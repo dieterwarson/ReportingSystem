@@ -1,5 +1,8 @@
 #!/bin/bash
-#!/bin/bash
+
+chmod +x /srv/psopv-2020-groep1/ReportingSystem/startExpress.sh
+chmod +x /srv/psopv-2020-groep1/ReportingSystem/startVue.sh
+
 
 set -m
 
