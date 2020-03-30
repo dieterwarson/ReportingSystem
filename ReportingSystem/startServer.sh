@@ -11,3 +11,5 @@ echo "start Express"
 
 echo "start Vue"
 ./startVue.sh
+
+exec "/bin/bash"
