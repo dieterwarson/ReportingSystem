@@ -3,6 +3,8 @@
 
 set -m
 
+echo "start Express"
 ./startExpress.sh &
 
+echo "start Vue"
 ./startVue.sh
