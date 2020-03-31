@@ -113,3 +113,5 @@ dist
 .yarn/unplugged
 .yarn/build-state.yml
 .pnp.*
+
+ReportingSystem/reportingsystemExpress/src/public
