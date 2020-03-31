@@ -11,6 +11,9 @@ import BaseRouter from './routes';
 import logger from '@shared/Logger';
 
 
+// var index = require('./routes/index');
+// var users = require('./routes/users');
+
 // Init express
 const app = express();
 
@@ -55,8 +58,9 @@ const viewsDir = path.join(__dirname, 'views');
 app.set('views', viewsDir);
 const staticDir = path.join(__dirname, 'public');
 app.use(express.static(staticDir));
+
 app.get('*', (req: Request, res: Response) => {
-    res.sendFile('index.html', {root: viewsDir});
+    res.sendFile('index.html', {root: staticDir});
 });
 
 // Export express instance
