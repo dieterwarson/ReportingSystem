@@ -3,6 +3,7 @@ FROM ubuntu:latest
 RUN apt-get update && apt-get install -y curl git-core && \
 curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
 apt-get install -y nodejs
+RUN npm install -g yarn
 
 # download our code and install dependencies using npm
 RUN git clone --depth 1 https://github.com/dieterwarson/ReportingSystem.git /srv/psopv-2020-groep1
