@@ -1,11 +1,13 @@
-import Vue from "vue";
-import Vuex from "vuex";
+// wordt momenteel nog niet gebruikt
 
-Vue.use(Vuex);
+// import Vue from "vue";
+// import Vuex from "vuex";
 
-export default new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {}
-});
+// Vue.use(Vuex);
+
+// export default new Vuex.Store({
+//   state: {},
+//   mutations: {},
+//   actions: {},
+//   modules: {}
+// });
