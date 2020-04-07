@@ -12,6 +12,8 @@ ADD /ReportingSystem/startServerDev.sh  startServerDev.sh
 ADD ReportingSystem/setup/mysql_secure_installation.sql mysql_secure_install.sql
 ADD ReportingSystem/setup/testdata.sql testdata.sql
 
+RUN  apt-get update && apt-get install -y dos2unix && dos2unix startServerDev.sh
+
 # install mysql server with default password, start it and insert testdata
 RUN apt-key update && apt-get update
 
