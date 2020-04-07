@@ -19,10 +19,10 @@ RUN echo 'mysql-server mysql-server/root_password password mysqlroot' | debconf-
 RUN echo 'mysql-server mysql-server/root_password_again password mysqlroot' | debconf-set-selections 
 
 RUN apt-get install -y mysql-server
-ENTRYPOINT ["/etc/init.d/mysql start"]
 
-RUN mysql -fu root -pmysqlroot < "mysql_secure_install.sql" && \
-mysql -fu root -pmysqlroot < "testdata.sql"
+
+# RUN mysql -fu root -pmysqlroot < "mysql_secure_install.sql" && \
+# mysql -fu root -pmysqlroot < "testdata.sql"
 
 # run the servers
 RUN chmod +x startServerDev.sh
