@@ -21,6 +21,8 @@
 --  it does not correspond to real people.
 --  Any similarity to existing people is purely coincidental.
 --
+DROP DATABASE IF EXISTS reports;
+CREATE DATABASE IF NOT EXISTS reports;
 
 DROP DATABASE IF EXISTS employees;
 CREATE DATABASE IF NOT EXISTS employees;
