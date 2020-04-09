@@ -9,6 +9,8 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
+let models = require('./models')
+
 
 
 // var index = require('./routes/index');
@@ -16,8 +18,6 @@ import logger from '@shared/Logger';
 
 // Init express
 const app = express();
-
-
 
 /************************************************************************************
  *                              Set basic express settings
@@ -62,6 +62,14 @@ app.use(express.static(staticDir));
 app.get('*', (req: Request, res: Response) => {
     res.sendFile('index.html', {root: staticDir});
 });
+
+// use for starting sequelize not working now
+/*(const init = async () => {
+    await models.Campus.sync({force: true}) // force true will drop the table if it already exists
+    console.log('Tables have synced!')
+}
+
+init()*/
 
 // Export express instance
 export default app;
