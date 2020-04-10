@@ -64,12 +64,9 @@ app.get('*', (req: Request, res: Response) => {
 });
 
 // use for starting sequelize not working now
-/*(const init = async () => {
-    await models.Campus.sync({force: true}) // force true will drop the table if it already exists
-    console.log('Tables have synced!')
-}
+//models.User.sync();
+//console.log('Tables have synced!');
 
-init()*/
 
 // Export express instance
 export default app;
