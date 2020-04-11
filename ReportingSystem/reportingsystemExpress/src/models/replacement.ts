@@ -22,11 +22,11 @@ Replacement.init(
       primaryKey: true,
     },
     absentee: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     substitute: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     monitoring: {

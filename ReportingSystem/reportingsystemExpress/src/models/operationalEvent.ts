@@ -10,7 +10,7 @@ export class OperationalEvent extends Model {
   public operationalTypeId!: number;
   public signaling!: string;
   public plNumber!: string;
-  public eventDescription!: string;
+  public description!: string;
   public location!: string;
   public unit!: string;
   public date!: Date;
@@ -28,23 +28,23 @@ OperationalEvent.init(
       allowNull: false,
     },
     signaling: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     plNumber: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
-    eventDescription: {
-      type: new DataTypes.STRING(128),
+    description: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     location: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     unit: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     date: {

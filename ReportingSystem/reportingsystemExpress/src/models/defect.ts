@@ -8,7 +8,7 @@ let sequelize = new Sequelize(config.getDatabase());
 
 export class Defect extends Model {
   public defectId!: number;
-  public type!: DefectType;
+  public defectTypeId!: number;
   public description!: string;
   public monitoring!: boolean;
   public date!: Date;
@@ -21,12 +21,12 @@ Defect.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    type: {
-      type: DefectType, // weet nog niet hoe custom class als DataType kan
+    defectTypeId: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
     description: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.TEXT(),
       allowNull: false,
     },
     monitoring: {

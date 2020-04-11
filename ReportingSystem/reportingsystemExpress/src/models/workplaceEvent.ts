@@ -8,7 +8,7 @@ let sequelize = new Sequelize(config.getDatabase());
 
 export class WorkplaceEvent extends Model {
   public workplaceEventId!: number;
-  public type!: WorkplaceType;
+  public workplaceTypeId!: WorkplaceType;
   public absentee!: string;
   public substitute!: string;
   public monitoring!: boolean;
@@ -24,16 +24,16 @@ WorkplaceEvent.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    type: {
-      type: WorkplaceType,
+    workplaceTypeId: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
     absentee: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     substitute: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     monitoring: {
@@ -49,7 +49,7 @@ WorkplaceEvent.init(
       allowNull: false,
     },
     description: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   },
