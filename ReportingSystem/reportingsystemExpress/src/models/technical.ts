@@ -1,7 +1,5 @@
 import { Sequelize, Model, DataTypes } from "sequelize";
 import { setupConnection } from "../config/config";
-import { CategoryMalfunction } from "./categoryMalfunction";
-import { CategoryDefect } from "./categoryDefect";
 
 let config = new setupConnection();
 
@@ -9,8 +7,7 @@ let sequelize = new Sequelize(config.getDatabase());
 
 export class Technical extends Model {
   public reportId!: number;
-  public malfunction!: CategoryMalfunction;
-  public defect!: CategoryDefect;
+  public technicalId!: number;
 }
 
 Technical.init(
@@ -20,12 +17,8 @@ Technical.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    malfunction: {
-      type: CategoryMalfunction, // weet nog niet hoe custom class als DataType kan
-      allowNull: false,
-    },
-    defect: {
-      type: CategoryDefect,
+    technicalId: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
   },

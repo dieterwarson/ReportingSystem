@@ -7,7 +7,7 @@ let sequelize = new Sequelize(config.getDatabase());
 
 export class Administrative extends Model {
   public reportId!: number;
-  public absence!: boolean;
+  public administrativeId!: number;
 }
 
 Administrative.init(
@@ -17,8 +17,8 @@ Administrative.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    absence: {
-      type: DataTypes.TINYINT(), // BOOLEAN == TINYINT
+    administrativeId: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
   },

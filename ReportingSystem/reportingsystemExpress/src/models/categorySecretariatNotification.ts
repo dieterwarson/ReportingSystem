@@ -7,13 +7,13 @@ let config = new setupConnection();
 let sequelize = new Sequelize(config.getDatabase());
 
 export class CategorySecretariatNotification extends Model {
-  public reportId!: number;
+  public administrativeId!: number;
   public secretariatNotificationId!: number;
 }
 
 CategorySecretariatNotification.init(
   {
-    reportId: {
+    administrativeId: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
@@ -30,7 +30,7 @@ CategorySecretariatNotification.init(
 );
 
 CategorySecretariatNotification.hasMany(SecretariatNotification, {
-  sourceKey: "reportId",
+  sourceKey: "administrativeId",
   foreignKey: "secretariatNotificationId",
   as: "secretariatNotifications",
 });

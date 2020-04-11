@@ -7,13 +7,13 @@ let config = new setupConnection();
 let sequelize = new Sequelize(config.getDatabase());
 
 export class CategoryWorkplaceEvent extends Model {
-  public reportId!: number;
+  public administrativeId!: number;
   public workplaceEventId!: number;
 }
 
 CategoryWorkplaceEvent.init(
   {
-    reportId: {
+    administrativeId: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
@@ -30,7 +30,7 @@ CategoryWorkplaceEvent.init(
 );
 
 CategoryWorkplaceEvent.hasMany(WorkplaceEvent, {
-  sourceKey: "reportId",
+  sourceKey: "administrativeId",
   foreignKey: "workplaceEventId",
   as: "workplaceEvents",
 });

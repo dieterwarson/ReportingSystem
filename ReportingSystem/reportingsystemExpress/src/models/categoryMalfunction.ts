@@ -7,13 +7,13 @@ let config = new setupConnection();
 let sequelize = new Sequelize(config.getDatabase());
 
 export class CategoryMalfunction extends Model {
-  public reportId!: number;
+  public technicalId!: number;
   public malfunctionId!: number;
 }
 
 CategoryMalfunction.init(
   {
-    reportId: {
+    technicalId: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
@@ -30,7 +30,7 @@ CategoryMalfunction.init(
 );
 
 CategoryMalfunction.hasMany(Malfunction, {
-  sourceKey: "reportId",
+  sourceKey: "technicalId",
   foreignKey: "malfunctionId",
   as: "malfunctions",
 });

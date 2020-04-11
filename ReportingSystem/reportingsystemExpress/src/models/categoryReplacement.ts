@@ -7,13 +7,13 @@ let config = new setupConnection();
 let sequelize = new Sequelize(config.getDatabase());
 
 export class CategoryReplacement extends Model {
-  public reportId!: number;
+  public administrativeId!: number;
   public replacementId!: number;
 }
 
 CategoryReplacement.init(
   {
-    reportId: {
+    administrativeId: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
@@ -30,7 +30,7 @@ CategoryReplacement.init(
 );
 
 CategoryReplacement.hasMany(Replacement, {
-  sourceKey: "reportId",
+  sourceKey: "administrativeId",
   foreignKey: "replacementId",
   as: "replacements",
 });
