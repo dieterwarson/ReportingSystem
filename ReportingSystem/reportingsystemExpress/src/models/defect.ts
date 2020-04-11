@@ -1,29 +1,28 @@
 import { Sequelize, Model, DataTypes } from "sequelize";
-import { MalfunctionType } from "./malfunctionType";
 import { setupConnection } from "../config/config";
+import { DefectType } from "./defectType";
 
 let config = new setupConnection();
 
 let sequelize = new Sequelize(config.getDatabase());
 
-export class Malfunction extends Model {
-  public malfunctionId!: number;
-  public type!: MalfunctionType;
+export class Defect extends Model {
+  public defectId!: number;
+  public type!: DefectType;
   public description!: string;
   public monitoring!: boolean;
   public date!: Date;
-  public duration!: number;
 }
 
-Malfunction.init(
+Defect.init(
   {
-    malfunctionId: {
+    defectId: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
     },
     type: {
-      type: MalfunctionType, // weet nog niet hoe custom class als DataType kan
+      type: DefectType, // weet nog niet hoe custom class als DataType kan
       allowNull: false,
     },
     description: {
@@ -38,13 +37,9 @@ Malfunction.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    duration: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
   },
   {
-    modelName: "malfunction",
+    modelName: "defect",
     sequelize: sequelize,
   }
 );

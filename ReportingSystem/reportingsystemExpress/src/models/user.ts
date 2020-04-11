@@ -27,10 +27,10 @@ User.init(
     },
     password: { // provide encryption for password
       type: new DataTypes.STRING(128),
-      allowNull: true,
+      allowNull: false,
     },
     accessRights: {
-      type: new DataTypes.INTEGER.UNSIGNED(),
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
   },

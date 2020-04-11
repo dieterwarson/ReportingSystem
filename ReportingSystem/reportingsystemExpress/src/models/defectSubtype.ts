@@ -5,14 +5,15 @@ let config = new setupConnection();
 
 let sequelize = new Sequelize(config.getDatabase());
 
-export class WorkplaceType extends Model {
-  public workplaceTypeId!: number;
+export class DefectSubtype extends Model {
+  public defectSubtypeId!: number;
   public typeName!: string;
+  public description!: string;
 }
 
-WorkplaceType.init(
+DefectSubtype.init(
   {
-    workplaceTypeId: {
+    defectSubtypeId: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
@@ -21,9 +22,13 @@ WorkplaceType.init(
       type: DataTypes.STRING(128),
       allowNull: false,
     },
+    description: {
+      type: DataTypes.STRING(128),
+      allowNull: false,
+    },
   },
   {
-    modelName: "workplaceType",
+    modelName: "defectSubtype",
     sequelize: sequelize,
   }
 );

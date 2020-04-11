@@ -1,21 +1,27 @@
 import { Sequelize, Model, DataTypes } from "sequelize";
 import { setupConnection } from "../config/config";
+import { DefectSubtype } from "./defectSubtype";
 
 let config = new setupConnection();
 
 let sequelize = new Sequelize(config.getDatabase());
 
-export class WorkplaceType extends Model {
-  public workplaceTypeId!: number;
+export class DefectType extends Model {
+  public defectTypeId!: number;
+  public defectSubtypeId!: number;
   public typeName!: string;
 }
 
-WorkplaceType.init(
+DefectType.init(
   {
-    workplaceTypeId: {
+    defectTypeId: {
       type: DataTypes.INTEGER.UNSIGNED,
       autoIncrement: true,
       primaryKey: true,
+    },
+    defectSubtypeId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
     },
     typeName: {
       type: DataTypes.STRING(128),
@@ -23,7 +29,13 @@ WorkplaceType.init(
     },
   },
   {
-    modelName: "workplaceType",
+    modelName: "defectType",
     sequelize: sequelize,
   }
 );
+
+DefectType.hasMany(DefectSubtype, {
+  sourceKey: "defectTypeId",
+  foreignKey: "defectSubtypeId",
+  as: "defectSubtype",
+});

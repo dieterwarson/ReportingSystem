@@ -5,7 +5,6 @@ let config = new setupConnection();
 
 let sequelize = new Sequelize(config.getDatabase());
 
-
 export class Administrative extends Model {
   public reportId!: number;
   public absence!: boolean;
@@ -19,12 +18,12 @@ Administrative.init(
       primaryKey: true,
     },
     absence: {
-      type: new DataTypes.TINYINT(), // BOOLEAN == TINYINT
+      type: DataTypes.TINYINT(), // BOOLEAN == TINYINT
       allowNull: false,
     },
   },
   {
-    modelName: "Administrative",
+    modelName: "administrative",
     sequelize: sequelize,
   }
 );

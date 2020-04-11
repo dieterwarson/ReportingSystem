@@ -1,4 +1,10 @@
-import { Model } from "sequelize";
+import { Sequelize, Model, DataTypes } from "sequelize";
+import { setupConnection } from "../config/config";
+import { DefectType } from "./defectType";
+
+let config = new setupConnection();
+
+let sequelize = new Sequelize(config.getDatabase());
 
 export class SecretariatNotification extends Model {
   public secretariatNotificationId!: number;
@@ -7,3 +13,33 @@ export class SecretariatNotification extends Model {
   public shift!: boolean;
   public description!: string;
 }
+
+SecretariatNotification.init(
+  {
+    secretariatNotificationId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    monitoring: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+    },
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    shift: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+    },
+    description: {
+      type: new DataTypes.STRING(128),
+      allowNull: false,
+    },
+  },
+  {
+    modelName: "secretariatNotification",
+    sequelize: sequelize,
+  }
+);
