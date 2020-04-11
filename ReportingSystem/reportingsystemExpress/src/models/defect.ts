@@ -1,6 +1,5 @@
 import { Sequelize, Model, DataTypes } from "sequelize";
 import { setupConnection } from "../config/config";
-import { DefectType } from "./defectType";
 
 let config = new setupConnection();
 
