@@ -34,7 +34,7 @@ SecretariatNotification.init(
       allowNull: false,
     },
     description: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   },

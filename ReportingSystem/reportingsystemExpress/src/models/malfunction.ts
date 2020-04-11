@@ -8,7 +8,7 @@ let sequelize = new Sequelize(config.getDatabase());
 
 export class Malfunction extends Model {
   public malfunctionId!: number;
-  public type!: MalfunctionType;
+  public malfunctionTypeId!: MalfunctionType;
   public description!: string;
   public monitoring!: boolean;
   public date!: Date;
@@ -22,12 +22,12 @@ Malfunction.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    type: {
-      type: MalfunctionType, // weet nog niet hoe custom class als DataType kan
+    malfunctionTypeId: {
+      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
     description: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     monitoring: {

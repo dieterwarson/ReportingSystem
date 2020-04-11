@@ -23,7 +23,7 @@ WorkplaceSubtype.init(
       allowNull: false,
     },
     description: {
-      type: DataTypes.STRING(128),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
   },

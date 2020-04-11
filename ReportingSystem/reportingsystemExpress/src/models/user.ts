@@ -22,11 +22,11 @@ User.init(
       primaryKey: true,
     },
     username: {
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     password: { // provide encryption for password
-      type: new DataTypes.STRING(128),
+      type: DataTypes.STRING(128),
       allowNull: false,
     },
     accessRights: {
