@@ -1,19 +1,18 @@
-import { Sequelize, Model, DataTypes, TINYINT } from "sequelize";
-import { sequelize } from "../Server"
-
+import { Model, DataTypes } from "sequelize";
+import { sequelize } from "../Server";
 
 export class Report extends Model {
   public reportId!: number;
   public authorId!: number;
   public date!: Date;
   public temporary!: boolean;
-  
-  constructor(){
+
+  constructor() {
     super();
     this.initseq();
   }
 
-  initseq(){
+  initseq() {
     Report.init(
       {
         reportId: {
@@ -41,4 +40,3 @@ export class Report extends Model {
     );
   }
 }
-
