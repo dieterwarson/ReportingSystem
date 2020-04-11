@@ -5,11 +5,7 @@ import { Report } from "./report";
 export class Database {
   config: setupConnection = new setupConnection();
   sequelize: Sequelize = new Sequelize(this.config.getDatabase());
-  report: Report = new Report();
-
-  constructor() {
-    this.sequelize.sync();
-  }
+  report!: Report
 
   testConnection() {
     try {
@@ -19,4 +15,13 @@ export class Database {
       console.error("Unable to connect to the database:", error);
     }
   }
+
+  makeObjects(){
+    this.report = new Report;
+    this.sequelize.sync()
+  }
+
 }
+
+
+

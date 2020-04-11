@@ -50,6 +50,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 // Add sequelize database
 let db = new Database();
 db.testConnection();
+export const sequelize = db.sequelize;
+db.makeObjects();
 
 
 
