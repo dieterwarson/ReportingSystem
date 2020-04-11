@@ -9,8 +9,7 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
-let models = require('./models')
-
+import { Database } from './models/index'
 
 
 // var index = require('./routes/index');
@@ -48,6 +47,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
+// Add sequelize database
+let db = new Database();
+db.testConnection();
+
 
 
 /************************************************************************************
@@ -62,10 +65,6 @@ app.use(express.static(staticDir));
 app.get('*', (req: Request, res: Response) => {
     res.sendFile('index.html', {root: staticDir});
 });
-
-// use for starting sequelize not working now
-//models.User.sync();
-//console.log('Tables have synced!');
 
 
 // Export express instance
