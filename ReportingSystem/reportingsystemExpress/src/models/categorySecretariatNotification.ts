@@ -1,10 +1,9 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 import SecretariatNotification from "./secretariatNotification";
 
 @Table
 export default class CategorySecretariatNotification extends Model<CategorySecretariatNotification> {
-  @Column
-  administrativeId!: number;
+  @Index
 
   @Column
   secretariatNotificationId!: number;

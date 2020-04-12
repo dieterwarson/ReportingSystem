@@ -1,9 +1,8 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 
 @Table
 export default class Administrative extends Model<Administrative> {
-  @Column
-  reportId!: number;
+  @Index
 
   @Column
   administrativeId!: number;

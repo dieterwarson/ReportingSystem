@@ -1,9 +1,8 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 
 @Table
 export default class WorkplaceSubtype extends Model<WorkplaceSubtype> {
-  @Column
-  workplaceSubtypeId!: number;
+  @Index
   @Column
   typeName!: string;
   @Column

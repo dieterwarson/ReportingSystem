@@ -1,10 +1,9 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 import DefectType from "./defectType";
 
 @Table
 export default class SecretariatNotification extends Model<SecretariatNotification> {
-  @Column
-  secretariatNotificationId!: number;
+  @Index
   @Column
   monitoring!: boolean;
   @Column

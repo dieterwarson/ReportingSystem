@@ -1,10 +1,9 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 import MalfunctionType from "./malfunctionType";
 
 @Table
 export default class Malfunction extends Model<Malfunction> {
-  @Column
-  malfunctionId!: number;
+  @Index
   @Column
   malfunctionTypeId!: number;
   @Column

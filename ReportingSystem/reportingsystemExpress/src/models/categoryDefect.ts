@@ -1,10 +1,9 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 import Defect from "./defect";
 
 @Table
 export default class CategoryDefect extends Model<CategoryDefect> {
-  @Column
-  technicalId!: number;
+  @Index
   
   @Column
   defectId!: number;

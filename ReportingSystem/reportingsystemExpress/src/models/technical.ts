@@ -1,9 +1,8 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 
 @Table
 export default class Technical extends Model<Technical> {
-  @Column
-  reportId!: number;
+  @Index
   @Column
   technicalId!: number;
 }

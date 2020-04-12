@@ -1,10 +1,9 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 import WorkplaceType from './workplaceType';
 
 @Table
 export default class WorkplaceEvent extends Model<WorkplaceEvent> {
-  @Column
-  workplaceEventId!: number;
+  @Index
   @Column
   workplaceTypeId!: number;
   @Column

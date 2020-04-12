@@ -1,10 +1,9 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 import OperationalSubtype from "./operationalSubtype";
 
 @Table
 export default class OperationalType extends Model<OperationalType> {
-  @Column
-  operationalTypeId!: number;
+  @Index
   @Column
   operationalSubtypeId!: number;
   @Column

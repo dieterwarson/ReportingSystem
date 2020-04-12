@@ -1,10 +1,9 @@
-import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 
 
 @Table
 export default class OperationalEvent extends Model<OperationalEvent> {
-  @Column
-  operationalEventId!: number;
+  @Index
   @Column
   operationalTypeId!: number;
   @Column
