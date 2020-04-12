@@ -1,41 +1,19 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
-import { DefectSubtype } from "./defectSubtype";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import DefectSubtype from "./defectSubtype";
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class DefectType extends Model {
-  public defectTypeId!: number;
-  public defectSubtypeId!: number;
-  public typeName!: string;
+@Table
+export default class DefectType extends Model<DefectType> {
+  @Column
+  defectTypeId!: number;
+  @Column
+  defectSubtypeId!: number;
+  @Column
+  typeName!: string;
 }
 
-DefectType.init(
-  {
-    defectTypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    defectSubtypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
-    typeName: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "defectType",
-    sequelize: sequelize,
-  }
-);
-
-DefectType.hasMany(DefectSubtype, {
+/* DefectType.hasMany(DefectSubtype, {
   sourceKey: "defectTypeId",
   foreignKey: "defectSubtypeId",
   as: "defectSubtype",
 });
+ */

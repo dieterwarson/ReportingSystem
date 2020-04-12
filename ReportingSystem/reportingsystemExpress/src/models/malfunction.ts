@@ -1,50 +1,19 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { MalfunctionType } from "./malfunctionType";
-import { setupConnection } from "../config/config";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import MalfunctionType from "./malfunctionType";
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class Malfunction extends Model {
-  public malfunctionId!: number;
-  public malfunctionTypeId!: MalfunctionType;
-  public description!: string;
-  public monitoring!: boolean;
-  public date!: Date;
-  public duration!: number;
+@Table
+export default class Malfunction extends Model<Malfunction> {
+  @Column
+  malfunctionId!: number;
+  @Column
+  malfunctionTypeId!: number;
+  @Column
+  description!: string;
+  @Column
+  monitoring!: boolean;
+  @Column
+  date!: Date;
+  @Column
+  duration!: number;
 }
 
-Malfunction.init(
-  {
-    malfunctionId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    malfunctionTypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    monitoring: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    duration: {
-      type: DataTypes.NUMBER,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "malfunction",
-    sequelize: sequelize,
-  }
-);

@@ -1,34 +1,11 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class WorkplaceSubtype extends Model {
-  public workplaceSubtypeId!: number;
-  public typeName!: string;
-  public description!: string;
+@Table
+export default class WorkplaceSubtype extends Model<WorkplaceSubtype> {
+  @Column
+  workplaceSubtypeId!: number;
+  @Column
+  typeName!: string;
+  @Column
+  description!: string;
 }
-
-WorkplaceSubtype.init(
-  {
-    workplaceSubtypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    typeName: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "workplaceSubtype",
-    sequelize: sequelize,
-  }
-);

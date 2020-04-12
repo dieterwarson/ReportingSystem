@@ -1,34 +1,11 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class DefectSubtype extends Model {
-  public defectSubtypeId!: number;
-  public typeName!: string;
-  public description!: string;
+@Table
+export default class DefectSubtype extends Model<DefectSubtype> {
+  @Column
+  defectSubtypeId!: number;
+  @Column
+  typeName!: string;
+  @Column
+  description!: string;
 }
-
-DefectSubtype.init(
-  {
-    defectSubtypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    typeName: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "defectSubtype",
-    sequelize: sequelize,
-  }
-);

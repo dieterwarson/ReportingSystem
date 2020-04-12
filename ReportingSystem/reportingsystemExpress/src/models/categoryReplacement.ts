@@ -1,36 +1,18 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
-import { Replacement } from './replacement';
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import Replacement from './replacement';
 
-let config = new setupConnection();
+@Table
+export default class CategoryReplacement extends Model<CategoryReplacement> {
+  @Column
+  administrativeId!: number;
 
-let sequelize = new Sequelize(config.getDatabase());
-
-export class CategoryReplacement extends Model {
-  public administrativeId!: number;
-  public replacementId!: number;
+  @Column
+  replacementId!: number;
 }
 
-CategoryReplacement.init(
-  {
-    administrativeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    replacementId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "categoryReplacement",
-    sequelize: sequelize,
-  }
-);
 
-CategoryReplacement.hasMany(Replacement, {
+/* CategoryReplacement.hasMany(Replacement, {
   sourceKey: "administrativeId",
   foreignKey: "replacementId",
   as: "replacements",
-});
+}); */

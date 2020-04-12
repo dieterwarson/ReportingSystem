@@ -1,36 +1,17 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
-import { WorkplaceEvent } from './workplaceEvent';
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import WorkplaceEvent from './workplaceEvent';
 
-let config = new setupConnection();
+@Table
+export default class CategoryWorkplaceEvent extends Model<CategoryWorkplaceEvent> {
+  @Column
+  administrativeId!: number;
 
-let sequelize = new Sequelize(config.getDatabase());
-
-export class CategoryWorkplaceEvent extends Model {
-  public administrativeId!: number;
-  public workplaceEventId!: number;
+  @Column
+  workplaceEventId!: number;
 }
 
-CategoryWorkplaceEvent.init(
-  {
-    administrativeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    workplaceEventId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "categoryWorkplaceEvent",
-    sequelize: sequelize,
-  }
-);
-
-CategoryWorkplaceEvent.hasMany(WorkplaceEvent, {
+/* CategoryWorkplaceEvent.hasMany(WorkplaceEvent, {
   sourceKey: "administrativeId",
   foreignKey: "workplaceEventId",
   as: "workplaceEvents",
-});
+}); */

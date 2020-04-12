@@ -1,45 +1,16 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
-import { DefectType } from "./defectType";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import DefectType from "./defectType";
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class Defect extends Model {
-  public defectId!: number;
-  public defectTypeId!: number;
-  public description!: string;
-  public monitoring!: boolean;
-  public date!: Date;
+@Table
+export default class Defect extends Model<Defect> {
+  @Column
+  defectId!: number;
+  @Column
+  defectTypeId!: number;
+  @Column
+  description!: string;
+  @Column
+  monitoring!: boolean;
+  @Column
+  date!: Date;
 }
-
-Defect.init(
-  {
-    defectId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    defectTypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT(),
-      allowNull: false,
-    },
-    monitoring: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "defect",
-    sequelize: sequelize,
-  }
-);

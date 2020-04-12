@@ -9,7 +9,9 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
-import { Database } from './models/index'
+// import { sequelize } from './config/config';
+import { Sequelize } from 'sequelize-typescript';
+
 
 
 // var index = require('./routes/index');
@@ -47,12 +49,17 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
-// Add sequelize database
-let db = new Database();
-db.testConnection();
-export const sequelize = db.sequelize;
-db.makeObjects();
+// add sequelize
+const sequelize =  new Sequelize({
+    database: 'reports',
+    dialect: 'mysql',
+    username: 'root',
+    password: 'mysqlroot',
+    models: [__dirname + '/models'], // or [Player, Team],
+});
 
+sequelize.sync({ force: true });
+console.log("All models were synchronized successfully.");
 
 
 /************************************************************************************

@@ -1,34 +1,12 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class OperationalSubtype extends Model {
-  public operationalSubtypeId!: number;
-  public typeName!: string;
-  public description!: string;
+@Table
+export default class OperationalSubtype extends Model<OperationalSubtype> {
+  @Column
+  operationalSubtypeId!: number;
+  @Column
+  typeName!: string;
+  @Column
+  description!: string;
 }
 
-OperationalSubtype.init(
-  {
-    operationalSubtypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    typeName: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "operationalSubtype",
-    sequelize: sequelize,
-  }
-);

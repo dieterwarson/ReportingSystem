@@ -1,59 +1,22 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
 
-let config = new setupConnection();
 
-let sequelize = new Sequelize(config.getDatabase());
-
-export class OperationalEvent extends Model {
-  public operationalEventId!: number;
-  public operationalTypeId!: number;
-  public signaling!: string;
-  public plNumber!: string;
-  public description!: string;
-  public location!: string;
-  public unit!: string;
-  public date!: Date;
+@Table
+export default class OperationalEvent extends Model<OperationalEvent> {
+  @Column
+  operationalEventId!: number;
+  @Column
+  operationalTypeId!: number;
+  @Column
+  signaling!: string;
+  @Column
+  plNumber!: string;
+  @Column
+  description!: string;
+  @Column
+  location!: string;
+  @Column
+  unit!: string;
+  @Column
+  date!: Date;
 }
-
-OperationalEvent.init(
-  {
-    operationalEventId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    operationalTypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
-    signaling: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    plNumber: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    location: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    unit: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "operationalEvent",
-    sequelize: sequelize,
-  }
-);

@@ -1,29 +1,9 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class Technical extends Model {
-  public reportId!: number;
-  public technicalId!: number;
+@Table
+export default class Technical extends Model<Technical> {
+  @Column
+  reportId!: number;
+  @Column
+  technicalId!: number;
 }
-
-Technical.init(
-  {
-    reportId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    technicalId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "technical",
-    sequelize: sequelize,
-  }
-);

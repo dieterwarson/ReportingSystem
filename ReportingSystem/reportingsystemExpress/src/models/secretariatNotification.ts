@@ -1,45 +1,16 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
-import { DefectType } from "./defectType";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import DefectType from "./defectType";
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class SecretariatNotification extends Model {
-  public secretariatNotificationId!: number;
-  public monitoring!: boolean;
-  public date!: Date;
-  public shift!: boolean;
-  public description!: string;
+@Table
+export default class SecretariatNotification extends Model<SecretariatNotification> {
+  @Column
+  secretariatNotificationId!: number;
+  @Column
+  monitoring!: boolean;
+  @Column
+  date!: Date;
+  @Column
+  shift!: boolean;
+  @Column
+  description!: string;
 }
-
-SecretariatNotification.init(
-  {
-    secretariatNotificationId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    monitoring: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    shift: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "secretariatNotification",
-    sequelize: sequelize,
-  }
-);

@@ -27,8 +27,10 @@
     "module-alias": "^2.2.2",
     "morgan": "^1.10.0",
     "mysql2": "^2.1.0",
+    "reflect-metadata": "^0.1.13",
     "sequelize": "^5.21.6",
     "sequelize-cli": "^5.5.1",
+    "sequelize-typescript": "^1.1.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {

@@ -1,34 +1,11 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class MalfunctionSubtype extends Model {
-  public malfunctionSubtypeId!: number;
-  public typeName!: string;
-  public description!: string;
+@Table
+export default class MalfunctionSubtype extends Model<MalfunctionSubtype> {
+  @Column
+  malfunctionSubtypeId!: number;
+  @Column
+  typeName!: string;
+  @Column
+  description!: string;
 }
-
-MalfunctionSubtype.init(
-  {
-    malfunctionSubtypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    typeName: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "malfunctionSubtype",
-    sequelize: sequelize,
-  }
-);

@@ -1,60 +1,23 @@
-import { Sequelize, Model, DataTypes } from "sequelize";
-import { setupConnection } from "../config/config";
-import { WorkplaceType } from './workplaceType';
+import {Table, Column, Model, HasMany} from 'sequelize-typescript';
+import WorkplaceType from './workplaceType';
 
-let config = new setupConnection();
-
-let sequelize = new Sequelize(config.getDatabase());
-
-export class WorkplaceEvent extends Model {
-  public workplaceEventId!: number;
-  public workplaceTypeId!: WorkplaceType;
-  public absentee!: string;
-  public substitute!: string;
-  public monitoring!: boolean;
-  public date!: Date;
-  public shift!: boolean;
-  public description!: string;
+@Table
+export default class WorkplaceEvent extends Model<WorkplaceEvent> {
+  @Column
+  workplaceEventId!: number;
+  @Column
+  workplaceTypeId!: number;
+  @Column
+  absentee!: string;
+  @Column
+  substitute!: string;
+  @Column
+  monitoring!: boolean;
+  @Column
+  date!: Date;
+  @Column
+  shift!: boolean;
+  @Column
+  description!: string;
 }
 
-WorkplaceEvent.init(
-  {
-    workplaceEventId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    workplaceTypeId: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      allowNull: false,
-    },
-    absentee: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    substitute: {
-      type: DataTypes.STRING(128),
-      allowNull: false,
-    },
-    monitoring: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-    },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    shift: {
-      type: DataTypes.TINYINT,
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-  },
-  {
-    modelName: "workplaceEvent",
-    sequelize: sequelize,
-  }
-);
