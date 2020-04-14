@@ -58,7 +58,7 @@ const sequelize =  new Sequelize({
     models: [__dirname + '/models'], // or [Player, Team],
 });
 
-sequelize.sync({ force: true });
+sequelize.sync();
 console.log("All models were synchronized successfully.");
 
 

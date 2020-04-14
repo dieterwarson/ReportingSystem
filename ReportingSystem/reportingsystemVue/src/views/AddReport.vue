@@ -104,11 +104,6 @@ export default Vue.extend({
         saveButton : function() {
             alert('send to db');
         }
-    },
-    
-
-    mounted() {
-
     }
 
 
