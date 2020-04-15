@@ -75,6 +75,9 @@ app.get('*', (req: Request, res: Response) => {
     res.sendFile('index.html', {root: staticDir});
 });
 
+// HIER HARDCODE DATA TOEVOEGEN AAN DB
+// const person = new Person({ name: "bob", age: 99 });
+// person.save();
 
 // Export express instance
 export default app;
