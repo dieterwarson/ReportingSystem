@@ -10,6 +10,9 @@ import 'express-async-errors';
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 let models = require('./models')
+const cors = require("cors");
+
+
 
 
 
@@ -19,6 +22,7 @@ let models = require('./models')
 // Init express
 const app = express();
 
+
 /************************************************************************************
  *                              Set basic express settings
  ***********************************************************************************/
@@ -26,6 +30,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use(cors());
+
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === 'development') {
@@ -70,6 +76,16 @@ app.get('*', (req: Request, res: Response) => {
 }
 
 init()*/
+
+/************************************************************************************
+ *                              AXIOS
+ ***********************************************************************************/
+app.post('/addReport', (req, res) => {
+    res.send({
+        message: "your plnumber: ${req.plnumber}"
+    })
+})
+
 
 // Export express instance
 export default app;
