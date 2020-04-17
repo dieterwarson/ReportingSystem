@@ -16,8 +16,4 @@ export default class CategoryMalfunction extends Model<CategoryMalfunction> {
   foreignKey: "malfunctionId",
   as: "malfunctions",
 });
-<<<<<<< HEAD
  */
-=======
- */
->>>>>>> add-report
