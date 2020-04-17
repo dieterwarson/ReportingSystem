@@ -9,8 +9,15 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
+<<<<<<< HEAD
 // import { sequelize } from './config/config';
 import { Sequelize } from 'sequelize-typescript';
+=======
+let models = require('./models')
+const cors = require("cors");
+
+
+>>>>>>> add-report
 
 
 
@@ -20,6 +27,7 @@ import { Sequelize } from 'sequelize-typescript';
 // Init express
 const app = express();
 
+
 /************************************************************************************
  *                              Set basic express settings
  ***********************************************************************************/
@@ -27,6 +35,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use(cors());
+
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === 'development') {
@@ -74,6 +84,16 @@ app.use(express.static(staticDir));
 app.get('*', (req: Request, res: Response) => {
     res.sendFile('index.html', {root: staticDir});
 });
+
+
+/************************************************************************************
+ *                              AXIOS
+ ***********************************************************************************/
+app.post('/addReport', (req, res) => {
+    res.send({
+        message: "your plnumber: ${req.plnumber}"
+    })
+})
 
 
 // Export express instance

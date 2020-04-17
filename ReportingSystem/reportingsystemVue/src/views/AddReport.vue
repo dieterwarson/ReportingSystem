@@ -1,7 +1,7 @@
 <template>
 
 <!-- script has to be implemented again to achieve the seperate forms -->
-  <div class="container pt-5 pb-5">   
+  <div class="container pt-5 pb-5">
     <h1>Voeg verslag toe</h1>
             <form id="addReport">
                 <div class="btn-group d-flex" role="group" aria-label="Justified button group" >
@@ -13,9 +13,9 @@
                 <section v-if="step == 'Operational'">
                     <h3>Operationeel</h3>
                     <div class="input-group">
-                        <input v-model="form.plNumber" type="text" placeholder="PL-nummer" class="form-control form-control-lg">
-                        <input v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg">
-                        <input v-model="form.date" type="text" placeholder="Datum" class="form-control form-control-lg">
+                        <input name ="plNumber" v-model="form.plNumber" type="text" placeholder="PL-nummer" class="form-control form-control-lg">
+                        <input name="location" v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg">
+                        <input name="date" v-model="form.date" type="text" placeholder="Datum" class="form-control form-control-lg">
                     </div>
                     
 <!-- CODE FOR LOADING CHECKBOXES BY VALUES IN TS
@@ -27,7 +27,7 @@
 -->
 
                     <input v-model="form.operationalMessage" type="text" placeholder="Data" class="form-control form-control-lg">
-                    <button class="btn btn-large btn-block btn-primary" type="button" @click.prevent="saveButton">Opslaan</button>
+                    <button class="btn btn-large btn-block btn-primary" type="button" @click="operationalReport">Opslaan</button>
                 
                 </section>
 
@@ -50,6 +50,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import ReportingService from "../services/ReportingService"
 export default Vue.extend({
     data() {
         return {
@@ -103,8 +104,15 @@ export default Vue.extend({
 
         saveButton : function() {
             alert('send to db');
+        },
+        async operationalReport() {
+            const response = await ReportingService.addReport({
+                plNumber: this.form.plNumber
+                })
+                alert(response);
         }
     }
+    
 
 
 })

@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { BAD_REQUEST, CREATED, OK } from 'http-status-codes';
 import { ParamsDictionary } from 'express-serve-static-core';
+import axios from  "axios";
 
 import UserDao from '@daos/User/UserDao.mock';
 import { paramMissingError } from '@shared/constants';
@@ -8,7 +9,6 @@ import { paramMissingError } from '@shared/constants';
 // Init shared
 const router = Router();
 const userDao = new UserDao();
-
 
 /******************************************************************************
  *                      Get All Users - "GET /api/users/all"
