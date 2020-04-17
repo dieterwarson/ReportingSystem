@@ -1,6 +1,16 @@
-import { Model } from "sequelize";
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
+import Defect from "./defect";
 
-export class CategoryDefect extends Model {
-  public reportId!: number;
-  public defectId!: number;
+@Table
+export default class CategoryDefect extends Model<CategoryDefect> {
+  @Index
+  
+  @Column
+  defectId!: number;
 }
+
+/* CategoryDefect.hasMany(Defect, {
+  sourceKey: "technicalId",
+  foreignKey: "defectId",
+  as: "defects",
+}); */

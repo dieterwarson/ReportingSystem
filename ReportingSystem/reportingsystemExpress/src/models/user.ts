@@ -1,10 +1,14 @@
-import { Model } from "sequelize";
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 
-export class User extends Model {
-    public id!: number;
-    public name!: string;
-    public passHash!: string;
-    
+@Table
+export default class User extends Model {
+  @Index
+  @Column
+  username!: string;
+  @Column
+  password!: string;
+  @Column
+  accessRights!: number;
 }
 
 // TODO provide safe way to save user

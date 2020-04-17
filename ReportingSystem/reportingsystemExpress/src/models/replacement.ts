@@ -1,11 +1,8 @@
 import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
-import WorkplaceType from './workplaceType';
 
 @Table
-export default class WorkplaceEvent extends Model<WorkplaceEvent> {
+export default class Replacement extends Model<Replacement> {
   @Index
-  @Column
-  workplaceTypeId!: number;
   @Column
   absentee!: string;
   @Column
@@ -16,7 +13,4 @@ export default class WorkplaceEvent extends Model<WorkplaceEvent> {
   date!: Date;
   @Column
   shift!: boolean;
-  @Column
-  description!: string;
 }
-

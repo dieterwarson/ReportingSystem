@@ -1,8 +1,11 @@
-import { Model } from "sequelize";
 import { WorkplaceEvent } from './workplaceEvent';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 
-export class OperationalSubtype extends Model {
-  public reportId!: number;
-  public absence!: boolean;
-  public workplaceEvent!: WorkplaceEvent;
+
+@Table
+export default class Administrative extends Model<Administrative> {
+  @Index
+
+  @Column
+  administrativeId!: number;
 }

@@ -1,15 +1,9 @@
 import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
-import WorkplaceType from './workplaceType';
+import DefectType from "./defectType";
 
 @Table
-export default class WorkplaceEvent extends Model<WorkplaceEvent> {
+export default class SecretariatNotification extends Model<SecretariatNotification> {
   @Index
-  @Column
-  workplaceTypeId!: number;
-  @Column
-  absentee!: string;
-  @Column
-  substitute!: string;
   @Column
   monitoring!: boolean;
   @Column
@@ -19,4 +13,3 @@ export default class WorkplaceEvent extends Model<WorkplaceEvent> {
   @Column
   description!: string;
 }
-

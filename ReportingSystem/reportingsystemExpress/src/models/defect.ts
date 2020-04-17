@@ -1,18 +1,15 @@
 import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
-import MalfunctionType from "./malfunctionType";
+import DefectType from "./defectType";
 
 @Table
-export default class Malfunction extends Model<Malfunction> {
+export default class Defect extends Model<Defect> {
   @Index
   @Column
-  malfunctionTypeId!: number;
+  defectTypeId!: number;
   @Column
   description!: string;
   @Column
   monitoring!: boolean;
   @Column
   date!: Date;
-  @Column
-  duration!: number;
 }
-

@@ -1,6 +1,18 @@
-import { Model } from "sequelize";
+import {Table, Column, Model, Index, ForeignKey, HasMany} from 'sequelize-typescript';
+import OperationalEvent from "./operationalEvent";
 
-export class CategoryOperational extends Model {
-  public reportId!: number;
-  public operationalEventId!: number;
+@Table
+export default class CategoryOperational extends Model<CategoryOperational> {
+  @Index
+
+  @ForeignKey(() => OperationalEvent)
+  @Column
+  operationalEventId!: number;
 }
+
+
+/* CategoryOperational.hasMany(OperationalEvent, {
+  sourceKey: "operationalId",
+  foreignKey: "operationalEventId",
+  as: "operationalEvents",
+}); */

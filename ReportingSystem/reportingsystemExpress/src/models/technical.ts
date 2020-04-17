@@ -1,9 +1,8 @@
-import { Model } from "sequelize";
-import { CategoryMalfunction } from './categoryMalfunction';
-import { CategoryDefect } from './categoryDefect';
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 
-export class Technical extends Model {
-  public reportId!: number;
-  public malfunction!: CategoryMalfunction;
-  public defect!: CategoryDefect;
+@Table
+export default class Technical extends Model<Technical> {
+  @Index
+  @Column
+  technicalId!: number;
 }

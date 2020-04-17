@@ -1,6 +1,8 @@
-import { Model } from "sequelize";
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 
-export class Operational extends Model {
-  public reportId!: number;
-  public operationalId!: number;
+@Table
+export default class Operational extends Model<Operational> {
+  @Index
+  @Column
+  operationalId!: number;
 }

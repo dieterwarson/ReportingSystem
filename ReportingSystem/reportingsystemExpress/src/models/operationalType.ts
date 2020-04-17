@@ -1,7 +1,19 @@
-import { Model } from "sequelize";
+import {Table, Column, Model, Index, ForeignKey, HasMany} from 'sequelize-typescript';
+import OperationalSubtype from "./operationalSubtype";
 
-export class OperationalType extends Model {
-  public operationalTypeId!: number;
-  public operationalSubtypeId!: number;
-  public typeName!: string;
+@Table
+export default class OperationalType extends Model<OperationalType> {
+  @Index
+
+  @ForeignKey(() => OperationalSubtype)
+  @Column
+  operationalSubtypeId!: number;
+  @Column
+  typeName!: string;
 }
+
+/* OperationalType.hasMany(OperationalSubtype, {
+  sourceKey: "operationalTypeId",
+  foreignKey: "operationalSubtypeId",
+  as: "operationalSubtype",
+}); */

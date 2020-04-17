@@ -1,12 +1,21 @@
-import { Model } from "sequelize";
+import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
 
-export class OperationalEvent extends Model {
-  public operationalEventId!: number;
-  public operationalTypeId!: number;
-  public signaling!: string;
-  public plNumber!: string;
-  public eventDescription!: string;
-  public location!: string;
-  public unit!: string;
-  public date!: Date;
+
+@Table
+export default class OperationalEvent extends Model<OperationalEvent> {
+  @Index
+  @Column
+  operationalTypeId!: number;
+  @Column
+  signaling!: string;
+  @Column
+  plNumber!: string;
+  @Column
+  description!: string;
+  @Column
+  location!: string;
+  @Column
+  unit!: string;
+  @Column
+  date!: Date;
 }

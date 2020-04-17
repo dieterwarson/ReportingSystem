@@ -1,6 +1,19 @@
-import { Model } from "sequelize";
+import {Table, Column, Model, Index, HasMany, ForeignKey} from 'sequelize-typescript';
+import  Malfunction from "./malfunction";
 
-export class CategoryMalfunction extends Model {
-  public reportId!: number;
-  public malfunctionId!: number;
+@Table
+export default class CategoryMalfunction extends Model<CategoryMalfunction> {
+  @Index
+
+  @ForeignKey(() => Malfunction)
+  @Column
+  malfunctionId!: number;
 }
+
+
+/* CategoryMalfunction.hasMany(Malfunction, {
+  sourceKey: "technicalId",
+  foreignKey: "malfunctionId",
+  as: "malfunctions",
+});
+ */
