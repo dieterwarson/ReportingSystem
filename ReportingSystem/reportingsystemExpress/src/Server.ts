@@ -79,10 +79,6 @@ app.get("*", (req: Request, res: Response) => {
  *                              Add hardcoded reports data to db
  ***********************************************************************************/
 
-// HIER HARDCODE DATA TOEVOEGEN AAN DB
-// const person = new Person({ name: "bob", age: 99 });
-// person.save();
-
 const operationalEvent1 = new OperationalEvent({
   operationalTypeId: 1,
   signaling: "Verlies inschrijvingsbewijs",
@@ -92,7 +88,7 @@ const operationalEvent1 = new OperationalEvent({
   unit: "KEMPLA",
   date: new Date("2020/03/16 18:13:48"),
 });
-operationalEvent1.save();
+// operationalEvent1.save();
 
 const operationalEvent2 = new OperationalEvent({
   operationalTypeId: 2,
@@ -103,7 +99,7 @@ const operationalEvent2 = new OperationalEvent({
   unit: "CARMA",
   date: new Date("2020/03/16 21:34:37"),
 });
-operationalEvent2.save();
+// operationalEvent2.save();
 
 const operationalEvent3 = new OperationalEvent({
   operationalTypeId: 3,
@@ -114,7 +110,7 @@ const operationalEvent3 = new OperationalEvent({
   unit: "HANO",
   date: new Date("2020/03/16 22:05:18"),
 });
-operationalEvent3.save();
+// operationalEvent3.save();
 
 const operationalEvent4 = new OperationalEvent({
   operationalTypeId: 4,
@@ -125,7 +121,7 @@ const operationalEvent4 = new OperationalEvent({
   unit: "LAMA",
   date: new Date("2020/03/16 23:34:33"),
 });
-operationalEvent4.save();
+// operationalEvent4.save();
 
 const operationalEvent5 = new OperationalEvent({
   operationalTypeId: 5,
@@ -136,7 +132,7 @@ const operationalEvent5 = new OperationalEvent({
   unit: "LOON",
   date: new Date("2020/03/16 23:57:10"),
 });
-operationalEvent5.save();
+// operationalEvent5.save();
 
 const operationalEvent6 = new OperationalEvent({
   operationalTypeId: 6,
@@ -147,7 +143,7 @@ const operationalEvent6 = new OperationalEvent({
   unit: "BIHORI",
   date: new Date("2020/03/16 00:18:57"),
 });
-operationalEvent6.save();
+// operationalEvent6.save();
 
 const operationalEvent7 = new OperationalEvent({
   operationalTypeId: 7,
@@ -158,7 +154,7 @@ const operationalEvent7 = new OperationalEvent({
   unit: "HANO",
   date: new Date("2020/03/16 00:45:45"),
 });
-operationalEvent7.save();
+// operationalEvent7.save();
 
 const operationalEvent8 = new OperationalEvent({
   operationalTypeId: 8,
@@ -169,7 +165,7 @@ const operationalEvent8 = new OperationalEvent({
   unit: "LRH",
   date: new Date("2020/03/16 01:21:25"),
 });
-operationalEvent8.save();
+// operationalEvent8.save();
 
 const operationalEvent9 = new OperationalEvent({
   operationalTypeId: 9,
@@ -180,7 +176,7 @@ const operationalEvent9 = new OperationalEvent({
   unit: "LRH",
   date: new Date("2020/03/16 01:51:47"),
 });
-operationalEvent9.save();
+// operationalEvent9.save();
 
 const secretariatNotification1 = new SecretariatNotification({
   monitoring: true,
@@ -188,7 +184,7 @@ const secretariatNotification1 = new SecretariatNotification({
   shift: true,
   description: "Jan Janssens Inp ziek",
 });
-secretariatNotification1.save();
+// secretariatNotification1.save();
 
 const secretariatNotification2 = new SecretariatNotification({
   monitoring: true,
@@ -196,7 +192,7 @@ const secretariatNotification2 = new SecretariatNotification({
   shift: true,
   description: "Remans Luc Inp ziek",
 });
-secretariatNotification2.save();
+// secretariatNotification2.save();
 
 // Export express instance
 export default app;
