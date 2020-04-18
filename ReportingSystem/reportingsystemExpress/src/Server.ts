@@ -9,9 +9,7 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
-// import { sequelize } from './config/config';
 import { Sequelize } from 'sequelize-typescript';
-let models = require('./models')
 const cors = require("cors");
 
 
