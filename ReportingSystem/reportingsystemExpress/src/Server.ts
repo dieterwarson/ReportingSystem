@@ -79,6 +79,12 @@ app.get("*", (req: Request, res: Response) => {
  *                              Add hardcoded reports data to db
  ***********************************************************************************/
 
+ // Belangrijk:
+ // Elke keer dat de container opnieuw gestart wordt, is de database leeg
+ // Om de volgende data toe te voegen, moeten de save()'s oncomment worden
+ // Na eenmaal toevoegen, dus eenmaal herstarten via nodemon, moeten de save()'s terug gecomment worden
+ // Anders wordt elke keer nodemon hetstart opnieuw al deze kolommen toegevoegd
+
 const operationalEvent1 = new OperationalEvent({
   operationalTypeId: 1,
   signaling: "Verlies inschrijvingsbewijs",
