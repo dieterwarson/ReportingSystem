@@ -11,6 +11,10 @@ const router = Router();
  *                      Get All Reports - "GET /api/reports/recieve"
  ******************************************************************************/
 
+// NIET DE BEDOELING OM NU DE SEARCH TE DOEN
+// EERST MOET GWN HET VOLLEDIG VERSLAG OPGEHAALD WORDEN
+// findAll() IPV findOne()
+
 router.get("/recieve/", async (req: Request, res: Response) => {
   const search = "Japn";
 
@@ -19,8 +23,8 @@ router.get("/recieve/", async (req: Request, res: Response) => {
     where: {
       description: {
         [Op.like]: "%" + search + "%",
-        // Hier moet nog een OR of een AND of iets bij zodat er op meerdere columns in 1 table gecheckt kan worden
       },
+      // Hier moet nog een OR of een AND of iets bij zodat er op meerdere columns in 1 table gecheckt kan worden
     },
   });
   if (result !== null) {
@@ -31,8 +35,8 @@ router.get("/recieve/", async (req: Request, res: Response) => {
     where: {
       description: {
         [Op.like]: "%" + search + "%",
-        // Hier moet nog een OR of een AND of iets bij zodat er op meerdere columns in 1 table gecheckt kan worden
       },
+      // Hier moet nog een OR of een AND of iets bij zodat er op meerdere columns in 1 table gecheckt kan worden
     },
   });
   if (result !== null) {
