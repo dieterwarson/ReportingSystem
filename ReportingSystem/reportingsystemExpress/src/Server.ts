@@ -9,12 +9,19 @@ import "express-async-errors";
 
 import BaseRouter from "./routes";
 import logger from "@shared/Logger";
-// import { sequelize } from './config/config';
 import { Sequelize } from "sequelize-typescript";
 import Report from "./models/report";
 import OperationalEvent from "./models/operationalEvent";
 import SecretariatNotification from "./models/secretariatNotification";
 import Author from "./models/user";
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import path from 'path';
+import helmet from 'helmet';
+const cors = require("cors");
+
+
+
 
 
 // var index = require('./routes/index');
@@ -23,6 +30,7 @@ import Author from "./models/user";
 // Init express
 const app = express();
 
+
 /************************************************************************************
  *                              Set basic express settings
  ***********************************************************************************/
@@ -30,6 +38,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
+
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === "development") {
@@ -215,6 +225,16 @@ const secretariatNotification2 = new SecretariatNotification({
   description: "Remans Luc Inp ziek",
 });
 // secretariatNotification2.save();
+
+/************************************************************************************
+ *                              AXIOS
+ ***********************************************************************************/
+app.post('/addReport', (req, res) => {
+    res.send({
+        message: "your plnumber: ${req.plnumber}"
+    })
+})
+
 
 // Export express instance
 export default app;
