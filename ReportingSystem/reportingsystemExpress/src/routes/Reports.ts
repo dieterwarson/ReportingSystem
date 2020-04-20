@@ -2,13 +2,33 @@ import { Request, Response, Router } from "express";
 import SecretariatNotifications from "../models/secretariatNotification";
 import OperationalEvent from "src/models/operationalEvent";
 import SecretariatNotification from "../models/secretariatNotification";
+import Report from "../models/report"
+import User from "../models/user";
+
 import { Op } from "sequelize";
 
 // Init router
 const router = Router();
 
 /******************************************************************************
- *                      Get All Reports - "GET /api/reports/recieve"
+ *                      Get All Reports - "GET /api/reports/all"
+ ******************************************************************************/
+
+ // only get the reports that are finished
+
+router.get('/all', async (req: Request, res: Response) => {
+  const reports = await Report.findAll({
+    where: {
+      temporary: false
+    }, 
+    include: [User]
+  });
+  console.log(reports);
+  return res.json({reports});
+});
+
+/******************************************************************************
+ *                      Search Reports - "GET /api/reports/recieve"
  ******************************************************************************/
 
 // NIET DE BEDOELING OM NU DE SEARCH TE DOEN

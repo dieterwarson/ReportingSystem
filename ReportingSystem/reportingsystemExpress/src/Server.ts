@@ -14,6 +14,8 @@ import { Sequelize } from "sequelize-typescript";
 import Report from "./models/report";
 import OperationalEvent from "./models/operationalEvent";
 import SecretariatNotification from "./models/secretariatNotification";
+import Author from "./models/user";
+
 
 // var index = require('./routes/index');
 // var users = require('./routes/users');
@@ -84,6 +86,20 @@ app.get("*", (req: Request, res: Response) => {
  // Om de volgende data toe te voegen, moeten de save()'s oncomment worden
  // Na eenmaal toevoegen, dus eenmaal herstarten via nodemon, moeten de save()'s terug gecomment worden
  // Anders wordt elke keer nodemon hetstart opnieuw al deze kolommen toegevoegd
+
+const author1 = new Author({
+    username: "jan_janssens",
+    password: "",
+    accessRights: 0
+})
+// author1.save();
+
+ const report1 = new Report({
+     authorId: 1,
+     date: new Date("2020/03/16 21:13:48"),
+     temporary: false
+ })
+ // report1.save();
 
 const operationalEvent1 = new OperationalEvent({
   operationalTypeId: 1,
