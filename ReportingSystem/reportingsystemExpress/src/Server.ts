@@ -225,11 +225,8 @@ const secretariatNotification2 = new SecretariatNotification({
  *                              AXIOS
  ***********************************************************************************/
 app.post('/addReport', (req, res) => {
-    res.send({
-        message: "your plnumber: ${req.plnumber}"
-    })
+    res.send("message")
 })
-
 
 // Export express instance
 export default app;

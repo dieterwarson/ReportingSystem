@@ -5,9 +5,9 @@
     <h1>Voeg verslag toe</h1>
             <form id="addReport">
                 <div class="btn-group d-flex" role="group" aria-label="Justified button group" >
-                    <button type="button" class="btn btn-primary" @click.prevent="operational">Operationeel</button>
-                    <button type="button" class="btn btn-primary" @click.prevent="workforce">Personeel</button>
-                    <button type="button" class="btn btn-primary" @click.prevent="technical">Technisch</button>
+                    <button type="button" class="btn btn-primary" @click.prevent="getOperational">Operationeel</button>
+                    <button type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
+                    <button type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
                 </div>
 
                 <section v-if="step == 'Operational'">
@@ -91,15 +91,15 @@ export default Vue.extend({
     },
 
     methods: {
-        operational : function() {
+        getOperational : function() {
             if (this.step != 'Operational')
                 this.step = 'Operational'
         },
-        workforce : function() {
+        getWorkforce : function() {
             if (this.step != 'Workforce')
                 this.step = 'Workforce'
         },
-        technical : function() {
+        getTechnical : function() {
             if (this.step != 'Technical')
                 this.step = 'Technical'
         },
