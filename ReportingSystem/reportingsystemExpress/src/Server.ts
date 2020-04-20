@@ -51,7 +51,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-// add sequelize
+// Add sequelize
 const sequelize = new Sequelize({
   database: 'reports',
   dialect: 'mysql',
