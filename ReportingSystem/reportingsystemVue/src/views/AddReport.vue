@@ -42,7 +42,9 @@
                     <h3>Technisch</h3>
                     <textarea v-model="form.technicalMessage" placeholder="Type your message" class="form-control form-control-lg"></textarea>
                     <button class="btn btn-large btn-block btn-primary" type="button" @click.prevent="saveButton">Opslaan</button>
-                </section>              
+                </section>     
+
+            </form>         
         </div>
 
         

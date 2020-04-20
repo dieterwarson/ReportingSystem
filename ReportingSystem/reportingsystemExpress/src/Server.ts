@@ -9,9 +9,7 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
-// import { sequelize } from './config/config';
 import { Sequelize } from 'sequelize-typescript';
-let models = require('./models')
 const cors = require("cors");
 
 
@@ -87,11 +85,8 @@ app.get('*', (req: Request, res: Response) => {
  *                              AXIOS
  ***********************************************************************************/
 app.post('/addReport', (req, res) => {
-    res.send({
-        message: "your plnumber: ${req.plnumber}"
-    })
+    res.send("message")
 })
-
 
 // Export express instance
 export default app;

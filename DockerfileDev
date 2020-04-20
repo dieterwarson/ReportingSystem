@@ -1,9 +1,9 @@
-FROM ubuntu:19.04
+FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND noninteractive
 # install git and nodejs
 RUN apt-get update && apt-get install -y curl git-core && \
-curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+curl -sL https://deb.nodesource.com/setup_13.x | bash - && \
 apt-get install -y nodejs
 RUN npm install -g yarn
 
@@ -18,8 +18,8 @@ RUN  apt-get update && apt-get install -y dos2unix && dos2unix startServerDev.sh
 # install mysql server with default password, start it and insert testdata
 RUN apt-key update && apt-get update
 
-RUN echo 'mysql-server mysql-server/root_password password mysqlroot' | debconf-set-selections 
-RUN echo 'mysql-server mysql-server/root_password_again password mysqlroot' | debconf-set-selections 
+RUN echo 'mysql-server mysql-server/root_password password mysqlroot' | debconf-set-selections
+RUN echo 'mysql-server mysql-server/root_password_again password mysqlroot' | debconf-set-selections
 
 RUN apt-get install -y mysql-server
 

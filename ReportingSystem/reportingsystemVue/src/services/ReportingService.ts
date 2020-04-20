@@ -4,7 +4,7 @@ export default {
 addReport (data: any) {
     return Api().post("/addReport", data )
     .then(res => {
-        alert(res);
+        return res.data;
     }) 
     .catch(error => {
         alert(error);

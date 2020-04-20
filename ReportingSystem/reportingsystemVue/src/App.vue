@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <img id="logo" src="./assets/FedPol.jpg">
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
     </div>
@@ -13,7 +14,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #24348c;
 }
 
 #nav {
@@ -22,10 +23,15 @@
 
 #nav a {
   font-weight: bold;
-  color: #2c3e50;
+  color: #24348c;
 }
 
 #nav a.router-link-exact-active {
-  color: #42b983;
+  color: #4d59a2;
+}
+
+#logo {
+  width: 12%;
+  margin-top: 30px;
 }
 </style>
