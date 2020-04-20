@@ -1,11 +1,10 @@
-import { Request, Response, Router } from "express";
-import SecretariatNotifications from "../models/secretariatNotification";
-import OperationalEvent from "src/models/operationalEvent";
-import SecretariatNotification from "../models/secretariatNotification";
-import Report from "../models/report"
-import User from "../models/user";
+import { Request, Response, Router } from 'express';
+import OperationalEvent from 'src/models/operationalEvent';
+import SecretariatNotification from '../models/secretariatNotification';
+import Report from '../models/report';
+import User from '../models/user';
 
-import { Op } from "sequelize";
+import { Op } from 'sequelize';
 
 // Init router
 const router = Router();
@@ -14,19 +13,19 @@ const router = Router();
  *                      Get All Reports - "GET /api/reports/all"
  ******************************************************************************/
 
- // only get the reports that are finished
- // joins with user to get the Author's username
+// only get the reports that are finished
+// joins with user to get the Author's username
 
 router.get('/all', async (req: Request, res: Response) => {
   const reports = await Report.findAll({
     where: {
-      temporary: false
-    }, 
-    include: [{model: User, attributes: ['username']}],
-    attributes: ['id', 'date']
+      temporary: false,
+    },
+    include: [{ model: User, attributes: ['username'] }],
+    attributes: ['id', 'date'],
   });
   console.log(reports);
-  return res.json({reports});
+  return res.json({ reports });
 });
 
 /******************************************************************************
@@ -37,14 +36,14 @@ router.get('/all', async (req: Request, res: Response) => {
 // EERST MOET GWN HET VOLLEDIG VERSLAG OPGEHAALD WORDEN
 // findAll() IPV findOne()
 
-router.get("/recieve/", async (req: Request, res: Response) => {
-  const search = "Japn";
+router.get('/recieve/', async (req: Request, res: Response) => {
+  const search = 'Japn';
 
   var result;
   result = await SecretariatNotification.findOne({
     where: {
       description: {
-        [Op.like]: "%" + search + "%",
+        [Op.like]: '%' + search + '%',
       },
       // Hier moet nog een OR of een AND of iets bij zodat er op meerdere columns in 1 table gecheckt kan worden
     },
@@ -56,7 +55,7 @@ router.get("/recieve/", async (req: Request, res: Response) => {
   result = await OperationalEvent.findOne({
     where: {
       description: {
-        [Op.like]: "%" + search + "%",
+        [Op.like]: '%' + search + '%',
       },
       // Hier moet nog een OR of een AND of iets bij zodat er op meerdere columns in 1 table gecheckt kan worden
     },
@@ -67,7 +66,6 @@ router.get("/recieve/", async (req: Request, res: Response) => {
 
   // Er moet nog een findOne() komen voor
   // Defect, Malfunction, Replacement, WorkplaceEvent
-
 });
 
 /******************************************************************************
