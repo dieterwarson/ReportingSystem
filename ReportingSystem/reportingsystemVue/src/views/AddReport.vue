@@ -13,9 +13,10 @@
                 <section v-if="step == 'Operational'">
                     <h3>Operationeel</h3>
                     <div class="input-group">
-                        <input name ="plNumber" v-model="form.plNumber" type="text" placeholder="PL-nummer" class="form-control form-control-lg">
+                            <input name ="plNumber" v-model="form.plNumber" type="text" placeholder="PL-nummer" class="form-control form-control-lg">
+                            <button class="btn btn-large btn-block btn-success" type="button" @click="operationalReport">Zoek fiche</button>
                         <input name="location" v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg">
-                        <input name="date" v-model="form.date" type="text" placeholder="Datum" class="form-control form-control-lg">
+                        <input name="date" v-model="form.operationalDate" type="text" placeholder="Datum" class="form-control form-control-lg">
                     </div>
                     
 <!-- CODE FOR LOADING CHECKBOXES BY VALUES IN TS
@@ -27,8 +28,8 @@
 -->
 
                     <input v-model="form.operationalMessage" type="text" placeholder="Data" class="form-control form-control-lg">
-                    <button class="btn btn-large btn-block btn-primary" type="button" @click="operationalReport">Opslaan</button>
-                
+                    <button class="btn btn-large btn-block btn-success" type="button" @click="operationalReport">Opslaan</button>
+
                 </section>
 
 
@@ -111,7 +112,10 @@ export default Vue.extend({
             const response = await ReportingService.addReport({
                 plNumber: this.form.plNumber
                 })
-                alert(response);
+                this.form.plNumber = response.plNumber;
+                this.form.operationalDate = response.date.toString();
+                this.form.operationalMessage = response.actions;
+                this.form.location = response.location;
         }
     }
     

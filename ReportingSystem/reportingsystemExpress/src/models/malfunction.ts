@@ -1,9 +1,11 @@
-import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
-import MalfunctionType from "./malfunctionType";
+import { Table, Column, Model, Index, ForeignKey } from 'sequelize-typescript';
+import MalfunctionType from './malfunctionType';
 
 @Table
 export default class Malfunction extends Model<Malfunction> {
   @Index
+    
+  @ForeignKey(() => MalfunctionType)
   @Column
   malfunctionTypeId!: number;
   @Column
@@ -15,4 +17,3 @@ export default class Malfunction extends Model<Malfunction> {
   @Column
   duration!: number;
 }
-
