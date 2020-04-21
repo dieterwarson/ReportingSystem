@@ -15,7 +15,7 @@ const router = Router();
  ******************************************************************************/
 
  // only get the reports that are finished
- // joins with user to get the Author's username
+ // joins report with user to get the Author's username
 
 router.get('/all', async (req: Request, res: Response) => {
   const reports = await Report.findAll({
