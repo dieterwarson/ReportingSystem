@@ -1,8 +1,9 @@
-import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
+import { Table, Column, Model, Index } from 'sequelize-typescript';
 
 @Table
 export default class Replacement extends Model<Replacement> {
   @Index
+    
   @Column
   absentee!: string;
   @Column

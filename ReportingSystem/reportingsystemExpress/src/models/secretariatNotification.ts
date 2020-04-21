@@ -1,9 +1,9 @@
-import {Table, Column, Model, Index, HasMany} from 'sequelize-typescript';
-import DefectType from "./defectType";
+import { Table, Column, Model, Index } from 'sequelize-typescript';
 
 @Table
 export default class SecretariatNotification extends Model<SecretariatNotification> {
   @Index
+    
   @Column
   monitoring!: boolean;
   @Column
