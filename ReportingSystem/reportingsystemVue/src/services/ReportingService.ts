@@ -12,8 +12,8 @@ export default {
         // return data;
     },
     
-    getAllReports (data: any) {
-        return Api().get("/api/reports/all", data)
+    getAllReports () {
+        return Api().get("/api/reports/all")
         .then(res => {
             return res.data;
         }) 

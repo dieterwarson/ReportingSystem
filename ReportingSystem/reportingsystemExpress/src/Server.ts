@@ -93,14 +93,14 @@ const user1 = new User({
   password: '',
   accessRights: 0,
 });
-// user1.save();
+user1.save();
 
 const report1 = new Report({
   authorId: 1,
   date: new Date('2020/03/16 21:13:48'),
   temporary: false,
 });
-// report1.save();
+report1.save();
 
 const operationalEvent1 = new OperationalEvent({
   operationalTypeId: 1,

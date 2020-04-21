@@ -1,9 +1,9 @@
 <template>
-  <div v-if="results">
+  <div v-if="reports">
     <h1>Verslagen</h1>
-    <div class="container my-2" v-for="value in results.reports" :key="value.id">
-      <button class="btn btn-secondary btn-lg btn-block"> 
-        {{ value.date + ", gemaakt door " + value.user.username}}
+    <div class="container my-2" v-for="value in reports" :key="value.id">
+      <button class="btn btn-secondary btn-lg btn-block" v-on:click="reportClick(parseInt(value.id))"> 
+        {{ new Date(value.date).toLocaleString('en-BE') + "   -   gemaakt door " + value.user.username}}
       </button>
     </div>
   </div> 
@@ -14,14 +14,28 @@
 import Vue from 'vue'
 import ReportingService from "../services/ReportingService"
 export default Vue.extend({
-    async data() {
-        const response = await ReportingService.getAllReports({});
-        alert(response);
+    data() {
       return{
-        results: response //  {"reports":[{"id":2,"date":"2020-03-16T21:13:48.000Z","user":{"username":"jan_janssens"}},{"id":3,"date":"2020-03-16T21:13:48.000Z","user":{"username":"jan_janssens"}},{"id":4,"date":"2020-03-15T11:13:48.000Z","user":{"username":"jan_janssens"}}]}
+        reports: []
       }
+    },
+
+    mounted() {
+      this.loadData();
+    },
+
+    methods: {
+      loadData: function(){
+        const response = ReportingService.getAllReports()
+        .then(res => this.reports = res)
+      },
+
+      reportClick: function(id:string) {
+        this.$router.push({ path: 'reportView', query: {reportId: id} })
+      }
+
     }
-
-
-})
+    
+    
+  })
 </script>

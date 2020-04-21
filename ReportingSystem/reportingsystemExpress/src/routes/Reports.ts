@@ -29,7 +29,7 @@ router.get('/all', async (req: Request, res: Response) => {
     include: [{ model: User, attributes: ['username'] }],
     attributes: ['id', 'date'],
   });
-  console.log(reports);
+  res.send(reports);
   return res.json({ reports });
 });
 
