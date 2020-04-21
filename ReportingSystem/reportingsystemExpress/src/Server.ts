@@ -9,6 +9,8 @@ import Report from "./models/report";
 import OperationalEvent from "./models/operationalEvent";
 import SecretariatNotification from "./models/secretariatNotification";
 import Author from "./models/user";
+import DummyDatabase from "./models/dummyDataBase"
+
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import path from 'path';
@@ -97,14 +99,14 @@ const author1 = new Author({
     password: "",
     accessRights: 0
 })
-// author1.save();
+//  author1.save();
 
  const report1 = new Report({
      authorId: 1,
      date: new Date("2020/03/16 21:13:48"),
      temporary: false
  })
- // report1.save();
+  // report1.save();
 
 const operationalEvent1 = new OperationalEvent({
   operationalTypeId: 1,
@@ -115,7 +117,7 @@ const operationalEvent1 = new OperationalEvent({
   unit: "KEMPLA",
   date: new Date("2020/03/16 18:13:48"),
 });
-// operationalEvent1.save();
+//  operationalEvent1.save();
 
 const operationalEvent2 = new OperationalEvent({
   operationalTypeId: 2,
@@ -126,7 +128,7 @@ const operationalEvent2 = new OperationalEvent({
   unit: "CARMA",
   date: new Date("2020/03/16 21:34:37"),
 });
-// operationalEvent2.save();
+//  operationalEvent2.save();
 
 const operationalEvent3 = new OperationalEvent({
   operationalTypeId: 3,
@@ -137,7 +139,7 @@ const operationalEvent3 = new OperationalEvent({
   unit: "HANO",
   date: new Date("2020/03/16 22:05:18"),
 });
-// operationalEvent3.save();
+//  operationalEvent3.save();
 
 const operationalEvent4 = new OperationalEvent({
   operationalTypeId: 4,
@@ -148,7 +150,7 @@ const operationalEvent4 = new OperationalEvent({
   unit: "LAMA",
   date: new Date("2020/03/16 23:34:33"),
 });
-// operationalEvent4.save();
+//  operationalEvent4.save();
 
 const operationalEvent5 = new OperationalEvent({
   operationalTypeId: 5,
@@ -159,7 +161,7 @@ const operationalEvent5 = new OperationalEvent({
   unit: "LOON",
   date: new Date("2020/03/16 23:57:10"),
 });
-// operationalEvent5.save();
+//  operationalEvent5.save();
 
 const operationalEvent6 = new OperationalEvent({
   operationalTypeId: 6,
@@ -170,7 +172,7 @@ const operationalEvent6 = new OperationalEvent({
   unit: "BIHORI",
   date: new Date("2020/03/16 00:18:57"),
 });
-// operationalEvent6.save();
+//  operationalEvent6.save();
 
 const operationalEvent7 = new OperationalEvent({
   operationalTypeId: 7,
@@ -181,7 +183,7 @@ const operationalEvent7 = new OperationalEvent({
   unit: "HANO",
   date: new Date("2020/03/16 00:45:45"),
 });
-// operationalEvent7.save();
+//  operationalEvent7.save();
 
 const operationalEvent8 = new OperationalEvent({
   operationalTypeId: 8,
@@ -192,7 +194,7 @@ const operationalEvent8 = new OperationalEvent({
   unit: "LRH",
   date: new Date("2020/03/16 01:21:25"),
 });
-// operationalEvent8.save();
+//  operationalEvent8.save();
 
 const operationalEvent9 = new OperationalEvent({
   operationalTypeId: 9,
@@ -203,7 +205,7 @@ const operationalEvent9 = new OperationalEvent({
   unit: "LRH",
   date: new Date("2020/03/16 01:51:47"),
 });
-// operationalEvent9.save();
+//  operationalEvent9.save();
 
 const secretariatNotification1 = new SecretariatNotification({
   monitoring: true,
@@ -211,7 +213,7 @@ const secretariatNotification1 = new SecretariatNotification({
   shift: true,
   description: "Jan Janssens Inp ziek",
 });
-// secretariatNotification1.save();
+//  secretariatNotification1.save();
 
 const secretariatNotification2 = new SecretariatNotification({
   monitoring: true,
@@ -221,12 +223,31 @@ const secretariatNotification2 = new SecretariatNotification({
 });
 // secretariatNotification2.save();
 
+const dummyData1 = new DummyDatabase({
+  plNumber: "PL12536432",
+  unit: "CARMA",
+  location: "Markt 37, 3740 Bilzen",
+  date: new Date("2020/04/13 12:40:32"),
+  actions: "NAV zelfmoord te Overpelt",
+});
+dummyData1.save();
+
 /************************************************************************************
  *                              AXIOS
  ***********************************************************************************/
-app.post('/addReport', (req, res) => {
-    res.send("message")
-})
+app.post('/addReport', async (req , res) => {
+  console.log(req.body.plNumber);
+   const file = await DummyDatabase.findOne({
+     where: {
+       plNumber: req.body.plNumber
+     },
+   });
+   if (file !== null) {
+    res.send(file);   
+  } else {
+     console.log("file is empty");
+   }
+});
 
 // Export express instance
 export default app;
