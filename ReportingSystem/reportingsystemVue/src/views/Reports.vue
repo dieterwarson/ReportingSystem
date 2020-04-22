@@ -25,7 +25,7 @@ export default Vue.extend({
 
   methods: {
     loadData: function() {
-      const response = ReportingService.getAllReports('/api/reports/monitored').then(
+      const response = ReportingService.getAllReports('/api/reports/all').then(
         (res) => (this.reports = res)
       );
     },

@@ -46,21 +46,9 @@ router.get('/monitored', async (req: Request, res: Response) => {
       include: [
         [
           Sequelize.literal(`(
-            SELECT *
+            SELECT COUNT(*)
             FROM 
-              Defects AS D,
-              Malfunctions AS M,
-              Replacements AS R, 
-              WorkplaceEvents AS W, 
-              SecretariatNotifications AS S, 
-              OperationalEvents AS O
-            WHERE
-              D.monitoring=1 OR
-              M.monitoring=1 OR
-              R.monitoring=1 OR
-              W.monitoring=1 OR
-              S.monitoring=1 OR
-              O.monitoring=1
+              SecretariatNotifications
           )`),
           'monitored',
         ],

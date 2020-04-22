@@ -20,6 +20,8 @@ import Malfunction from './models/malfunction';
 import Replacement from './models/replacement';
 import WorkplaceEvent from './models/workplaceEvent';
 import Technical from './models/technical';
+import Administrative from './models/administrative';
+import Operational from './models/operational';
 const cors = require('cors');
 
 // var index = require('./routes/index');
@@ -101,17 +103,32 @@ const user1 = new User({
 // user1.save();
 
 const report1 = new Report({
-  authorId: 1,
   date: new Date('2020/03/16 21:13:48'),
   temporary: false,
 });
 // report1.save();
 
+// heeft geen columns
 const technical1 = new Technical({
-  
-})
+  reportId: 1,
+});
+// technical1.save();
+
+// heeft geen columns
+const administrative1 = new Administrative({
+  reportId: 1,
+});
+// administrative1.save();
+
+// heeft geen columns
+const operational1 = new Operational({
+  reportId: 1,
+});
+// operational1.save();
 
 const operationalEvent1 = new OperationalEvent({
+  operationalId: 1,
+  authorId: 1,
   operationalTypeId: 1,
   monitoring: true,
   signaling: 'Verlies inschrijvingsbewijs',
@@ -124,6 +141,8 @@ const operationalEvent1 = new OperationalEvent({
 //  operationalEvent1.save();
 
 const operationalEvent2 = new OperationalEvent({
+  operationalId: 1,
+  authorId: 1,
   operationalTypeId: 2,
   monitoring: true,
   signaling: null,
@@ -136,6 +155,8 @@ const operationalEvent2 = new OperationalEvent({
 //  operationalEvent2.save();
 
 const operationalEvent3 = new OperationalEvent({
+  operationalId: 1,
+  authorId: 1,
   operationalTypeId: 3,
   monitoring: true,
   signaling: null,
@@ -148,6 +169,8 @@ const operationalEvent3 = new OperationalEvent({
 //  operationalEvent3.save();
 
 const operationalEvent4 = new OperationalEvent({
+  operationalId: 1,
+  authorId: 1,
   operationalTypeId: 4,
   monitoring: true,
   signaling: 'Seining persoon',
@@ -160,6 +183,8 @@ const operationalEvent4 = new OperationalEvent({
 //  operationalEvent4.save();
 
 const operationalEvent5 = new OperationalEvent({
+  operationalId: 1,
+  authorId: 1,
   operationalTypeId: 5,
   monitoring: true,
   signaling: 'Seining persoon',
@@ -172,6 +197,8 @@ const operationalEvent5 = new OperationalEvent({
 //  operationalEvent5.save();
 
 const operationalEvent6 = new OperationalEvent({
+  operationalId: 1,
+  authorId: 1,
   operationalTypeId: 6,
   monitoring: true,
   signaling: 'Seining persoon',
@@ -184,6 +211,8 @@ const operationalEvent6 = new OperationalEvent({
 //  operationalEvent6.save();
 
 const operationalEvent7 = new OperationalEvent({
+  operationalId: 1,
+  authorId: 1,
   operationalTypeId: 7,
   monitoring: true,
   signaling: null,
@@ -196,6 +225,8 @@ const operationalEvent7 = new OperationalEvent({
 //  operationalEvent7.save();
 
 const operationalEvent8 = new OperationalEvent({
+  operationalId: 1,
+  authorId: 1,
   operationalTypeId: 8,
   monitoring: true,
   signaling: null,
@@ -208,6 +239,8 @@ const operationalEvent8 = new OperationalEvent({
 //  operationalEvent8.save();
 
 const operationalEvent9 = new OperationalEvent({
+  operationalId: 1,
+  authorId: 1,
   operationalTypeId: 9,
   monitoring: true,
   signaling: null,
@@ -220,6 +253,8 @@ const operationalEvent9 = new OperationalEvent({
 //  operationalEvent9.save();
 
 const secretariatNotification1 = new SecretariatNotification({
+  administrativeId: 1,
+  authorId: 1,
   monitoring: true,
   date: new Date('2020/03/16 19:19:49'),
   shift: true,
@@ -228,6 +263,8 @@ const secretariatNotification1 = new SecretariatNotification({
 //  secretariatNotification1.save();
 
 const secretariatNotification2 = new SecretariatNotification({
+  administrativeId: 1,
+  authorId: 1,
   monitoring: true,
   date: new Date('2020/03/16 19:21:46'),
   shift: true,
@@ -245,6 +282,8 @@ const dummyData1 = new DummyDatabase({
 // dummyData1.save();
 
 const defect1 = new Defect({
+  technicalId: 1,
+  authorId: 1,
   defectTypeId: 1,
   description: 'lekkende kraan in kamer 304',
   monitoring: true,
@@ -253,6 +292,8 @@ const defect1 = new Defect({
 // defect1.save();
 
 const defect2 = new Defect({
+  technicalId: 1,
+  authorId: 1,
   defectTypeId: 2,
   description: 'krakende deur in kamer 512',
   monitoring: true,
@@ -261,6 +302,8 @@ const defect2 = new Defect({
 // defect2.save();
 
 const malfunction1 = new Malfunction({
+  technicalId: 1,
+  authorId: 1,
   malfunctionTypeId: 1,
   description: 'lekkende kraan in kamer 304',
   monitoring: true,
@@ -270,6 +313,8 @@ const malfunction1 = new Malfunction({
 // malfunction1.save();
 
 const replacement1 = new Replacement({
+  administrativeId: 1,
+  authorId: 1,
   absentee: 'Jan Jacobs',
   substitute: 'Geordy Hendricks',
   monitoring: true,
@@ -279,6 +324,8 @@ const replacement1 = new Replacement({
 // replacement1.save();
 
 const workplaceEvent1 = new WorkplaceEvent({
+  administrativeId: 1,
+  authorId: 1,
   workplaceTypeId: 1,
   description: 'Jacob sleutelbeen gebroken',
   absentee: 'Jacob Franssen',
