@@ -34,10 +34,29 @@ router.get('/all', async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                      Search Reports - "GET /api/reports/recieve"
+ *                      Get All monitored Reports - "GET /api/reports/monitored"
  ******************************************************************************/
 
-router.get('/recieve/', async (req: Request, res: Response) => {
+ // only get the reports that are finished and arer being monitored
+ // joins report with user to get the Author's username
+
+router.get('/monitored', async (req: Request, res: Response) => {
+  const reports = await Report.findAll({
+    where: {
+      monitoring: true,
+    },
+    include: [{ model: User, attributes: ['username'] }],
+    attributes: ['id', 'date'],
+  });
+  res.send(reports);
+  return res.json({ reports });
+});
+
+/******************************************************************************
+ *                      Search Reports - "GET /api/reports/search"
+ ******************************************************************************/
+
+router.get('/search/', async (req: Request, res: Response) => {
   const search = 'l';
 
   var result;

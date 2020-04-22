@@ -9,12 +9,15 @@ import Report from './models/report';
 import OperationalEvent from './models/operationalEvent';
 import SecretariatNotification from './models/secretariatNotification';
 import User from './models/user';
-import DummyDatabase from "./models/dummyDataBase"
+import DummyDatabase from './models/dummyDataBase';
 
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import path from 'path';
 import helmet from 'helmet';
+import Defect from './models/defect';
+import Malfunction from './models/malfunction';
+import Replacement from './models/replacement';
 const cors = require('cors');
 
 // var index = require('./routes/index');
@@ -93,17 +96,18 @@ const user1 = new User({
   password: '',
   accessRights: 0,
 });
-user1.save();
+// user1.save();
 
 const report1 = new Report({
   authorId: 1,
   date: new Date('2020/03/16 21:13:48'),
   temporary: false,
 });
-report1.save();
+// report1.save();
 
 const operationalEvent1 = new OperationalEvent({
   operationalTypeId: 1,
+  monitoring: true,
   signaling: 'Verlies inschrijvingsbewijs',
   plNumber: null,
   description: null,
@@ -115,6 +119,7 @@ const operationalEvent1 = new OperationalEvent({
 
 const operationalEvent2 = new OperationalEvent({
   operationalTypeId: 2,
+  monitoring: true,
   signaling: null,
   plNumber: 'PL031770168',
   description: null,
@@ -126,6 +131,7 @@ const operationalEvent2 = new OperationalEvent({
 
 const operationalEvent3 = new OperationalEvent({
   operationalTypeId: 3,
+  monitoring: true,
   signaling: null,
   plNumber: 'PL03170104',
   description: null,
@@ -137,6 +143,7 @@ const operationalEvent3 = new OperationalEvent({
 
 const operationalEvent4 = new OperationalEvent({
   operationalTypeId: 4,
+  monitoring: true,
   signaling: 'Seining persoon',
   plNumber: null,
   description: null,
@@ -148,6 +155,7 @@ const operationalEvent4 = new OperationalEvent({
 
 const operationalEvent5 = new OperationalEvent({
   operationalTypeId: 5,
+  monitoring: true,
   signaling: 'Seining persoon',
   plNumber: null,
   description: null,
@@ -159,6 +167,7 @@ const operationalEvent5 = new OperationalEvent({
 
 const operationalEvent6 = new OperationalEvent({
   operationalTypeId: 6,
+  monitoring: true,
   signaling: 'Seining persoon',
   plNumber: 'PL03170202',
   description: null,
@@ -170,6 +179,7 @@ const operationalEvent6 = new OperationalEvent({
 
 const operationalEvent7 = new OperationalEvent({
   operationalTypeId: 7,
+  monitoring: true,
   signaling: null,
   plNumber: 'PL03170104',
   description: null,
@@ -181,6 +191,7 @@ const operationalEvent7 = new OperationalEvent({
 
 const operationalEvent8 = new OperationalEvent({
   operationalTypeId: 8,
+  monitoring: true,
   signaling: null,
   plNumber: 'PL03170315',
   description: null,
@@ -192,6 +203,7 @@ const operationalEvent8 = new OperationalEvent({
 
 const operationalEvent9 = new OperationalEvent({
   operationalTypeId: 9,
+  monitoring: true,
   signaling: null,
   plNumber: 'PL03170322',
   description: null,
@@ -218,29 +230,55 @@ const secretariatNotification2 = new SecretariatNotification({
 // secretariatNotification2.save();
 
 const dummyData1 = new DummyDatabase({
-  plNumber: "PL12536432",
-  unit: "CARMA",
-  location: "Markt 37, 3740 Bilzen",
-  date: new Date("2020/04/13 12:40:32"),
-  actions: "NAV zelfmoord te Overpelt",
+  plNumber: 'PL12536432',
+  unit: 'CARMA',
+  location: 'Markt 37, 3740 Bilzen',
+  date: new Date('2020/04/13 12:40:32'),
+  actions: 'NAV zelfmoord te Overpelt',
 });
-//dummyData1.save();
+// dummyData1.save();
+
+const defect1 = new Defect({
+  defectTypeId: 1,
+  description: 'lekkende kraan in kamer 304',
+  monitoring: true,
+  date: new Date('2020/04/15 13:03:57'),
+});
+// defect1.save();
+
+const defect2 = new Defect({
+  defectTypeId: 2,
+  description: 'krakende deur in kamer 512',
+  monitoring: true,
+  date: new Date('2020/04/15 16:58:34'),
+});
+// defect2.save();
+
+const malfunction1 = new Malfunction({
+  malfunctionTypeId: 1,
+  description: 'lekkende kraan in kamer 304',
+  monitoring: true,
+  date: new Date('2020/04/15 13:03:57'),
+  duration: new Date('2020/04/14 09:12:59')
+});
+// malfunction1.save();
+
 
 /************************************************************************************
  *                              AXIOS
  ***********************************************************************************/
-app.post('/addReport', async (req , res) => {
+app.post('/addReport', async (req, res) => {
   console.log(req.body.plNumber);
-   const file = await DummyDatabase.findOne({
-     where: {
-       plNumber: req.body.plNumber
-     },
-   });
-   if (file !== null) {
-    res.send(file);   
+  const file = await DummyDatabase.findOne({
+    where: {
+      plNumber: req.body.plNumber,
+    },
+  });
+  if (file !== null) {
+    res.send(file);
   } else {
-     console.log("file is empty");
-   }
+    console.log('file is empty');
+  }
 });
 
 // Export express instance

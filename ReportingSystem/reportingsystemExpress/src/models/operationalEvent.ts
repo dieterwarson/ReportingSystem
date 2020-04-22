@@ -7,6 +7,8 @@ export default class OperationalEvent extends Model<OperationalEvent> {
   @Column
   operationalTypeId!: number;
   @Column
+  monitoring!: boolean;
+  @Column
   signaling!: string;
   @Column
   plNumber!: string;
