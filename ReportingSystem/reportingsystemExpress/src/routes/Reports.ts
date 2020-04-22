@@ -26,7 +26,6 @@ router.get('/all', async (req: Request, res: Response) => {
     where: {
       temporary: false,
     },
-    include: [{ model: User, attributes: ['username'] }],
     attributes: ['id', 'date'],
   });
   res.send(reports);

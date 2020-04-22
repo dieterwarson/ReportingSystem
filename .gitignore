@@ -115,3 +115,4 @@ dist
 .pnp.*
 
 ReportingSystem/reportingsystemExpress/src/public
+/startDocker.sh
