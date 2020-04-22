@@ -10,7 +10,6 @@ export default class WorkplaceEvent extends Model<WorkplaceEvent> {
   @ForeignKey(() => Administrative)
   @Column
   administrativeId!: number;
-
   @BelongsTo(() => Administrative)
   administrative!: Administrative
 
@@ -24,6 +23,8 @@ export default class WorkplaceEvent extends Model<WorkplaceEvent> {
   @Column
   workplaceTypeId!: number;
   @Column
+  description!: string;
+  @Column
   absentee!: string;
   @Column
   substitute!: string;
@@ -33,6 +34,4 @@ export default class WorkplaceEvent extends Model<WorkplaceEvent> {
   date!: Date;
   @Column
   shift!: boolean;
-  @Column
-  description!: string;
 }

@@ -10,6 +10,7 @@ import Malfunction from 'src/models/malfunction';
 import Replacement from 'src/models/replacement';
 import WorkplaceEvent from 'src/models/workplaceEvent';
 import { Sequelize } from 'sequelize-typescript';
+import { sequelize } from 'src/config/config';
 
 // Init router
 const router = Router();
@@ -18,8 +19,8 @@ const router = Router();
  *                      Get All Reports - "GET /api/reports/all"
  ******************************************************************************/
 
- // only get the reports that are finished
- // joins report with user to get the Author's username
+// only get the reports that are finished
+// joins report with user to get the Author's username
 
 router.get('/all', async (req: Request, res: Response) => {
   const reports = await Report.findAll({
@@ -36,17 +37,37 @@ router.get('/all', async (req: Request, res: Response) => {
  *                      Get All monitored Reports - "GET /api/reports/monitored"
  ******************************************************************************/
 
- // only get the reports that are finished and arer being monitored
- // joins report with user to get the Author's username
+// only get the reports that are finished and arer being monitored
+// joins report with user to get the Author's username
 
 router.get('/monitored', async (req: Request, res: Response) => {
   const reports = await Report.findAll({
-    where: {
-      monitoring: true,
+    attributes: {
+      include: [
+        [
+          Sequelize.literal(`(
+            SELECT *
+            FROM 
+              Defects AS D,
+              Malfunctions AS M,
+              Replacements AS R, 
+              WorkplaceEvents AS W, 
+              SecretariatNotifications AS S, 
+              OperationalEvents AS O
+            WHERE
+              D.monitoring=1 OR
+              M.monitoring=1 OR
+              R.monitoring=1 OR
+              W.monitoring=1 OR
+              S.monitoring=1 OR
+              O.monitoring=1
+          )`),
+          'monitored',
+        ],
+      ],
     },
-    include: [{ model: User, attributes: ['username'] }],
-    attributes: ['id', 'date'],
   });
+
   res.send(reports);
   return res.json({ reports });
 });

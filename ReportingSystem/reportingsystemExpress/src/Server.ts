@@ -18,6 +18,8 @@ import helmet from 'helmet';
 import Defect from './models/defect';
 import Malfunction from './models/malfunction';
 import Replacement from './models/replacement';
+import WorkplaceEvent from './models/workplaceEvent';
+import Technical from './models/technical';
 const cors = require('cors');
 
 // var index = require('./routes/index');
@@ -104,6 +106,10 @@ const report1 = new Report({
   temporary: false,
 });
 // report1.save();
+
+const technical1 = new Technical({
+  
+})
 
 const operationalEvent1 = new OperationalEvent({
   operationalTypeId: 1,
@@ -259,10 +265,29 @@ const malfunction1 = new Malfunction({
   description: 'lekkende kraan in kamer 304',
   monitoring: true,
   date: new Date('2020/04/15 13:03:57'),
-  duration: new Date('2020/04/14 09:12:59')
+  duration: 6,
 });
 // malfunction1.save();
 
+const replacement1 = new Replacement({
+  absentee: 'Jan Jacobs',
+  substitute: 'Geordy Hendricks',
+  monitoring: true,
+  date: new Date('2020/03/30 15:46:36'),
+  shift: true,
+});
+// replacement1.save();
+
+const workplaceEvent1 = new WorkplaceEvent({
+  workplaceTypeId: 1,
+  description: 'Jacob sleutelbeen gebroken',
+  absentee: 'Jacob Franssen',
+  substitute: 'James Brook',
+  monitoring: true,
+  date: new Date('2020/12/11 9:10:23'),
+  shift: false,
+});
+// workplaceEvent1.save();
 
 /************************************************************************************
  *                              AXIOS

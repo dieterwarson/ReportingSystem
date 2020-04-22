@@ -10,7 +10,6 @@ export default class Malfunction extends Model<Malfunction> {
   @ForeignKey(() => Technical)
   @Column
   technicalId!: number;
-
   @BelongsTo(() => Technical)
   technical!: Technical
 

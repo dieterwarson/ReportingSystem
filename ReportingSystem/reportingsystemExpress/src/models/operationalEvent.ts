@@ -35,6 +35,4 @@ export default class OperationalEvent extends Model<OperationalEvent> {
   unit!: string;
   @Column
   date!: Date;
-  @Column
-  monitoring!: boolean;
 }
