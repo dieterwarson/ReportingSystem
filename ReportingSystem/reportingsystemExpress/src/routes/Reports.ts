@@ -2,16 +2,12 @@ import { Request, Response, Router } from 'express';
 import OperationalEvent from 'src/models/operationalEvent';
 import SecretariatNotification from '../models/secretariatNotification';
 import Report from '../models/report';
-import User from '../models/user';
 
 import { Op } from 'sequelize';
 import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import Replacement from 'src/models/replacement';
 import WorkplaceEvent from 'src/models/workplaceEvent';
-import { Sequelize } from 'sequelize-typescript';
-import Administrative from 'src/models/administrative';
-import Technical from 'src/models/technical';
 
 // Init router
 const router = Router();
@@ -42,20 +38,74 @@ router.get('/all', async (req: Request, res: Response) => {
 // joins report with user to get the Author's username
 
 router.get('/monitored', async (req: Request, res: Response) => {
-  const reports = await Report.findAll({
-    attributes: {
-      include: [
-        [
-          Sequelize.literal(`(
-            SELECT COUNT(*)
-            FROM 
-              SecretariatNotifications
-          )`),
-          'monitored',
-        ],
-      ],
+  var reports: (Defect[] | Malfunction[] | Replacement[] | SecretariatNotification[] | OperationalEvent[])[] = [];
+
+  var result;
+  result = await Defect.findAll({
+    where: {
+      monitoring: 1,
     },
+    attributes: ['id', 'date'],
+
   });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await Malfunction.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await Replacement.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await WorkplaceEvent.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await SecretariatNotification.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await OperationalEvent.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
 
   res.send(reports);
   return res.json({ reports });
