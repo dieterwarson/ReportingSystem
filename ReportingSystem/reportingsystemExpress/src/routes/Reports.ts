@@ -263,7 +263,8 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   let secretariatNotifications = await administrative?.$get('replacements');
   let operationalEvents = await operational?.$get('operationalEvents');
 
-  let results = {'operational': {operationalEvents},
+  let results = {'report': report,
+                 'operational': {operationalEvents},
                  'administrative': {replacements, workplaceEvents, secretariatNotifications},
                  'technical': {defects, malfunctions},
                  };
