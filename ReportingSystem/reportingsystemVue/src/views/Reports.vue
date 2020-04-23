@@ -2,7 +2,10 @@
   <div v-if="reports">
     <h1>Verslagen</h1>
     <div class="container my-2" v-for="value in reports" :key="value.id">
-      <button class="btn btn-secondary btn-lg btn-block" v-on:click="reportClick(parseInt(value.id))"> 
+      <button
+        class="btn btn-secondary btn-lg btn-block"
+        v-on:click="reportClick(parseInt(value.id))"
+      >
         {{ new Date(value.date).toLocaleString('en-BE') }}
       </button>
     </div>

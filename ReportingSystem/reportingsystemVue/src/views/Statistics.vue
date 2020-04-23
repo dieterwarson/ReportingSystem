@@ -1,17 +1,14 @@
 <template>
   <div v-if="reports">
     <h1>Statistieken</h1>
-
+    <!-- die moet loopen door een dubbele array, 
+    reports is een array met daarin de table arrays -->
     <div class="container my-2" v-for="value in reports" :key="value.id">
       <button
         class="btn btn-secondary btn-lg btn-block"
         v-on:click="reportClick(parseInt(value.id))"
       >
-        {{
-          new Date(value.date).toLocaleString('en-BE') +
-            '   -   gemaakt door ' +
-            value.user.username
-        }}
+        {{ new Date(value.date).toLocaleString('en-BE') }}
       </button>
     </div>
   </div>
@@ -21,7 +18,7 @@
 import Vue from 'vue';
 import ReportingService from '../services/ReportingService';
 export default Vue.extend({
-  data() {
+  data: function() {
     return {
       reports: [],
     };
@@ -35,7 +32,7 @@ export default Vue.extend({
     loadData: function() {
       const response = ReportingService.getAllReports('/api/reports/monitored').then(
         (res) => (this.reports = res)
-      );
+        );
     },
 
     reportClick: function(id: string) {
