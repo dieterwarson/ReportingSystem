@@ -1,43 +1,87 @@
 <template>
-  <div v-if="reports">
+  <div class="statistics">
     <h1>Statistieken</h1>
-    <!-- die moet loopen door een dubbele array, 
-    reports is een array met daarin de table arrays -->
-    <div class="container my-2" v-for="value in reports" :key="value.id">
-      <button
-        class="btn btn-secondary btn-lg btn-block"
-        v-on:click="reportClick(parseInt(value.id))"
-      >
-        {{ new Date(value.date).toLocaleString('en-BE') }}
-      </button>
+
+    <div class="container my-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            <div class="text-left">
+              <div>
+                <input
+                  type="checkbox"
+                  value="helikopter ingezet: 5"
+                  id="checkbox-helicopter"
+                  v-model="categories"
+                />
+                <label for="checkbox">helikopter ingezet</label>
+                <br />
+                <input
+                  type="checkbox"
+                  value="grensoverschrijdende achtervolging: 9"
+                  id="checkbox-crossed-border"
+                  v-model="categories"
+                />
+                <label for="checkbox">grensoverschrijdende achtervolging</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm">
+            <div class="text-left">
+              <div>
+                <ul>
+                  <li v-for="category in this.categories" :key="category.id">
+                    {{ category }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div class="container my-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            <div class="text-left">
+              <div>
+                <input
+                  type="checkbox"
+                  value="helikopter ingezet: 5 in 2018"
+                  id="2018"
+                  v-model="categories"
+                />
+                <label for="checkbox">2018</label>
+                <br />
+                <input
+                  type="checkbox"
+                  value="grensoverschrijdende achtervolging: 9 in 2019"
+                  id="2019"
+                  v-model="categories"
+                />
+                <label for="checkbox">2019</label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
-import ReportingService from '../services/ReportingService';
-export default Vue.extend({
+<script>
+export default {
   data: function() {
     return {
-      reports: [],
+      helicopterCount:5,
+      crossedBorderCount:9,
+      categories: []
     };
-  },
-
-  mounted() {
-    this.loadData();
-  },
-
-  methods: {
-    loadData: function() {
-      const response = ReportingService.getAllReports('/api/reports/monitored').then(
-        (res) => (this.reports = res)
-        );
-    },
-
-    reportClick: function(id: string) {
-      this.$router.push({ path: 'reportView', query: { reportId: id } });
-    },
-  },
-});
+  }
+};
 </script>

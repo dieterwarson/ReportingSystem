@@ -108,19 +108,16 @@ const report1 = new Report({
 });
 // report1.save();
 
-// heeft geen columns
 const technical1 = new Technical({
   reportId: 1,
 });
 // technical1.save();
 
-// heeft geen columns
 const administrative1 = new Administrative({
   reportId: 1,
 });
 // administrative1.save();
 
-// heeft geen columns
 const operational1 = new Operational({
   reportId: 1,
 });
