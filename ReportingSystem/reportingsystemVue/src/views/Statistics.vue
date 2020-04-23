@@ -3,74 +3,27 @@
     <h1>Statistieken</h1>
 
     <div class="container my-4">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm">
-            <div class="text-left">
-              <div>
-                <input
-                  type="checkbox"
-                  value="helikopter ingezet: 5"
-                  id="checkbox-helicopter"
-                  v-model="categories"
-                />
-                <label for="checkbox">helikopter ingezet</label>
-                <br />
-                <input
-                  type="checkbox"
-                  value="grensoverschrijdende achtervolging: 9"
-                  id="checkbox-crossed-border"
-                  v-model="categories"
-                />
-                <label for="checkbox">grensoverschrijdende achtervolging</label>
-              </div>
+      <h3>2020</h3>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Helikopter ingezet</h5>
+              <p class="card-text">15 keer</p>
             </div>
           </div>
+        </div>
 
-          <div class="col-sm">
-            <div class="text-left">
-              <div>
-                <ul>
-                  <li v-for="category in this.categories" :key="category.id">
-                    {{ category }}
-                  </li>
-                </ul>
-              </div>
+        <div class="col-sm-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Grensoverschrijdende achtervolging</h5>
+              <p class="card-text">23 keer</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="container my-4">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm">
-            <div class="text-left">
-              <div>
-                <input
-                  type="checkbox"
-                  value="helikopter ingezet: 5 in 2018"
-                  id="2018"
-                  v-model="categories"
-                />
-                <label for="checkbox">2018</label>
-                <br />
-                <input
-                  type="checkbox"
-                  value="grensoverschrijdende achtervolging: 9 in 2019"
-                  id="2019"
-                  v-model="categories"
-                />
-                <label for="checkbox">2019</label>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
   </div>
 </template>
 
@@ -78,10 +31,10 @@
 export default {
   data: function() {
     return {
-      helicopterCount:5,
-      crossedBorderCount:9,
-      categories: []
+      helicopterCount: 5,
+      crossedBorderCount: 9,
+      categories: [],
     };
-  }
+  },
 };
 </script>
