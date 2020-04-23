@@ -2,42 +2,120 @@ import { Request, Response, Router } from 'express';
 import OperationalEvent from 'src/models/operationalEvent';
 import SecretariatNotification from '../models/secretariatNotification';
 import Report from '../models/report';
-import User from '../models/user';
 
 import { Op } from 'sequelize';
 import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import Replacement from 'src/models/replacement';
 import WorkplaceEvent from 'src/models/workplaceEvent';
-import { Sequelize } from 'sequelize-typescript';
 
 // Init router
 const router = Router();
 
 /******************************************************************************
- *                      Get All Reports - "GET /api/reports/all"
+ *                   Get All Reports - "GET /api/reports/all"
  ******************************************************************************/
 
 // only get the reports that are finished
-// joins with user to get the Author's username
+// joins report with user to get the Author's username
 
 router.get('/all', async (req: Request, res: Response) => {
   const reports = await Report.findAll({
     where: {
       temporary: false,
     },
-    include: [{ model: User, attributes: ['username'] }],
     attributes: ['id', 'date'],
   });
-  console.log(reports);
+  res.send(reports);
   return res.json({ reports });
 });
 
 /******************************************************************************
- *                      Search Reports - "GET /api/reports/recieve"
+ *             Get All monitored Reports - "GET /api/reports/monitored"
  ******************************************************************************/
 
-router.get('/recieve/', async (req: Request, res: Response) => {
+// only get the reports that are finished and arer being monitored
+// joins report with user to get the Author's username
+
+router.get('/monitored', async (req: Request, res: Response) => {
+  var reports: (Defect[] | Malfunction[] | Replacement[] | SecretariatNotification[] | OperationalEvent[])[] = [];
+
+  var result;
+  result = await Defect.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await Malfunction.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await Replacement.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await WorkplaceEvent.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await SecretariatNotification.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  result = await OperationalEvent.findAll({
+    where: {
+      monitoring: 1,
+    },
+    attributes: ['id', 'date'],
+
+  });
+  if (result.length !== 0) {
+    reports.push(result);
+  }
+
+  res.send(reports);
+  return res.json({ reports });
+});
+
+/******************************************************************************
+ *                      Search Reports - "GET /api/reports/search"
+ ******************************************************************************/
+
+router.get('/search/', async (req: Request, res: Response) => {
   const search = 'l';
 
   var result;
@@ -161,6 +239,43 @@ router.get('/recieve/', async (req: Request, res: Response) => {
     return res.json({ result });
   }
 });
+
+
+/******************************************************************************
+ *        Get the content of a report - "GET /api/reports/content/:reportId"
+ ******************************************************************************/
+router.get('/content/:reportId', async (req: Request, res: Response) => {
+  let reportId = req.param('reportId');
+  let report = await Report.findOne({
+    where: {
+      id: reportId,
+    }
+  });
+
+  let technical = await report?.$get('technical');
+  let administrative = await report?.$get('administrative');
+  let operational = await report?.$get('operational');
+
+  let defects = await technical?.$get('defects');
+  let malfunctions = await technical?.$get('malfunctions');
+  let replacements = await administrative?.$get('replacements');
+  let workplaceEvents = await administrative?.$get('workplaceEvents');
+  let secretariatNotifications = await administrative?.$get('replacements');
+  let operationalEvents = await operational?.$get('operationalEvents');
+
+  let results = {'report': report,
+                 'operational': {operationalEvents},
+                 'administrative': {replacements, workplaceEvents, secretariatNotifications},
+                 'technical': {defects, malfunctions},
+                 };
+  
+  res.send(results);
+
+
+  // res.send(report);
+  // return res.json({ report });
+});
+
 
 /******************************************************************************
  *                                     Export

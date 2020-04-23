@@ -54,5 +54,14 @@ addField(data: any) {
     .catch(error => {
         alert(error);
     })
-}
+},
+    getAllReports (url:string) {
+        return Api().get(url)
+        .then(res => {
+            return res.data;
+        }) 
+        .catch(error => {
+            alert(error);
+        });
+    }
 };
