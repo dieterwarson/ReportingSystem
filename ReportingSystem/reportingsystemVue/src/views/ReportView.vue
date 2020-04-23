@@ -119,10 +119,10 @@ export default Vue.extend({
 
   methods: {
     loadData: function() {
-      /*  const response = ReportingService.getAllReports('/api/reports/content/' + this.$route.query.reportId).then(
+      const response = ReportingService.getAllReports('/api/reports/content/' + this.$route.query.reportId).then(
         (res) => (this.reportContent = res) 
-      ); */
-      this.reportContent = {"report":{"id":1,"date":"2020-03-16T21:13:48.000Z","temporary":false,"createdAt":"2020-04-23T14:25:02.000Z","updatedAt":"2020-04-23T14:25:02.000Z"},"operational":{},"administrative":{},"technical":{}}    
+      );
+      // this.reportContent = {"report":{"id":1,"date":"2020-03-16T21:13:48.000Z","temporary":false,"createdAt":"2020-04-23T14:25:02.000Z","updatedAt":"2020-04-23T14:25:02.000Z"},"operational":{},"administrative":{},"technical":{}}    
       },
 
     reportClick: function(id: string) {
