@@ -224,12 +224,13 @@ const dummyData1 = new DummyDatabase({
   date: new Date("2020/04/13 12:40:32"),
   actions: "NAV zelfmoord te Overpelt",
 });
-//dummyData1.save();
+
+dummyData1.save();
 
 /************************************************************************************
  *                              AXIOS
  ***********************************************************************************/
-app.post('/addReport', async (req , res) => {
+app.post('/getFile', async (req , res) => {
   console.log(req.body.plNumber);
    const file = await DummyDatabase.findOne({
      where: {
@@ -239,9 +240,72 @@ app.post('/addReport', async (req , res) => {
    if (file !== null) {
     res.send(file);   
   } else {
-     console.log("file is empty");
+     res.send(Error("File not found"));
    }
 });
 
+app.post('/addReport', async (req, res) =>  {
+  console.log(req.body.plNumber);
+    OperationalEvent.create({
+    plNumber: req.body.plNumber,
+    description: req.body.message,
+    location: req.body.location,
+    unit: req.body.unit,
+    //date: new Date(req.body.date),
+  }).then(function() {
+    res.send(true);
+  }).catch(function(error){
+    console.log(error);
+    res.send(false);
+  });
+});
+
+app.post('/addUser', async (req , res) => { 
+  console.log(req.body.username);
+  User.create({
+    username: req.body.username,
+    password: req.body.password,
+    accessRights: req.body.accessRights
+  }).then(function(newUser: User){
+    console.log(newUser.username);
+    res.send(true);
+  }).catch(function(error: Error){
+    console.log(error);
+    res.send(false);
+  })
+});
+
+app.post('/changePassword', async (req , res) => {
+  console.log(req.body.username);
+  // User.find({
+  //   where: {username: req.body.username}
+  // }).on('succes', function(user: User) {
+  //   if (user) {
+  //     user.update({
+  //       password: req.body.newPassword
+  //     })
+  //     res.send(true);
+  //   }
+  // });
+
+});
+
+app.post('/changeAccess', async (req , res) => {
+  console.log(req.body.username);
+  // User.find({
+  //   where: {username: req.body.username}
+  // }).on('succes', function(user: User) {
+  //   if (user) {
+  //     user.update({
+  //       accessRights: req.body.accessRights
+  //     })
+  //     res.send(true);
+  //   }
+  // });
+});
+
+app.post('/addField', async (req , res) => {
+  console.log(req.body.newField);
+});
 // Export express instance
 export default app;

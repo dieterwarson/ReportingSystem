@@ -17,7 +17,7 @@
                 <small v-if="newUserData.passwordCheck">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
                 <small v-if="changePassword.completed">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
                 <small v-if="changeAccesRights.completed">De nieuwe gebruiker is toegevoegd!</small>
-                <button type="button" class="btn btn-success btn-block" @click.prevent="newUser" >Voeg gebruiker toe</button>
+                <button type="button" class="btn btn-success btn-block" @click.prevent="doNewUser" >Voeg gebruiker toe</button>
             </div>
         </section>
     </div>
@@ -78,6 +78,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import ReportingService from "../services/ReportingService"
 export default Vue.extend({
     data() {
         return {
@@ -143,32 +144,51 @@ export default Vue.extend({
             }
             this.emptyAllFields();
         },
-        newUser: function() {
+        async doNewUser() {
             //CHECK IF PASSWORDS ARE THE SAME
             this.newUserData.passwordComp = this.checkPasswords(this.newUserData.password, this.newUserData.rptPassword);
+            if (!this.newUserData.passwordComp /*&& !this.newUserData.passwordCheck*/){
+                const response = await ReportingService.addUser({
+                    username: this.newUserData.username,
+                    password: this.newUserData.password,
+                    accessRights: 1
+                });
+            }
             this.newUserData.username = ""
             this.newUserData.password = "";
             this.newUserData.rptPassword = "";
-            if (!this.newUserData.passwordComp /*&& !this.newUserData.passwordCheck*/)
-                this.newUserData.completed = true;
+            this.newUserData.completed = true;
         },
-        doChangePassword: function() {
+        async doChangePassword() {
             //CHECK IF PASSWORDS ARE THE SAME
             this.changePassword.passwordComp = this.checkPasswords(this.changePassword.newPassword, this.changePassword.rptPassword);
+            if (!this.changePassword.passwordComp /*&& !this.changePassword.passwordCheck*/){
+                const response = await ReportingService.changePassword({
+                    username: this.changePassword.username,
+                    newPassword: this.changePassword.newPassword,
+                });
+            }
             this.changePassword.newPassword = "";
             this.changePassword.rptPassword = "";
-            if (!this.changePassword.passwordComp /*&& !this.changePassword.passwordCheck*/)
-                this.changePassword.completed = true;
+            this.changePassword.completed = true;
         },
-        doChangeAccess: function() {
+        async doChangeAccess() {
+            const response = await ReportingService.changeAcces({
+                username: this.changeAccesRights.username,
+                newAcces: this.changeAccesRights.newRights
+            });
             this.changeAccesRights.username = "";
             this.changeAccesRights.rights = "";
             this.changeAccesRights.newRights = "";
             this.changeAccesRights.completed = true;
         },
-        doAddField: function() {
-            this.addField.newField = "";
+        async doAddField() {
+            const response = await ReportingService.addField({
+                newField: this.addField.newField
+            })
+
             this.addField.completed = true;
+            this.addField.newField = "";
         },
         checkPasswords: function(password1 : string, password2 : string){
             const test = new String(password1)
