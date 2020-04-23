@@ -38,15 +38,19 @@ router.get('/all', async (req: Request, res: Response) => {
 // joins report with user to get the Author's username
 
 router.get('/monitored', async (req: Request, res: Response) => {
-  var reports: (Defect[] | Malfunction[] | Replacement[] | SecretariatNotification[] | OperationalEvent[])[] = [];
+  var reports: (
+    | Defect[]
+    | Malfunction[]
+    | Replacement[]
+    | SecretariatNotification[]
+    | OperationalEvent[]
+  )[] = [];
 
   var result;
   result = await Defect.findAll({
     where: {
       monitoring: 1,
     },
-    attributes: ['id', 'date'],
-
   });
   if (result.length !== 0) {
     reports.push(result);
@@ -56,8 +60,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
     where: {
       monitoring: 1,
     },
-    attributes: ['id', 'date'],
-
   });
   if (result.length !== 0) {
     reports.push(result);
@@ -67,8 +69,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
     where: {
       monitoring: 1,
     },
-    attributes: ['id', 'date'],
-
   });
   if (result.length !== 0) {
     reports.push(result);
@@ -78,8 +78,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
     where: {
       monitoring: 1,
     },
-    attributes: ['id', 'date'],
-
   });
   if (result.length !== 0) {
     reports.push(result);
@@ -89,8 +87,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
     where: {
       monitoring: 1,
     },
-    attributes: ['id', 'date'],
-
   });
   if (result.length !== 0) {
     reports.push(result);
@@ -100,12 +96,13 @@ router.get('/monitored', async (req: Request, res: Response) => {
     where: {
       monitoring: 1,
     },
-    attributes: ['id', 'date'],
-
   });
   if (result.length !== 0) {
     reports.push(result);
   }
+console.log(reports);
+console.log(reports[0]);
+
 
   res.send(reports);
   return res.json({ reports });
@@ -240,7 +237,6 @@ router.get('/search/', async (req: Request, res: Response) => {
   }
 });
 
-
 /******************************************************************************
  *        Get the content of a report - "GET /api/reports/content/:reportId"
  ******************************************************************************/
@@ -249,7 +245,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   let report = await Report.findOne({
     where: {
       id: reportId,
-    }
+    },
   });
 
   let technical = await report?.$get('technical');
@@ -263,19 +259,18 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   let secretariatNotifications = await administrative?.$get('replacements');
   let operationalEvents = await operational?.$get('operationalEvents');
 
-  let results = {'report': report,
-                 'operational': {operationalEvents},
-                 'administrative': {replacements, workplaceEvents, secretariatNotifications},
-                 'technical': {defects, malfunctions},
-                 };
-  
-  res.send(results);
+  let results = {
+    report: report,
+    operational: { operationalEvents },
+    administrative: { replacements, workplaceEvents, secretariatNotifications },
+    technical: { defects, malfunctions },
+  };
 
+  res.send(results);
 
   // res.send(report);
   // return res.json({ report });
 });
-
 
 /******************************************************************************
  *                                     Export
