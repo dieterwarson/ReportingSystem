@@ -18,7 +18,7 @@
         to="/AddReport"
         tag="button"
         class="btn btn-primary btn-lg btn-block"
-        >+ Nieuw verslag</router-link
+        >+ Nieuwe gebeurtenis</router-link
       >
 
       <div class="container">

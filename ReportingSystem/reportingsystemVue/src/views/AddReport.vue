@@ -1,7 +1,7 @@
 <template>
   <!-- script has to be implemented again to achieve the seperate forms -->
   <div class="container pt-5 pb-5">
-    <h1>Voeg verslag toe</h1>
+    <h1>Voeg gebeurtenis toe</h1>
     <form id="addReport">
       <div
         class="btn-group d-flex"
