@@ -2,28 +2,33 @@
   <div class="home">
     <div class="container my-4">
       <!-- Search form -->
-      <form
-        class="form-inline d-flex justify-content-center md-form form-sm mt-0"
-      >
-        <i class="fas fa-search" aria-hidden="true"></i>
-        <input
-          class="form-control form-control-sm w-75"
-          type="text"
-          placeholder="Trefwoord"
-          aria-label="Search"
-        />
-        <input
-          class="form-control form-control-sm w-75"
-          type="text"
-          placeholder="PL-nummer"
-          aria-label="Search"
-        />
-        <router-link
-        to="/"
-        tag="button"
-        class="btn btn-secondary btn btn-block w-75"
-        >Zoek</router-link
-      >
+      <form>
+        <div class="form-row align-items-center">
+          <div class="col my-1">
+            <input
+              type="text"
+              class="form-control"
+              id="inlineFormInputName"
+              placeholder="Trefwoord"
+            />
+          </div>
+          <div class="col my-1">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                id="inlineFormInputGroupUsername"
+                placeholder="PL-nummer"
+              />
+            </div>
+          </div>
+
+          <div class="col-auto my-1">
+            <button type="submit" class="btn btn-secondary btn-block">
+              Zoek
+            </button>
+          </div>
+        </div>
       </form>
 
       <router-link
@@ -84,8 +89,8 @@
 // @ is an alias to /src
 
 export default {
-  name: "Home",
-  components: {}
+  name: 'Home',
+  components: {},
 };
 </script>
 
