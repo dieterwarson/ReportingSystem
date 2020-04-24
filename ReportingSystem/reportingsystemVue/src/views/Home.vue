@@ -64,7 +64,7 @@
         <div class="row">
           <div class="col-sm">
             <router-link
-              to="/OverviewShift"
+              to="/reportView?reportId=1"
               tag="button"
               class="btn btn-secondary btn-lg btn-block"
               >Overzicht vorige shift</router-link
