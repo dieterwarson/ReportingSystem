@@ -6,7 +6,7 @@
         class="btn btn-secondary btn-lg btn-block"
         v-on:click="reportClick(parseInt(value.id))"
       >
-        {{ new Date(value.date).toLocaleString('en-BE') }}
+        {{ new Date(value.date).toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit', hour12: false})}}
       </button>
     </div>
   </div>

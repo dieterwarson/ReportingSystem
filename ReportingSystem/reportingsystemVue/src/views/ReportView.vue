@@ -2,7 +2,7 @@
   <div class="container pt-5 pb-5">
     <h1>
       Verslag van
-      {{ new Date(reportContent.report.date).toLocaleString('en-BE') }}
+      {{ new Date(reportContent.report.date).toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit', hour12: false}) }}
     </h1>
     <div
       class="btn-group d-flex"
