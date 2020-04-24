@@ -276,7 +276,16 @@ const dummyData1 = new DummyDatabase({
   date: new Date('2020/04/13 12:40:32'),
   actions: 'NAV zelfmoord te Overpelt',
 });
-// dummyData1.save();
+//  dummyData1.save();
+
+ const dummyData2 = new DummyDatabase({
+  plNumber: 'PL12536433',
+  unit: 'CARMA',
+  location: 'Universiteitslaan 32, Diepenbeek',
+  date: new Date('2020/04/13 12:40:32'),
+  actions: 'NAV zelfmoord',
+});
+//  dummyData2.save();
 
 const defect1 = new Defect({
   technicalId: 1,
@@ -333,6 +342,8 @@ const workplaceEvent1 = new WorkplaceEvent({
 });
 // workplaceEvent1.save();
 
+// DummyDatabase.sync();
+
 /************************************************************************************
  *                              AXIOS
  ***********************************************************************************/
@@ -350,20 +361,76 @@ app.post('/getFile', async (req , res) => {
    }
 });
 
-app.post('/addReport', async (req, res) =>  {
-  console.log(req.body.plNumber);
+app.post('/addOperationalEvent', async (req, res) =>  {
     OperationalEvent.create({
+    operationalId: 1,
+    authorId: 1,
+    operationalTypeId: 7,
+    monitoring: true,
+    signaling: null,
     plNumber: req.body.plNumber,
     description: req.body.message,
     location: req.body.location,
     unit: req.body.unit,
+    date: new Date('2020/03/16 01:21:25'),
     //date: new Date(req.body.date),
   }).then(function() {
-    res.send(true);
+    res.send({
+      bool : true
+    });
   }).catch(function(error){
-    console.log(error);
+    console.log("ERR:" + error);
     res.send(false);
   });
+  OperationalEvent.sync();
+});
+
+app.post('/addWorkForceEvent', async (req , res) => {
+  WorkplaceEvent.create({
+      administrativeId: 1,
+      authorId: 1,
+      absentee: req.body.absentee,
+      substitute: req.body.replacement,
+      monitoring: true,
+      date: Date.now(),
+      shift: true,
+  })
+  .then(function(){
+    res.send({
+      bool: true
+    })
+  })
+  .catch(function(error){
+    console.log("ERR:" + error);
+    res.send({
+      bool: false
+    })
+  });
+  
+  WorkplaceEvent.sync();
+});
+
+app.post('/addTechnicalEvent', async (req , res) => {
+  Defect.create({
+    technicalId: 1,
+    authorId: 1,
+    defectTypeId: 1,
+    description: req.body.description,
+    monitoring: true,
+    date: Date.now(),
+  })
+  .then(function() {
+    res.send({
+      bool: true
+    })
+  })
+  .catch(function(error){
+    console.log("ERR: " + error);
+    res.send({
+      bool: false
+    })
+  })
+  Defect.sync();
 });
 
 app.post('/addUser', async (req , res) => { 
@@ -379,6 +446,7 @@ app.post('/addUser', async (req , res) => {
     console.log(error);
     res.send(false);
   })
+  User.sync();
 });
 
 app.post('/changePassword', async (req , res) => {
@@ -413,5 +481,9 @@ app.post('/changeAccess', async (req , res) => {
 app.post('/addField', async (req , res) => {
   console.log(req.body.newField);
 });
+
+
+
+
 // Export express instance
 export default app;

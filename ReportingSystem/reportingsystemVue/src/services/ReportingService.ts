@@ -11,9 +11,9 @@ getFile (data: any) {
     });
 },
 addReport(data: any) {
-    return Api().post("/addReport", data)
+    return Api().post("/addOperationalEvent", data)
     .then(res => {
-        return res;
+        return res.data;
     })
     .catch(error => {
         alert(error);
@@ -63,5 +63,23 @@ addField(data: any) {
         .catch(error => {
             alert(error);
         });
+    },
+    addWorkForceEvent(data: any) {
+        return Api().post("/addWorkForceEvent", data)
+        .then( res => {
+            return res.data;
+        })
+        .catch(error => {
+            alert(error);
+        })
+    },
+    addTechnicalEvent(data: any) {
+        return Api().post("/addTechnicalEvent", data)
+        .then( res => {
+            return res.data;
+        })
+        .catch(error => {
+            alert(error);
+        })
     }
 };
