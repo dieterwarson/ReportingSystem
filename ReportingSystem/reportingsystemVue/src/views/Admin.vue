@@ -30,7 +30,7 @@
         <section v-if="option == 'changeAccess'">
             <div class="input-group-vertical mt-2">
                 <input name="username" v-model="changeAccesRights.username" type="text" placeholder="Gebruikersnaam" class="form-control form-control-lg">
-                <input name="rights" v-model="changeAccesRights.rights" type="text" placeholder="Huidige toegangsRechten" class="form-control form-control-lg">
+                <input name="rights" v-model="changeAccesRights.rights" type="text" placeholder="Huidige toegangsrechten" class="form-control form-control-lg">
                 <input name="newRights" v-model="changeAccesRights.newRights" type="text" placeholder="Nieuwe toegangsrechten" class="form-control form-control-lg">
                 <small v-if="changeAccesRights.completed">De toegangsrechten zijn gewijzigd!</small>
                 <button type="button" class="btn btn-success btn-block" @click.prevent="doChangeAccess" >Verander toegangsrechten</button>

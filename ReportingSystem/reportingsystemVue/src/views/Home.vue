@@ -7,11 +7,23 @@
       >
         <i class="fas fa-search" aria-hidden="true"></i>
         <input
-          class="form-control form-control-sm ml-3 w-75"
+          class="form-control form-control-sm w-75"
+          type="text"
+          placeholder="Trefwoord"
+          aria-label="Search"
+        />
+        <input
+          class="form-control form-control-sm w-75"
           type="text"
           placeholder="PL-nummer"
           aria-label="Search"
         />
+        <router-link
+        to="/"
+        tag="button"
+        class="btn btn-secondary btn btn-block w-75"
+        >Zoek</router-link
+      >
       </form>
 
       <router-link
