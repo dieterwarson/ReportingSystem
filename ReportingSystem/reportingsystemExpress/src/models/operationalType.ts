@@ -16,10 +16,10 @@ export default class OperationalType extends Model<OperationalType> {
     
   @Column
   typeName!: string;
-  
-  @ForeignKey(() => OperationalSubtype)
+
+  @ForeignKey(() => EventType)
   @Column
-  operationalSubtypeId!: number;
+  eventTypeId!: number;
 
   @BelongsTo(() => EventType)
   eventType!: EventType;

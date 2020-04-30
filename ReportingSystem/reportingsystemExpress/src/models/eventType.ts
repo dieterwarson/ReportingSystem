@@ -31,9 +31,15 @@ export default class EventType extends Model<EventType> {
   @Column
   operationalTypeId!: number;
 
+  @BelongsTo(() => OperationalType)
+  operationalType!: OperationalType;
+
   @ForeignKey(() => OperationalSubtype)
   @Column
   operationalSubtypeId!: number;
+
+  @BelongsTo(() => OperationalSubtype)
+  operationalSubtype!: OperationalSubtype;
 
   @HasMany(() => OperationalType)
   operationalTypes!: OperationalType[];
