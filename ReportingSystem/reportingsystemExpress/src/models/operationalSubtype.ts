@@ -1,4 +1,12 @@
-import { Table, Column, Model, Index } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  Index,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
+import OperationalType from './operationalType';
 
 @Table
 export default class OperationalSubtype extends Model<OperationalSubtype> {
@@ -6,6 +14,14 @@ export default class OperationalSubtype extends Model<OperationalSubtype> {
     
   @Column
   typeName!: string;
+
   @Column
   description!: string;
+
+  @ForeignKey(() => OperationalType)
+  @Column
+  operationalTypeId!: number;
+
+  @BelongsTo(() => OperationalType)
+  operationalType!: OperationalType;
 }

@@ -1,6 +1,14 @@
-import { Table, Column, Model, Index, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript';
-import Report from './report'
-import OperationalEvent from './operationalEvent'
+import {
+  Table,
+  Column,
+  Model,
+  Index,
+  ForeignKey,
+  BelongsTo,
+  HasMany,
+} from 'sequelize-typescript';
+import Report from './report';
+import OperationalEvent from './operationalEvent';
 
 @Table
 export default class Operational extends Model<Operational> {
@@ -11,7 +19,7 @@ export default class Operational extends Model<Operational> {
   reportId!: number;
 
   @BelongsTo(() => Report)
-  report!: Report
+  report!: Report;
 
   @HasMany(() => OperationalEvent)
   operationalEvents!: OperationalEvent[];
