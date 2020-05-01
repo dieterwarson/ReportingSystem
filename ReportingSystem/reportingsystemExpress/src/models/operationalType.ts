@@ -20,10 +20,10 @@ export default class OperationalType extends Model<OperationalType> {
 
   @BelongsTo(() => EventType)
   eventType!: EventType;
+  
+  @Column
+  typeName!: string;
 
   @HasMany(() => OperationalSubtype)
   operationalSubtypes!: OperationalSubtype[];
-    
-  @Column
-  typeName!: string;
 }

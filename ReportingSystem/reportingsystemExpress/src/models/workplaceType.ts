@@ -5,13 +5,13 @@ import WorkplaceEvent from './workplaceEvent';
 @Table
 export default class WorkplaceType extends Model<WorkplaceType> {
   @Index
+    
+  @Column
+  typeName!: string;
   
   @HasMany(() => WorkplaceEvent)
   workplaceEvents!: WorkplaceEvent[];
   
   @HasMany(() => WorkplaceSubtype)
   sorkplaceSubtypes!: WorkplaceSubtype[];
-    
-  @Column
-  typeName!: string;
 }

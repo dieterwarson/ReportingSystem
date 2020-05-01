@@ -30,14 +30,11 @@ export default class OperationalEvent extends Model<OperationalEvent> {
   operational!: Operational;
 
   /** OperationalTypeId ? */
-
-  @HasMany(() => EventType)
-  eventTypes!: EventType[];
-
+  
   /** FK */
   @Column
   operationalTypeId!: number;
-
+  
   @Column
   signaling!: string;
   
@@ -52,10 +49,13 @@ export default class OperationalEvent extends Model<OperationalEvent> {
 
   @Column
   location!: string;
-
+  
   @Column
   unit!: string;
-
+  
   @Column
   date!: Date;
+
+  @HasMany(() => EventType)
+  eventTypes!: EventType[];
 }

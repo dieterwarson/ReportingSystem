@@ -109,28 +109,28 @@ const user1 = new User({
   password: '',
   accessRights: 0,
 });
-user1.save();
+// user1.save();
 
 const report1 = new Report({
   date: new Date('2020/03/16 21:13:48'),
   temporary: false,
 });
-report1.save();
+// report1.save();
 
 const technical1 = new Technical({
   reportId: 1,
 });
-technical1.save();
+// technical1.save();
 
 const administrative1 = new Administrative({
   reportId: 1,
 });
-administrative1.save();
+// administrative1.save();
 
 const operational1 = new Operational({
   reportId: 1,
 });
-operational1.save();
+// operational1.save();
 
 const defect1 = new Defect({
   technicalId: 1,
@@ -140,7 +140,7 @@ const defect1 = new Defect({
   monitoring: true,
   date: new Date('2020/04/15 13:03:57'),
 });
-defect1.save();
+// defect1.save();
 
 const defect2 = new Defect({
   technicalId: 1,
@@ -150,31 +150,31 @@ const defect2 = new Defect({
   monitoring: true,
   date: new Date('2020/04/15 16:58:34'),
 });
-defect2.save();
+// defect2.save();
 
 const defectType1 = new DefectType({
   typeName: 'lekkende kraan',
 });
-defectType1.save();
+// defectType1.save();
 
 const defectType2 = new DefectType({
   typeName: 'krakende deur',
 });
-defectType2.save();
+// defectType2.save();
 
 const defectSubtype1 = new DefectSubtype({
   defectTypeId: 1,
   typeName: 'defectSubtype typeName',
   description: 'defectSubtype lekkende kraan',
 });
-defectSubtype1.save();
+// defectSubtype1.save();
 
 const defectSubtype2 = new DefectSubtype({
   defectTypeId: 2,
   typeName: 'defectSubtype typeName',
   description: 'defectSubtype krakende deur',
 });
-defectSubtype2.save();
+// defectSubtype2.save();
 
 const malfunction1 = new Malfunction({
   technicalId: 1,
@@ -185,19 +185,19 @@ const malfunction1 = new Malfunction({
   date: new Date('2020/04/15 13:03:57'),
   duration: 6,
 });
-malfunction1.save();
+// malfunction1.save();
 
 const malfunctionType1 = new MalfunctionType({
   typeName: 'malfunctionType typeName',
 });
-malfunctionType1.save();
+// malfunctionType1.save();
 
 const malfunctionSubtype1 = new MalfunctionSubtype({
   typeName: 'malfunctionSubtype typeName',
   description: 'malfunctionSubtype description',
   malfunctionTypeId: 1,
 });
-malfunctionSubtype1.save();
+// malfunctionSubtype1.save();
 
 const replacement1 = new Replacement({
   authorId: 1,
@@ -208,7 +208,7 @@ const replacement1 = new Replacement({
   date: new Date('2020/03/30 15:46:36'),
   shift: true,
 });
-replacement1.save();
+// replacement1.save();
 
 const workplaceEvent1 = new WorkplaceEvent({
   authorId: 1,
@@ -221,19 +221,19 @@ const workplaceEvent1 = new WorkplaceEvent({
   date: new Date('2020/12/11 9:10:23'),
   shift: false,
 });
-workplaceEvent1.save();
+// workplaceEvent1.save();
 
 const workplaceType1 = new WorkplaceType({
   typeName: 'workplaceType typeName',
 });
-workplaceType1.save();
+// workplaceType1.save();
 
 const workplaceSubtype1 = new WorkplaceSubtype({
   workplaceTypeId: 1,
   typeName: 'workplaceSubtype typeName',
   description: 'workplaceSubtype description',
 });
-workplaceSubtype1.save();
+// workplaceSubtype1.save();
 
 const secretariatNotification1 = new SecretariatNotification({
   authorId: 1,
@@ -243,7 +243,7 @@ const secretariatNotification1 = new SecretariatNotification({
   date: new Date('2020/03/16 19:19:49'),
   shift: true,
 });
- secretariatNotification1.save();
+//  secretariatNotification1.save();
 
 const secretariatNotification2 = new SecretariatNotification({
   authorId: 1,
@@ -253,7 +253,7 @@ const secretariatNotification2 = new SecretariatNotification({
   date: new Date('2020/03/16 19:21:46'),
   shift: true,
 });
-secretariatNotification2.save();
+// secretariatNotification2.save();
 
 const operationalEvent1 = new OperationalEvent({
   authorId: 1,
@@ -267,7 +267,7 @@ const operationalEvent1 = new OperationalEvent({
   unit: 'KEMPLA',
   date: new Date('2020/03/16 18:13:48'),
 });
- operationalEvent1.save();
+//  operationalEvent1.save();
 
 const operationalEvent2 = new OperationalEvent({
   authorId: 1,
@@ -281,7 +281,7 @@ const operationalEvent2 = new OperationalEvent({
   unit: 'CARMA',
   date: new Date('2020/03/16 21:34:37'),
 });
- operationalEvent2.save();
+//  operationalEvent2.save();
 
 const operationalEvent3 = new OperationalEvent({
   authorId: 1,
@@ -295,7 +295,7 @@ const operationalEvent3 = new OperationalEvent({
   unit: 'HANO',
   date: new Date('2020/03/16 22:05:18'),
 });
- operationalEvent3.save();
+//  operationalEvent3.save();
 
 const operationalEvent4 = new OperationalEvent({
   authorId: 1,
@@ -309,7 +309,7 @@ const operationalEvent4 = new OperationalEvent({
   unit: 'LAMA',
   date: new Date('2020/03/16 23:34:33'),
 });
- operationalEvent4.save();
+//  operationalEvent4.save();
 
 const operationalEvent5 = new OperationalEvent({
   authorId: 1,
@@ -323,7 +323,7 @@ const operationalEvent5 = new OperationalEvent({
   unit: 'LOON',
   date: new Date('2020/03/16 23:57:10'),
 });
- operationalEvent5.save();
+//  operationalEvent5.save();
 
 const operationalEvent6 = new OperationalEvent({
   authorId: 1,
@@ -337,7 +337,7 @@ const operationalEvent6 = new OperationalEvent({
   unit: 'BIHORI',
   date: new Date('2020/03/16 00:18:57'),
 });
- operationalEvent6.save();
+//  operationalEvent6.save();
 
 const operationalEvent7 = new OperationalEvent({
   authorId: 1,
@@ -351,7 +351,7 @@ const operationalEvent7 = new OperationalEvent({
   unit: 'HANO',
   date: new Date('2020/03/16 00:45:45'),
 });
- operationalEvent7.save();
+//  operationalEvent7.save();
 
 const operationalEvent8 = new OperationalEvent({
   authorId: 1,
@@ -365,7 +365,7 @@ const operationalEvent8 = new OperationalEvent({
   unit: 'LRH',
   date: new Date('2020/03/16 01:21:25'),
 });
- operationalEvent8.save();
+//  operationalEvent8.save();
 
 const operationalEvent9 = new OperationalEvent({
   authorId: 1,
@@ -379,27 +379,27 @@ const operationalEvent9 = new OperationalEvent({
   unit: 'LRH',
   date: new Date('2020/03/16 01:51:47'),
 });
- operationalEvent9.save();
+//  operationalEvent9.save();
 
 const eventType1 = new EventType({
   reportId: 1,
   operationalEventId: 1,
   operationalTypeId: 1,
 });
-eventType1.save();
+// eventType1.save();
 
 const operationalType1 = new OperationalType({
   eventTypeId: 1,
   typeName: 'operationalType typeName',
 });
-operationalType1.save();
+// operationalType1.save();
 
 const operationalSubtype1 = new OperationalSubtype({
   operationalTypeId: 1,
   typeName: 'operationalSubtype typeName',
   description: 'opertationalSubtype description',
 });
-operationalSubtype1.save();
+// operationalSubtype1.save();
 
 const dummyData1 = new DummyDatabase({
   plNumber: 'PL12536432',
@@ -408,7 +408,7 @@ const dummyData1 = new DummyDatabase({
   date: new Date('2020/04/13 12:40:32'),
   actions: 'NAV zelfmoord te Overpelt',
 });
- dummyData1.save();
+//  dummyData1.save();
 
 const dummyData2 = new DummyDatabase({
   plNumber: 'PL12536433',
@@ -417,7 +417,7 @@ const dummyData2 = new DummyDatabase({
   date: new Date('2020/04/13 12:40:32'),
   actions: 'NAV zelfmoord',
 });
- dummyData2.save();
+//  dummyData2.save();
 
 // DummyDatabase.sync();
 
