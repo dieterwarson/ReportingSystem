@@ -14,22 +14,13 @@ import User from './user';
 export default class Defect extends Model<Defect> {
   @Index
     
-  @Column
-  description!: string;
-
-  @Column
-  monitoring!: boolean;
-
-  @Column
-  date!: Date;
-
   @ForeignKey(() => Technical)
   @Column
   technicalId!: number;
 
   @BelongsTo(() => Technical)
   technical!: Technical;
-
+  
   @ForeignKey(() => User)
   @Column
   authorId!: number;
@@ -43,4 +34,13 @@ export default class Defect extends Model<Defect> {
 
   @BelongsTo(() => DefectType)
   defectType!: DefectType;
+
+  @Column
+  description!: string;
+
+  @Column
+  monitoring!: boolean;
+
+  @Column
+  date!: Date;
 }

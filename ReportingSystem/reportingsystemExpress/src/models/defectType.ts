@@ -6,12 +6,12 @@ import Defect from './defect';
 export default class DefectType extends Model<DefectType> {
   @Index
     
-  @Column
-  typeName!: string;
-
   @HasMany(() => Defect)
   defects!: Defect[];
 
   @HasMany(() => DefectSubtype)
   defectSubtypes!: DefectSubtype[];
+
+  @Column
+  typeName!: string;
 }

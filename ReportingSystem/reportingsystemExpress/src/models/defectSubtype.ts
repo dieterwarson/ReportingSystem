@@ -12,16 +12,16 @@ import DefectType from './defectType';
 export default class DefectSubtype extends Model<DefectSubtype> {
   @Index
     
-  @Column
-  typeName!: string;
-
-  @Column
-  description!: string;
-
   @ForeignKey(() => DefectType)
   @Column
   defectTypeId!: number;
 
   @BelongsTo(() => DefectType)
   defectType!: DefectType;
+
+  @Column
+  typeName!: string;
+
+  @Column
+  description!: string;
 }

@@ -13,6 +13,20 @@ import User from './user';
 export default class Replacement extends Model<Replacement> {
   @Index
     
+  @ForeignKey(() => User)
+  @Column
+  authorId!: number;
+
+  @BelongsTo(() => User)
+  user!: User;
+
+  @ForeignKey(() => Administrative)
+  @Column
+  administrativeId!: number;
+
+  @BelongsTo(() => Administrative)
+  administrative!: Administrative;
+
   @Column
   absentee!: string;
 
@@ -27,18 +41,4 @@ export default class Replacement extends Model<Replacement> {
 
   @Column
   shift!: boolean;
-
-  @ForeignKey(() => Administrative)
-  @Column
-  administrativeId!: number;
-
-  @BelongsTo(() => Administrative)
-  administrative!: Administrative;
-
-  @ForeignKey(() => User)
-  @Column
-  authorId!: number;
-
-  @BelongsTo(() => User)
-  user!: User;
 }

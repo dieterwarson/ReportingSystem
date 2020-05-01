@@ -14,6 +14,27 @@ import User from './user';
 export default class Malfunction extends Model<Malfunction> {
   @Index
     
+  @ForeignKey(() => User)
+  @Column
+  authorId!: number;
+
+  @BelongsTo(() => User)
+  user!: User;
+
+  @ForeignKey(() => Technical)
+  @Column
+  technicalId!: number;
+
+  @BelongsTo(() => Technical)
+  technical!: Technical;
+
+  @ForeignKey(() => MalfunctionType)
+  @Column
+  malfunctionTypeId!: number;
+
+  @BelongsTo(() => MalfunctionType)
+  malfunctionType!: MalfunctionType;
+
   @Column
   description!: string;
 
@@ -25,25 +46,4 @@ export default class Malfunction extends Model<Malfunction> {
 
   @Column
   duration!: number;
-
-  @ForeignKey(() => Technical)
-  @Column
-  technicalId!: number;
-
-  @BelongsTo(() => Technical)
-  technical!: Technical;
-
-  @ForeignKey(() => User)
-  @Column
-  authorId!: number;
-
-  @BelongsTo(() => User)
-  user!: User;
-
-  @ForeignKey(() => MalfunctionType)
-  @Column
-  malfunctionTypeId!: number;
-
-  @BelongsTo(() => MalfunctionType)
-  malfunctionType!: MalfunctionType;
 }

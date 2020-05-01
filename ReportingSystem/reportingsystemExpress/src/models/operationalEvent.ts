@@ -14,21 +14,41 @@ import EventType from './eventType';
 @Table
 export default class OperationalEvent extends Model<OperationalEvent> {
   @Index
+
+  @ForeignKey(() => User)
+  @Column
+  authorId!: number;
+
+  @BelongsTo(() => User)
+  user!: User;
     
+  @ForeignKey(() => Operational)
+  @Column
+  operationalId!: number;
+
+  @BelongsTo(() => Operational)
+  operational!: Operational;
+
+  /** OperationalTypeId ? */
+
+  @HasMany(() => EventType)
+  eventTypes!: EventType[];
+
+  /** FK */
   @Column
   operationalTypeId!: number;
 
   @Column
-  monitoring!: boolean;
-
-  @Column
   signaling!: string;
-
+  
   @Column
   plNumber!: string;
-
+  
   @Column
   description!: string;
+  
+  @Column
+  monitoring!: boolean;
 
   @Column
   location!: string;
@@ -38,21 +58,4 @@ export default class OperationalEvent extends Model<OperationalEvent> {
 
   @Column
   date!: Date;
-
-  @ForeignKey(() => Operational)
-  @Column
-  operationalId!: number;
-
-  @BelongsTo(() => Operational)
-  operational!: Operational;
-
-  @ForeignKey(() => User)
-  @Column
-  authorId!: number;
-
-  @BelongsTo(() => User)
-  user!: User;
-
-  @HasMany(() => EventType)
-  eventTypes!: EventType[];
 }

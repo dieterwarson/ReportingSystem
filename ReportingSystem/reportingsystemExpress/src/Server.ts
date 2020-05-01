@@ -22,6 +22,15 @@ import WorkplaceEvent from './models/workplaceEvent';
 import Technical from './models/technical';
 import Administrative from './models/administrative';
 import Operational from './models/operational';
+import DefectType from './models/defectType';
+import DefectSubtype from './models/defectSubtype';
+import MalfunctionType from './models/malfunctionType';
+import MalfunctionSubtype from './models/malfunctionSubtype';
+import WorkplaceSubtype from './models/workplaceSubtype';
+import WorkplaceType from './models/workplaceType';
+import EventType from './models/eventType';
+import OperationalType from './models/operationalType';
+import OperationalSubtype from './models/operationalSubtype';
 const cors = require('cors');
 
 // var index = require('./routes/index');
@@ -100,192 +109,28 @@ const user1 = new User({
   password: '',
   accessRights: 0,
 });
-// user1.save();
+user1.save();
 
 const report1 = new Report({
   date: new Date('2020/03/16 21:13:48'),
   temporary: false,
 });
-// report1.save();
+report1.save();
 
 const technical1 = new Technical({
   reportId: 1,
 });
-// technical1.save();
+technical1.save();
 
 const administrative1 = new Administrative({
   reportId: 1,
 });
-// administrative1.save();
+administrative1.save();
 
 const operational1 = new Operational({
   reportId: 1,
 });
-// operational1.save();
-
-const operationalEvent1 = new OperationalEvent({
-  operationalId: 1,
-  authorId: 1,
-  operationalTypeId: 1,
-  monitoring: true,
-  signaling: 'Verlies inschrijvingsbewijs',
-  plNumber: null,
-  description: null,
-  location: null,
-  unit: 'KEMPLA',
-  date: new Date('2020/03/16 18:13:48'),
-});
-//  operationalEvent1.save();
-
-const operationalEvent2 = new OperationalEvent({
-  operationalId: 1,
-  authorId: 1,
-  operationalTypeId: 2,
-  monitoring: true,
-  signaling: null,
-  plNumber: 'PL031770168',
-  description: null,
-  location: null,
-  unit: 'CARMA',
-  date: new Date('2020/03/16 21:34:37'),
-});
-//  operationalEvent2.save();
-
-const operationalEvent3 = new OperationalEvent({
-  operationalId: 1,
-  authorId: 1,
-  operationalTypeId: 3,
-  monitoring: true,
-  signaling: null,
-  plNumber: 'PL03170104',
-  description: null,
-  location: null,
-  unit: 'HANO',
-  date: new Date('2020/03/16 22:05:18'),
-});
-//  operationalEvent3.save();
-
-const operationalEvent4 = new OperationalEvent({
-  operationalId: 1,
-  authorId: 1,
-  operationalTypeId: 4,
-  monitoring: true,
-  signaling: 'Seining persoon',
-  plNumber: null,
-  description: null,
-  location: null,
-  unit: 'LAMA',
-  date: new Date('2020/03/16 23:34:33'),
-});
-//  operationalEvent4.save();
-
-const operationalEvent5 = new OperationalEvent({
-  operationalId: 1,
-  authorId: 1,
-  operationalTypeId: 5,
-  monitoring: true,
-  signaling: 'Seining persoon',
-  plNumber: null,
-  description: null,
-  location: null,
-  unit: 'LOON',
-  date: new Date('2020/03/16 23:57:10'),
-});
-//  operationalEvent5.save();
-
-const operationalEvent6 = new OperationalEvent({
-  operationalId: 1,
-  authorId: 1,
-  operationalTypeId: 6,
-  monitoring: true,
-  signaling: 'Seining persoon',
-  plNumber: 'PL03170202',
-  description: null,
-  location: null,
-  unit: 'BIHORI',
-  date: new Date('2020/03/16 00:18:57'),
-});
-//  operationalEvent6.save();
-
-const operationalEvent7 = new OperationalEvent({
-  operationalId: 1,
-  authorId: 1,
-  operationalTypeId: 7,
-  monitoring: true,
-  signaling: null,
-  plNumber: 'PL03170104',
-  description: null,
-  location: null,
-  unit: 'HANO',
-  date: new Date('2020/03/16 00:45:45'),
-});
-//  operationalEvent7.save();
-
-const operationalEvent8 = new OperationalEvent({
-  operationalId: 1,
-  authorId: 1,
-  operationalTypeId: 8,
-  monitoring: true,
-  signaling: null,
-  plNumber: 'PL03170315',
-  description: null,
-  location: null,
-  unit: 'LRH',
-  date: new Date('2020/03/16 01:21:25'),
-});
-//  operationalEvent8.save();
-
-const operationalEvent9 = new OperationalEvent({
-  operationalId: 1,
-  authorId: 1,
-  operationalTypeId: 9,
-  monitoring: true,
-  signaling: null,
-  plNumber: 'PL03170322',
-  description: null,
-  location: null,
-  unit: 'LRH',
-  date: new Date('2020/03/16 01:51:47'),
-});
-//  operationalEvent9.save();
-
-const secretariatNotification1 = new SecretariatNotification({
-  administrativeId: 1,
-  authorId: 1,
-  monitoring: true,
-  date: new Date('2020/03/16 19:19:49'),
-  shift: true,
-  description: 'Jan Janssens Inp ziek',
-});
-//  secretariatNotification1.save();
-
-const secretariatNotification2 = new SecretariatNotification({
-  administrativeId: 1,
-  authorId: 1,
-  monitoring: true,
-  date: new Date('2020/03/16 19:21:46'),
-  shift: true,
-  description: 'Remans Luc Inp ziek',
-});
-// secretariatNotification2.save();
-
-const dummyData1 = new DummyDatabase({
-  plNumber: 'PL12536432',
-  unit: 'CARMA',
-  location: 'Markt 37, 3740 Bilzen',
-  date: new Date('2020/04/13 12:40:32'),
-  actions: 'NAV zelfmoord te Overpelt',
-});
-//  dummyData1.save();
-
- const dummyData2 = new DummyDatabase({
-  plNumber: 'PL12536433',
-  unit: 'CARMA',
-  location: 'Universiteitslaan 32, Diepenbeek',
-  date: new Date('2020/04/13 12:40:32'),
-  actions: 'NAV zelfmoord',
-});
-//  dummyData2.save();
+operational1.save();
 
 const defect1 = new Defect({
   technicalId: 1,
@@ -295,7 +140,7 @@ const defect1 = new Defect({
   monitoring: true,
   date: new Date('2020/04/15 13:03:57'),
 });
-// defect1.save();
+defect1.save();
 
 const defect2 = new Defect({
   technicalId: 1,
@@ -305,7 +150,31 @@ const defect2 = new Defect({
   monitoring: true,
   date: new Date('2020/04/15 16:58:34'),
 });
-// defect2.save();
+defect2.save();
+
+const defectType1 = new DefectType({
+  typeName: 'lekkende kraan',
+});
+defectType1.save();
+
+const defectType2 = new DefectType({
+  typeName: 'krakende deur',
+});
+defectType2.save();
+
+const defectSubtype1 = new DefectSubtype({
+  defectTypeId: 1,
+  typeName: 'defectSubtype typeName',
+  description: 'defectSubtype lekkende kraan',
+});
+defectSubtype1.save();
+
+const defectSubtype2 = new DefectSubtype({
+  defectTypeId: 2,
+  typeName: 'defectSubtype typeName',
+  description: 'defectSubtype krakende deur',
+});
+defectSubtype2.save();
 
 const malfunction1 = new Malfunction({
   technicalId: 1,
@@ -316,22 +185,34 @@ const malfunction1 = new Malfunction({
   date: new Date('2020/04/15 13:03:57'),
   duration: 6,
 });
-// malfunction1.save();
+malfunction1.save();
+
+const malfunctionType1 = new MalfunctionType({
+  typeName: 'malfunctionType typeName',
+});
+malfunctionType1.save();
+
+const malfunctionSubtype1 = new MalfunctionSubtype({
+  typeName: 'malfunctionSubtype typeName',
+  description: 'malfunctionSubtype description',
+  malfunctionTypeId: 1,
+});
+malfunctionSubtype1.save();
 
 const replacement1 = new Replacement({
-  administrativeId: 1,
   authorId: 1,
+  administrativeId: 1,
   absentee: 'Jan Jacobs',
   substitute: 'Geordy Hendricks',
   monitoring: true,
   date: new Date('2020/03/30 15:46:36'),
   shift: true,
 });
-// replacement1.save();
+replacement1.save();
 
 const workplaceEvent1 = new WorkplaceEvent({
-  administrativeId: 1,
   authorId: 1,
+  administrativeId: 1,
   workplaceTypeId: 1,
   description: 'Jacob sleutelbeen gebroken',
   absentee: 'Jacob Franssen',
@@ -340,14 +221,210 @@ const workplaceEvent1 = new WorkplaceEvent({
   date: new Date('2020/12/11 9:10:23'),
   shift: false,
 });
-// workplaceEvent1.save();
+workplaceEvent1.save();
+
+const workplaceType1 = new WorkplaceType({
+  typeName: 'workplaceType typeName',
+});
+workplaceType1.save();
+
+const workplaceSubtype1 = new WorkplaceSubtype({
+  workplaceTypeId: 1,
+  typeName: 'workplaceSubtype typeName',
+  description: 'workplaceSubtype description',
+});
+workplaceSubtype1.save();
+
+const secretariatNotification1 = new SecretariatNotification({
+  authorId: 1,
+  administrativeId: 1,
+  description: 'Jan Janssens Inp ziek',
+  monitoring: true,
+  date: new Date('2020/03/16 19:19:49'),
+  shift: true,
+});
+ secretariatNotification1.save();
+
+const secretariatNotification2 = new SecretariatNotification({
+  authorId: 1,
+  administrativeId: 1,
+  description: 'Remans Luc Inp ziek',
+  monitoring: true,
+  date: new Date('2020/03/16 19:21:46'),
+  shift: true,
+});
+secretariatNotification2.save();
+
+const operationalEvent1 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 1,
+  operationalTypeId: 1,
+  signaling: 'Verlies inschrijvingsbewijs',
+  plNumber: null,
+  description: null,
+  monitoring: true,
+  location: null,
+  unit: 'KEMPLA',
+  date: new Date('2020/03/16 18:13:48'),
+});
+ operationalEvent1.save();
+
+const operationalEvent2 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 1,
+  operationalTypeId: 2,
+  signaling: null,
+  plNumber: 'PL031770168',
+  description: null,
+  monitoring: true,
+  location: null,
+  unit: 'CARMA',
+  date: new Date('2020/03/16 21:34:37'),
+});
+ operationalEvent2.save();
+
+const operationalEvent3 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 1,
+  operationalTypeId: 3,
+  signaling: null,
+  plNumber: 'PL03170104',
+  description: null,
+  monitoring: true,
+  location: null,
+  unit: 'HANO',
+  date: new Date('2020/03/16 22:05:18'),
+});
+ operationalEvent3.save();
+
+const operationalEvent4 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 1,
+  operationalTypeId: 4,
+  signaling: 'Seining persoon',
+  plNumber: null,
+  description: null,
+  monitoring: true,
+  location: null,
+  unit: 'LAMA',
+  date: new Date('2020/03/16 23:34:33'),
+});
+ operationalEvent4.save();
+
+const operationalEvent5 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 1,
+  operationalTypeId: 5,
+  signaling: 'Seining persoon',
+  plNumber: null,
+  description: null,
+  monitoring: true,
+  location: null,
+  unit: 'LOON',
+  date: new Date('2020/03/16 23:57:10'),
+});
+ operationalEvent5.save();
+
+const operationalEvent6 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 1,
+  operationalTypeId: 6,
+  signaling: 'Seining persoon',
+  plNumber: 'PL03170202',
+  description: null,
+  monitoring: true,
+  location: null,
+  unit: 'BIHORI',
+  date: new Date('2020/03/16 00:18:57'),
+});
+ operationalEvent6.save();
+
+const operationalEvent7 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 1,
+  operationalTypeId: 7,
+  signaling: null,
+  plNumber: 'PL03170104',
+  description: null,
+  monitoring: true,
+  location: null,
+  unit: 'HANO',
+  date: new Date('2020/03/16 00:45:45'),
+});
+ operationalEvent7.save();
+
+const operationalEvent8 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 1,
+  operationalTypeId: 8,
+  signaling: null,
+  plNumber: 'PL03170315',
+  description: null,
+  monitoring: true,
+  location: null,
+  unit: 'LRH',
+  date: new Date('2020/03/16 01:21:25'),
+});
+ operationalEvent8.save();
+
+const operationalEvent9 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 1,
+  operationalTypeId: 9,
+  signaling: null,
+  plNumber: 'PL03170322',
+  description: null,
+  monitoring: true,
+  location: null,
+  unit: 'LRH',
+  date: new Date('2020/03/16 01:51:47'),
+});
+ operationalEvent9.save();
+
+const eventType1 = new EventType({
+  reportId: 1,
+  operationalEventId: 1,
+  operationalTypeId: 1,
+});
+eventType1.save();
+
+const operationalType1 = new OperationalType({
+  eventTypeId: 1,
+  typeName: 'operationalType typeName',
+});
+operationalType1.save();
+
+const operationalSubtype1 = new OperationalSubtype({
+  operationalTypeId: 1,
+  typeName: 'operationalSubtype typeName',
+  description: 'opertationalSubtype description',
+});
+operationalSubtype1.save();
+
+const dummyData1 = new DummyDatabase({
+  plNumber: 'PL12536432',
+  unit: 'CARMA',
+  location: 'Markt 37, 3740 Bilzen',
+  date: new Date('2020/04/13 12:40:32'),
+  actions: 'NAV zelfmoord te Overpelt',
+});
+ dummyData1.save();
+
+const dummyData2 = new DummyDatabase({
+  plNumber: 'PL12536433',
+  unit: 'CARMA',
+  location: 'Universiteitslaan 32, Diepenbeek',
+  date: new Date('2020/04/13 12:40:32'),
+  actions: 'NAV zelfmoord',
+});
+ dummyData2.save();
 
 // DummyDatabase.sync();
 
 /************************************************************************************
  *                              AXIOS
  ***********************************************************************************/
-app.post('/getFile', async (req , res) => {
+app.post('/getFile', async (req, res) => {
   console.log(req.body.plNumber);
   const file = await DummyDatabase.findOne({
     where: {
@@ -357,12 +434,12 @@ app.post('/getFile', async (req , res) => {
   if (file !== null) {
     res.send(file);
   } else {
-     res.send(Error("File not found"));
-   }
+    res.send(Error('File not found'));
+  }
 });
 
-app.post('/addOperationalEvent', async (req, res) =>  {
-    OperationalEvent.create({
+app.post('/addOperationalEvent', async (req, res) => {
+  OperationalEvent.create({
     operationalId: 1,
     authorId: 1,
     operationalTypeId: 7,
@@ -374,43 +451,45 @@ app.post('/addOperationalEvent', async (req, res) =>  {
     unit: req.body.unit,
     date: new Date('2020/03/16 01:21:25'),
     //date: new Date(req.body.date),
-  }).then(function() {
-    res.send({
-      bool : true
+  })
+    .then(function () {
+      res.send({
+        bool: true,
+      });
+    })
+    .catch(function (error) {
+      console.log('ERR:' + error);
+      res.send(false);
     });
-  }).catch(function(error){
-    console.log("ERR:" + error);
-    res.send(false);
-  });
   OperationalEvent.sync();
 });
 
-app.post('/addWorkForceEvent', async (req , res) => {
+app.post('/addWorkForceEvent', async (req, res) => {
   WorkplaceEvent.create({
-      administrativeId: 1,
-      authorId: 1,
-      absentee: req.body.absentee,
-      substitute: req.body.replacement,
-      monitoring: true,
-      date: Date.now(),
-      shift: true,
+    administrativeId: 1,
+    authorId: 1,
+    absentee: req.body.absentee,
+    substitute: req.body.replacement,
+    monitoring: true,
+    date: Date.now(),
+    shift: true,
   })
-  .then(function(){
-    res.send({
-      bool: true
+    .then(function () {
+      res.send({
+        bool: true,
+      });
     })
-  })
-  .catch(function(error){
-    console.log("ERR:" + error);
-    res.send({
-      bool: false
-    })
-  });
-  
+    .catch(function (error) {
+      console.log('ERR:' + error);
+      res.send({
+        bool: false,
+      });
+    });
+
   WorkplaceEvent.sync();
 });
 
-app.post('/addTechnicalEvent', async (req , res) => {
+app.post('/addTechnicalEvent', async (req, res) => {
   Defect.create({
     technicalId: 1,
     authorId: 1,
@@ -419,37 +498,39 @@ app.post('/addTechnicalEvent', async (req , res) => {
     monitoring: true,
     date: Date.now(),
   })
-  .then(function() {
-    res.send({
-      bool: true
+    .then(function () {
+      res.send({
+        bool: true,
+      });
     })
-  })
-  .catch(function(error){
-    console.log("ERR: " + error);
-    res.send({
-      bool: false
-    })
-  })
+    .catch(function (error) {
+      console.log('ERR: ' + error);
+      res.send({
+        bool: false,
+      });
+    });
   Defect.sync();
 });
 
-app.post('/addUser', async (req , res) => { 
+app.post('/addUser', async (req, res) => {
   console.log(req.body.username);
   User.create({
     username: req.body.username,
     password: req.body.password,
-    accessRights: req.body.accessRights
-  }).then(function(newUser: User){
-    console.log(newUser.username);
-    res.send(true);
-  }).catch(function(error: Error){
-    console.log(error);
-    res.send(false);
+    accessRights: req.body.accessRights,
   })
+    .then(function (newUser: User) {
+      console.log(newUser.username);
+      res.send(true);
+    })
+    .catch(function (error: Error) {
+      console.log(error);
+      res.send(false);
+    });
   User.sync();
 });
 
-app.post('/changePassword', async (req , res) => {
+app.post('/changePassword', async (req, res) => {
   console.log(req.body.username);
   // User.find({
   //   where: {username: req.body.username}
@@ -461,10 +542,9 @@ app.post('/changePassword', async (req , res) => {
   //     res.send(true);
   //   }
   // });
-
 });
 
-app.post('/changeAccess', async (req , res) => {
+app.post('/changeAccess', async (req, res) => {
   console.log(req.body.username);
   // User.find({
   //   where: {username: req.body.username}
@@ -478,12 +558,9 @@ app.post('/changeAccess', async (req , res) => {
   // });
 });
 
-app.post('/addField', async (req , res) => {
+app.post('/addField', async (req, res) => {
   console.log(req.body.newField);
 });
-
-
-
 
 // Export express instance
 export default app;

@@ -13,10 +13,7 @@ import EventType from './eventType';
 @Table
 export default class OperationalType extends Model<OperationalType> {
   @Index
-    
-  @Column
-  typeName!: string;
-
+  
   @ForeignKey(() => EventType)
   @Column
   eventTypeId!: number;
@@ -26,4 +23,7 @@ export default class OperationalType extends Model<OperationalType> {
 
   @HasMany(() => OperationalSubtype)
   operationalSubtypes!: OperationalSubtype[];
+    
+  @Column
+  typeName!: string;
 }

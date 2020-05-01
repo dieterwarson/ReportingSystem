@@ -11,12 +11,6 @@ import OperationalType from './operationalType';
 @Table
 export default class OperationalSubtype extends Model<OperationalSubtype> {
   @Index
-    
-  @Column
-  typeName!: string;
-
-  @Column
-  description!: string;
 
   @ForeignKey(() => OperationalType)
   @Column
@@ -24,4 +18,10 @@ export default class OperationalSubtype extends Model<OperationalSubtype> {
 
   @BelongsTo(() => OperationalType)
   operationalType!: OperationalType;
+    
+  @Column
+  typeName!: string;
+
+  @Column
+  description!: string;
 }

@@ -12,16 +12,16 @@ import MalfunctionType from './malfunctionType';
 export default class MalfunctionSubtype extends Model<MalfunctionSubtype> {
   @Index
     
-  @Column
-  typeName!: string;
-
-  @Column
-  description!: string;
-
   @ForeignKey(() => MalfunctionType)
   @Column
   malfunctionTypeId!: number;
 
   @BelongsTo(() => MalfunctionType)
   malfunctionType!: MalfunctionType;
+
+  @Column
+  typeName!: string;
+
+  @Column
+  description!: string;
 }

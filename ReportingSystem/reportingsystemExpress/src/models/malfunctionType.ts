@@ -6,12 +6,12 @@ import Malfunction from './malfunction';
 export default class MalfunctionType extends Model<MalfunctionType> {
   @Index
     
-  @Column
-  typeName!: string;
-
   @HasMany(() => Malfunction)
   malfunctions!: Malfunction[];
-
+  
   @HasMany(() => MalfunctionSubtype)
   malfunctionSubtypes!: MalfunctionSubtype[];
-}
+  
+  @Column
+  typeName!: string;
+}  

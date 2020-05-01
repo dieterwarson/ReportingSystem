@@ -13,6 +13,27 @@ import User from './user';
 @Table
 export default class WorkplaceEvent extends Model<WorkplaceEvent> {
   @Index
+  
+  @ForeignKey(() => User)
+  @Column
+  authorId!: number;
+  
+  @BelongsTo(() => User)
+  user!: User;
+  
+  @ForeignKey(() => Administrative)
+  @Column
+  administrativeId!: number;
+  
+  @BelongsTo(() => Administrative)
+  administrative!: Administrative;
+  
+  @ForeignKey(() => WorkplaceType)
+  @Column
+  workplaceTypeId!: number;
+  
+  @BelongsTo(() => WorkplaceType)
+  workplaceType!: WorkplaceType;
     
   @Column
   description!: string;
@@ -31,25 +52,4 @@ export default class WorkplaceEvent extends Model<WorkplaceEvent> {
 
   @Column
   shift!: boolean;
-
-  @ForeignKey(() => Administrative)
-  @Column
-  administrativeId!: number;
-
-  @BelongsTo(() => Administrative)
-  administrative!: Administrative;
-
-  @ForeignKey(() => User)
-  @Column
-  authorId!: number;
-
-  @BelongsTo(() => User)
-  user!: User;
-
-  @ForeignKey(() => WorkplaceType)
-  @Column
-  workplaceTypeId!: number;
-
-  @BelongsTo(() => WorkplaceType)
-  workplaceType!: WorkplaceType;
 }

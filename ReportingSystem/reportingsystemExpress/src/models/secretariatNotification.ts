@@ -10,11 +10,26 @@ import Administrative from './administrative';
 import User from './user';
 
 @Table
-export default class SecretariatNotification extends Model<
-  SecretariatNotification
-> {
+export default class SecretariatNotification extends Model<SecretariatNotification> {
   @Index
   
+  @ForeignKey(() => User)
+  @Column
+  authorId!: number;
+  
+  @BelongsTo(() => User)
+  user!: User;
+  
+  @ForeignKey(() => Administrative)
+  @Column
+  administrativeId!: number;
+
+  @BelongsTo(() => Administrative)
+  administrative!: Administrative;
+  
+  @Column
+  description!: string;
+
   @Column
   monitoring!: boolean;
   
@@ -23,21 +38,4 @@ export default class SecretariatNotification extends Model<
   
   @Column
   shift!: boolean;
-  
-  @Column
-  description!: string;
-  
-  @ForeignKey(() => Administrative)
-  @Column
-  administrativeId!: number;
-
-  @BelongsTo(() => Administrative)
-  administrative!: Administrative;
-
-  @ForeignKey(() => User)
-  @Column
-  authorId!: number;
-  
-  @BelongsTo(() => User)
-  user!: User;
 }
