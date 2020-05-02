@@ -28,12 +28,6 @@ export default class OperationalEvent extends Model<OperationalEvent> {
 
   @BelongsTo(() => Operational)
   operational!: Operational;
-
-  /** OperationalTypeId ? */
-  
-  /** FK */
-  @Column
-  operationalTypeId!: number;
   
   @Column
   signaling!: string;

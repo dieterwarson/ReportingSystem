@@ -2,23 +2,13 @@
   <div class="statistics">
     <h1>Statistieken</h1>
 
-    <div class="container my-4">
-      <h3>2020</h3>
-      <div class="row">
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Helikopter ingezet</h5>
-              <p class="card-text">15 keer</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Grensoverschrijdende achtervolging</h5>
-              <p class="card-text">23 keer</p>
+    <div class="container">
+      <div class="row" v-for="(value, index) in reports" :key="value.id">
+        <div v-if="index % 2 == 1">
+          <div class="card text-center">
+            <h5 class="card-title">{{ getTypeName(value[0]) }}</h5>
+            <div class="card-block">
+              <p class="card-text">{{ getTypeNumber(value[0]) }}</p>
             </div>
           </div>
         </div>
@@ -27,14 +17,44 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+import ReportingService from '../services/ReportingService';
+export default Vue.extend({
   data: function() {
     return {
-      helicopterCount: 5,
-      crossedBorderCount: 9,
-      categories: [],
+      reports: [],
     };
   },
-};
+
+  mounted() {
+    this.loadData();
+  },
+
+  methods: {
+    loadData: function() {
+      ReportingService.getAllReports('/api/statistics/types').then(
+        (res) => (this.reports = res)
+      );
+    },
+
+    reportClick: function(id: string) {
+      this.$router.push({ path: 'reportView', query: { reportId: id } });
+    },
+
+    splitString: function(str: string) {
+      return str.split(':');
+    },
+
+    getTypeName: function(str: string) {
+      const splitted = this.splitString(str);
+      return splitted[0];
+    },
+
+    getTypeNumber: function(str: string) {
+      const splitted = this.splitString(str);
+      return splitted[1];
+    },
+  },
+});
 </script>

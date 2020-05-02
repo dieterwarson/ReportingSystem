@@ -1,73 +1,72 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
-    component: Home
+    path: '/',
+    name: 'Home',
+    component: Home,
   },
   {
-    path: "/addreport",
-    name: "AddReport",
+    path: '/addreport',
+    name: 'AddReport',
     component: () =>
-      import(/* webpackChunckName: "AddReport" */ "../views/AddReport.vue")
+      import(/* webpackChunckName: "AddReport" */ '../views/AddReport.vue'),
   },
   {
-    path: "/reports",
-    name: "Reports",
+    path: '/reports',
+    name: 'Reports',
     component: () =>
-      import(/* webpackChunckName: "Reports" */ "../views/Reports.vue")
+      import(/* webpackChunckName: "Reports" */ '../views/Reports.vue'),
   },
   {
-    path: "/notifications",
-    name: "Notifications",
-    component: () =>
-      import(
-        /* webpackChunckName: "Notifications" */ "../views/Notifications.vue"
-      )
-  },
-  {
-    path: "/overviewshift",
-    name: "OverviewShift",
+    path: '/notifications',
+    name: 'Notifications',
     component: () =>
       import(
-        /* webpackChunckName: "OverviewShift" */ "../views/OverviewShift.vue"
-      )
+        /* webpackChunckName: "Notifications" */ '../views/Notifications.vue'
+      ),
   },
   {
-    path: "/statistics",
-    name: "Statistics",
+    path: '/overviewshift',
+    name: 'OverviewShift',
     component: () =>
-      import(/* webpackChunckName: "Statistics" */ "../views/Statistics.vue")
+      import(
+        /* webpackChunckName: "OverviewShift" */ '../views/OverviewShift.vue'
+      ),
   },
   {
-    path: "/login",
-    name: "Login",
+    path: '/statistics',
+    name: 'Statistics',
     component: () =>
-      import(/* webpackChunckName: "Login" */ "../views/Login.vue")
+      import(/* webpackChunckName: "Statistics" */ '../views/Statistics.vue'),
   },
   {
-    path: "/reportview",
-    name: "ReportView",
+    path: '/login',
+    name: 'Login',
     component: () =>
-      import(/* webpackChunckName: "Login" */ "../views/ReportView.vue")
+      import(/* webpackChunckName: "Login" */ '../views/Login.vue'),
   },
   {
-    path: "/admin",
-    name: "Admin",
+    path: '/reportview',
+    name: 'ReportView',
     component: () =>
-      import(/* webChunckName: "Admin" */ "../views/Admin.vue")
-  }
+      import(/* webpackChunckName: "Login" */ '../views/ReportView.vue'),
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import(/* webChunckName: "Admin" */ '../views/Admin.vue'),
+  },
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 export default router;

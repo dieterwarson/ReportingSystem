@@ -2,7 +2,16 @@
   <div class="container pt-5 pb-5">
     <h1>
       Verslag van
-      {{ new Date(reportContent.report.date).toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit', hour12: false}) }}
+      {{
+        new Date(reportContent.report.date).toLocaleString([], {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+        })
+      }}
     </h1>
     <div
       class="btn-group d-flex"
@@ -168,7 +177,7 @@ export default Vue.extend({
 
   methods: {
     loadData: function() {
-      const response = ReportingService.getAllReports(
+      ReportingService.getAllReports(
         '/api/reports/content/' + this.$route.query.reportId
       ).then((res) => (this.reportContent = res));
       // this.reportContent = {"report":{"id":1,"date":"2020-03-16T21:13:48.000Z","temporary":false,"createdAt":"2020-04-23T14:25:02.000Z","updatedAt":"2020-04-23T14:25:02.000Z"},"operational":{},"administrative":{},"technical":{}}

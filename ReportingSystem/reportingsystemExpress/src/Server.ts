@@ -100,7 +100,7 @@ app.get('*', (req: Request, res: Response) => {
 
 // Belangrijk:
 // Elke keer dat de container opnieuw gestart wordt, is de database leeg
-// Om de volgende data toe te voegen, moeten de save()'s oncomment worden
+// Om de volgende data toe te voegen, moeten de save()'s uncomment worden
 // Na eenmaal toevoegen, dus eenmaal herstarten via nodemon, moeten de save()'s terug gecomment worden
 // Anders wordt elke keer nodemon hetstart opnieuw al deze kolommen toegevoegd
 
@@ -258,7 +258,6 @@ const secretariatNotification2 = new SecretariatNotification({
 const operationalEvent1 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  operationalTypeId: 1,
   signaling: 'Verlies inschrijvingsbewijs',
   plNumber: null,
   description: null,
@@ -272,7 +271,6 @@ const operationalEvent1 = new OperationalEvent({
 const operationalEvent2 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  operationalTypeId: 2,
   signaling: null,
   plNumber: 'PL031770168',
   description: null,
@@ -286,7 +284,6 @@ const operationalEvent2 = new OperationalEvent({
 const operationalEvent3 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  operationalTypeId: 3,
   signaling: null,
   plNumber: 'PL03170104',
   description: null,
@@ -300,7 +297,6 @@ const operationalEvent3 = new OperationalEvent({
 const operationalEvent4 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  operationalTypeId: 4,
   signaling: 'Seining persoon',
   plNumber: null,
   description: null,
@@ -314,7 +310,6 @@ const operationalEvent4 = new OperationalEvent({
 const operationalEvent5 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  operationalTypeId: 5,
   signaling: 'Seining persoon',
   plNumber: null,
   description: null,
@@ -328,7 +323,6 @@ const operationalEvent5 = new OperationalEvent({
 const operationalEvent6 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  operationalTypeId: 6,
   signaling: 'Seining persoon',
   plNumber: 'PL03170202',
   description: null,
@@ -342,7 +336,6 @@ const operationalEvent6 = new OperationalEvent({
 const operationalEvent7 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  operationalTypeId: 7,
   signaling: null,
   plNumber: 'PL03170104',
   description: null,
@@ -356,7 +349,6 @@ const operationalEvent7 = new OperationalEvent({
 const operationalEvent8 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  operationalTypeId: 8,
   signaling: null,
   plNumber: 'PL03170315',
   description: null,
@@ -370,7 +362,6 @@ const operationalEvent8 = new OperationalEvent({
 const operationalEvent9 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  operationalTypeId: 9,
   signaling: null,
   plNumber: 'PL03170322',
   description: null,
@@ -388,18 +379,51 @@ const eventType1 = new EventType({
 });
 // eventType1.save();
 
+const eventType2 = new EventType({
+  reportId: 1,
+  operationalEventId: 1,
+  operationalTypeId: 2,
+});
+// eventType2.save();
+
+const eventType3 = new EventType({
+  reportId: 1,
+  operationalEventId: 1,
+  operationalTypeId: 2,
+});
+// eventType3.save();
+
 const operationalType1 = new OperationalType({
   eventTypeId: 1,
-  typeName: 'operationalType typeName',
+  typeName: 'Helikopter ingezet',
 });
 // operationalType1.save();
 
+const operationalType2 = new OperationalType({
+  eventTypeId: 2,
+  typeName: 'Grensoverschrijdende achtervolging',
+});
+// operationalType2.save();
+
+const operationalType3 = new OperationalType({
+  eventTypeId: 3,
+  typeName: 'Helikopter ingezet',
+});
+// operationalType3.save();
+
 const operationalSubtype1 = new OperationalSubtype({
   operationalTypeId: 1,
-  typeName: 'operationalSubtype typeName',
-  description: 'opertationalSubtype description',
+  typeName: null,
+  description: 'operationalSubtype description',
 });
 // operationalSubtype1.save();
+
+const operationalSubtype2 = new OperationalSubtype({
+  operationalTypeId: 2,
+  typeName: null,
+  description: 'operationalSubtype description',
+});
+// operationalSubtype2.save();
 
 const dummyData1 = new DummyDatabase({
   plNumber: 'PL12536432',
