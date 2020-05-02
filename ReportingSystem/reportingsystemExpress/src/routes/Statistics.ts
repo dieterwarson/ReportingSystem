@@ -18,11 +18,8 @@ router.get('/types', async (req: Request, res: Response) => {
     'Grensoverschrijdende achtervolging',
   ];
 
+  // Loop over all types
   for (let i in types) {
-    console.log('\n\n\n\n');
-
-    console.log(types[i]);
-
     var type = types[i];
 
     var result;
@@ -35,16 +32,10 @@ router.get('/types', async (req: Request, res: Response) => {
     });
     if (result.length != 0) {
       reports.push(result);
+      // Add the typeName and number of its occurrences to reports
       var count: number[] | String[] = [type + ':' + result.length];
       reports.push(count);
     }
-    console.log('\n\n----------------------------\nresult\n');
-    console.log(result);
-    console.log('\n\n----------------------------\nreports\n');
-    console.log(reports);
-
-    var example;
-    example = reports[1].toString();
   }
 
   res.send(reports);

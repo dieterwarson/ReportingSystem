@@ -37,20 +37,16 @@ export default Vue.extend({
         (res) => (this.reports = res)
       );
     },
-
     reportClick: function(id: string) {
       this.$router.push({ path: 'reportView', query: { reportId: id } });
     },
-
     splitString: function(str: string) {
       return str.split(':');
     },
-
     getTypeName: function(str: string) {
       const splitted = this.splitString(str);
       return splitted[0];
     },
-
     getTypeNumber: function(str: string) {
       const splitted = this.splitString(str);
       return splitted[1];
