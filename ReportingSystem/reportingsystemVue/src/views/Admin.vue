@@ -80,7 +80,6 @@
 <script lang="ts">
 import Vue from 'vue'
 import ReportingService from "../services/ReportingService"
-import { access } from 'fs'
 export default Vue.extend({
     data() {
         return {
