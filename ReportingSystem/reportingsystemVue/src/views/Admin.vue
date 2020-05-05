@@ -11,6 +11,7 @@
         <section v-if="option == 'newUser'">
             <div class="input-group-vertical mt-2">
                 <input name="username" v-model="newUserData.username" type="text" placeholder="Gebruikersnaam" class="form-control form-control-lg">
+                <input name="email" v-model="newUserData.email" type="email" placeholder="email" class="form-control form-control-lg">
                 <input name="password" v-model="newUserData.password" type="password" placeholder="Wachtwoord" class="form-control form-control-lg">
                 <input name="passwordCheck" v-model="newUserData.rptPassword" type="password" placeholder="Herhaal wachtwoord" class="form-control form-control-lg">
                 <small v-if="newUserData.passwordComp">De wachtwoorden komen niet overeen!</small>
@@ -79,6 +80,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import ReportingService from "../services/ReportingService"
+import { access } from 'fs'
 export default Vue.extend({
     data() {
         return {
@@ -87,6 +89,7 @@ export default Vue.extend({
                 username: "",
                 password: "",
                 rptPassword: "",
+                email: "",
                 passwordCheck: false,
                 passwordComp: false,
                 completed: false
@@ -190,18 +193,37 @@ export default Vue.extend({
             this.addField.completed = true;
             this.addField.newField = "";
         },
-        checkPasswords: function(password1 : string, password2 : string){
-            const test = new String(password1)
-            if (test.localeCompare(password2) == 0) {
-                return false
+        checkUsername: function(username: string) {
+            if (/^[a-z0-9_-]{3,15}$/.test(username)) {
+                return true;
             } else {
-                return true
+                return false;
             }
+        },
+        checkPasswords: function(password1 : string, password2 : string){
+            if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password1)){    //Check if password is at least 6 long and at least one uppercase
+                const test = new String(password1)
+                if (test.localeCompare(password2) == 0) {
+                    return false
+                } else {
+                    return true
+                }
+            } else {
+                return false;
+            }
+           
+        },
+        checkAccessRights: function(accessRights : number){
+            if (accessRights >= 0 && accessRights < 3)
+                return true;
+            else
+                return false;
         },
         emptyAllFields: function() {
             this.newUserData.username = "";
             this.newUserData.password = "";
             this.newUserData.rptPassword = "";
+            this.newUserData.email = "";
             this.newUserData.passwordCheck = false;
             this.newUserData.passwordComp = false;
             this.newUserData.completed = false;

@@ -16,6 +16,7 @@
 import Vue from 'vue';
 import axios from "axios";
 import router from "../router/index"
+import ReportingService from '../services/ReportingService';
 //import service from "../axios/service";
 export default Vue.extend({
     name: 'Login',
@@ -29,29 +30,18 @@ export default Vue.extend({
                 errors: {}
             }
         }
-    }
-    /*,
+    },
     methods: { 
-        login:(e) => {
-            e.preventDefault();
-            email : String;
-            password : String;
-            let login = () => {
-                let data = {
-                    email: this.input.email,
-                    password: this.input.password
-                }
-                axios.post("", data)
-                .then((response) => {
-                    console.log("Logged in");
-                    router.push("/Home");
-                })
-                .catch((errors) => {
-                    console.log("Cannot log in");
-                })
-            } 
-            login();
+        async login() {
+            const response = await ReportingService.loginUser({
+                username: this.input.username,
+                password: this.input.password
+            });
+            alert(response.username);
+            this.input.username = response;
+            this.input.password = "";
         }
-    } */
+
+    } 
 })
 </script>
