@@ -110,6 +110,7 @@ const user1 = new User({
   accessRights: 0,
 });
 // user1.save();
+
 const user2 = new User({
   username: 'chass_beerts',
   password: 'test',
@@ -117,28 +118,27 @@ const user2 = new User({
 });
 // user2.save();
 
-
 const report1 = new Report({
   date: new Date('2020/03/16 21:13:48'),
   temporary: false,
   nightShift: true,
 });
-report1.save();
+// report1.save();
 
 const technical1 = new Technical({
   reportId: 1,
 });
-technical1.save();
+// technical1.save();
 
 const administrative1 = new Administrative({
   reportId: 1,
 });
-administrative1.save();
+// administrative1.save();
 
 const operational1 = new Operational({
   reportId: 1,
 });
-operational1.save();
+// operational1.save();
 
 const defect1 = new Defect({
   technicalId: 1,
@@ -148,7 +148,7 @@ const defect1 = new Defect({
   monitoring: true,
   date: new Date('2020/04/15 13:03:57'),
 });
-defect1.save();
+// defect1.save();
 
 const defect2 = new Defect({
   technicalId: 1,
@@ -158,31 +158,7 @@ const defect2 = new Defect({
   monitoring: true,
   date: new Date('2020/04/15 16:58:34'),
 });
-defect2.save();
-
-const defectType1 = new DefectType({
-  typeName: 'lekkende kraan',
-});
-defectType1.save();
-
-const defectType2 = new DefectType({
-  typeName: 'krakende deur',
-});
-defectType2.save();
-
-const defectSubtype1 = new DefectSubtype({
-  defectTypeId: 1,
-  typeName: 'defectSubtype typeName',
-  description: 'defectSubtype lekkende kraan',
-});
-defectSubtype1.save();
-
-const defectSubtype2 = new DefectSubtype({
-  defectTypeId: 2,
-  typeName: 'defectSubtype typeName',
-  description: 'defectSubtype krakende deur',
-});
-defectSubtype2.save();
+// defect2.save();
 
 const malfunction1 = new Malfunction({
   technicalId: 1,
@@ -193,19 +169,7 @@ const malfunction1 = new Malfunction({
   date: new Date('2020/04/15 13:03:57'),
   duration: 6,
 });
-malfunction1.save();
-
-const malfunctionType1 = new MalfunctionType({
-  typeName: 'malfunctionType typeName',
-});
-malfunctionType1.save();
-
-const malfunctionSubtype1 = new MalfunctionSubtype({
-  typeName: 'malfunctionSubtype typeName',
-  description: 'malfunctionSubtype description',
-  malfunctionTypeId: 1,
-});
-malfunctionSubtype1.save();
+// malfunction1.save();
 
 const replacement1 = new Replacement({
   authorId: 1,
@@ -216,7 +180,7 @@ const replacement1 = new Replacement({
   date: new Date('2020/03/30 15:46:36'),
   shift: true,
 });
-replacement1.save();
+// replacement1.save();
 
 const workplaceEvent1 = new WorkplaceEvent({
   authorId: 1,
@@ -229,19 +193,7 @@ const workplaceEvent1 = new WorkplaceEvent({
   date: new Date('2020/12/11 9:10:23'),
   shift: false,
 });
-workplaceEvent1.save();
-
-const workplaceType1 = new WorkplaceType({
-  typeName: 'workplaceType typeName',
-});
-workplaceType1.save();
-
-const workplaceSubtype1 = new WorkplaceSubtype({
-  workplaceTypeId: 1,
-  typeName: 'workplaceSubtype typeName',
-  description: 'workplaceSubtype description',
-});
-workplaceSubtype1.save();
+// workplaceEvent1.save();
 
 const secretariatNotification1 = new SecretariatNotification({
   authorId: 1,
@@ -251,7 +203,7 @@ const secretariatNotification1 = new SecretariatNotification({
   date: new Date('2020/03/16 19:19:49'),
   shift: true,
 });
- secretariatNotification1.save();
+//  secretariatNotification1.save();
 
 const secretariatNotification2 = new SecretariatNotification({
   authorId: 1,
@@ -261,7 +213,7 @@ const secretariatNotification2 = new SecretariatNotification({
   date: new Date('2020/03/16 19:21:46'),
   shift: true,
 });
-secretariatNotification2.save();
+// secretariatNotification2.save();
 
 const operationalEvent1 = new OperationalEvent({
   authorId: 1,
@@ -273,7 +225,7 @@ const operationalEvent1 = new OperationalEvent({
   unit: 'KEMPLA',
   date: new Date('2020/03/16 18:13:48'),
 });
- operationalEvent1.save();
+//  operationalEvent1.save();
 
 const operationalEvent2 = new OperationalEvent({
   authorId: 1,
@@ -285,7 +237,7 @@ const operationalEvent2 = new OperationalEvent({
   unit: 'CARMA',
   date: new Date('2020/03/16 21:34:37'),
 });
- operationalEvent2.save();
+//  operationalEvent2.save();
 
 const operationalEvent3 = new OperationalEvent({
   authorId: 1,
@@ -297,7 +249,7 @@ const operationalEvent3 = new OperationalEvent({
   unit: 'HANO',
   date: new Date('2020/03/16 22:05:18'),
 });
- operationalEvent3.save();
+//  operationalEvent3.save();
 
 const operationalEvent4 = new OperationalEvent({
   authorId: 1,
@@ -309,7 +261,7 @@ const operationalEvent4 = new OperationalEvent({
   unit: 'LAMA',
   date: new Date('2020/03/16 23:34:33'),
 });
- operationalEvent4.save();
+//  operationalEvent4.save();
 
 const operationalEvent5 = new OperationalEvent({
   authorId: 1,
@@ -321,7 +273,7 @@ const operationalEvent5 = new OperationalEvent({
   unit: 'LOON',
   date: new Date('2020/03/16 23:57:10'),
 });
- operationalEvent5.save();
+//  operationalEvent5.save();
 
 const operationalEvent6 = new OperationalEvent({
   authorId: 1,
@@ -334,7 +286,7 @@ const operationalEvent6 = new OperationalEvent({
   unit: 'BIHORI',
   date: new Date('2020/03/16 00:18:57'),
 });
- operationalEvent6.save();
+//  operationalEvent6.save();
 
 const operationalEvent7 = new OperationalEvent({
   authorId: 1,
@@ -346,7 +298,7 @@ const operationalEvent7 = new OperationalEvent({
   unit: 'HANO',
   date: new Date('2020/03/16 00:45:45'),
 });
- operationalEvent7.save();
+//  operationalEvent7.save();
 
 const operationalEvent8 = new OperationalEvent({
   authorId: 1,
@@ -358,7 +310,7 @@ const operationalEvent8 = new OperationalEvent({
   unit: 'LRH',
   date: new Date('2020/03/16 01:21:25'),
 });
- operationalEvent8.save();
+//  operationalEvent8.save();
 
 const operationalEvent9 = new OperationalEvent({
   authorId: 1,
@@ -370,60 +322,108 @@ const operationalEvent9 = new OperationalEvent({
   unit: 'LRH',
   date: new Date('2020/03/16 01:51:47'),
 });
- operationalEvent9.save();
+//  operationalEvent9.save();
+
+const defectType1 = new DefectType({
+  typeName: 'lekkende kraan',
+});
+// defectType1.save();
+
+const defectType2 = new DefectType({
+  typeName: 'krakende deur',
+});
+// defectType2.save();
+
+const malfunctionType1 = new MalfunctionType({
+  typeName: 'malfunctionType typeName',
+});
+// malfunctionType1.save();
+
+const workplaceType1 = new WorkplaceType({
+  typeName: 'workplaceType typeName',
+});
+// workplaceType1.save();
 
 const eventType1 = new EventType({
   reportId: 1,
   operationalEventId: 1,
   operationalTypeId: 1,
 });
-eventType1.save();
+// eventType1.save();
 
 const eventType2 = new EventType({
   reportId: 1,
   operationalEventId: 1,
   operationalTypeId: 2,
 });
-eventType2.save();
+// eventType2.save();
 
 const eventType3 = new EventType({
   reportId: 1,
   operationalEventId: 1,
   operationalTypeId: 2,
 });
-eventType3.save();
+// eventType3.save();
 
 const operationalType1 = new OperationalType({
   eventTypeId: 1,
   typeName: 'Helikopter ingezet',
 });
-operationalType1.save();
+// operationalType1.save();
 
 const operationalType2 = new OperationalType({
   eventTypeId: 2,
   typeName: 'Grensoverschrijdende achtervolging',
 });
-operationalType2.save();
+// operationalType2.save();
 
 const operationalType3 = new OperationalType({
   eventTypeId: 3,
   typeName: 'Helikopter ingezet',
 });
-operationalType3.save();
+// operationalType3.save();
+
+const defectSubtype1 = new DefectSubtype({
+  defectTypeId: 1,
+  typeName: 'defectSubtype typeName',
+  description: 'defectSubtype lekkende kraan',
+});
+// defectSubtype1.save();
+
+const defectSubtype2 = new DefectSubtype({
+  defectTypeId: 2,
+  typeName: 'defectSubtype typeName',
+  description: 'defectSubtype krakende deur',
+});
+// defectSubtype2.save();
+
+const malfunctionSubtype1 = new MalfunctionSubtype({
+  typeName: 'malfunctionSubtype typeName',
+  description: 'malfunctionSubtype description',
+  malfunctionTypeId: 1,
+});
+// malfunctionSubtype1.save();
+
+const workplaceSubtype1 = new WorkplaceSubtype({
+  workplaceTypeId: 1,
+  typeName: 'workplaceSubtype typeName',
+  description: 'workplaceSubtype description',
+});
+// workplaceSubtype1.save();
 
 const operationalSubtype1 = new OperationalSubtype({
   operationalTypeId: 1,
   typeName: null,
   description: 'operationalSubtype description',
 });
-operationalSubtype1.save();
+// operationalSubtype1.save();
 
 const operationalSubtype2 = new OperationalSubtype({
   operationalTypeId: 2,
   typeName: null,
   description: 'operationalSubtype description',
 });
-operationalSubtype2.save();
+// operationalSubtype2.save();
 
 const dummyData1 = new DummyDatabase({
   plNumber: 'PL12536432',
@@ -432,7 +432,7 @@ const dummyData1 = new DummyDatabase({
   date: new Date('2020/04/13 12:40:32'),
   actions: 'NAV zelfmoord te Overpelt',
 });
- dummyData1.save();
+//  dummyData1.save();
 
 const dummyData2 = new DummyDatabase({
   plNumber: 'PL12536433',
@@ -441,7 +441,7 @@ const dummyData2 = new DummyDatabase({
   date: new Date('2020/04/13 12:40:32'),
   actions: 'NAV zelfmoord',
 });
- dummyData2.save();
+//  dummyData2.save();
 
 // DummyDatabase.sync();
 
@@ -449,7 +449,7 @@ const dummyData2 = new DummyDatabase({
  *                              AXIOS     NEEDS TO BE REPLACED LATER
  ***********************************************************************************/
 
- // REPORTS
+// REPORTS
 app.post('/getFile', async (req, res) => {
   console.log(req.body.plNumber);
   const file = await DummyDatabase.findOne({
@@ -538,7 +538,7 @@ app.post('/addTechnicalEvent', async (req, res) => {
   Defect.sync();
 });
 
-// USER 
+// USER
 interface INewUserData {
   username: string;
   email: string;
@@ -547,17 +547,16 @@ interface INewUserData {
   accessRights: number;
 }
 
-
 function checkUsername(username: string) {
-  if (/^[a-z0-9_-]{3,15}$/.test(username)){
+  if (/^[a-z0-9_-]{3,15}$/.test(username)) {
     return true;
   }
   return false;
 }
 
 function checkPassword(password: string, rptPassword: string) {
-  if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)){
-    if (password.localeCompare(rptPassword) == 0){
+  if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)) {
+    if (password.localeCompare(rptPassword) == 0) {
       return true;
     }
   }
@@ -565,67 +564,73 @@ function checkPassword(password: string, rptPassword: string) {
 }
 
 function checkAccessRights(accessRights: number) {
-  if (accessRights >= 0 && accessRights < 3){
+  if (accessRights >= 0 && accessRights < 3) {
     return true;
   }
   return false;
 }
 
 function checkEmail(email: string) {
-  if (email.search("@") > -1){
+  if (email.search('@') > -1) {
     return true;
   }
   return false;
 }
 
-function checkUserData(newUser: INewUserData){
-  return checkUsername(newUser.username) && checkPassword(newUser.password, newUser.rptPassword) && checkAccessRights(newUser.accessRights) && checkEmail(newUser.email);
+function checkUserData(newUser: INewUserData) {
+  return (
+    checkUsername(newUser.username) &&
+    checkPassword(newUser.password, newUser.rptPassword) &&
+    checkAccessRights(newUser.accessRights) &&
+    checkEmail(newUser.email)
+  );
 }
 
-
 app.post('/addUser', async (req, res) => {
-  const userData:INewUserData = {
+  const userData: INewUserData = {
     username: req.body.username,
     password: req.body.password,
     rptPassword: req.body.rptPassword,
     email: req.body.email,
-    accessRights: req.body.accessRights
+    accessRights: req.body.accessRights,
   };
-  if (userData.username && userData.password && userData.email && userData.accessRights) {
-    if (checkUserData(userData)){
+  if (
+    userData.username &&
+    userData.password &&
+    userData.email &&
+    userData.accessRights
+  ) {
+    if (checkUserData(userData)) {
       const user = User.findOne({
-        where: {username: userData.username}
+        where: { username: userData.username },
       });
       if (user !== null) {
         res.status(401).json({
-          message: "Deze gebruiker bestaat al"
-        })
+          message: 'Deze gebruiker bestaat al',
+        });
       } else {
-      User.create({
-        username: userData.username,
-        password: userData.password,
-        email: userData.email,
-        accessRights: userData.accessRights
-      });
-      User.sync();
-      res.json({
-        message: "De nieuwe gebruiker is toegevoegd"
-      })
+        User.create({
+          username: userData.username,
+          password: userData.password,
+          email: userData.email,
+          accessRights: userData.accessRights,
+        });
+        User.sync();
+        res.json({
+          message: 'De nieuwe gebruiker is toegevoegd',
+        });
       }
     } else {
       res.status(401).json({
-        message: "Niet alle velden werden correct ingevuld"
-      })
+        message: 'Niet alle velden werden correct ingevuld',
+      });
     }
-
   } else {
     res.status(401).json({
-      message: "Niet alle velden werden ingevuld"
-    })
+      message: 'Niet alle velden werden ingevuld',
+    });
   }
 });
-
-
 
 app.post('/changePassword', async (req, res) => {
   console.log(req.body.username);
@@ -659,8 +664,8 @@ app.post('/loginUser', async (req, res) => {
   const user = await User.findOne({
     where: {
       username: req.body.username,
-      password: req.body.password
-    }
+      password: req.body.password,
+    },
   });
   if (user !== null) {
     res.send(user);
@@ -672,8 +677,6 @@ app.post('/loginUser', async (req, res) => {
 app.post('/addField', async (req, res) => {
   console.log(req.body.newField);
 });
-
-
 
 // Export express instance
 export default app;
