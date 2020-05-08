@@ -109,7 +109,14 @@ const user1 = new User({
   password: '',
   accessRights: 0,
 });
-user1.save();
+// user1.save();
+const user2 = new User({
+  username: 'chass_beerts',
+  password: 'test',
+  accessRights: 0,
+});
+// user2.save();
+
 
 const report1 = new Report({
   date: new Date('2020/03/16 21:13:48'),
@@ -439,8 +446,10 @@ const dummyData2 = new DummyDatabase({
 // DummyDatabase.sync();
 
 /************************************************************************************
- *                              AXIOS
+ *                              AXIOS     NEEDS TO BE REPLACED LATER
  ***********************************************************************************/
+
+ // REPORTS
 app.post('/getFile', async (req, res) => {
   console.log(req.body.plNumber);
   const file = await DummyDatabase.findOne({
@@ -529,23 +538,94 @@ app.post('/addTechnicalEvent', async (req, res) => {
   Defect.sync();
 });
 
+// USER 
+interface INewUserData {
+  username: string;
+  email: string;
+  password: string;
+  rptPassword: string;
+  accessRights: number;
+}
+
+
+function checkUsername(username: string) {
+  if (/^[a-z0-9_-]{3,15}$/.test(username)){
+    return true;
+  }
+  return false;
+}
+
+function checkPassword(password: string, rptPassword: string) {
+  if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)){
+    if (password.localeCompare(rptPassword) == 0){
+      return true;
+    }
+  }
+  return false;
+}
+
+function checkAccessRights(accessRights: number) {
+  if (accessRights >= 0 && accessRights < 3){
+    return true;
+  }
+  return false;
+}
+
+function checkEmail(email: string) {
+  if (email.search("@") > -1){
+    return true;
+  }
+  return false;
+}
+
+function checkUserData(newUser: INewUserData){
+  return checkUsername(newUser.username) && checkPassword(newUser.password, newUser.rptPassword) && checkAccessRights(newUser.accessRights) && checkEmail(newUser.email);
+}
+
+
 app.post('/addUser', async (req, res) => {
-  console.log(req.body.username);
-  User.create({
+  const userData:INewUserData = {
     username: req.body.username,
     password: req.body.password,
-    accessRights: req.body.accessRights,
-  })
-    .then(function (newUser: User) {
-      console.log(newUser.username);
-      res.send(true);
+    rptPassword: req.body.rptPassword,
+    email: req.body.email,
+    accessRights: req.body.accessRights
+  };
+  if (userData.username && userData.password && userData.email && userData.accessRights) {
+    if (checkUserData(userData)){
+      const user = User.findOne({
+        where: {username: userData.username}
+      });
+      if (user !== null) {
+        res.status(401).json({
+          message: "Deze gebruiker bestaat al"
+        })
+      } else {
+      User.create({
+        username: userData.username,
+        password: userData.password,
+        email: userData.email,
+        accessRights: userData.accessRights
+      });
+      User.sync();
+      res.json({
+        message: "De nieuwe gebruiker is toegevoegd"
+      })
+      }
+    } else {
+      res.status(401).json({
+        message: "Niet alle velden werden correct ingevuld"
+      })
+    }
+
+  } else {
+    res.status(401).json({
+      message: "Niet alle velden werden ingevuld"
     })
-    .catch(function (error: Error) {
-      console.log(error);
-      res.send(false);
-    });
-  User.sync();
+  }
 });
+
+
 
 app.post('/changePassword', async (req, res) => {
   console.log(req.body.username);
@@ -575,9 +655,25 @@ app.post('/changeAccess', async (req, res) => {
   // });
 });
 
+app.post('/loginUser', async (req, res) => {
+  const user = await User.findOne({
+    where: {
+      username: req.body.username,
+      password: req.body.password
+    }
+  });
+  if (user !== null) {
+    res.send(user);
+  } else {
+    res.send('USER NOT FOUND');
+  }
+});
+
 app.post('/addField', async (req, res) => {
   console.log(req.body.newField);
 });
+
+
 
 // Export express instance
 export default app;
