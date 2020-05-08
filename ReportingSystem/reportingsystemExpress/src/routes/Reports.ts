@@ -27,7 +27,6 @@ router.get('/all', async (req: Request, res: Response) => {
     attributes: ['id', 'date'],
   });
   res.send(reports);
-  return res.json({ reports });
 });
 
 /******************************************************************************
@@ -43,69 +42,45 @@ router.get('/monitored', async (req: Request, res: Response) => {
     | Malfunction[]
     | Replacement[]
     | SecretariatNotification[]
-    | OperationalEvent[]
   )[] = [];
 
-  var result;
-  result = await Defect.findAll({
+  let defects = await Defect.findAll({
     where: {
       monitoring: 1,
     },
   });
-  if (result.length !== 0) {
-    reports.push(result);
-  }
 
-  result = await Malfunction.findAll({
+  let malfunctions = await Malfunction.findAll({
     where: {
       monitoring: 1,
     },
   });
-  if (result.length !== 0) {
-    reports.push(result);
-  }
 
-  result = await Replacement.findAll({
+  let replacements = await Replacement.findAll({
     where: {
       monitoring: 1,
     },
   });
-  if (result.length !== 0) {
-    reports.push(result);
-  }
 
-  result = await WorkplaceEvent.findAll({
+  let workplaceEvents = await WorkplaceEvent.findAll({
     where: {
       monitoring: 1,
     },
   });
-  if (result.length !== 0) {
-    reports.push(result);
-  }
 
-  result = await SecretariatNotification.findAll({
+  let secretariatNotifications = await SecretariatNotification.findAll({
     where: {
       monitoring: 1,
     },
   });
-  if (result.length !== 0) {
-    reports.push(result);
-  }
 
-  result = await OperationalEvent.findAll({
-    where: {
-      monitoring: 1,
-    },
-  });
-  if (result.length !== 0) {
-    reports.push(result);
-  }
-console.log(reports);
-console.log(reports[0]);
+  let results = {
+    administrative: { replacements, workplaceEvents, secretariatNotifications },
+    technical: { defects, malfunctions },
+  };
 
 
-  res.send(reports);
-  return res.json({ reports });
+  res.send(results);
 });
 
 /******************************************************************************
@@ -268,8 +243,84 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
 
   res.send(results);
 
-  // res.send(report);
-  // return res.json({ report });
+});
+
+/******************************************************************************
+ *      Get all the notifications from a report - "GET /api/reports/notifications/:reportId"
+ ******************************************************************************/
+router.get('/notifications/:reportId', async (req: Request, res: Response) => {
+  let reportId = req.param('reportId');
+  let report = await Report.findOne({
+    where: {
+      id: reportId,
+    },
+  });
+
+  let technical = await report?.$get('technical');
+  let administrative = await report?.$get('administrative');
+  let operational = await report?.$get('operational');
+
+  let defects = await technical?.$get('defects', {
+    where: {
+      monitoring: true
+    }
+  });
+  let malfunctions = await technical?.$get('malfunctions', {
+    where: {
+      monitoring: true
+    }
+  });
+  let replacements = await administrative?.$get('replacements', {
+    where: {
+      monitoring: true
+    }
+  });
+  let workplaceEvents = await administrative?.$get('workplaceEvents', {
+    where: {
+      monitoring: true
+    }
+  });
+  let secretariatNotifications = await administrative?.$get('replacements', {
+    where: {
+      monitoring: true
+    }
+  });
+
+  let results = {
+    administrative: { replacements, workplaceEvents, secretariatNotifications },
+    technical: { defects, malfunctions },
+  };
+
+  res.send(results);
+
+});
+
+
+/******************************************************************************
+ *      Get all the priority operationalEvents - "GET /api/reports/priority/:reportId"
+ ******************************************************************************/
+router.get('/priority/:reportId', async (req: Request, res: Response) => {
+  let reportId = req.param('reportId');
+  let report = await Report.findOne({
+    where: {
+      id: reportId,
+    },
+  });
+
+  let operational = await report?.$get('operational');
+
+  let operationalEvents = await operational?.$get('operationalEvents', {
+    where: {
+      priority: true
+    }
+  });
+
+  let results = {
+    operational: { operationalEvents }
+  };
+
+  res.send(results);
+
 });
 
 /******************************************************************************
