@@ -77,6 +77,7 @@
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
             <div>
+              <!-- PL-nummer -->
               <div>
                 <div class="form-control form-control-lg">
                   <div
@@ -97,6 +98,7 @@
               </div>
               <div class="input-group" style="height: 20%;">
                 <div class="formcontainer btn-block">
+                  <!-- Locatie -->
                   <div class="form-control form-control-lg">
                     <div
                       v-if="this.reportContent.operational.operationalEvents[this.eventId-1].location == null"
@@ -105,6 +107,7 @@
                       v-else
                     >Locatie: {{this.reportContent.operational.operationalEvents[this.eventId-1].location}}</div>
                   </div>
+                  <!-- Datum -->
                   <div class="form-control form-control-lg">
                     <div
                       v-if="this.reportContent.operational.operationalEvents[this.eventId-1].date == null"
@@ -118,6 +121,7 @@
                       }}
                     </div>
                   </div>
+                  <!-- Unit -->
                   <div class="form-control form-control-lg">
                     <div
                       v-if="this.reportContent.operational.operationalEvents[this.eventId-1].unit == null"
@@ -126,15 +130,13 @@
                       v-else
                     >Unit: {{this.reportContent.operational.operationalEvents[this.eventId-1].unit}}</div>
                   </div>
-
+                </div>
               </div>
-                              </div>
-
+              <!-- Extra info -->
               <div class="input-group" style="height: 39%;">
                 <input
                   type="text"
-                  contenteditable="true"
-                  placeholder="Extra info"
+                  value="zertyu"
                   class="form-control form-control-lg"
                   v-model="form.operationalMessage"
                 />
@@ -304,6 +306,9 @@ export default Vue.extend({
   data: function() {
     return {
       step: "Operational",
+      reportContent: {},
+      eventId: 0,
+      test:"",
       form: {
         //OPERATIONAL OBJECTS
         plNumber: "",
@@ -350,9 +355,7 @@ export default Vue.extend({
         problemType: null,
         technicalFailed: false,
         technicalSucceeded: false
-      },
-      reportContent: {},
-      eventId: 0
+      }
     };
   },
 
@@ -555,6 +558,7 @@ export default Vue.extend({
       };
 
       this.eventId = this.$route.query.eventId;
+      this.form.operationalMessage = this.reportContent.operational.operationalEvents[this.eventId-1].description;
     },
     getOperational: function() {
       if (this.step != "Operational") {
