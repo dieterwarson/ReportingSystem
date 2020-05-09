@@ -78,13 +78,14 @@
           <div class="text-sm-left col-lg">
             <div class="input-group">
               <div class="input-group" style="height: 20%;">
-                <input
-                  type="text"
-                  name="plNumber"
-                  placeholder="PL-nummer"
-                  class="form-control form-control-lg"
-                  v-model="form.plNumber"
-                />
+                <div class="form-control form-control-lg">
+                  <div
+                    v-if="this.reportContent.operational.operationalEvents[this.eventId-1].plNumber == null"
+                  >Geen PL-nummer beschikbaar.</div>
+                  <div
+                    v-else
+                  >{{this.reportContent.operational.operationalEvents[this.eventId-1].plNumber}}</div>
+                </div>
               </div>
               <!-- Zoek fiche knop -->
               <div class="input-group" style="height: 20%;">
@@ -132,9 +133,7 @@
               type="button"
               @click.prevent="addReport"
             >Opslaan</button>
-            <small
-              v-if="form.operationalFailed"
-            >Er is iets misgegaan bij het aanpassen.</small>
+            <small v-if="form.operationalFailed">Er is iets misgegaan bij het aanpassen.</small>
             <small v-if="form.operationalSucceeded">Het verslag is aangepast.</small>
           </div>
         </div>
@@ -218,12 +217,8 @@
               type="button"
               @click.prevent="addWorkForceEvent"
             >Opslaan</button>
-            <small v-if="form.workForceFailed">
-              Er is iets misgegaan bij het aanpassen.
-              </small>
-            <small v-if="form.workForceSucceeded">
-              Het verslag is aangepast.
-              </small>
+            <small v-if="form.workForceFailed">Er is iets misgegaan bij het aanpassen.</small>
+            <small v-if="form.workForceSucceeded">Het verslag is aangepast.</small>
           </div>
         </div>
       </section>
@@ -280,12 +275,8 @@
               type="button"
               @click.prevent="addTechnicalEvent"
             >Opslaan</button>
-            <small v-if="form.technicalFailed">
-              Er is iets misgegaan bij het aanpassen.
-              </small>
-            <small v-if="form.technicalSucceeded">
-              Het verslag is aangepast.
-            </small>
+            <small v-if="form.technicalFailed">Er is iets misgegaan bij het aanpassen.</small>
+            <small v-if="form.technicalSucceeded">Het verslag is aangepast.</small>
           </div>
         </div>
       </section>
@@ -346,10 +337,212 @@ export default Vue.extend({
         problemType: null,
         technicalFailed: false,
         technicalSucceeded: false
-      }
+      },
+      reportContent: {},
+      eventId: 0
     };
   },
+
+  mounted() {
+    this.loadData();
+  },
+
   methods: {
+    loadData: function() {
+      // ReportingService.getAllReports(
+      //   "/api/reports/content/" + this.$route.query.reportId
+      // ).then(res => (this.reportContent = res));
+
+      this.reportContent = {
+        report: {
+          id: 1,
+          date: "2020-03-16T21:13:48.000Z",
+          temporary: false,
+          createdAt: "2020-05-04T07:46:17.000Z",
+          updatedAt: "2020-05-04T07:46:17.000Z"
+        },
+        operational: {
+          operationalEvents: [
+            {
+              id: 1,
+              authorId: 1,
+              operationalId: 1,
+              signaling: "Verlies inschrijvingsbewijs",
+              plNumber: null,
+              description: null,
+              monitoring: true,
+              location: null,
+              unit: "KEMPLA",
+              date: "2020-03-16T18:13:48.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            },
+            {
+              id: 2,
+              authorId: 1,
+              operationalId: 1,
+              signaling: null,
+              plNumber: "PL03170104",
+              description: null,
+              monitoring: true,
+              location: null,
+              unit: "HANO",
+              date: "2020-03-16T22:05:18.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            },
+            {
+              id: 3,
+              authorId: 1,
+              operationalId: 1,
+              signaling: null,
+              plNumber: "PL031770168",
+              description: null,
+              monitoring: true,
+              location: null,
+              unit: "CARMA",
+              date: "2020-03-16T21:34:37.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            },
+            {
+              id: 4,
+              authorId: 1,
+              operationalId: 1,
+              signaling: "Seining persoon",
+              plNumber: null,
+              description: null,
+              monitoring: true,
+              location: null,
+              unit: "LAMA",
+              date: "2020-03-16T23:34:33.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            },
+            {
+              id: 5,
+              authorId: 1,
+              operationalId: 1,
+              signaling: "Seining persoon",
+              plNumber: null,
+              description: null,
+              monitoring: true,
+              location: null,
+              unit: "LOON",
+              date: "2020-03-16T23:57:10.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            },
+            {
+              id: 6,
+              authorId: 1,
+              operationalId: 1,
+              signaling: "Seining persoon",
+              plNumber: "PL03170202",
+              description: null,
+              monitoring: true,
+              location: null,
+              unit: "BIHORI",
+              date: "2020-03-16T00:18:57.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            },
+            {
+              id: 7,
+              authorId: 1,
+              operationalId: 1,
+              signaling: null,
+              plNumber: "PL03170104",
+              description: null,
+              monitoring: true,
+              location: null,
+              unit: "HANO",
+              date: "2020-03-16T00:45:45.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            },
+            {
+              id: 8,
+              authorId: 1,
+              operationalId: 1,
+              signaling: null,
+              plNumber: "PL03170315",
+              description: null,
+              monitoring: true,
+              location: null,
+              unit: "LRH",
+              date: "2020-03-16T01:21:25.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            },
+            {
+              id: 9,
+              authorId: 1,
+              operationalId: 1,
+              signaling: null,
+              plNumber: "PL03170322",
+              description: null,
+              monitoring: true,
+              location: null,
+              unit: "LRH",
+              date: "2020-03-16T01:51:47.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            }
+          ]
+        },
+        administrative: {
+          replacements: [
+            {
+              id: 1,
+              authorId: 1,
+              administrativeId: 1,
+              absentee: "Jan Jacobs",
+              substitute: "Geordy Hendricks",
+              monitoring: true,
+              date: "2020-03-30T15:46:36.000Z",
+              shift: true,
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            }
+          ],
+          workplaceEvents: [],
+          secretariatNotifications: [
+            {
+              id: 1,
+              authorId: 1,
+              administrativeId: 1,
+              absentee: "Jan Jacobs",
+              substitute: "Geordy Hendricks",
+              monitoring: true,
+              date: "2020-03-30T15:46:36.000Z",
+              shift: true,
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            }
+          ]
+        },
+        technical: {
+          defects: [],
+          malfunctions: [
+            {
+              id: 1,
+              authorId: 1,
+              technicalId: 1,
+              malfunctionTypeId: 1,
+              description: "lekkende kraan in kamer 304",
+              monitoring: true,
+              date: "2020-04-15T13:03:57.000Z",
+              duration: 6,
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            }
+          ]
+        }
+      };
+
+      this.eventId = this.$route.query.eventId;
+    },
     getOperational: function() {
       if (this.step != "Operational") {
         this.step = "Operational";
