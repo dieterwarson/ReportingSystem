@@ -76,15 +76,15 @@
           </div>
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
-            <div class="input-group">
-              <div class="input-group" style="height: 20%;">
+            <div>
+              <div>
                 <div class="form-control form-control-lg">
                   <div
                     v-if="this.reportContent.operational.operationalEvents[this.eventId-1].plNumber == null"
                   >Geen PL-nummer beschikbaar.</div>
                   <div
                     v-else
-                  >{{this.reportContent.operational.operationalEvents[this.eventId-1].plNumber}}</div>
+                  >PL-nummer: {{this.reportContent.operational.operationalEvents[this.eventId-1].plNumber}}</div>
                 </div>
               </div>
               <!-- Zoek fiche knop -->
@@ -96,31 +96,44 @@
                 >Zoek fiche</button>
               </div>
               <div class="input-group" style="height: 20%;">
-                <input
-                  type="text"
-                  name="location"
-                  placeholder="Adres"
-                  class="form-control form-control-lg"
-                  v-model="form.location"
-                />
-                <input
-                  type="text"
-                  name="date"
-                  placeholder="Datum"
-                  class="form-control form-control-lg"
-                  v-model="form.operationalDate"
-                />
-                <input
-                  type="text"
-                  name="unit"
-                  placeholder="Unit"
-                  class="form-control form-control-lg"
-                  v-model="form.unit"
-                />
+                <div class="formcontainer btn-block">
+                  <div class="form-control form-control-lg">
+                    <div
+                      v-if="this.reportContent.operational.operationalEvents[this.eventId-1].location == null"
+                    >Geen adres beschikbaar.</div>
+                    <div
+                      v-else
+                    >Locatie: {{this.reportContent.operational.operationalEvents[this.eventId-1].location}}</div>
+                  </div>
+                  <div class="form-control form-control-lg">
+                    <div
+                      v-if="this.reportContent.operational.operationalEvents[this.eventId-1].date == null"
+                    >Geen datum beschikbaar.</div>
+                    <div v-else>
+                      Datum: {{ new Date(this.reportContent.operational.operationalEvents[this.eventId-1].date).toLocaleString("en-BE", {
+                      year: 'numeric',
+                      month: 'numeric',
+                      day: 'numeric',
+                      })
+                      }}
+                    </div>
+                  </div>
+                  <div class="form-control form-control-lg">
+                    <div
+                      v-if="this.reportContent.operational.operationalEvents[this.eventId-1].unit == null"
+                    >Geen unit beschikbaar.</div>
+                    <div
+                      v-else
+                    >Unit: {{this.reportContent.operational.operationalEvents[this.eventId-1].unit}}</div>
+                  </div>
+
               </div>
+                              </div>
+
               <div class="input-group" style="height: 39%;">
                 <input
                   type="text"
+                  contenteditable="true"
                   placeholder="Extra info"
                   class="form-control form-control-lg"
                   v-model="form.operationalMessage"
@@ -369,9 +382,9 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "Verlies inschrijvingsbewijs",
               plNumber: null,
-              description: null,
+              description: "het bewijs is verloren",
               monitoring: true,
-              location: null,
+              location: "hasselt",
               unit: "KEMPLA",
               date: "2020-03-16T18:13:48.000Z",
               createdAt: "2020-05-04T07:47:37.000Z",
@@ -653,3 +666,13 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style scoped>
+.formcontaier {
+  width: 100%;
+  height: fit-content;
+}
+.form-control {
+  height: fit-content;
+}
+</style>
