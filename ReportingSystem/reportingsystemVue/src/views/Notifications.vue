@@ -142,11 +142,6 @@ export default Vue.extend({
 
       // this.reportContent = {"administrative":{"replacements":[{"id":1,"authorId":1,"administrativeId":1,"absentee":"Jan Jacobs","substitute":"Geordy Hendricks","monitoring":true,"date":"2020-03-30T15:46:36.000Z","shift":true,"createdAt":"2020-05-08T08:04:15.000Z","updatedAt":"2020-05-08T08:04:15.000Z"}],"workplaceEvents":[],"secretariatNotifications":[{"id":1,"authorId":1,"administrativeId":1,"description":"Jan Janssens Inp ziek","monitoring":true,"date":"2020-03-16T19:19:49.000Z","shift":true,"createdAt":"2020-05-08T08:04:15.000Z","updatedAt":"2020-05-08T08:04:15.000Z"},{"id":2,"authorId":1,"administrativeId":1,"description":"Remans Luc Inp ziek","monitoring":true,"date":"2020-03-16T19:21:46.000Z","shift":true,"createdAt":"2020-05-08T08:04:15.000Z","updatedAt":"2020-05-08T08:04:15.000Z"}]},"technical":{"defects":[],"malfunctions":[{"id":1,"authorId":1,"technicalId":1,"malfunctionTypeId":1,"description":"lekkende kraan in kamer 304","monitoring":true,"date":"2020-04-15T13:03:57.000Z","duration":6,"createdAt":"2020-05-08T08:04:15.000Z","updatedAt":"2020-05-08T08:04:15.000Z"}]}}
     },
-
-    reportClick: function(id: string) {
-      this.$router.push({ path: "reportView", query: { reportId: id } });
-    },
-
     getOperational: function() {
       if (this.step != "Operational") this.step = "Operational";
     },

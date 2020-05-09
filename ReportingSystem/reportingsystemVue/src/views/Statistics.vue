@@ -37,9 +37,6 @@ export default Vue.extend({
         (res) => (this.reports = res)
       );
     },
-    reportClick: function(id: string) {
-      this.$router.push({ path: 'reportView', query: { reportId: id } });
-    },
     splitString: function(str: string) {
       return str.split(':');
     },
