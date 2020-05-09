@@ -1,7 +1,6 @@
 <template>
-  <div class="container pt-5 pb-5">
-    <h2 v-if="this.reportContent.report == null">Error</h2>
-    <h1 v-else>
+  <div class="container pt-5 pb-5" v-if="this.reportContent != this.emptyReport">
+    <h1>
       Verslag van
       {{
         new Date(reportContent.report.date).toLocaleString("en-BE", {
@@ -17,7 +16,7 @@
         <div class="card w-100">
           <div class="card-header bg-primary text-white">Operationeel met prioriteit</div>
           <div class="card-body">
-            <div v-if="this.priorityContent.operational == {}">
+            <div v-if="this.priorityContent.operational == this.emptyPriority.operational">
               <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
             </div>
             <div v-else class="row row-cols-1">
@@ -53,7 +52,8 @@
         <div class="card w-100">
           <div class="card-header bg-primary text-white">Meldingen</div>
           <div class="card-body">
-            <div v-if="this.notificationContent.administrative == {}">
+            <div v-if="this.notificationContent.administrative == this.emptyNotifications.administrative
+                        || this.notificationContent.technical == this.emptyNotifications.technical">
               <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
             </div>
             <div v-else class="row row-cols-1">
@@ -84,7 +84,7 @@
                 v-for="event in notificationContent.administrative.workplaceEvents"
                 :key="event.id" 
               >
-                <div class="col mx-5 px-0 card h-100">
+                <div class="col card h-100">
                   <div class="card-body">
                     <h3 class="card-title display-5">
                       {{ new Date(event.date).toLocaleString("en-BE", {
@@ -128,6 +128,36 @@
                   </div>
                 </div>
               </div>
+              <div
+                  v-for="event in reportContent.technical.defects"
+                  :key="event.id"
+                >
+                  <div class="col card h-100">
+                    <div class="card-body">
+                      <h5 class="card-title">Logistiek</h5>
+                      <p class="card-text">
+                        {{ new Date(event.date).toLocaleString("en-BE") }}
+                      </p>
+                      <p class="card-text">{{ event.description }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  v-for="event in reportContent.technical.malfunctions"
+                  :key="event.id"
+                >
+                  <div class="col card h-100">
+                    <div class="card-body">
+                      <h5 class="card-title">Technisch</h5>
+                      <p class="card-text">
+                        {{ new Date(event.date).toLocaleString("en-BE") }}
+                      </p>
+                      <p class="card-text">{{ event.description }}</p>
+                      <p class="card-text">{{ event.duration }}</p>
+                    </div>
+                  </div>
+                </div>
             </div>
           </div>
         </div>
@@ -163,7 +193,7 @@
     </div>
 
     <section v-if="step == 'Operational'" class="container">
-      <div v-if="this.reportContent.operational == {}">
+      <div v-if="this.reportContent.operational == this.emptyReport.operational">
         <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
       </div>
       <div v-else class="row row-cols-1 row-cols-md-2">
@@ -193,7 +223,7 @@
     </section>
 
     <section v-if="step == 'Workforce'" class="container">
-      <div v-if="this.reportContent.administrative == {}">
+      <div v-if="this.reportContent.administrative == this.emptyReport.administrative">
         <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
       </div>
       <div v-else class="row row-cols-1 row-cols-md-2">
@@ -259,7 +289,7 @@
     </section>
 
     <section v-if="step == 'Technical'">
-      <div v-if="this.reportContent.technical == {}">
+      <div v-if="this.reportContent.technical == this.reportContent.technical">
         <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
       </div>
       <div v-else>
@@ -299,6 +329,9 @@
       </div>
     </section>
   </div>
+  <div v-else>
+    <h2>Dit verslag bestaat niet</h2>
+  </div>
 </template>
 
 <script lang="ts">
@@ -308,9 +341,12 @@ export default Vue.extend({
   data: function() {
     return {
       step: 'Operational',
-      reportContent: {},
-      priorityContent: {},
-      notificationContent: {},
+      reportContent: {"report":{"id":1,"date":"2020-03-16T21:13:48.000Z","temporary":false,"nightShift":true,"createdAt":"","updatedAt":""},"operational":{},"administrative":{},"technical":{}},
+      emptyReport: {"report":{"id":1,"date":"2020-03-16T21:13:48.000Z","temporary":false,"nightShift":true,"createdAt":"","updatedAt":""},"operational":{},"administrative":{},"technical":{}},
+      priorityContent: {"operational":{}},
+      emptyPriority: {"operational":{}},
+      notificationContent: {"administrative":{},"technical":{}},
+      emptyNotifications: {"administrative":{},"technical":{}}, 
       shift: ''
     };
   },

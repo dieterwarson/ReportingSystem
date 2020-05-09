@@ -4,19 +4,19 @@
       Meldingen
     </h1>
     <section>
-      <div class="row my-5" v-if="reportContent != {}">
+      <div class="row my-5" v-if="this.monitored != this.emptyMonitored">
         <div class="col">
           <div class="card w-100">
             <h5 class="card-header bg-primary text-white">Administratief</h5>
             <div class="card-body">
-              <div v-if="this.reportContent.administrative == {}">
+              <div v-if="this.monitored.administrative == this.emptyMonitored.administrative">
                 <p class="card-text">
                   Er zijn nog geen gebeurtenissen van deze categorie
                 </p>
               </div>
               <div v-else class="row row-cols-1">
                 <div
-                  v-for="event in reportContent.administrative.replacements"
+                  v-for="event in monitored.administrative.replacements"
                   :key="event.id"
                 >
                   <div class="col card h-100">
@@ -34,7 +34,7 @@
                 </div>
 
                 <div
-                  v-for="event in reportContent.administrative.workplaceEvents"
+                  v-for="event in monitored.administrative.workplaceEvents"
                   :key="event.id"
                 >
                   <div class="col card h-100">
@@ -53,7 +53,7 @@
                 </div>
 
                 <div
-                  v-for="event in reportContent.administrative
+                  v-for="event in monitored.administrative
                     .secretariatNotifications"
                   :key="event.id"
                 >
@@ -76,12 +76,12 @@
           <div class="card w-100">
             <h5 class="card-header bg-primary text-white">Defecten</h5>
             <div class="card-body">
-              <div v-if="this.reportContent.technical == {}">
+              <div v-if="this.monitored.technical == this.emptyMonitored.technical">
                 <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
               </div>
               <div v-else class="row row-cols-1">
                 <div
-                  v-for="event in reportContent.technical.defects"
+                  v-for="event in monitored.technical.defects"
                   :key="event.id"
                 >
                   <div class="col card h-100">
@@ -96,7 +96,7 @@
                 </div>
 
                 <div
-                  v-for="event in reportContent.technical.malfunctions"
+                  v-for="event in monitored.technical.malfunctions"
                   :key="event.id"
                 >
                   <div class="col card h-100">
@@ -126,7 +126,8 @@ export default Vue.extend({
   data: function() {
     return {
       step: "Operational",
-      reportContent: {},
+      monitored: {"administrative":{"replacements":[],"workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}},
+      emptyMonitored: {"administrative":{"replacements":[],"workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}}
     };
   },
 
@@ -137,11 +138,11 @@ export default Vue.extend({
   methods: {
     loadData: function() {
       const response = ReportingService.getAllReports(
-        '/api/reports/monitored' + this.$route.query.reportId
-      ).then((res) => (this.reportContent = res));
+       '/api/reports/monitored'
+      ).then((res) => (this.monitored = res));
 
-      // this.reportContent = {"administrative":{"replacements":[{"id":1,"authorId":1,"administrativeId":1,"absentee":"Jan Jacobs","substitute":"Geordy Hendricks","monitoring":true,"date":"2020-03-30T15:46:36.000Z","shift":true,"createdAt":"2020-05-08T08:04:15.000Z","updatedAt":"2020-05-08T08:04:15.000Z"}],"workplaceEvents":[],"secretariatNotifications":[{"id":1,"authorId":1,"administrativeId":1,"description":"Jan Janssens Inp ziek","monitoring":true,"date":"2020-03-16T19:19:49.000Z","shift":true,"createdAt":"2020-05-08T08:04:15.000Z","updatedAt":"2020-05-08T08:04:15.000Z"},{"id":2,"authorId":1,"administrativeId":1,"description":"Remans Luc Inp ziek","monitoring":true,"date":"2020-03-16T19:21:46.000Z","shift":true,"createdAt":"2020-05-08T08:04:15.000Z","updatedAt":"2020-05-08T08:04:15.000Z"}]},"technical":{"defects":[],"malfunctions":[{"id":1,"authorId":1,"technicalId":1,"malfunctionTypeId":1,"description":"lekkende kraan in kamer 304","monitoring":true,"date":"2020-04-15T13:03:57.000Z","duration":6,"createdAt":"2020-05-08T08:04:15.000Z","updatedAt":"2020-05-08T08:04:15.000Z"}]}}
-    },
+      // this.monitored = {"administrative":{"replacements":[{"id":1,"authorId":1,"administrativeId":1,"absentee":"Jan Jacobs","substitute":"Geordy Hendricks","monitoring":true,"date":"2020-03-30T15:46:36.000Z","shift":true,"createdAt":"2020-05-09T12:41:05.000Z","updatedAt":"2020-05-09T12:41:05.000Z"}],"workplaceEvents":[],"secretariatNotifications":[{"id":1,"authorId":1,"administrativeId":1,"description":"Jan Janssens Inp ziek","monitoring":true,"date":"2020-03-16T19:19:49.000Z","shift":true,"createdAt":"2020-05-09T12:41:05.000Z","updatedAt":"2020-05-09T12:41:05.000Z"},{"id":2,"authorId":1,"administrativeId":1,"description":"Remans Luc Inp ziek","monitoring":true,"date":"2020-03-16T19:21:46.000Z","shift":true,"createdAt":"2020-05-09T12:41:05.000Z","updatedAt":"2020-05-09T12:41:05.000Z"}]},"technical":{"defects":[],"malfunctions":[{"id":1,"authorId":1,"technicalId":1,"malfunctionTypeId":1,"description":"lekkende kraan in kamer 304","monitoring":true,"date":"2020-04-15T13:03:57.000Z","duration":6,"createdAt":"2020-05-09T12:41:05.000Z","updatedAt":"2020-05-09T12:41:05.000Z"}]}}
+      },
 
     reportClick: function(id: string) {
       this.$router.push({ path: "reportView", query: { reportId: id } });
