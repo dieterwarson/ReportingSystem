@@ -231,6 +231,12 @@
             <div class="card-body">
               <h5 class="card-title">Vervanging</h5>
               <h5 class="card-text">
+                <img
+                  id="topright"
+                  src="../assets/edit-logo.png"
+                  alt="pas aan"
+                  @click="changeEventClick(parseInt(event.id))"
+                />
                 {{ new Date(event.date).toLocaleString("en-BE", {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -284,6 +290,12 @@
             <div class="card-body">
               <h5 class="card-title">Logistiek</h5>
               <h5 class="card-text">
+                <img
+                  id="topright"
+                  src="../assets/edit-logo.png"
+                  alt="pas aan"
+                  @click="changeEventClick(parseInt(event.id))"
+                />
                 {{ new Date(event.date).toLocaleString("en-BE", {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -607,7 +619,11 @@ export default Vue.extend({
     changeEventClick: function(id: string) {
       this.$router.push({
         path: "changeevent",
-        query: { reportId: this.reportContent.report.id, eventId: id }
+        query: {
+          reportId: this.reportContent.report.id,
+          eventId: id,
+          categorie: this.step
+        }
       });
     }
   }

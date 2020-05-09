@@ -3,29 +3,8 @@
   <div class="container pt-5 pb-5">
     <h1>Wijzig gebeurtenis</h1>
     <form id="addReport">
-      <!-- Categorie knoppen -->
-      <div class="btn-group d-flex" role="group" aria-label="Justified button group">
-        <button
-          id="operationalButton"
-          type="button"
-          class="btn btn-info"
-          @click.prevent="getOperational"
-        >Operationeel</button>
-        <button
-          id="workForceButton"
-          type="button"
-          class="btn btn-primary"
-          @click.prevent="getWorkforce"
-        >Personeel</button>
-        <button
-          id="technicalButton"
-          type="button"
-          class="btn btn-primary"
-          @click.prevent="getTechnical"
-        >Technisch</button>
-      </div>
       <!-- Operationeel -->
-      <section v-if="step == 'Operational'">
+      <section v-if="this.step == 'Operational'">
         <h3>Operationeel</h3>
         <br />
         <div class="row">
@@ -79,7 +58,7 @@
             <div>
               <!-- PL-nummer -->
               <div>
-                <div class="form-control form-control-lg">
+                <div class="form-control form-control-lg no-edit">
                   <div
                     v-if="this.reportContent.operational.operationalEvents[this.eventId-1].plNumber == null"
                   >Geen PL-nummer beschikbaar.</div>
@@ -99,7 +78,7 @@
               <div class="input-group" style="height: 20%;">
                 <div class="formcontainer btn-block">
                   <!-- Locatie -->
-                  <div class="form-control form-control-lg">
+                  <div class="form-control form-control-lg no-edit">
                     <div
                       v-if="this.reportContent.operational.operationalEvents[this.eventId-1].location == null"
                     >Geen adres beschikbaar.</div>
@@ -108,7 +87,7 @@
                     >Locatie: {{this.reportContent.operational.operationalEvents[this.eventId-1].location}}</div>
                   </div>
                   <!-- Datum -->
-                  <div class="form-control form-control-lg">
+                  <div class="form-control form-control-lg no-edit">
                     <div
                       v-if="this.reportContent.operational.operationalEvents[this.eventId-1].date == null"
                     >Geen datum beschikbaar.</div>
@@ -122,7 +101,7 @@
                     </div>
                   </div>
                   <!-- Unit -->
-                  <div class="form-control form-control-lg">
+                  <div class="form-control form-control-lg no-edit">
                     <div
                       v-if="this.reportContent.operational.operationalEvents[this.eventId-1].unit == null"
                     >Geen unit beschikbaar.</div>
@@ -133,14 +112,12 @@
                 </div>
               </div>
               <!-- Extra info -->
-              <div class="input-group" style="height: 39%;">
-                <input
-                  type="text"
-                  value="zertyu"
-                  class="form-control form-control-lg"
-                  v-model="form.operationalMessage"
-                />
-              </div>
+              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+              <input
+                type="text"
+                class="form-control form-control-lg"
+                v-model="form.operationalMessage"
+              />
             </div>
             <!-- Opslaan knop -->
             <button
@@ -154,7 +131,7 @@
         </div>
       </section>
       <!-- Personeel -->
-      <section v-if="step == 'Workforce'">
+      <section v-if="this.step == 'Workforce'">
         <h3>Personeel</h3>
         <br />
         <div class="row">
@@ -203,29 +180,37 @@
           </div>
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
-            <div class="input-group">
+            <div>
+              <div class="input-group" style="height: 20%;">
+                <div class="formcontainer btn-block">
+                  <!-- Afwezige -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div
+                      v-if="this.reportContent.administrative.replacements[this.eventId-1].absentee == null"
+                    >Geen afwezige beschikbaar.</div>
+                    <div
+                      v-else
+                    >Afwezige: {{this.reportContent.administrative.replacements[this.eventId-1].absentee}}</div>
+                  </div>
+                  <!-- Vervanger -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div
+                      v-if="this.reportContent.administrative.replacements[this.eventId-1].substitute == null"
+                    >Geen vervanger beschikbaar.</div>
+                    <div
+                      v-else
+                    >Vervanger: {{this.reportContent.administrative.replacements[this.eventId-1].substitute}}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Extra info -->
+              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
               <input
-                name="Name absentee"
-                v-model="form.absentee"
                 type="text"
-                placeholder="Naam afwezige"
                 class="form-control form-control-lg"
-              />
-              <input
-                name="Naam"
-                v-model="form.replacement"
-                type="text"
-                placeholder="Naam vervanger"
-                class="form-control form-control-lg"
+                v-model="form.workforceMessage"
               />
             </div>
-            <input
-              name="Message"
-              v-model="form.workforceMessage"
-              type="text"
-              placeholder="Extra info"
-              class="form-control form-control-lg"
-            />
             <!-- Opslaan knop -->
             <button
               class="btn btn-large btn-block btn-success"
@@ -238,7 +223,7 @@
         </div>
       </section>
       <!-- Technisch -->
-      <section v-if="step == 'Technical'">
+      <section v-if="this.step == 'Technical'">
         <h3>Technisch</h3>
         <br />
         <div class="row">
@@ -275,13 +260,13 @@
           </div>
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
-            <div class="input-group">
+            <div>
+              <!-- Extra info -->
+              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
               <input
-                name="Message"
-                v-model="form.technicalMessage"
                 type="text"
-                placeholder="Info over defect"
                 class="form-control form-control-lg"
+                v-model="form.technicalMessage"
               />
             </div>
             <!-- Opslaan knop -->
@@ -305,10 +290,16 @@ import ReportingService from "../services/ReportingService";
 export default Vue.extend({
   data: function() {
     return {
+      operationalDescription: "",
+      replacementDescription: "",
+      workplaceEventDescription: "",
+      secretariatNotificationDescription: "",
+      defectDescription: "",
+      malfunctionDescription: "",
       step: "Operational",
       reportContent: {},
       eventId: 0,
-      test:"",
+      test: "",
       form: {
         //OPERATIONAL OBJECTS
         plNumber: "",
@@ -528,10 +519,9 @@ export default Vue.extend({
               id: 1,
               authorId: 1,
               administrativeId: 1,
-              absentee: "Jan Jacobs",
-              substitute: "Geordy Hendricks",
+              description: "",
               monitoring: true,
-              date: "2020-03-30T15:46:36.000Z",
+              date: "2020-03-30T11:26:36.000Z",
               shift: true,
               createdAt: "2020-05-04T07:47:37.000Z",
               updatedAt: "2020-05-04T07:47:37.000Z"
@@ -556,9 +546,65 @@ export default Vue.extend({
           ]
         }
       };
-
+      this.step = this.$route.query.categorie;
       this.eventId = this.$route.query.eventId;
-      this.form.operationalMessage = this.reportContent.operational.operationalEvents[this.eventId-1].description;
+      // operational
+      // operationalEvent
+      this.operationalDescription = this.reportContent.operational.operationalEvents[
+        this.eventId - 1
+      ].description;
+      if (this.operationalDescription != null) {
+        this.form.operationalMessage = this.operationalDescription;
+      } else {
+        this.form.operationalMessage = "";
+      }
+      // administrative
+      // replacement
+      this.replacementDescription = this.reportContent.administrative.replacements[
+        this.eventId - 1
+      ].description;
+      if (this.replacementDescription != null) {
+        this.form.workforceMessage = this.replacementDescription;
+      } else {
+        this.form.workforceMessage = "";
+      }
+      // workplaceEvent
+      this.workplaceEventDescription = this.reportContent.administrative.workplaceEvents[
+        this.eventId - 1
+      ].description;
+      if (this.workplaceEventDescription != null) {
+        this.form.workforceMessage = this.workplaceEventDescription;
+      } else {
+        this.form.workforceMessage = "";
+      }
+      // secretariatNotificationDescription
+      this.secretariatNotificationDescriptionDescription = this.reportContent.administrative.secretariatNotificationDescriptions[
+        this.eventId - 1
+      ].description;
+      if (this.secretariatNotificationDescriptionDescription != null) {
+        this.form.workforceMessage = this.secretariatNotificationDescriptionDescription;
+      } else {
+        this.form.workforceMessage = "";
+      }
+      // technical
+      // defect
+      this.defectDescription = this.reportContent.technical.defects[
+        this.eventId - 1
+      ].description;
+      if (this.defectDescription != null) {
+        this.form.technicalMessage = "" + this.defectDescription;
+      } else {
+        this.form.technicalMessage = "";
+      }
+      // malfunction
+      this.malfunctionDescription = this.reportContent.technical.malfunctions[
+        this.eventId - 1
+      ].description;
+      if (this.malfunctionDescription != null) {
+        this.form.technicalMessage = this.malfunctionDescription;
+      } else {
+        this.form.technicalMessage = "";
+      }
     },
     getOperational: function() {
       if (this.step != "Operational") {
@@ -678,5 +724,8 @@ export default Vue.extend({
 }
 .form-control {
   height: fit-content;
+}
+.no-edit {
+  color: rgba(83, 72, 72, 0.705);
 }
 </style>
