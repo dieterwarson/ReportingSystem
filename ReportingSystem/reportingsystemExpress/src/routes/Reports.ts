@@ -341,25 +341,53 @@ router.get('/types', async (req: Request, res: Response) => {
     attributes: ['typeName'],
   });
   if (result.length != 0) {
-    reports.push(result);
+    console.log('\n\n\n\nresult OperationalType');
+    console.log(result);
+    console.log('\n\n\n\nreports OperationalType');
+    console.log(reports);
+
+    if (!reports.includes(result)) {
+      reports.push(result);
+    }
   }
   result = await WorkplaceType.findAll({
     attributes: ['typeName'],
   });
   if (result.length != 0) {
-    reports.push(result);
+    console.log('\n\n\n\nresult WorkplaceType');
+    console.log(result);
+    console.log('\n\n\n\nreports WorkplaceType');
+    console.log(reports);
+
+    if (!reports.includes(result)) {
+      reports.push(result);
+    }
   }
   result = await DefectType.findAll({
     attributes: ['typeName'],
   });
   if (result.length != 0) {
-    reports.push(result);
+    console.log('\n\n\n\nresult DefectType');
+    console.log(result);
+    console.log('\n\n\n\nreports DefectType');
+    console.log(reports);
+
+    if (!reports.includes(result)) {
+      reports.push(result);
+    }
   }
   result = await MalfunctionType.findAll({
     attributes: ['typeName'],
   });
   if (result.length != 0) {
-    reports.push(result);
+    console.log('\n\n\n\nresult MalfunctionType');
+    console.log(result);
+    console.log('\n\n\n\nreports MalfunctionType');
+    console.log(reports);
+
+    if (!reports.includes(result)) {
+      reports.push(result);
+    }
   }
 
   res.send(reports);

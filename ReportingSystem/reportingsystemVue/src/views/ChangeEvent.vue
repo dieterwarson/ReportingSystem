@@ -2,61 +2,30 @@
   <!-- script has to be implemented again to achieve the seperate forms -->
   <div class="container pt-5 pb-5">
     <h1>Wijzig gebeurtenis</h1>
-    <form id="addReport">
+    <form id="changeOperationalEvent">
       <!-- Operationeel -->
       <section v-if="this.step == 'Operational'">
         <h3>Operationeel</h3>
         <br />
         <div class="row">
           <!-- Checkboxes types -->
-          <div v-if="this.reportContent.operational == {}">
-            <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
+          <div v-if="this.reportTypes == []">
+            <p>Er zijn nog geen types</p>
           </div>
-
-          <div class="checkbox-container text-sm-left col-sm-4">
-            <div class="text-sm-left">
-              <input type="checkbox" name="Cross border pursuit" v-model="form.crossBorderPursuit" />
-              <label>Grensoverschrijdende achtervolging</label>
+          <div v-else>
+            <div v-for="value in reportTypes" :key="value.id">
+              <div v-for="value in value" :key="value.id">{{filterTypes(value.typeName)}}</div>
             </div>
-            <div class="text-sm-left">
-              <input type="checkbox" name="Specific event" v-model="form.specificEvent" />
-              <label>Specifieke gebeurtenis</label>
-            </div>
-            <div class="text-sm-left">
-              <input type="checkbox" name="Proclamation BIN-alarm" v-model="form.BIN" />
-              <label>Afkondiging BIN-alarm</label>
-            </div>
-            <div class="text-sm-left">
-              <input type="checkbox" name="Telecom operator" v-model="form.telecomOperator" />
-              <label>Bevraging gsm-operatoren</label>
-            </div>
-            <br />
-            <label>Verwittiging schouwarts:</label>
-            <div class="text-sm-left">
-              <input type="checkbox" name="Collocation" v-model="form.collocation" />
-              <label>Collocatie:</label>
-            </div>
-            <div class="text-sm-left">
-              <input type="checkbox" name="Firts schouwarts" v-model="form.firstSchouwarts" />
-              <label>Martijn Martens</label>
-            </div>
-            <div class="text-sm-left">
-              <input type="checkbox" name="Second schouwarts" v-model="form.secondSchouwarts" />
-              <label>Dirk Stegen</label>
-            </div>
-            <div class="text-sm-left">
-              <input type="checkbox" name="Set Sexual Agression" v-model="form.sexualAgression" />
-              <label>Sexuele agressie:</label>
-            </div>
-            <div class="text-sm-left">
-              <input type="checkbox" name="First SA Schouwarts" v-model="form.firstSASchouwarts" />
-              <label>Ruben Boelen</label>
-            </div>
-            <div class="text-sm-left">
-              <input type="checkbox" name="Second SA Schouwarts" v-model="form.secondSASchouwarts" />
-              <label>Vincent Potargent</label>
+            <div class="checkbox-container text-sm-left col-sm-4">
+              <div v-for="(value, index) in filteredTypes" :key="value.id">
+                <div class="typecontainer text-lg-left">
+                  <input type="checkbox" v-bind:value="false" v-model="formType.parentId[index]" />
+                  <label>{{value}}</label>
+                </div>
+              </div>
             </div>
           </div>
+          {{setOperationalId(this.reportContent.operational.operationalEvents[this.eventId-1].id)}}
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
             <div>
@@ -70,14 +39,6 @@
                     v-else
                   >PL-nummer: {{this.reportContent.operational.operationalEvents[this.eventId-1].plNumber}}</div>
                 </div>
-              </div>
-              <!-- Zoek fiche knop -->
-              <div class="input-group" style="height: 20%;">
-                <button
-                  type="button"
-                  class="btn btn-block btn-success"
-                  @click.prevent="getFile"
-                >Zoek fiche</button>
               </div>
               <div class="input-group" style="height: 20%;">
                 <div class="formcontainer btn-block">
@@ -127,7 +88,7 @@
             <button
               class="btn btn-large btn-block btn-success"
               type="button"
-              @click.prevent="addReport"
+              @click.prevent="changeOperationalEvent"
             >Opslaan</button>
             <small v-if="form.operationalFailed">Er is iets misgegaan bij het aanpassen.</small>
             <small v-if="form.operationalSucceeded">Het verslag is aangepast.</small>
@@ -294,6 +255,9 @@ import ReportingService from "../services/ReportingService";
 export default Vue.extend({
   data: function() {
     return {
+      operationalId: "",
+      filteredTypes: [],
+      reportTypes: [],
       operationalDescription: "",
       replacementDescription: "",
       workplaceEventDescription: "",
@@ -303,26 +267,15 @@ export default Vue.extend({
       step: "Operational",
       reportContent: {},
       eventId: 0,
-      test: "",
+      formType: {
+        parentId: []
+      },
       form: {
         //OPERATIONAL OBJECTS
         plNumber: "",
         location: "",
         operationalDate: "",
         operationalMessage: "",
-        crossBorderPursuit: false,
-        specificEvent: false,
-        BIN: false,
-        telecomOperator: false,
-        signalingPerson: false,
-        signalingVehicle: false,
-        signalingObject: false,
-        collocation: false,
-        firstSchouwarts: false,
-        secondSchouwarts: false,
-        sexualAgression: false,
-        firstSASchouwarts: false,
-        secondSASchouwarts: false,
         operationalFailed: false,
         operationalSucceeded: false,
         unit: "",
@@ -359,197 +312,214 @@ export default Vue.extend({
   },
 
   methods: {
+    setOperationalId: function(id: string) {
+      this.operationalId = id;
+    },
     loadData: function() {
-      // ReportingService.getAllReports(
-      //   "/api/reports/content/" + this.$route.query.reportId
-      // ).then(res => (this.reportContent = res));
+      ReportingService.getAllReports(
+        "/api/reports/content/" + this.$route.query.reportId
+      ).then(res => (this.reportContent = res));
+      ReportingService.getAllReports(
+        "/api/reports/types"
+      ).then(res => (this.reportTypes = res));
 
-      this.reportContent = {
-        report: {
-          id: 1,
-          date: "2020-03-16T21:13:48.000Z",
-          temporary: false,
-          createdAt: "2020-05-04T07:46:17.000Z",
-          updatedAt: "2020-05-04T07:46:17.000Z"
-        },
-        operational: {
-          operationalEvents: [
-            {
-              id: 1,
-              authorId: 1,
-              operationalId: 1,
-              signaling: "Verlies inschrijvingsbewijs",
-              plNumber: null,
-              description: "het bewijs is verloren",
-              monitoring: true,
-              location: "hasselt",
-              unit: "KEMPLA",
-              date: "2020-03-16T18:13:48.000Z",
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            },
-            {
-              id: 2,
-              authorId: 1,
-              operationalId: 1,
-              signaling: null,
-              plNumber: "PL03170104",
-              description: null,
-              monitoring: true,
-              location: null,
-              unit: "HANO",
-              date: "2020-03-16T22:05:18.000Z",
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            },
-            {
-              id: 3,
-              authorId: 1,
-              operationalId: 1,
-              signaling: null,
-              plNumber: "PL031770168",
-              description: null,
-              monitoring: true,
-              location: null,
-              unit: "CARMA",
-              date: "2020-03-16T21:34:37.000Z",
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            },
-            {
-              id: 4,
-              authorId: 1,
-              operationalId: 1,
-              signaling: "Seining persoon",
-              plNumber: null,
-              description: null,
-              monitoring: true,
-              location: null,
-              unit: "LAMA",
-              date: "2020-03-16T23:34:33.000Z",
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            },
-            {
-              id: 5,
-              authorId: 1,
-              operationalId: 1,
-              signaling: "Seining persoon",
-              plNumber: null,
-              description: null,
-              monitoring: true,
-              location: null,
-              unit: "LOON",
-              date: "2020-03-16T23:57:10.000Z",
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            },
-            {
-              id: 6,
-              authorId: 1,
-              operationalId: 1,
-              signaling: "Seining persoon",
-              plNumber: "PL03170202",
-              description: null,
-              monitoring: true,
-              location: null,
-              unit: "BIHORI",
-              date: "2020-03-16T00:18:57.000Z",
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            },
-            {
-              id: 7,
-              authorId: 1,
-              operationalId: 1,
-              signaling: null,
-              plNumber: "PL03170104",
-              description: null,
-              monitoring: true,
-              location: null,
-              unit: "HANO",
-              date: "2020-03-16T00:45:45.000Z",
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            },
-            {
-              id: 8,
-              authorId: 1,
-              operationalId: 1,
-              signaling: null,
-              plNumber: "PL03170315",
-              description: null,
-              monitoring: true,
-              location: null,
-              unit: "LRH",
-              date: "2020-03-16T01:21:25.000Z",
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            },
-            {
-              id: 9,
-              authorId: 1,
-              operationalId: 1,
-              signaling: null,
-              plNumber: "PL03170322",
-              description: null,
-              monitoring: true,
-              location: null,
-              unit: "LRH",
-              date: "2020-03-16T01:51:47.000Z",
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            }
-          ]
-        },
-        administrative: {
-          replacements: [
-            {
-              id: 1,
-              authorId: 1,
-              administrativeId: 1,
-              absentee: "Jan Jacobs",
-              substitute: "Geordy Hendricks",
-              monitoring: true,
-              date: "2020-03-30T15:46:36.000Z",
-              shift: true,
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            }
-          ],
-          workplaceEvents: [],
-          secretariatNotifications: [
-            {
-              id: 1,
-              authorId: 1,
-              administrativeId: 1,
-              description: "",
-              monitoring: true,
-              date: "2020-03-30T11:26:36.000Z",
-              shift: true,
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            }
-          ]
-        },
-        technical: {
-          defects: [],
-          malfunctions: [
-            {
-              id: 1,
-              authorId: 1,
-              technicalId: 1,
-              malfunctionTypeId: 1,
-              description: "lekkende kraan in kamer 304",
-              monitoring: true,
-              date: "2020-04-15T13:03:57.000Z",
-              duration: 6,
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            }
-          ]
-        }
-      };
+      // this.reportTypes = [
+      //   [
+      //     { typeName: "Helikopter ingezet" },
+      //     { typeName: "Grensoverschrijdende achtervolging" },
+      //     { typeName: "Helikopter ingezet" }
+      //   ],
+      //   [{ typeName: "workplaceType typeName" }],
+      //   [{ typeName: "krakende deur" }, { typeName: "lekkende kraan" }],
+      //   [{ typeName: "malfunctionType typeName" }]
+      // ];
+
+      // this.reportContent = {
+      //   report: {
+      //     id: 1,
+      //     date: "2020-03-16T21:13:48.000Z",
+      //     temporary: false,
+      //     createdAt: "2020-05-04T07:46:17.000Z",
+      //     updatedAt: "2020-05-04T07:46:17.000Z"
+      //   },
+      //   operational: {
+      //     operationalEvents: [
+      //       {
+      //         id: 1,
+      //         authorId: 1,
+      //         operationalId: 1,
+      //         signaling: "Verlies inschrijvingsbewijs",
+      //         plNumber: null,
+      //         description: "het bewijs is verloren",
+      //         monitoring: true,
+      //         location: "hasselt",
+      //         unit: "KEMPLA",
+      //         date: "2020-03-16T18:13:48.000Z",
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       },
+      //       {
+      //         id: 2,
+      //         authorId: 1,
+      //         operationalId: 1,
+      //         signaling: null,
+      //         plNumber: "PL03170104",
+      //         description: null,
+      //         monitoring: true,
+      //         location: null,
+      //         unit: "HANO",
+      //         date: "2020-03-16T22:05:18.000Z",
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       },
+      //       {
+      //         id: 3,
+      //         authorId: 1,
+      //         operationalId: 1,
+      //         signaling: null,
+      //         plNumber: "PL031770168",
+      //         description: null,
+      //         monitoring: true,
+      //         location: null,
+      //         unit: "CARMA",
+      //         date: "2020-03-16T21:34:37.000Z",
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       },
+      //       {
+      //         id: 4,
+      //         authorId: 1,
+      //         operationalId: 1,
+      //         signaling: "Seining persoon",
+      //         plNumber: null,
+      //         description: null,
+      //         monitoring: true,
+      //         location: null,
+      //         unit: "LAMA",
+      //         date: "2020-03-16T23:34:33.000Z",
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       },
+      //       {
+      //         id: 5,
+      //         authorId: 1,
+      //         operationalId: 1,
+      //         signaling: "Seining persoon",
+      //         plNumber: null,
+      //         description: null,
+      //         monitoring: true,
+      //         location: null,
+      //         unit: "LOON",
+      //         date: "2020-03-16T23:57:10.000Z",
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       },
+      //       {
+      //         id: 6,
+      //         authorId: 1,
+      //         operationalId: 1,
+      //         signaling: "Seining persoon",
+      //         plNumber: "PL03170202",
+      //         description: null,
+      //         monitoring: true,
+      //         location: null,
+      //         unit: "BIHORI",
+      //         date: "2020-03-16T00:18:57.000Z",
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       },
+      //       {
+      //         id: 7,
+      //         authorId: 1,
+      //         operationalId: 1,
+      //         signaling: null,
+      //         plNumber: "PL03170104",
+      //         description: null,
+      //         monitoring: true,
+      //         location: null,
+      //         unit: "HANO",
+      //         date: "2020-03-16T00:45:45.000Z",
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       },
+      //       {
+      //         id: 8,
+      //         authorId: 1,
+      //         operationalId: 1,
+      //         signaling: null,
+      //         plNumber: "PL03170315",
+      //         description: null,
+      //         monitoring: true,
+      //         location: null,
+      //         unit: "LRH",
+      //         date: "2020-03-16T01:21:25.000Z",
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       },
+      //       {
+      //         id: 9,
+      //         authorId: 1,
+      //         operationalId: 1,
+      //         signaling: null,
+      //         plNumber: "PL03170322",
+      //         description: null,
+      //         monitoring: true,
+      //         location: null,
+      //         unit: "LRH",
+      //         date: "2020-03-16T01:51:47.000Z",
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       }
+      //     ]
+      //   },
+      //   administrative: {
+      //     replacements: [
+      //       {
+      //         id: 1,
+      //         authorId: 1,
+      //         administrativeId: 1,
+      //         absentee: "Jan Jacobs",
+      //         substitute: "Geordy Hendricks",
+      //         monitoring: true,
+      //         date: "2020-03-30T15:46:36.000Z",
+      //         shift: true,
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       }
+      //     ],
+      //     workplaceEvents: [],
+      //     secretariatNotifications: [
+      //       {
+      //         id: 1,
+      //         authorId: 1,
+      //         administrativeId: 1,
+      //         description: "",
+      //         monitoring: true,
+      //         date: "2020-03-30T11:26:36.000Z",
+      //         shift: true,
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       }
+      //     ]
+      //   },
+      //   technical: {
+      //     defects: [],
+      //     malfunctions: [
+      //       {
+      //         id: 1,
+      //         authorId: 1,
+      //         technicalId: 1,
+      //         malfunctionTypeId: 1,
+      //         description: "lekkende kraan in kamer 304",
+      //         monitoring: true,
+      //         date: "2020-04-15T13:03:57.000Z",
+      //         duration: 6,
+      //         createdAt: "2020-05-04T07:47:37.000Z",
+      //         updatedAt: "2020-05-04T07:47:37.000Z"
+      //       }
+      //     ]
+      //   }
+      // };
       this.step = this.$route.query.categorie;
       this.eventId = this.$route.query.eventId;
       this.loadDescriptions();
@@ -691,34 +661,51 @@ export default Vue.extend({
         this.form.technicalMessage = "";
       }
     },
-    async addReport() {
-      const response = await ReportingService.addReport({
-        plNumber: this.form.plNumber,
-        location: this.form.location,
-        date: this.form.operationalDate,
-        message: this.form.operationalMessage,
-        unit: this.form.unit
+    async changeOperationalEvent() {
+      const response = await ReportingService.changeOperationalEvent({
+        reportId: this.$route.query.reportId,
+        operationalId: this.operationalId,
+        plNumber: this.reportContent.operational.operationalEvents[
+          this.eventId - 1
+        ].plNumber,
+        location: this.reportContent.operational.operationalEvents[
+          this.eventId - 1
+        ].location,
+        date: this.reportContent.operational.operationalEvents[this.eventId - 1]
+          .date,
+        unit: this.reportContent.operational.operationalEvents[this.eventId - 1]
+          .unit,
+        message: this.form.operationalMessage
       });
       this.form.operationalSucceeded = true;
       if (response.bool) {
-        this.form.plNumber = "";
-        this.form.location = "";
-        this.form.operationalDate = "";
-        this.form.operationalMessage = "";
-        this.form.crossBorderPursuit = false;
-        this.form.specificEvent = false;
-        this.form.BIN = false;
-        this.form.telecomOperator = false;
-        this.form.signalingPerson = false;
-        this.form.signalingVehicle = false;
-        this.form.signalingObject = false;
-        this.form.collocation = false;
-        this.form.firstSchouwarts = false;
-        this.form.secondSchouwarts = false;
-        this.form.sexualAgression = false;
-        this.form.firstSASchouwarts = false;
-        this.form.secondSASchouwarts = false;
+        console.log(response.bool);
+        // this.form.plNumber = "";
+        // this.form.location = "";
+        // this.form.operationalDate = "";
+        // this.form.operationalMessage = "";
+        // this.form.crossBorderPursuit = false;
+        // this.form.specificEvent = false;
+        // this.form.BIN = false;
+        // this.form.telecomOperator = false;
+        // this.form.signalingPerson = false;
+        // this.form.signalingVehicle = false;
+        // this.form.signalingObject = false;
+        // this.form.collocation = false;
+        // this.form.firstSchouwarts = false;
+        // this.form.secondSchouwarts = false;
+        // this.form.sexualAgression = false;
+        // this.form.firstSASchouwarts = false;
+        // this.form.secondSASchouwarts = false;
       }
+    },
+    filterTypes: function(str: string) {
+      for (let i = 0; i < this.filteredTypes.length; i++) {
+        if (this.filteredTypes[i] === str) {
+          return;
+        }
+      }
+      this.filteredTypes.push(str);
     }
   }
 });
@@ -734,5 +721,8 @@ export default Vue.extend({
 }
 .no-edit {
   color: rgba(83, 72, 72, 0.705);
+}
+.typecontainer {
+  width: max-content;
 }
 </style>

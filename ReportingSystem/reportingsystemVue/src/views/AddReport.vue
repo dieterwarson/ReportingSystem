@@ -400,8 +400,8 @@ export default Vue.extend({
         this.form.technicalMessage = "";
       }
     },
-    async addReport() {
-      const response = await ReportingService.addReport({
+    async addOperationalEvent() {
+      const response = await ReportingService.addOperationalEvent({
         plNumber: this.form.plNumber,
         location: this.form.location,
         date: this.form.operationalDate,

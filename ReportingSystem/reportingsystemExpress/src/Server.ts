@@ -538,6 +538,41 @@ app.post('/addTechnicalEvent', async (req, res) => {
   Defect.sync();
 });
 
+app.post('/changeOperationalEvent', async (req, res) => {
+  // OperationalEvent.update({
+  //   OperationalEventId: req.body.id
+  // });
+
+  const event = await OperationalEvent.findAll({
+    where: {
+      id: req.body.operationalId,
+    },
+    include: [
+      {
+        model: Operational,
+      },
+    ],
+  });
+
+  if (event.length !== 0) {
+    // OperationalEvent.update({
+    //   description: req.body.message,
+      
+    // });
+
+    console.log('\n\n\n');
+    console.log(req.body);
+    console.log('\n');
+
+    console.log(event);
+    console.log('\n\n\n');
+  } else {
+    res.send(Error('File not found'));
+  }
+
+  OperationalEvent.sync();
+});
+
 // USER
 interface INewUserData {
   username: string;

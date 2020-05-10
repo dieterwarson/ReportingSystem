@@ -61,8 +61,10 @@
         <div class="card w-100">
           <div class="card-header bg-primary text-white">Meldingen</div>
           <div class="card-body">
-            <div v-if="this.notificationContent.administrative == this.emptyNotifications.administrative
-                        || this.notificationContent.technical == this.emptyNotifications.technical">
+            <div
+              v-if="this.notificationContent.administrative == this.emptyNotifications.administrative
+                        || this.notificationContent.technical == this.emptyNotifications.technical"
+            >
               <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
             </div>
             <div v-else class="row row-cols-1">
@@ -164,36 +166,26 @@
                   </div>
                 </div>
               </div>
-              <div
-                  v-for="event in reportContent.technical.defects"
-                  :key="event.id"
-                >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">Logistiek</h5>
-                      <p class="card-text">
-                        {{ new Date(event.date).toLocaleString("en-BE") }}
-                      </p>
-                      <p class="card-text">{{ event.description }}</p>
-                    </div>
+              <div v-for="event in reportContent.technical.defects" :key="event.id">
+                <div class="col card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title">Logistiek</h5>
+                    <p class="card-text">{{ new Date(event.date).toLocaleString("en-BE") }}</p>
+                    <p class="card-text">{{ event.description }}</p>
                   </div>
                 </div>
+              </div>
 
-                <div
-                  v-for="event in reportContent.technical.malfunctions"
-                  :key="event.id"
-                >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">Technisch</h5>
-                      <p class="card-text">
-                        {{ new Date(event.date).toLocaleString("en-BE") }}
-                      </p>
-                      <p class="card-text">{{ event.description }}</p>
-                      <p class="card-text">{{ event.duration }}</p>
-                    </div>
+              <div v-for="event in reportContent.technical.malfunctions" :key="event.id">
+                <div class="col card h-100">
+                  <div class="card-body">
+                    <h5 class="card-title">Technisch</h5>
+                    <p class="card-text">{{ new Date(event.date).toLocaleString("en-BE") }}</p>
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text">{{ event.duration }}</p>
                   </div>
                 </div>
+              </div>
             </div>
           </div>
         </div>
@@ -365,14 +357,38 @@ import ReportingService from "../services/ReportingService";
 export default Vue.extend({
   data: function() {
     return {
-      step: 'Operational',
-      reportContent: {"report":{"id":1,"date":"2020-03-16T21:13:48.000Z","temporary":false,"nightShift":true,"createdAt":"","updatedAt":""},"operational":{},"administrative":{},"technical":{}},
-      emptyReport: {"report":{"id":1,"date":"2020-03-16T21:13:48.000Z","temporary":false,"nightShift":true,"createdAt":"","updatedAt":""},"operational":{},"administrative":{},"technical":{}},
-      priorityContent: {"operational":{}},
-      emptyPriority: {"operational":{}},
-      notificationContent: {"administrative":{},"technical":{}},
-      emptyNotifications: {"administrative":{},"technical":{}}, 
-      shift: ''
+      step: "Operational",
+      reportContent: {
+        report: {
+          id: 1,
+          date: "2020-03-16T21:13:48.000Z",
+          temporary: false,
+          nightShift: true,
+          createdAt: "",
+          updatedAt: ""
+        },
+        operational: {},
+        administrative: {},
+        technical: {}
+      },
+      emptyReport: {
+        report: {
+          id: 1,
+          date: "2020-03-16T21:13:48.000Z",
+          temporary: false,
+          nightShift: true,
+          createdAt: "",
+          updatedAt: ""
+        },
+        operational: {},
+        administrative: {},
+        technical: {}
+      },
+      priorityContent: { operational: {} },
+      emptyPriority: { operational: {} },
+      notificationContent: { administrative: {}, technical: {} },
+      emptyNotifications: { administrative: {}, technical: {} },
+      shift: ""
     };
   },
 
@@ -654,7 +670,7 @@ export default Vue.extend({
     },
     changeEventClick: function(id: string) {
       this.$router.push({
-        path: "changeevent",
+        path: "changeEvent",
         query: {
           reportId: this.reportContent.report.id,
           eventId: id,
