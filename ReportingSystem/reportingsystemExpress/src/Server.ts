@@ -160,6 +160,30 @@ const defect2 = new Defect({
 });
 // defect2.save();
 
+const defectType1 = new DefectType({
+  typeName: 'lekkende kraan',
+});
+// defectType1.save();
+
+const defectType2 = new DefectType({
+  typeName: 'krakende deur',
+});
+// defectType2.save();
+
+const defectSubtype1 = new DefectSubtype({
+  defectTypeId: 1,
+  typeName: 'defectSubtype typeName',
+  description: 'defectSubtype lekkende kraan',
+});
+// defectSubtype1.save();
+
+const defectSubtype2 = new DefectSubtype({
+  defectTypeId: 2,
+  typeName: 'defectSubtype typeName',
+  description: 'defectSubtype krakende deur',
+});
+// defectSubtype2.save();
+
 const malfunction1 = new Malfunction({
   technicalId: 1,
   authorId: 1,
@@ -170,6 +194,18 @@ const malfunction1 = new Malfunction({
   duration: 6,
 });
 // malfunction1.save();
+
+const malfunctionType1 = new MalfunctionType({
+  typeName: 'malfunctionType typeName',
+});
+// malfunctionType1.save();
+
+const malfunctionSubtype1 = new MalfunctionSubtype({
+  typeName: 'malfunctionSubtype typeName',
+  description: 'malfunctionSubtype description',
+  malfunctionTypeId: 1,
+});
+// malfunctionSubtype1.save();
 
 const replacement1 = new Replacement({
   authorId: 1,
@@ -194,6 +230,18 @@ const workplaceEvent1 = new WorkplaceEvent({
   shift: false,
 });
 // workplaceEvent1.save();
+
+const workplaceType1 = new WorkplaceType({
+  typeName: 'workplaceType typeName',
+});
+// workplaceType1.save();
+
+const workplaceSubtype1 = new WorkplaceSubtype({
+  workplaceTypeId: 1,
+  typeName: 'workplaceSubtype typeName',
+  description: 'workplaceSubtype description',
+});
+// workplaceSubtype1.save();
 
 const secretariatNotification1 = new SecretariatNotification({
   authorId: 1,
@@ -324,26 +372,6 @@ const operationalEvent9 = new OperationalEvent({
 });
 //  operationalEvent9.save();
 
-const defectType1 = new DefectType({
-  typeName: 'lekkende kraan',
-});
-// defectType1.save();
-
-const defectType2 = new DefectType({
-  typeName: 'krakende deur',
-});
-// defectType2.save();
-
-const malfunctionType1 = new MalfunctionType({
-  typeName: 'malfunctionType typeName',
-});
-// malfunctionType1.save();
-
-const workplaceType1 = new WorkplaceType({
-  typeName: 'workplaceType typeName',
-});
-// workplaceType1.save();
-
 const eventType1 = new EventType({
   reportId: 1,
   operationalEventId: 1,
@@ -382,34 +410,6 @@ const operationalType3 = new OperationalType({
   typeName: 'Helikopter ingezet',
 });
 // operationalType3.save();
-
-const defectSubtype1 = new DefectSubtype({
-  defectTypeId: 1,
-  typeName: 'defectSubtype typeName',
-  description: 'defectSubtype lekkende kraan',
-});
-// defectSubtype1.save();
-
-const defectSubtype2 = new DefectSubtype({
-  defectTypeId: 2,
-  typeName: 'defectSubtype typeName',
-  description: 'defectSubtype krakende deur',
-});
-// defectSubtype2.save();
-
-const malfunctionSubtype1 = new MalfunctionSubtype({
-  typeName: 'malfunctionSubtype typeName',
-  description: 'malfunctionSubtype description',
-  malfunctionTypeId: 1,
-});
-// malfunctionSubtype1.save();
-
-const workplaceSubtype1 = new WorkplaceSubtype({
-  workplaceTypeId: 1,
-  typeName: 'workplaceSubtype typeName',
-  description: 'workplaceSubtype description',
-});
-// workplaceSubtype1.save();
 
 const operationalSubtype1 = new OperationalSubtype({
   operationalTypeId: 1,
