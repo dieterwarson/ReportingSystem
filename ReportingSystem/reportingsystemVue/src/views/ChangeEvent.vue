@@ -9,6 +9,10 @@
         <br />
         <div class="row">
           <!-- Checkboxes types -->
+          <div v-if="this.reportContent.operational == {}">
+            <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
+          </div>
+
           <div class="checkbox-container text-sm-left col-sm-4">
             <div class="text-sm-left">
               <input type="checkbox" name="Cross border pursuit" v-model="form.crossBorderPursuit" />
@@ -548,6 +552,9 @@ export default Vue.extend({
       };
       this.step = this.$route.query.categorie;
       this.eventId = this.$route.query.eventId;
+      this.loadDescriptions();
+    },
+    loadDescriptions: function() {
       // operational
       // operationalEvent
       this.operationalDescription = this.reportContent.operational.operationalEvents[

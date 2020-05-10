@@ -8,6 +8,10 @@ import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import Replacement from 'src/models/replacement';
 import WorkplaceEvent from 'src/models/workplaceEvent';
+import OperationalType from 'src/models/operationalType';
+import WorkplaceType from 'src/models/workplaceType';
+import DefectType from 'src/models/defectType';
+import MalfunctionType from 'src/models/malfunctionType';
 
 // Init router
 const router = Router();
@@ -78,7 +82,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
     administrative: { replacements, workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
-
 
   res.send(results);
 });
@@ -242,7 +245,6 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   };
 
   res.send(results);
-
 });
 
 /******************************************************************************
@@ -262,28 +264,28 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
 
   let defects = await technical?.$get('defects', {
     where: {
-      monitoring: true
-    }
+      monitoring: true,
+    },
   });
   let malfunctions = await technical?.$get('malfunctions', {
     where: {
-      monitoring: true
-    }
+      monitoring: true,
+    },
   });
   let replacements = await administrative?.$get('replacements', {
     where: {
-      monitoring: true
-    }
+      monitoring: true,
+    },
   });
   let workplaceEvents = await administrative?.$get('workplaceEvents', {
     where: {
-      monitoring: true
-    }
+      monitoring: true,
+    },
   });
   let secretariatNotifications = await administrative?.$get('replacements', {
     where: {
-      monitoring: true
-    }
+      monitoring: true,
+    },
   });
 
   let results = {
@@ -292,9 +294,7 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
   };
 
   res.send(results);
-
 });
-
 
 /******************************************************************************
  *      Get all the priority operationalEvents - "GET /api/reports/priority/:reportId"
@@ -311,16 +311,59 @@ router.get('/priority/:reportId', async (req: Request, res: Response) => {
 
   let operationalEvents = await operational?.$get('operationalEvents', {
     where: {
-      priority: true
-    }
+      priority: true,
+    },
   });
 
   let results = {
-    operational: { operationalEvents }
+    operational: { operationalEvents },
   };
 
   res.send(results);
+});
 
+/******************************************************************************
+ *             Get types from Reports - "GET /api/reports/types"
+ ******************************************************************************/
+
+router.get('/types', async (req: Request, res: Response) => {
+  var reports: (
+    | OperationalType[]
+    | WorkplaceType[]
+    | DefectType[]
+    | MalfunctionType[]
+    | number[]
+    | String[]
+  )[] = [];
+
+  var result;
+  result = await OperationalType.findAll({
+    attributes: ['typeName'],
+  });
+  if (result.length != 0) {
+    reports.push(result);
+  }
+  result = await WorkplaceType.findAll({
+    attributes: ['typeName'],
+  });
+  if (result.length != 0) {
+    reports.push(result);
+  }
+  result = await DefectType.findAll({
+    attributes: ['typeName'],
+  });
+  if (result.length != 0) {
+    reports.push(result);
+  }
+  result = await MalfunctionType.findAll({
+    attributes: ['typeName'],
+  });
+  if (result.length != 0) {
+    reports.push(result);
+  }
+
+  res.send(reports);
+  return res.json({ reports });
 });
 
 /******************************************************************************
