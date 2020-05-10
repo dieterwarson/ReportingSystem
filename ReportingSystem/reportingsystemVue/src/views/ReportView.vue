@@ -289,7 +289,7 @@
     </section>
 
     <section v-if="step == 'Technical'">
-      <div v-if="this.reportContent.technical == this.reportContent.technical">
+      <div v-if="this.reportContent.technical == this.emptyReport.technical">
         <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
       </div>
       <div v-else>
