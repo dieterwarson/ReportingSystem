@@ -8,6 +8,9 @@ import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import Replacement from 'src/models/replacement';
 import WorkplaceEvent from 'src/models/workplaceEvent';
+import DefectType from 'src/models/defectType'
+import MalfunctionType from 'src/models/malfunctionType';
+import WorkplaceType from 'src/models/workplaceType';
 
 // Init router
 const router = Router();
@@ -48,12 +51,14 @@ router.get('/monitored', async (req: Request, res: Response) => {
     where: {
       monitoring: 1,
     },
+    include: [{ model: DefectType }]
   });
 
   let malfunctions = await Malfunction.findAll({
     where: {
       monitoring: 1,
     },
+    include: [{ model: MalfunctionType }]
   });
 
   let replacements = await Replacement.findAll({
@@ -66,6 +71,7 @@ router.get('/monitored', async (req: Request, res: Response) => {
     where: {
       monitoring: 1,
     },
+    include: [{ model: WorkplaceType }]
   });
 
   let secretariatNotifications = await SecretariatNotification.findAll({
@@ -227,10 +233,29 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   let administrative = await report?.$get('administrative');
   let operational = await report?.$get('operational');
 
-  let defects = await technical?.$get('defects');
-  let malfunctions = await technical?.$get('malfunctions');
+  let defects = await Defect.findAll({
+    where: {
+      technicalId: technical?.id
+    },
+    include: [{ model: DefectType }]
+  })
+
+  let malfunctions = await Malfunction.findAll({
+    where: {
+      technicalId: technical?.id
+    },
+    include: [{ model: MalfunctionType }]
+  })
+
   let replacements = await administrative?.$get('replacements');
-  let workplaceEvents = await administrative?.$get('workplaceEvents');
+
+  let workplaceEvents = await WorkplaceEvent.findAll({
+    where: {
+      administrativeId: administrative?.id
+    },
+    include: [{ model: WorkplaceType }]
+  })
+
   let secretariatNotifications = await administrative?.$get('replacements');
   let operationalEvents = await operational?.$get('operationalEvents');
 

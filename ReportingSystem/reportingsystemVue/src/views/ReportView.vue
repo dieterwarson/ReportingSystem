@@ -100,6 +100,7 @@
                     </h5>
                     <p class="card-text">{{ event.description }}</p>
                     <p class="card-text">{{ event.location }}</p>
+                    <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.workplaceType.typeName }}</span></h5>
                     <h5></h5>
                   </div>
                 </div>
@@ -139,6 +140,7 @@
                         {{ new Date(event.date).toLocaleString("en-BE") }}
                       </p>
                       <p class="card-text">{{ event.description }}</p>
+                      <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.defectType.typeName }}</span></h5>
                     </div>
                   </div>
                 </div>
@@ -155,6 +157,7 @@
                       </p>
                       <p class="card-text">{{ event.description }}</p>
                       <p class="card-text">{{ event.duration }}</p>
+                      <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.malfunctionType.typeName }}</span></h5>
                     </div>
                   </div>
                 </div>
@@ -251,7 +254,7 @@
           v-for="event in reportContent.administrative.workplaceEvents"
           :key="event.id"
         >
-          <div class="card">
+          <div class="col card h-100">
             <div class="card-body">
               <h5 class="card-title">Voorval tijdens de dienst</h5>
               <h5 class="card-text">
@@ -272,7 +275,7 @@
           v-for="event in reportContent.administrative.workplaceEvents"
           :key="event.id"
         >
-          <div class="card">
+          <div class="col card h-100">
             <div class="card-body">
               <h5 class="card-title">Melding aan het secretariaat</h5>
               <h5 class="card-text">
@@ -294,7 +297,7 @@
       </div>
       <div v-else>
         <div v-for="event in reportContent.technical.defects" :key="event.id">
-          <div class="card">
+          <div class="col card h-100">
             <div class="card-body">
               <h5 class="card-title">Logistiek</h5>
               <h5 class="card-text">
@@ -304,6 +307,7 @@
                 }) }}
               </h5>
               <p class="card-text">{{ event.description }}</p>
+              <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.defectType.typeName }}</span></h5>
             </div>
           </div>
         </div>
@@ -312,7 +316,7 @@
           v-for="event in reportContent.administrative.malfunctions"
           :key="event.id"
         >
-          <div class="card">
+          <div class="col card h-100">
             <div class="card-body">
               <h5 class="card-title">Technisch</h5>
               <h5 class="card-text">
@@ -367,7 +371,7 @@ export default Vue.extend({
         '/api/reports/notifications/' + this.$route.query.reportId
       ).then((res) => (this.notificationContent = res));
 
-      // this.reportContent = {"report":{"id":1,"date":"2020-03-16T21:13:48.000Z","temporary":false,"createdAt":"2020-05-04T07:46:17.000Z","updatedAt":"2020-05-04T07:46:17.000Z"},"operational":{"operationalEvents":[{"id":1,"authorId":1,"operationalId":1,"signaling":"Verlies inschrijvingsbewijs","plNumber":null,"description":null,"monitoring":true,"location":null,"unit":"KEMPLA","date":"2020-03-16T18:13:48.000Z","createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"},{"id":2,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL03170104","description":null,"monitoring":true,"location":null,"unit":"HANO","date":"2020-03-16T22:05:18.000Z","createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"},{"id":3,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL031770168","description":null,"monitoring":true,"location":null,"unit":"CARMA","date":"2020-03-16T21:34:37.000Z","createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"},{"id":4,"authorId":1,"operationalId":1,"signaling":"Seining persoon","plNumber":null,"description":null,"monitoring":true,"location":null,"unit":"LAMA","date":"2020-03-16T23:34:33.000Z","createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"},{"id":5,"authorId":1,"operationalId":1,"signaling":"Seining persoon","plNumber":null,"description":null,"monitoring":true,"location":null,"unit":"LOON","date":"2020-03-16T23:57:10.000Z","createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"},{"id":6,"authorId":1,"operationalId":1,"signaling":"Seining persoon","plNumber":"PL03170202","description":null,"monitoring":true,"location":null,"unit":"BIHORI","date":"2020-03-16T00:18:57.000Z","createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"},{"id":7,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL03170104","description":null,"monitoring":true,"location":null,"unit":"HANO","date":"2020-03-16T00:45:45.000Z","createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"},{"id":8,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL03170315","description":null,"monitoring":true,"location":null,"unit":"LRH","date":"2020-03-16T01:21:25.000Z","createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"},{"id":9,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL03170322","description":null,"monitoring":true,"location":null,"unit":"LRH","date":"2020-03-16T01:51:47.000Z","createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"}]},"administrative":{"replacements":[{"id":1,"authorId":1,"administrativeId":1,"absentee":"Jan Jacobs","substitute":"Geordy Hendricks","monitoring":true,"date":"2020-03-30T15:46:36.000Z","shift":true,"createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"}],"workplaceEvents":[],"secretariatNotifications":[{"id":1,"authorId":1,"administrativeId":1,"absentee":"Jan Jacobs","substitute":"Geordy Hendricks","monitoring":true,"date":"2020-03-30T15:46:36.000Z","shift":true,"createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"}]},"technical":{"defects":[],"malfunctions":[{"id":1,"authorId":1,"technicalId":1,"malfunctionTypeId":1,"description":"lekkende kraan in kamer 304","monitoring":true,"date":"2020-04-15T13:03:57.000Z","duration":6,"createdAt":"2020-05-04T07:47:37.000Z","updatedAt":"2020-05-04T07:47:37.000Z"}]}}
+      // this.reportContent = {"report":{"id":1,"date":"2020-03-16T21:13:48.000Z","temporary":false,"nightShift":true,"createdAt":"2020-05-10T11:26:57.000Z","updatedAt":"2020-05-10T11:26:57.000Z"},"operational":{"operationalEvents":[{"id":1,"authorId":1,"operationalId":1,"signaling":"Seining persoon","plNumber":null,"description":null,"priority":null,"location":null,"unit":"LOON","date":"2020-03-16T23:57:10.000Z","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"},{"id":2,"authorId":1,"operationalId":1,"signaling":"Seining persoon","plNumber":null,"description":null,"priority":null,"location":null,"unit":"LAMA","date":"2020-03-16T23:34:33.000Z","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"},{"id":3,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL03170104","description":null,"priority":null,"location":null,"unit":"HANO","date":"2020-03-16T22:05:18.000Z","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"},{"id":4,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL031770168","description":null,"priority":null,"location":null,"unit":"CARMA","date":"2020-03-16T21:34:37.000Z","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"},{"id":5,"authorId":1,"operationalId":1,"signaling":"Verlies inschrijvingsbewijs","plNumber":null,"description":null,"priority":null,"location":null,"unit":"KEMPLA","date":"2020-03-16T18:13:48.000Z","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"},{"id":6,"authorId":1,"operationalId":1,"signaling":"Seining persoon","plNumber":"PL03170202","description":null,"priority":true,"location":null,"unit":"BIHORI","date":"2020-03-16T00:18:57.000Z","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"},{"id":7,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL03170104","description":null,"priority":null,"location":null,"unit":"HANO","date":"2020-03-16T00:45:45.000Z","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"},{"id":8,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL03170315","description":null,"priority":null,"location":null,"unit":"LRH","date":"2020-03-16T01:21:25.000Z","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"},{"id":9,"authorId":1,"operationalId":1,"signaling":null,"plNumber":"PL03170322","description":null,"priority":null,"location":null,"unit":"LRH","date":"2020-03-16T01:51:47.000Z","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"}]},"administrative":{"replacements":[{"id":1,"authorId":1,"administrativeId":1,"absentee":"Jan Jacobs","substitute":"Geordy Hendricks","monitoring":true,"date":"2020-03-30T15:46:36.000Z","shift":true,"createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"}],"workplaceEvents":[],"secretariatNotifications":[{"id":1,"authorId":1,"administrativeId":1,"absentee":"Jan Jacobs","substitute":"Geordy Hendricks","monitoring":true,"date":"2020-03-30T15:46:36.000Z","shift":true,"createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"}]},"technical":{"defects":[{"id":3,"technicalId":1,"authorId":1,"defectTypeId":1,"description":"lekkende kraan in lokaal 102","monitoring":true,"date":"2020-05-10T11:31:46.000Z","createdAt":"2020-05-10T11:31:46.000Z","updatedAt":"2020-05-10T11:31:46.000Z","defectType":{"id":1,"typeName":"lekkende kraan","createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"}}],"malfunctions":[{"id":1,"authorId":1,"technicalId":1,"malfunctionTypeId":1,"description":"lekkende kraan in kamer 304","monitoring":true,"date":"2020-04-15T13:03:57.000Z","duration":6,"createdAt":"2020-05-10T11:31:10.000Z","updatedAt":"2020-05-10T11:31:10.000Z"}]}}
       // this.priorityContent = {"operational":{"operationalEvents":[{"id":5,"authorId":1,"operationalId":1,"signaling":"Seining persoon","plNumber":"PL03170202","description":null,"priority":true,"location":null,"unit":"BIHORI","date":"2020-03-16T00:18:57.000Z","createdAt":"2020-05-04T21:58:27.000Z","updatedAt":"2020-05-04T21:58:27.000Z"}]}}
       // this.notificationContent = {"administrative":{"replacements":[{"id":1,"authorId":1,"administrativeId":1,"absentee":"Jan Jacobs","substitute":"Geordy Hendricks","monitoring":true,"date":"2020-03-30T15:46:36.000Z","shift":true,"createdAt":"2020-05-04T21:58:27.000Z","updatedAt":"2020-05-04T21:58:27.000Z"}],"workplaceEvents":[],"secretariatNotifications":[{"id":1,"authorId":1,"administrativeId":1,"absentee":"Jan Jacobs","substitute":"Geordy Hendricks","monitoring":true,"date":"2020-03-30T15:46:36.000Z","shift":true,"createdAt":"2020-05-04T21:58:27.000Z","updatedAt":"2020-05-04T21:58:27.000Z"}]},"technical":{"defects":[],"malfunctions":[]}}
       
