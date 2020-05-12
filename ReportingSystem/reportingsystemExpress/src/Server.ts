@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import { BAD_REQUEST } from 'http-status-codes';
 import 'express-async-errors';
 
+const { QueryTypes } = require('sequelize');
+
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import { Sequelize } from 'sequelize-typescript';
@@ -542,8 +544,11 @@ app.post('/changeOperationalEvent', async (req, res) => {
   // OperationalEvent.update({
   //   OperationalEventId: req.body.id
   // });
+    console.log('\n\n\n');
+    console.log(req.body);
+    console.log('\n');
 
-  const event = await OperationalEvent.findAll({
+  const event = await OperationalEvent.findOne({
     where: {
       id: req.body.operationalId,
     },
@@ -553,13 +558,12 @@ app.post('/changeOperationalEvent', async (req, res) => {
       },
     ],
   });
+  if (event != null) {
+    console.log(event);
 
-  if (event.length !== 0) {
-    // OperationalEvent.update({
-    //   description: req.body.message,
-      
-    // });
-
+    event.description = req.body.message;
+    event.save();
+    
     console.log('\n\n\n');
     console.log(req.body);
     console.log('\n');

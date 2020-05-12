@@ -83,6 +83,8 @@
                 class="form-control form-control-lg"
                 v-model="form.operationalMessage"
               />
+              {{this.form.operationalMessage}}
+              {{form.operationalMessage}}
             </div>
             <!-- Opslaan knop -->
             <button
@@ -522,7 +524,10 @@ export default Vue.extend({
       // };
       this.step = this.$route.query.categorie;
       this.eventId = this.$route.query.eventId;
-      this.loadDescriptions();
+      this.form.operationalMessage = this.reportContent.operational.operationalEvents[
+        this.eventId - 1
+      ].description;
+      // this.loadDescriptions();
     },
     loadDescriptions: function() {
       // operational
@@ -530,12 +535,9 @@ export default Vue.extend({
       this.operationalDescription = this.reportContent.operational.operationalEvents[
         this.eventId - 1
       ].description;
-      if (this.operationalDescription != null) {
         this.form.operationalMessage = this.operationalDescription;
-      } else {
-        this.form.operationalMessage = "";
-      }
-      // administrative
+
+// administrative
       // replacement
       this.replacementDescription = this.reportContent.administrative.replacements[
         this.eventId - 1
