@@ -36,7 +36,6 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-
 // var index = require('./routes/index');
 // var users = require('./routes/users');
 
@@ -125,6 +124,7 @@ const user2 = new User({
 const report1 = new Report({
   date: new Date('2020/03/16 21:13:48'),
   temporary: false,
+  nightShift: true,
 });
 // report1.save();
 
@@ -272,7 +272,6 @@ const operationalEvent1 = new OperationalEvent({
   signaling: 'Verlies inschrijvingsbewijs',
   plNumber: null,
   description: null,
-  monitoring: true,
   location: null,
   unit: 'KEMPLA',
   date: new Date('2020/03/16 18:13:48'),
@@ -285,7 +284,6 @@ const operationalEvent2 = new OperationalEvent({
   signaling: null,
   plNumber: 'PL031770168',
   description: null,
-  monitoring: true,
   location: null,
   unit: 'CARMA',
   date: new Date('2020/03/16 21:34:37'),
@@ -298,7 +296,6 @@ const operationalEvent3 = new OperationalEvent({
   signaling: null,
   plNumber: 'PL03170104',
   description: null,
-  monitoring: true,
   location: null,
   unit: 'HANO',
   date: new Date('2020/03/16 22:05:18'),
@@ -311,7 +308,6 @@ const operationalEvent4 = new OperationalEvent({
   signaling: 'Seining persoon',
   plNumber: null,
   description: null,
-  monitoring: true,
   location: null,
   unit: 'LAMA',
   date: new Date('2020/03/16 23:34:33'),
@@ -324,7 +320,6 @@ const operationalEvent5 = new OperationalEvent({
   signaling: 'Seining persoon',
   plNumber: null,
   description: null,
-  monitoring: true,
   location: null,
   unit: 'LOON',
   date: new Date('2020/03/16 23:57:10'),
@@ -337,7 +332,7 @@ const operationalEvent6 = new OperationalEvent({
   signaling: 'Seining persoon',
   plNumber: 'PL03170202',
   description: null,
-  monitoring: true,
+  priority: true,
   location: null,
   unit: 'BIHORI',
   date: new Date('2020/03/16 00:18:57'),
@@ -350,7 +345,6 @@ const operationalEvent7 = new OperationalEvent({
   signaling: null,
   plNumber: 'PL03170104',
   description: null,
-  monitoring: true,
   location: null,
   unit: 'HANO',
   date: new Date('2020/03/16 00:45:45'),
@@ -363,7 +357,6 @@ const operationalEvent8 = new OperationalEvent({
   signaling: null,
   plNumber: 'PL03170315',
   description: null,
-  monitoring: true,
   location: null,
   unit: 'LRH',
   date: new Date('2020/03/16 01:21:25'),
@@ -376,7 +369,6 @@ const operationalEvent9 = new OperationalEvent({
   signaling: null,
   plNumber: 'PL03170322',
   description: null,
-  monitoring: true,
   location: null,
   unit: 'LRH',
   date: new Date('2020/03/16 01:51:47'),

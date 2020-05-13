@@ -3,7 +3,7 @@ FROM ubuntu:latest
 ENV DEBIAN_FRONTEND noninteractive
 # install git and nodejs
 RUN apt-get update && apt-get install -y curl git-core && \
-curl -sL https://deb.nodesource.com/setup_13.x | bash - && \
+curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
 apt-get install -y nodejs
 RUN npm install -g yarn
 
