@@ -8,7 +8,8 @@ import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import Replacement from 'src/models/replacement';
 import WorkplaceEvent from 'src/models/workplaceEvent';
-
+// const checkAuth = require('middleware/check-auth');
+ 
 // Init router
 const router = Router();
 
@@ -112,7 +113,7 @@ console.log(reports[0]);
  *                      Search Reports - "GET /api/reports/search"
  ******************************************************************************/
 
-router.get('/search/', async (req: Request, res: Response) => {
+router.get('/search/',  async (req: Request, res: Response) => {
   const search = 'l';
 
   var result;

@@ -6,8 +6,8 @@
         <br>
         <input type="password" name="password" v-model="input.password" placeholder="Wachtwoord" class="form-control form-control-lg">
         <br>
-        <button class="btn btn-lg btn-primary" type="button" v-on:click="login(input.username, input.password)" >Aanmelden</button>
-
+        <button class="btn btn-lg btn-primary" type="button" v-on:click="login()" >Aanmelden</button>
+        <input type="text" name="resp" v-model="output.response" class="form-control form-control-lf">
     </form>
   </div>
 </template>
@@ -27,7 +27,8 @@ export default Vue.extend({
                 password: ""
             },
             output: {
-                errors: {}
+                errors: {},
+                response: ""
             }
         }
     },
@@ -37,8 +38,7 @@ export default Vue.extend({
                 username: this.input.username,
                 password: this.input.password
             });
-            alert(response.username);
-            this.input.username = response;
+            this.input.username = "";
             this.input.password = "";
         }
 
