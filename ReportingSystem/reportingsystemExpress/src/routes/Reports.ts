@@ -13,6 +13,7 @@ import WorkplaceEvent from 'src/models/workplaceEvent';
 import DefectType from 'src/models/defectType'
 import MalfunctionType from 'src/models/malfunctionType';
 import WorkplaceType from 'src/models/workplaceType';
+import OperationalType from 'src/models/operationalType';
 
 // Init router
 const router = Router();
