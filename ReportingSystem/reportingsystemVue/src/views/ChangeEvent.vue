@@ -1,3 +1,4 @@
+/* eslint-disable */
 <template>
 <!-- script has to be implemented again to achieve the seperate forms -->
 <div class="container pt-5 pb-5">
@@ -74,13 +75,13 @@
 
             <input type="text" class="form-control form-control-lg" v-model="this.form.operationalMessage" @change="getOperationalMessage" />
 
-            <!-- <input type="text" class="form-control form-control-lg" v-model="this.reportContent.operational.operationalEvents[
+            <input type="text" class="form-control form-control-lg" v-model="this.reportContent.operational.operationalEvents[
               this.eventId - 1
               ].description" @change="getOperationalMessage2" />
 
             <input type="text" class="form-control form-control-lg" v-model="this.reportContent.operational.operationalEvents[
               this.eventId - 1
-              ].description" @change="setinlink" /> -->
+              ].description" @change="setinlink" />
 
           </div>
           <div>message: {{this.form.operationalMessage}}</div>
@@ -236,7 +237,74 @@ export default Vue.extend({
       defectDescription: "",
       malfunctionDescription: "",
       step: "Operational",
-      reportContent: {},
+      reportContent: {
+        report: {
+          id: 1,
+          date: "2020-03-16T21:13:48.000Z",
+          temporary: false,
+          nightShift: true,
+          createdAt: "",
+          updatedAt: ""
+        },
+        operational: {
+          operationalEvents: [{
+            id: 1,
+            authorId: 1,
+            operationalId: 1,
+            signaling: "Verlies inschrijvingsbewijs",
+            plNumber: "",
+            description: "",
+            monitoring: true,
+            location: "",
+            unit: "KEMPLA",
+            date: "2020-03-16T18:13:48.000Z",
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }, ]
+        },
+        administrative: {
+          replacements: [{
+            id: 1,
+            authorId: 1,
+            administrativeId: 1,
+            absentee: "Jan Jacobs",
+            substitute: "Geordy Hendricks",
+            monitoring: true,
+            date: "2020-03-30T15:46:36.000Z",
+            shift: true,
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }],
+          workplaceEvents: [],
+          secretariatNotifications: [{
+            id: 1,
+            authorId: 1,
+            administrativeId: 1,
+            absentee: "Jan Jacobs",
+            substitute: "Geordy Hendricks",
+            monitoring: true,
+            date: "2020-03-30T15:46:36.000Z",
+            shift: true,
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }]
+        },
+        technical: {
+          defects: [],
+          malfunctions: [{
+            id: 1,
+            authorId: 1,
+            technicalId: 1,
+            malfunctionTypeId: 1,
+            description: "lekkende kraan in kamer 304",
+            monitoring: true,
+            date: "2020-04-15T13:03:57.000Z",
+            duration: 6,
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }]
+        }
+      },
       eventId: 0,
       formType: {
         parentId: []
@@ -313,8 +381,8 @@ export default Vue.extend({
         res => (this.reportTypes = res)
       );
 
-      this.step = this.$route.query.categorie;
-      this.eventId = parseInt(this.$route.query.eventId);
+      this.step = String(this.$route.query.categorie);
+      this.eventId = parseInt(String(this.$route.query.eventId));
 
       // this.form.operationalMessage = this.reportContent.operational.operationalEvents[
       //   this.eventId - 1
@@ -441,7 +509,7 @@ export default Vue.extend({
           return;
         }
       }
-      this.filteredTypes.push(str);
+      Array(String(this.filteredTypes)).push(str);
     },
     getOperationalMessage: function () {
       // let temp = this.reportContent.operational.operationalEvents[
@@ -450,17 +518,17 @@ export default Vue.extend({
       this.operationalDescription = "bla";
       this.reportContent.operational.operationalEvents[
         this.eventId - 1
-      ].description = "hi";
+      ].description = String("hi");
       // this.form.operationalMessage;
       // this.operationalDescription = this.form.operationalMessage;
     },
     getOperationalMessage2: function () {
-      this.operationalDescription = this.reportContent.operational.operationalEvents[
+      this.operationalDescription = String(this.reportContent.operational.operationalEvents[
         this.eventId - 1
-      ].description;
+      ].description);
     },
     setinlink: function () {
-      let temp = this.reportContent.operational.operationalEvents[
+      const temp = this.reportContent.operational.operationalEvents[
         this.eventId - 1
       ].description;
 

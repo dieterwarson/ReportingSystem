@@ -418,22 +418,22 @@ export default Vue.extend({
       //     createdAt: "2020-05-04T07:46:17.000Z",
       //     updatedAt: "2020-05-04T07:46:17.000Z"
       //   },
-      //   operational: {
-      //     operationalEvents: [
-      //       {
-      //         id: 1,
-      //         authorId: 1,
-      //         operationalId: 1,
-      //         signaling: "Verlies inschrijvingsbewijs",
-      //         plNumber: null,
-      //         description: null,
-      //         monitoring: true,
-      //         location: null,
-      //         unit: "KEMPLA",
-      //         date: "2020-03-16T18:13:48.000Z",
-      //         createdAt: "2020-05-04T07:47:37.000Z",
-      //         updatedAt: "2020-05-04T07:47:37.000Z"
-      //       },
+        // operational: {
+        //   operationalEvents: [
+        //     {
+        //       id: 1,
+        //       authorId: 1,
+        //       operationalId: 1,
+        //       signaling: "Verlies inschrijvingsbewijs",
+        //       plNumber: null,
+        //       description: null,
+        //       monitoring: true,
+        //       location: null,
+        //       unit: "KEMPLA",
+        //       date: "2020-03-16T18:13:48.000Z",
+        //       createdAt: "2020-05-04T07:47:37.000Z",
+        //       updatedAt: "2020-05-04T07:47:37.000Z"
+        //     },
       //       {
       //         id: 2,
       //         authorId: 1,
@@ -674,7 +674,7 @@ export default Vue.extend({
       this.$router.push({
         path: "changeEvent",
         query: {
-          reportId: this.reportContent.report.id,
+          reportId: String(this.reportContent.report.id),
           eventId: id,
           categorie: this.step
         }
