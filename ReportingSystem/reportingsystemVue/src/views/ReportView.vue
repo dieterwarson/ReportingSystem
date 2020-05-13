@@ -1,4 +1,5 @@
 <template>
+
   <div class="container pt-5 pb-5" v-if="this.reportContent != this.emptyReport">
     <h1>
       Verslag van
