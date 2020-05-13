@@ -31,6 +31,7 @@ import WorkplaceType from './models/workplaceType';
 import EventType from './models/eventType';
 import OperationalType from './models/operationalType';
 import OperationalSubtype from './models/operationalSubtype';
+import cronServer from './cron'
 const cors = require('cors');
 
 // var index = require('./routes/index');
@@ -673,7 +674,7 @@ app.post('/addField', async (req, res) => {
   console.log(req.body.newField);
 });
 
-
+let cronInstance = new cronServer(1);
 
 // Export express instance
 export default app;

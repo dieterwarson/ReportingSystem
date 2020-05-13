@@ -10,3 +10,4 @@ export const sequelize =  new Sequelize({
         password: 'mysqlroot',
         models: /*[__dirname + '/models']*/ [Administrative], // or [Player, Team],
 });
+

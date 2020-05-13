@@ -51,7 +51,7 @@
                           {{ event.absentee }} vervangen door
                           {{ event.substitute }}
                         </p>
-                        <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.workplaceType.typeName }}</span></h5>
+                        <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.workplaceType.typeName }}</span></h5>
                       </div>
                     </div>
                   </div>
@@ -99,7 +99,7 @@
                           {{ new Date(event.date).toLocaleString("en-BE") }}
                         </p>
                         <p class="card-text">{{ event.description }}</p>
-                        <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.defectType.typeName }}</span></h5>
+                        <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.defectType.typeName }}</span></h5>
                       </div>
                     </div>
                   </div>
@@ -118,7 +118,7 @@
                         </p>
                         <p class="card-text">{{ event.description }}</p>
                         <p class="card-text">{{ event.duration }}</p>
-                        <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.malfunctionType.typeName }}</span></h5>
+                        <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.malfunctionType.typeName }}</span></h5>
                       </div>
                     </div>
                   </div>
