@@ -454,7 +454,6 @@ const dummyData2 = new DummyDatabase({
 
  // REPORTS
 app.post('/getFile', async (req, res) => {
-  console.log(req.body.plNumber);
   const file = await DummyDatabase.findOne({
     where: {
       plNumber: req.body.plNumber,
@@ -544,17 +543,17 @@ app.post('/addTechnicalEvent', async (req, res) => {
 // USER 
 interface INewUserData {
   username: string;
-  email: string;
+  mail: string;
   password: string;
   rptPassword: string;
   accessRights: number;
+  subscription: boolean;
 }
 
 
 
 function checkUsername(username: string) {
   if (/^[a-z0-9_-]{3,15}$/.test(username)){
-    console.log("username OK")
     return true;
   }
   return false;
@@ -563,7 +562,6 @@ function checkUsername(username: string) {
 function checkPassword(password: string, rptPassword: string) {
   if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)){
     if (password.localeCompare(rptPassword) == 0){
-      console.log("password OK")
       return true;
     }
   }
@@ -572,7 +570,6 @@ function checkPassword(password: string, rptPassword: string) {
 
 function checkAccessRights(accessRights: number) {
   if (accessRights >= 0 && accessRights < 3){
-    console.log("access OK")
     return true;
   }
   return false;
@@ -581,7 +578,6 @@ function checkAccessRights(accessRights: number) {
 
 
 function checkUserData(newUser: INewUserData){
-  console.log(newUser)
   return checkUsername(newUser.username) && checkPassword(newUser.password, newUser.rptPassword) && checkAccessRights(newUser.accessRights);
 }
 
@@ -592,23 +588,32 @@ app.post('/addUser',  async (req, res) => {
     username: req.body.username,
     password: req.body.password,
     rptPassword: req.body.rptPassword,
-    email: req.body.email,
-    accessRights: req.body.accessRights
+    mail: req.body.mail,
+    accessRights: req.body.accessRights,
+    subscription: req.body.subscription,
   };
   var matched_users_promise = User.findAll({
-    where : {username: userData.username}
+    where : {username: userData.username},
+    attributes: ['id'],
   });
   matched_users_promise.then(function(users) {
+
     if (users.length == 0) {
       const passwordHash = bcrypt.hashSync(userData.password, 10);
       User.create({
         username: userData.username,
         password: passwordHash,
-        email: userData.email,
-        accessRights: userData.accessRights
+        accessRights: userData.accessRights,
+        email: userData.mail,
+        subscription: userData.subscription,
       }).then(function() {
           res.json({
           message: "Gebruiker aangemaakt"
+        });
+      })
+      .catch(function( error)  {
+        res.json({
+          message: error
         })
       })
       User.sync();
@@ -714,7 +719,6 @@ app.post('/loginUser', async (req, res) => {
     if (users.length > 0 ) {
       let user = users[0];
       let passwordHash = user.password;
-      console.log(passwordHash);
       if (bcrypt.compareSync(req.body.password, passwordHash, 10)) {
         const token = jwt.sign({
           username: user.username,
@@ -746,6 +750,22 @@ app.post('/loginUser', async (req, res) => {
 app.post('/addField', async (req, res) => {
   console.log(req.body.newField);
 });
+
+app.post('/changeSubscription', async (req, res) => {
+  var matched_user = User.findAll({
+    where: {id: req.body.id}
+  });
+  matched_user.then(function(users){
+    if (users.length > 0) {
+      let user = users[0];
+      user.subscription = req.body.subscription;
+      user.save();
+      res.json(
+        {message:"Subscription has changed"}
+      )
+    }
+  })
+})
 
 
 
