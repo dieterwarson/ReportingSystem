@@ -129,7 +129,6 @@
                     </h5>
                     <p class="card-text">{{ event.description }}</p>
                     <p class="card-text">{{ event.location }}</p>
-                    <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.workplaceType.typeName }}</span></h5>
                     <h5></h5>
                   </div>
                 </div>
@@ -174,7 +173,6 @@
                     <h5 class="card-title">Logistiek</h5>
                     <p class="card-text">{{ new Date(event.date).toLocaleString("en-BE") }}</p>
                     <p class="card-text">{{ event.description }}</p>
-                    <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.defectType.typeName }}</span></h5>
                   </div>
                 </div>
               </div>
@@ -186,7 +184,6 @@
                     <p class="card-text">{{ new Date(event.date).toLocaleString("en-BE") }}</p>
                     <p class="card-text">{{ event.description }}</p>
                     <p class="card-text">{{ event.duration }}</p>
-                                          <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.malfunctionType.typeName }}</span></h5>
                   </div>
                 </div>
               </div>
@@ -273,11 +270,8 @@
           </div>
         </div>
 
-        <div
-          v-for="event in reportContent.administrative.workplaceEvents"
-          :key="event.id"
-        >
-          <div class="col card h-100">
+        <div v-for="event in reportContent.administrative.workplaceEvents" :key="event.id">
+          <div class="card">
             <div class="card-body">
               <h5 class="card-title">Voorval tijdens de dienst</h5>
               <h5 class="card-text">
@@ -292,11 +286,8 @@
           </div>
         </div>
 
-        <div
-          v-for="event in reportContent.administrative.workplaceEvents"
-          :key="event.id"
-        >
-          <div class="col card h-100">
+        <div v-for="event in reportContent.administrative.workplaceEvents" :key="event.id">
+          <div class="card">
             <div class="card-body">
               <h5 class="card-title">Melding aan het secretariaat</h5>
               <h5 class="card-text">
@@ -318,7 +309,7 @@
       </div>
       <div v-else>
         <div v-for="event in reportContent.technical.defects" :key="event.id">
-          <div class="col card h-100">
+          <div class="card">
             <div class="card-body">
               <h5 class="card-title">Logistiek</h5>
               <h5 class="card-text">
@@ -334,16 +325,12 @@
                 }) }}
               </h5>
               <p class="card-text">{{ event.description }}</p>
-              <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.defectType.typeName }}</span></h5>
             </div>
           </div>
         </div>
 
-        <div
-          v-for="event in reportContent.administrative.malfunctions"
-          :key="event.id"
-        >
-          <div class="col card h-100">
+        <div v-for="event in reportContent.administrative.malfunctions" :key="event.id">
+          <div class="card">
             <div class="card-body">
               <h5 class="card-title">Technisch</h5>
               <h5 class="card-text">
