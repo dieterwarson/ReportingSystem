@@ -32,6 +32,7 @@ import EventType from './models/eventType';
 import OperationalType from './models/operationalType';
 import OperationalSubtype from './models/operationalSubtype';
 const checkAuth = require('middleware/check-auth');
+import cronServer from './cron'
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -768,6 +769,7 @@ app.post('/changeSubscription', async (req, res) => {
 })
 
 
+let cronInstance = new cronServer(1);
 
 // Export express instance
 export default app;
