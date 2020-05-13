@@ -1,4 +1,5 @@
 import Api from '@/services/api';
+import axios from "axios";
 
 export default {
   getFile(data: any) {
@@ -95,7 +96,9 @@ export default {
     return Api()
       .post('/loginUser', data)
       .then(res => {
-        return res.data;
+        window.localStorage.setItem("token",res.data.token);
+        window.location = res.data.redirect;
+        return;
       })
       .catch(error => {
         alert(error);
