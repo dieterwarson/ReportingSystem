@@ -19,16 +19,18 @@
                   v-for="event in monitored.administrative.replacements"
                   :key="event.id"
                 >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">Vervanging</h5>
-                      <p class="card-text">
-                        {{ new Date(event.date).toLocaleString("en-BE") }}
-                      </p>
-                      <p class="card-text">
-                        {{ event.absentee }} vervangen door
-                        {{ event.substitute }}
-                      </p>
+                  <div class="col">
+                    <div class="card h-100 mb-3">
+                      <h5 class="card-header bg-secondary">Vervanging</h5>
+                      <div class="card-body">
+                        <p class="card-text">
+                          {{ new Date(event.date).toLocaleString("en-BE") }}
+                        </p>
+                        <p class="card-text">
+                          {{ event.absentee }} vervangen door
+                          {{ event.substitute }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -37,17 +39,20 @@
                   v-for="event in monitored.administrative.workplaceEvents"
                   :key="event.id"
                 >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">Voorval tijdens de dienst</h5>
-                      <p class="card-text">
-                        {{ new Date(event.date).toLocaleString("en-BE") }}
-                      </p>
-                      <p class="card-text">{{ event.description }}</p>
-                      <p class="card-text">
-                        {{ event.absentee }} vervangen door
-                        {{ event.substitute }}
-                      </p>
+                  <div class="col">
+                    <div class="card h-100 mb-3">
+                      <h5 class="card-header bg-secondary">Voorval tijdens de dienst</h5>
+                      <div class="card-body">
+                        <p class="card-text">
+                          {{ new Date(event.date).toLocaleString("en-BE") }}
+                        </p>
+                        <p class="card-text">{{ event.description }}</p>
+                        <p class="card-text">
+                          {{ event.absentee }} vervangen door
+                          {{ event.substitute }}
+                        </p>
+                        <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.workplaceType.typeName }}</span></h5>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -57,13 +62,15 @@
                     .secretariatNotifications"
                   :key="event.id"
                 >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">Melding aan het secretariaat</h5>
-                      <p class="card-text">
-                        {{ new Date(event.date).toLocaleString("en-BE") }}
-                      </p>
-                      <p class="card-text">{{ event.description }}</p>
+                  <div class="col">
+                    <div class="card h-100 mb-3">
+                      <h5 class="card-header bg-secondary">Melding aan het secretariaat</h5>
+                      <div class="card-body">
+                        <p class="card-text">
+                          {{ new Date(event.date).toLocaleString("en-BE") }}
+                        </p>
+                        <p class="card-text">{{ event.description }}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -84,13 +91,16 @@
                   v-for="event in monitored.technical.defects"
                   :key="event.id"
                 >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">Logistiek</h5>
-                      <p class="card-text">
-                        {{ new Date(event.date).toLocaleString("en-BE") }}
-                      </p>
-                      <p class="card-text">{{ event.description }}</p>
+                  <div class="col">
+                    <div class="card h-100 mb-3">
+                      <h5 class="card-header bg-secondary">Logistiek</h5>
+                      <div class="card-body">
+                        <p class="card-text">
+                          {{ new Date(event.date).toLocaleString("en-BE") }}
+                        </p>
+                        <p class="card-text">{{ event.description }}</p>
+                        <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.defectType.typeName }}</span></h5>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -99,14 +109,17 @@
                   v-for="event in monitored.technical.malfunctions"
                   :key="event.id"
                 >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">Technisch</h5>
-                      <p class="card-text">
-                        {{ new Date(event.date).toLocaleString("en-BE") }}
-                      </p>
-                      <p class="card-text">{{ event.description }}</p>
-                      <p class="card-text">{{ event.duration }}</p>
+                  <div class="col">
+                    <div class="card h-100 mb-3">
+                      <h5 class="card-header bg-secondary">Technisch</h5>
+                      <div class="card-body">
+                        <p class="card-text">
+                          {{ new Date(event.date).toLocaleString("en-BE") }}
+                        </p>
+                        <p class="card-text">{{ event.description }}</p>
+                        <p class="card-text">{{ event.duration }}</p>
+                        <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.malfunctionType.typeName }}</span></h5>
+                      </div>
                     </div>
                   </div>
                 </div>

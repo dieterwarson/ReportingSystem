@@ -33,7 +33,10 @@ import WorkplaceType from './models/workplaceType';
 import EventType from './models/eventType';
 import OperationalType from './models/operationalType';
 import OperationalSubtype from './models/operationalSubtype';
+const checkAuth = require('middleware/check-auth');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // var index = require('./routes/index');
 // var users = require('./routes/users');
@@ -118,7 +121,7 @@ const user2 = new User({
   password: 'test',
   accessRights: 0,
 });
-// user2.save();
+ //user2.save();
 
 const report1 = new Report({
   date: new Date('2020/03/16 21:13:48'),
@@ -586,16 +589,20 @@ interface INewUserData {
   accessRights: number;
 }
 
+
+
 function checkUsername(username: string) {
-  if (/^[a-z0-9_-]{3,15}$/.test(username)) {
+  if (/^[a-z0-9_-]{3,15}$/.test(username)){
+    console.log("username OK")
     return true;
   }
   return false;
 }
 
 function checkPassword(password: string, rptPassword: string) {
-  if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)) {
-    if (password.localeCompare(rptPassword) == 0) {
+  if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)){
+    if (password.localeCompare(rptPassword) == 0){
+      console.log("password OK")
       return true;
     }
   }
@@ -603,114 +610,176 @@ function checkPassword(password: string, rptPassword: string) {
 }
 
 function checkAccessRights(accessRights: number) {
-  if (accessRights >= 0 && accessRights < 3) {
+  if (accessRights >= 0 && accessRights < 3){
+    console.log("access OK")
     return true;
   }
   return false;
 }
 
-function checkEmail(email: string) {
-  if (email.search('@') > -1) {
-    return true;
-  }
-  return false;
+
+
+function checkUserData(newUser: INewUserData){
+  console.log(newUser)
+  return checkUsername(newUser.username) && checkPassword(newUser.password, newUser.rptPassword) && checkAccessRights(newUser.accessRights);
 }
 
-function checkUserData(newUser: INewUserData) {
-  return (
-    checkUsername(newUser.username) &&
-    checkPassword(newUser.password, newUser.rptPassword) &&
-    checkAccessRights(newUser.accessRights) &&
-    checkEmail(newUser.email)
-  );
-}
 
-app.post('/addUser', async (req, res) => {
-  const userData: INewUserData = {
+app.post('/addUser',  async (req, res) => {
+  
+  const userData:INewUserData = {
     username: req.body.username,
     password: req.body.password,
     rptPassword: req.body.rptPassword,
     email: req.body.email,
     accessRights: req.body.accessRights,
   };
-  if (
-    userData.username &&
-    userData.password &&
-    userData.email &&
-    userData.accessRights
-  ) {
-    if (checkUserData(userData)) {
+  var matched_users_promise = User.findAll({
+    where : {username: userData.username}
+  });
+  matched_users_promise.then(function(users) {
+    if (users.length == 0) {
+      const passwordHash = bcrypt.hashSync(userData.password, 10);
+      User.create({
+        username: userData.username,
+        password: passwordHash,
+        email: userData.email,
+        accessRights: userData.accessRights
+      }).then(function() {
+          res.json({
+          message: "Gebruiker aangemaakt"
+        })
+      })
+      User.sync();
+    } else {
+      res.status(409).json({
+        message: "This user already exists"
+      })
+    }
+  })
+});
+
+
+function checkChangePasswordData(newPasswordData: any){
+  return checkUsername(newPasswordData.username) && checkPassword(newPasswordData.password, newPasswordData.rptPassword);
+}
+
+app.post('/changePassword', async (req, res) => {
+  const userData = req.body;
+  if (userData.username, userData.password, userData.rptPassword){
+    if (checkChangePasswordData(userData)){
+      userData.password = bcrypt.hashSync(req.body.password, 10);
       const user = User.findOne({
-        where: { username: userData.username },
+        where: {username: userData.username}
       });
       if (user !== null) {
-        res.status(401).json({
-          message: 'Deze gebruiker bestaat al',
-        });
+        User.update(
+          {password: userData.password},
+          {where: {username: userData.username}}
+        ).then(function() {
+          res.json({
+            message: "Wachtwoord gewijzigd"
+          })
+        })
+        .catch(function (err) {
+          res.json({
+            message: "Error"  + err
+          })
+        })
       } else {
-        User.create({
-          username: userData.username,
-          password: userData.password,
-          email: userData.email,
-          accessRights: userData.accessRights,
-        });
-        User.sync();
-        res.json({
-          message: 'De nieuwe gebruiker is toegevoegd',
-        });
+        res.status(401).json({
+          message: "Deze gebruiker bestaat niet"
+        })
       }
     } else {
       res.status(401).json({
-        message: 'Niet alle velden werden correct ingevuld',
+        message: "Niet alle data werd correct ingevuld"
+      })
+    } 
+    }else {
+      res.status(401).json({
+        message: "Niet alle data werd correct ingevuld"
+      })
+  }
+});
+
+function checkChangeAccessRights(newAccessRights: any) {
+  return checkUsername(newAccessRights.username) && checkAccessRights(newAccessRights.accessRights);
+}
+
+app.post('/changeAccess', async (req, res) => {
+  const data = req.body;
+  if (data.username && data.accessRights) {
+    if (checkAccessRights(data)) {
+      const user = User.findOne({
+        where: {username: data.username}
       });
+      if (user !== null) {
+        User.update(
+          {accessRights: data.accessRights},
+          {where: {username: data.username}}
+        ).then(function(){
+          res.json({
+            message: "De toegangsrechten zijn gewijzigd"
+          })
+        })
+        .catch(function (error){
+          res.json({
+            message: "Error: " + error
+          })
+        })
+      } else {
+        res.json({
+          message: "Deze gebruiker bestaat niet"
+        })
+      }
+    } else {
+      res.status(401).json({
+        message: "Niet alle data werd correct ingecvuld"
+      })
     }
   } else {
     res.status(401).json({
-      message: 'Niet alle velden werden ingevuld',
-    });
+      message: "Niet alle data werd correct ingevuld"
+    })
   }
-});
-
-app.post('/changePassword', async (req, res) => {
-  console.log(req.body.username);
-  // User.find({
-  //   where: {username: req.body.username}
-  // }).on('succes', function(user: User) {
-  //   if (user) {
-  //     user.update({
-  //       password: req.body.newPassword
-  //     })
-  //     res.send(true);
-  //   }
-  // });
-});
-
-app.post('/changeAccess', async (req, res) => {
-  console.log(req.body.username);
-  // User.find({
-  //   where: {username: req.body.username}
-  // }).on('succes', function(user: User) {
-  //   if (user) {
-  //     user.update({
-  //       accessRights: req.body.accessRights
-  //     })
-  //     res.send(true);
-  //   }
-  // });
 });
 
 app.post('/loginUser', async (req, res) => {
-  const user = await User.findOne({
-    where: {
-      username: req.body.username,
-      password: req.body.password,
-    },
+  var matched_users_promise = User.findAll({
+    where: {username: req.body.username}
   });
-  if (user !== null) {
-    res.send(user);
-  } else {
-    res.send('USER NOT FOUND');
-  }
+  matched_users_promise.then(function(users){
+    if (users.length > 0 ) {
+      let user = users[0];
+      let passwordHash = user.password;
+      console.log(passwordHash);
+      if (bcrypt.compareSync(req.body.password, passwordHash, 10)) {
+        const token = jwt.sign({
+          username: user.username,
+          id: user.id,
+          rights: user.accessRights
+        },
+        process.env.JWT_KEY,
+        {
+          expiresIn: '12h'
+        })
+        res.json({
+          message: "Authenticatie geslaagd",
+          token: token,
+          redirect: "/"
+        });
+      } else {
+        res.json({
+          message: "password doesnt match?"
+        });
+      }
+    } else {
+      res.json({
+        message: "user bestaat niet"
+      });
+    }
+  });
 });
 
 app.post('/addField', async (req, res) => {
