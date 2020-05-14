@@ -72,22 +72,8 @@
 
             <!-- Extra info -->
             <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-
             <input type="text" class="form-control form-control-lg" v-model="form.operationalMessage" @change="getOperationalMessage" />
 
-            <!-- <input type="text" class="form-control form-control-lg" v-model="operationalDescription" @change="setinlink" />
-
-            <input type="text" class="form-control form-control-lg" v-model="reportContent.operational.operationalEvents[
-              this.eventId - 1
-              ].description" @change="getOperationalMessage2" /> -->
-
-          </div>
-          <div>message: {{form.operationalMessage}}</div>
-          <div>description: {{operationalDescription}}</div>
-          <div>
-            reportContent: {{reportContent.operational.operationalEvents[
-              this.eventId - 1
-              ].description}}
           </div>
 
           <!-- Opslaan knop -->
@@ -147,7 +133,7 @@
             </div>
             <!-- Extra info -->
             <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-            <input type="text" class="form-control form-control-lg" v-model="form.workforceMessage" />
+            <input type="text" class="form-control form-control-lg" v-model="form.workforceMessage" @change="getWorkforceMessage" />
           </div>
           <!-- Opslaan knop -->
           <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addWorkForceEvent">Opslaan</button>
@@ -228,7 +214,6 @@ export default Vue.extend({
       operationalId: "",
       filteredTypes: [],
       reportTypes: [],
-      operationalDescription: "",
       replacementDescription: "",
       workplaceEventDescription: "",
       secretariatNotificationDescription: "",
@@ -251,7 +236,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "Verlies inschrijvingsbewijs",
               plNumber: null,
-              description: "beschrijving",
+              description: "bewijs verloren, nieuwe in maak",
               monitoring: true,
               location: null,
               unit: "KEMPLA",
@@ -391,10 +376,9 @@ export default Vue.extend({
             id: 1,
             authorId: 1,
             administrativeId: 1,
-            absentee: "Jan Jacobs",
-            substitute: "Geordy Hendricks",
+            description: "ongeval",
             monitoring: true,
-            date: "2020-03-30T15:46:36.000Z",
+            date: "2020-03-30T10:46:36.000Z",
             shift: true,
             createdAt: "2020-05-04T07:47:37.000Z",
             updatedAt: "2020-05-04T07:47:37.000Z"
@@ -459,10 +443,6 @@ export default Vue.extend({
 
   mounted() {
     this.loadData();
-
-    this.form.operationalMessage = String(this.reportContent.operational.operationalEvents[
-      this.eventId - 1
-    ].description);
   },
 
   methods: {
@@ -481,17 +461,10 @@ export default Vue.extend({
       this.step = String(this.$route.query.categorie);
       this.eventId = parseInt(String(this.$route.query.eventId));
 
-      // this.form.operationalMessage = this.reportContent.operational.operationalEvents[
-      //   this.eventId - 1
-      // ].description;
+      this.form.operationalMessage = String(this.reportContent.operational.operationalEvents[
+        this.eventId - 1
+      ].description);
 
-      // this.form.operationalMessage = "éhauohpuzeahafeu";
-
-      // this.operationalDescription = this.reportContent.operational.operationalEvents[
-      //   this.eventId - 1
-      // ].description;
-
-      // this.form.operationalMessage = this.operationalDescription;
       // this.loadDescriptions();
     },
     getOperational: function () {
@@ -609,34 +582,13 @@ export default Vue.extend({
       Array(String(this.filteredTypes)).push(str);
     },
     getOperationalMessage: function () {
-      // let temp = this.reportContent.operational.operationalEvents[
-      //   this.eventId - 1
-      // ].description;
-      this.operationalDescription = this.form.operationalMessage;
-
       this.reportContent.operational.operationalEvents[
         this.eventId - 1
       ].description = this.form.operationalMessage;
-      // this.reportContent.operational.operationalEvents[
-      //   this.eventId - 1
-      // ].description = String("hi");
-      // this.form.operationalMessage;
-      // this.operationalDescription = this.form.operationalMessage;
     },
-    // getOperationalMessage2: function () {
-    //   this.operationalDescription = String(this.reportContent.operational.operationalEvents[
-    //     this.eventId - 1
-    //   ].description);
-    // },
-    // setinlink: function () {
-    //   const temp = this.reportContent.operational.operationalEvents[
-    //     this.eventId - 1
-    //   ].description;
-
-    //   this.reportContent.operational.operationalEvents[
-    //     this.eventId - 1
-    //   ].description = temp;
-    // }
+    getWorkforceMessage: function () {
+      return;
+    }
   }
 });
 </script>

@@ -544,13 +544,6 @@ app.post('/addTechnicalEvent', async (req, res) => {
 });
 
 app.post('/changeOperationalEvent', async (req, res) => {
-  // OperationalEvent.update({
-  //   OperationalEventId: req.body.id
-  // });
-    console.log('\n\n\n');
-    console.log(req.body);
-    console.log('\n');
-
   const event = await OperationalEvent.findOne({
     where: {
       id: req.body.operationalId,
@@ -562,17 +555,8 @@ app.post('/changeOperationalEvent', async (req, res) => {
     ],
   });
   if (event != null) {
-    console.log(event);
-
     event.description = req.body.message;
     event.save();
-    
-    console.log('\n\n\n');
-    console.log(req.body);
-    console.log('\n');
-
-    console.log(event);
-    console.log('\n\n\n');
   } else {
     res.send(Error('File not found'));
   }
