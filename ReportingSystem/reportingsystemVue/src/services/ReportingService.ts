@@ -72,6 +72,16 @@ export default {
         alert(error);
       });
   },
+  getAllUsers(url: string) {
+    return Api()
+    .get(url)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    });
+  },
   addWorkForceEvent(data: any) {
     return Api()
       .post('/addWorkForceEvent', data)
@@ -154,4 +164,14 @@ export default {
         alert(error);
       });
   },
+  changeSubscription(data: any) {
+    return Api()
+    .post("/changeSubscription", data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  }
 };

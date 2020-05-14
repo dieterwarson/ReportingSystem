@@ -16,7 +16,7 @@
               </div>
               <div v-else class="row row-cols-1">
                 <div
-                  v-for="event in monitored.administrative.replacements"
+                  v-for="event in monitored.administrative.workplaceEvents"
                   :key="event.id"
                 >
                   <div class="col">
@@ -26,32 +26,12 @@
                         <p class="card-text">
                           {{ new Date(event.date).toLocaleString("en-BE") }}
                         </p>
-                        <p class="card-text">
-                          {{ event.absentee }} vervangen door
-                          {{ event.substitute }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  v-for="event in monitored.administrative.workplaceEvents"
-                  :key="event.id"
-                >
-                  <div class="col">
-                    <div class="card h-100 mb-3">
-                      <h5 class="card-header bg-secondary">Voorval tijdens de dienst</h5>
-                      <div class="card-body">
-                        <p class="card-text">
-                          {{ new Date(event.date).toLocaleString("en-BE") }}
-                        </p>
                         <p class="card-text">{{ event.description }}</p>
                         <p class="card-text">
                           {{ event.absentee }} vervangen door
                           {{ event.substitute }}
                         </p>
-                        <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.workplaceType.typeName }}</span></h5>
+                        <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.workplaceType.typeName }}</span></h5>
                       </div>
                     </div>
                   </div>
@@ -99,7 +79,7 @@
                           {{ new Date(event.date).toLocaleString("en-BE") }}
                         </p>
                         <p class="card-text">{{ event.description }}</p>
-                        <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.defectType.typeName }}</span></h5>
+                        <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.defectType.typeName }}</span></h5>
                       </div>
                     </div>
                   </div>
@@ -118,7 +98,7 @@
                         </p>
                         <p class="card-text">{{ event.description }}</p>
                         <p class="card-text">{{ event.duration }}</p>
-                        <h5 class="card-text"><span class="card-text badge badge-secondary">{{ event.malfunctionType.typeName }}</span></h5>
+                        <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.malfunctionType.typeName }}</span></h5>
                       </div>
                     </div>
                   </div>
@@ -139,8 +119,8 @@ export default Vue.extend({
   data: function() {
     return {
       step: "Operational",
-      monitored: {"administrative":{"replacements":[],"workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}},
-      emptyMonitored: {"administrative":{"replacements":[],"workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}}
+      monitored: {"administrative":{ "workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}},
+      emptyMonitored: {"administrative":{ "workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}}
     };
   },
 

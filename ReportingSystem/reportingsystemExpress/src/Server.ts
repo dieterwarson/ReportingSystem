@@ -19,7 +19,6 @@ import path from 'path';
 import helmet from 'helmet';
 import Defect from './models/defect';
 import Malfunction from './models/malfunction';
-import Replacement from './models/replacement';
 import WorkplaceEvent from './models/workplaceEvent';
 import Technical from './models/technical';
 import Administrative from './models/administrative';
@@ -34,6 +33,7 @@ import EventType from './models/eventType';
 import OperationalType from './models/operationalType';
 import OperationalSubtype from './models/operationalSubtype';
 const checkAuth = require('middleware/check-auth');
+import cronServer from './cron'
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -83,7 +83,7 @@ const sequelize = new Sequelize({
   models: [__dirname + '/models'], // or [Player, Team],
 });
 
-sequelize.sync();
+sequelize.sync( );
 console.log('All models were synchronized successfully.');
 
 /************************************************************************************
@@ -121,14 +121,28 @@ const user2 = new User({
   password: 'test',
   accessRights: 0,
 });
- //user2.save();
+//  user2.save();
 
 const report1 = new Report({
-  date: new Date('2020/03/16 21:13:48'),
+  date: new Date('2020/03/16 00:01:00'),
   temporary: false,
   nightShift: true,
 });
 // report1.save();
+
+/* const report2 = new Report({
+  date: new Date('2020/03/16 12:01:00'),
+  temporary: false,
+  nightShift: false,
+});
+// report2.save();
+
+const report3 = new Report({
+  date: new Date('2020/03/18 00:01:00'),
+  temporary: false,
+  nightShift: true,
+});
+// report3.save(); */
 
 const technical1 = new Technical({
   reportId: 1,
@@ -145,83 +159,6 @@ const operational1 = new Operational({
 });
 // operational1.save();
 
-const defect1 = new Defect({
-  technicalId: 1,
-  authorId: 1,
-  defectTypeId: 1,
-  description: 'lekkende kraan in kamer 304',
-  monitoring: true,
-  date: new Date('2020/04/15 13:03:57'),
-});
-// defect1.save();
-
-const defect2 = new Defect({
-  technicalId: 1,
-  authorId: 1,
-  defectTypeId: 2,
-  description: 'krakende deur in kamer 512',
-  monitoring: true,
-  date: new Date('2020/04/15 16:58:34'),
-});
-// defect2.save();
-
-const defectType1 = new DefectType({
-  typeName: 'lekkende kraan',
-});
-// defectType1.save();
-
-const defectType2 = new DefectType({
-  typeName: 'krakende deur',
-});
-// defectType2.save();
-
-const defectSubtype1 = new DefectSubtype({
-  defectTypeId: 1,
-  typeName: 'defectSubtype typeName',
-  description: 'defectSubtype lekkende kraan',
-});
-// defectSubtype1.save();
-
-const defectSubtype2 = new DefectSubtype({
-  defectTypeId: 2,
-  typeName: 'defectSubtype typeName',
-  description: 'defectSubtype krakende deur',
-});
-// defectSubtype2.save();
-
-const malfunction1 = new Malfunction({
-  technicalId: 1,
-  authorId: 1,
-  malfunctionTypeId: 1,
-  description: 'lekkende kraan in kamer 304',
-  monitoring: true,
-  date: new Date('2020/04/15 13:03:57'),
-  duration: 6,
-});
-// malfunction1.save();
-
-const malfunctionType1 = new MalfunctionType({
-  typeName: 'malfunctionType typeName',
-});
-// malfunctionType1.save();
-
-const malfunctionSubtype1 = new MalfunctionSubtype({
-  typeName: 'malfunctionSubtype typeName',
-  description: 'malfunctionSubtype description',
-  malfunctionTypeId: 1,
-});
-// malfunctionSubtype1.save();
-
-const replacement1 = new Replacement({
-  authorId: 1,
-  administrativeId: 1,
-  absentee: 'Jan Jacobs',
-  substitute: 'Geordy Hendricks',
-  monitoring: true,
-  date: new Date('2020/03/30 15:46:36'),
-  shift: true,
-});
-// replacement1.save();
 
 const workplaceEvent1 = new WorkplaceEvent({
   authorId: 1,
@@ -236,17 +173,28 @@ const workplaceEvent1 = new WorkplaceEvent({
 });
 // workplaceEvent1.save();
 
+const workplaceEvent2 = new WorkplaceEvent({
+  authorId: 1,
+  administrativeId: 1,
+  workplaceTypeId: 1,
+  description: 'Ziekte',
+  absentee: 'Remans Luc',
+  substitute: 'Jan Janssens',
+  monitoring: false,
+  date: new Date('2020/12/11 9:10:23'),
+  shift: false,
+});
+// workplaceEvent2.save();
+
 const workplaceType1 = new WorkplaceType({
-  typeName: 'workplaceType typeName',
+  typeName: 'Arbeidsongeval',
 });
 // workplaceType1.save();
 
-const workplaceSubtype1 = new WorkplaceSubtype({
-  workplaceTypeId: 1,
-  typeName: 'workplaceSubtype typeName',
-  description: 'workplaceSubtype description',
+const workplaceType2 = new WorkplaceType({
+  typeName: 'Ziekte',
 });
-// workplaceSubtype1.save();
+// workplaceType1.save();
 
 const secretariatNotification1 = new SecretariatNotification({
   authorId: 1,
@@ -271,7 +219,7 @@ const secretariatNotification2 = new SecretariatNotification({
 const operationalEvent1 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  signaling: 'Verlies inschrijvingsbewijs',
+  signaling: 'Verlies inschrijvingsbewijs CIM NR 545102920 / 1ABC123',
   plNumber: null,
   description: null,
   location: null,
@@ -285,7 +233,7 @@ const operationalEvent2 = new OperationalEvent({
   operationalId: 1,
   signaling: null,
   plNumber: 'PL031770168',
-  description: null,
+  description: 'Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht',
   location: null,
   unit: 'CARMA',
   date: new Date('2020/03/16 21:34:37'),
@@ -297,7 +245,7 @@ const operationalEvent3 = new OperationalEvent({
   operationalId: 1,
   signaling: null,
   plNumber: 'PL03170104',
-  description: null,
+  description: 'Verwittigen labo, verwittigen team Vandevoorde',
   location: null,
   unit: 'HANO',
   date: new Date('2020/03/16 22:05:18'),
@@ -307,7 +255,7 @@ const operationalEvent3 = new OperationalEvent({
 const operationalEvent4 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  signaling: 'Seining persoon',
+  signaling: 'Seining Jan Jansens - PZ LAMA',
   plNumber: null,
   description: null,
   location: null,
@@ -319,7 +267,7 @@ const operationalEvent4 = new OperationalEvent({
 const operationalEvent5 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  signaling: 'Seining persoon',
+  signaling: 'Seining persoon - Jan Jansens - PZ LOON',
   plNumber: null,
   description: null,
   location: null,
@@ -331,9 +279,12 @@ const operationalEvent5 = new OperationalEvent({
 const operationalEvent6 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
-  signaling: 'Seining persoon',
+  signaling: 'Seining Jan Jansens - PZ Bihori',
   plNumber: 'PL03170202',
-  description: null,
+  description: `ONRUSTWEKKENDE VERDWIJNING MEERDERJARIGE
+  86 J dame vertrok te voet vanuit haar woning omstreeks 1600 u en keerde niet weer.
+  
+  Zoeking met Heli leverde niets op - einde 0015 u`,
   priority: true,
   location: null,
   unit: 'BIHORI',
@@ -345,90 +296,180 @@ const operationalEvent7 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
   signaling: null,
-  plNumber: 'PL03170104',
-  description: null,
+  plNumber: 'PL03170315',
+  description: `Autodiefstal te Rummen straat van een Mercedes E300
+  - Melding binnen 101 Limburg
+  - ANPR Hit te Nieuwerkerken richting Herk de Stad
+  - Voertuig onderschept te Herk de Stad`,
   location: null,
-  unit: 'HANO',
-  date: new Date('2020/03/16 00:45:45'),
+  unit: 'LRH',
+  date: new Date('2020/03/16 01:21:25'),
 });
 //  operationalEvent7.save();
 
-const operationalEvent8 = new OperationalEvent({
+ const operationalEvent8 = new OperationalEvent({
   authorId: 1,
   operationalId: 1,
   signaling: null,
-  plNumber: 'PL03170315',
-  description: null,
+  plNumber: 'PL03170322',
+  description: `Inbraak in woning doch tussen melding en twee dagen ervoor. Geen BIN opgestart door onduidelijk tijdstip.`,
   location: null,
   unit: 'LRH',
   date: new Date('2020/03/16 01:21:25'),
 });
 //  operationalEvent8.save();
 
-const operationalEvent9 = new OperationalEvent({
-  authorId: 1,
-  operationalId: 1,
-  signaling: null,
-  plNumber: 'PL03170322',
-  description: null,
-  location: null,
-  unit: 'LRH',
-  date: new Date('2020/03/16 01:51:47'),
-});
-//  operationalEvent9.save();
-
 const eventType1 = new EventType({
-  reportId: 1,
   operationalEventId: 1,
-  operationalTypeId: 1,
+  operationalTypeId: 5,
+  operationalSubtypeId: 3,
 });
 // eventType1.save();
 
 const eventType2 = new EventType({
-  reportId: 1,
-  operationalEventId: 1,
-  operationalTypeId: 2,
+  operationalEventId: 4,
+  operationalTypeId: 5,
+  operationalSubtypeId: 1,
 });
 // eventType2.save();
 
 const eventType3 = new EventType({
-  reportId: 1,
-  operationalEventId: 1,
-  operationalTypeId: 2,
+  operationalEventId: 6,
+  operationalTypeId: 6,
 });
 // eventType3.save();
 
+const eventType4 = new EventType({
+  operationalEventId: 5,
+  operationalTypeId: 5,
+  operationalSubtypeId: 1,
+});
+// eventType4.save();
+
+
+const eventType5 = new EventType({
+  operationalEventId: 6,
+  operationalTypeId: 5,
+  operationalSubtypeId: 1,
+});
+// eventType5.save();
+
+const eventType6 = new EventType({
+  operationalEventId: 7,
+  operationalTypeId: 1,
+});
+// eventType6.save();
+
+const eventType7 = new EventType({
+  operationalEventId: 8,
+  operationalTypeId: 3,
+});
+// eventType7.save();
+
+const eventType8 = new EventType({
+  operationalEventId: 2,
+  operationalTypeId: 4,
+});
+// eventType8.save();
+
+const eventType9 = new EventType({
+  operationalEventId: 3,
+  operationalTypeId: 1,
+});
+// eventType9.save();
+
+
 const operationalType1 = new OperationalType({
-  eventTypeId: 1,
-  typeName: 'Helikopter ingezet',
+  typeName: 'Specifieke gebeurtenis',
 });
 // operationalType1.save();
 
 const operationalType2 = new OperationalType({
-  eventTypeId: 2,
   typeName: 'Grensoverschrijdende achtervolging',
 });
 // operationalType2.save();
 
 const operationalType3 = new OperationalType({
-  eventTypeId: 3,
-  typeName: 'Helikopter ingezet',
+  typeName: 'BIN-alarm',
 });
 // operationalType3.save();
 
+const operationalType4 = new OperationalType({
+  typeName: 'Bevraging GSM operatoren',
+});
+// operationalType4.save();
+
+const operationalType5 = new OperationalType({
+  typeName: 'Signalering',
+});
+// operationalType5.save();
+
+const operationalType6 = new OperationalType({
+  typeName: 'Zoeking met helikopter',
+});
+// operationalType6.save();
+
 const operationalSubtype1 = new OperationalSubtype({
-  operationalTypeId: 1,
-  typeName: null,
-  description: 'operationalSubtype description',
+  operationalTypeId: 5,
+  typeName: 'Persoon',
 });
 // operationalSubtype1.save();
 
 const operationalSubtype2 = new OperationalSubtype({
-  operationalTypeId: 2,
-  typeName: null,
-  description: 'operationalSubtype description',
+  operationalTypeId: 5,
+  typeName: 'Voertuig',
 });
 // operationalSubtype2.save();
+
+const operationalSubtype3 = new OperationalSubtype({
+  operationalTypeId: 5,
+  typeName: 'Voorwerp',
+});
+// operationalSubtype3.save();
+
+const defect1 = new Defect({
+  technicalId: 1,
+  authorId: 1,
+  defectTypeId: 1,
+  description: 'Voertuig P320 achterlicht kapot',
+  monitoring: true,
+  date: new Date('2020/04/15 13:03:57'),
+});
+// defect1.save();
+
+
+const defectType1 = new DefectType({
+  typeName: 'Schade aan voertuig',
+});
+// defectType1.save();
+
+
+const malfunction1 = new Malfunction({
+  technicalId: 1,
+  authorId: 1,
+  malfunctionTypeId: 1,
+  description: 'lekkende kraan in kamer 304',
+  monitoring: true,
+  date: new Date('2020/04/15 13:03:57'),
+  duration: 6,
+});
+// malfunction1.save();
+
+const malfunctionType1 = new MalfunctionType({
+  typeName: 'Voorwerp',
+});
+// malfunctionType1.save();
+
+const malfunctionType2 = new MalfunctionType({
+  typeName: 'Verwittiging ASC',
+});
+// malfunctionType2.save();
+
+const malfunctionType3 = new MalfunctionType({
+  typeName: 'Verwittiging (anderen)',
+});
+// malfunctionType3.save();
+
 
 const dummyData1 = new DummyDatabase({
   plNumber: 'PL12536432',
@@ -447,6 +488,7 @@ const dummyData2 = new DummyDatabase({
   actions: 'NAV zelfmoord',
 });
 //  dummyData2.save();
+ sequelize.sync( );
 
 // DummyDatabase.sync();
 
@@ -456,7 +498,6 @@ const dummyData2 = new DummyDatabase({
 
 // REPORTS
 app.post('/getFile', async (req, res) => {
-  console.log(req.body.plNumber);
   const file = await DummyDatabase.findOne({
     where: {
       plNumber: req.body.plNumber,
@@ -660,17 +701,17 @@ app.post('/changeMalfunction', async (req, res) => {
 // USER
 interface INewUserData {
   username: string;
-  email: string;
+  mail: string;
   password: string;
   rptPassword: string;
   accessRights: number;
+  subscription: boolean;
 }
 
 
 
 function checkUsername(username: string) {
   if (/^[a-z0-9_-]{3,15}$/.test(username)){
-    console.log("username OK")
     return true;
   }
   return false;
@@ -679,7 +720,6 @@ function checkUsername(username: string) {
 function checkPassword(password: string, rptPassword: string) {
   if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)){
     if (password.localeCompare(rptPassword) == 0){
-      console.log("password OK")
       return true;
     }
   }
@@ -688,7 +728,6 @@ function checkPassword(password: string, rptPassword: string) {
 
 function checkAccessRights(accessRights: number) {
   if (accessRights >= 0 && accessRights < 3){
-    console.log("access OK")
     return true;
   }
   return false;
@@ -697,7 +736,6 @@ function checkAccessRights(accessRights: number) {
 
 
 function checkUserData(newUser: INewUserData){
-  console.log(newUser)
   return checkUsername(newUser.username) && checkPassword(newUser.password, newUser.rptPassword) && checkAccessRights(newUser.accessRights);
 }
 
@@ -708,23 +746,32 @@ app.post('/addUser',  async (req, res) => {
     username: req.body.username,
     password: req.body.password,
     rptPassword: req.body.rptPassword,
-    email: req.body.email,
+    mail: req.body.mail,
     accessRights: req.body.accessRights,
+    subscription: req.body.subscription,
   };
   var matched_users_promise = User.findAll({
-    where : {username: userData.username}
+    where : {username: userData.username},
+    attributes: ['id'],
   });
   matched_users_promise.then(function(users) {
+
     if (users.length == 0) {
       const passwordHash = bcrypt.hashSync(userData.password, 10);
       User.create({
         username: userData.username,
         password: passwordHash,
-        email: userData.email,
-        accessRights: userData.accessRights
+        accessRights: userData.accessRights,
+        email: userData.mail,
+        subscription: userData.subscription,
       }).then(function() {
           res.json({
           message: "Gebruiker aangemaakt"
+        });
+      })
+      .catch(function( error)  {
+        res.json({
+          message: error
         })
       })
       User.sync();
@@ -830,7 +877,6 @@ app.post('/loginUser', async (req, res) => {
     if (users.length > 0 ) {
       let user = users[0];
       let passwordHash = user.password;
-      console.log(passwordHash);
       if (bcrypt.compareSync(req.body.password, passwordHash, 10)) {
         const token = jwt.sign({
           username: user.username,
@@ -862,6 +908,25 @@ app.post('/loginUser', async (req, res) => {
 app.post('/addField', async (req, res) => {
   console.log(req.body.newField);
 });
+
+app.post('/changeSubscription', async (req, res) => {
+  var matched_user = User.findAll({
+    where: {id: req.body.id}
+  });
+  matched_user.then(function(users){
+    if (users.length > 0) {
+      let user = users[0];
+      user.subscription = req.body.subscription;
+      user.save();
+      res.json(
+        {message:"Subscription has changed"}
+      )
+    }
+  })
+})
+
+
+let cronInstance = new cronServer(1);
 
 // Export express instance
 export default app;

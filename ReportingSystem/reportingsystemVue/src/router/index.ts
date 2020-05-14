@@ -66,6 +66,11 @@ const routes = [
     name: 'ChangeEvent',
     component: () => import(/* webChunckName: "ChangeEvent" */ '../views/ChangeEvent.vue'),
   },
+  {
+    path: '/userlist',
+    name: 'Userlist',
+    component: () => import(/*webChunckName: "Userlist" */ '../views/Userlist.vue'),
+  }
 ];
 
 const router = new VueRouter({

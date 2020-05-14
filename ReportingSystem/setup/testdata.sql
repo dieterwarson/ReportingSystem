@@ -16,6 +16,10 @@ USE reports;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+--
+-- Table structure for table `Administratives`
+--
+
 DROP TABLE IF EXISTS `Administratives`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -36,7 +40,7 @@ CREATE TABLE `Administratives` (
 
 LOCK TABLES `Administratives` WRITE;
 /*!40000 ALTER TABLE `Administratives` DISABLE KEYS */;
-INSERT INTO `Administratives` VALUES (1,1,'2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `Administratives` VALUES (1,1,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `Administratives` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,7 +61,7 @@ CREATE TABLE `DefectSubtypes` (
   PRIMARY KEY (`id`),
   KEY `defect_subtypes_defect_type_id` (`defectTypeId`),
   CONSTRAINT `DefectSubtypes_ibfk_1` FOREIGN KEY (`defectTypeId`) REFERENCES `DefectTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +70,6 @@ CREATE TABLE `DefectSubtypes` (
 
 LOCK TABLES `DefectSubtypes` WRITE;
 /*!40000 ALTER TABLE `DefectSubtypes` DISABLE KEYS */;
-INSERT INTO `DefectSubtypes` VALUES (1,1,'defectSubtype typeName','defectSubtype lekkende kraan','2020-05-10 11:31:10','2020-05-10 11:31:10'),(2,2,'defectSubtype typeName','defectSubtype krakende deur','2020-05-10 11:31:10','2020-05-10 11:31:10');
 /*!40000 ALTER TABLE `DefectSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -84,7 +87,7 @@ CREATE TABLE `DefectTypes` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `defect_types_type_name` (`typeName`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +96,7 @@ CREATE TABLE `DefectTypes` (
 
 LOCK TABLES `DefectTypes` WRITE;
 /*!40000 ALTER TABLE `DefectTypes` DISABLE KEYS */;
-INSERT INTO `DefectTypes` VALUES (1,'lekkende kraan','2020-05-10 11:31:10','2020-05-10 11:31:10'),(2,'krakende deur','2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `DefectTypes` VALUES (1,'Schade aan voertuig','2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `DefectTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +124,7 @@ CREATE TABLE `Defects` (
   CONSTRAINT `Defects_ibfk_1` FOREIGN KEY (`technicalId`) REFERENCES `Technicals` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `Defects_ibfk_2` FOREIGN KEY (`authorId`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `Defects_ibfk_3` FOREIGN KEY (`defectTypeId`) REFERENCES `DefectTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,7 +133,7 @@ CREATE TABLE `Defects` (
 
 LOCK TABLES `Defects` WRITE;
 /*!40000 ALTER TABLE `Defects` DISABLE KEYS */;
-INSERT INTO `Defects` VALUES (3,1,1,1,'lekkende kraan in lokaal 102',1,'2020-05-10 11:31:46','2020-05-10 11:31:46','2020-05-10 11:31:46');
+INSERT INTO `Defects` VALUES (2,1,1,1,'Voertuig P103 moet op onderhoud',1,'2020-05-14 14:32:42','2020-05-14 14:32:42','2020-05-14 14:32:42');
 /*!40000 ALTER TABLE `Defects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -161,7 +164,7 @@ CREATE TABLE `DummyDatabases` (
 
 LOCK TABLES `DummyDatabases` WRITE;
 /*!40000 ALTER TABLE `DummyDatabases` DISABLE KEYS */;
-INSERT INTO `DummyDatabases` VALUES (1,'PL12536432','CARMA','Markt 37, 3740 Bilzen','2020-04-13 12:40:32','NAV zelfmoord te Overpelt','2020-05-10 11:31:10','2020-05-10 11:31:10'),(2,'PL12536433','CARMA','Universiteitslaan 32, Diepenbeek','2020-04-13 12:40:32','NAV zelfmoord','2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `DummyDatabases` VALUES (1,'PL12536432','CARMA','Markt 37, 3740 Bilzen','2020-04-13 12:40:32','NAV zelfmoord te Overpelt','2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'PL12536433','CARMA','Universiteitslaan 32, Diepenbeek','2020-04-13 12:40:32','NAV zelfmoord','2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `DummyDatabases` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,16 +177,13 @@ DROP TABLE IF EXISTS `EventTypes`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `EventTypes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `reportId` int(11) DEFAULT NULL,
   `operationalEventId` int(11) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `operationalEventId` (`operationalEventId`),
-  KEY `event_types_report_id` (`reportId`),
-  CONSTRAINT `EventTypes_ibfk_1` FOREIGN KEY (`reportId`) REFERENCES `Reports` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `EventTypes_ibfk_2` FOREIGN KEY (`operationalEventId`) REFERENCES `OperationalEvents` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+  KEY `event_types_operational_event_id` (`operationalEventId`),
+  CONSTRAINT `EventTypes_ibfk_1` FOREIGN KEY (`operationalEventId`) REFERENCES `OperationalEvents` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -192,7 +192,7 @@ CREATE TABLE `EventTypes` (
 
 LOCK TABLES `EventTypes` WRITE;
 /*!40000 ALTER TABLE `EventTypes` DISABLE KEYS */;
-INSERT INTO `EventTypes` VALUES (1,1,1,'2020-05-10 11:31:10','2020-05-10 11:31:10'),(2,1,1,'2020-05-10 11:31:10','2020-05-10 11:31:10'),(3,1,1,'2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `EventTypes` VALUES (1,1,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,4,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(3,6,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(4,5,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(5,6,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(6,7,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(7,8,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(8,2,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(9,3,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `EventTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,7 +213,7 @@ CREATE TABLE `MalfunctionSubtypes` (
   PRIMARY KEY (`id`),
   KEY `malfunction_subtypes_malfunction_type_id` (`malfunctionTypeId`),
   CONSTRAINT `MalfunctionSubtypes_ibfk_1` FOREIGN KEY (`malfunctionTypeId`) REFERENCES `MalfunctionTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -222,7 +222,6 @@ CREATE TABLE `MalfunctionSubtypes` (
 
 LOCK TABLES `MalfunctionSubtypes` WRITE;
 /*!40000 ALTER TABLE `MalfunctionSubtypes` DISABLE KEYS */;
-INSERT INTO `MalfunctionSubtypes` VALUES (1,1,'malfunctionSubtype typeName','malfunctionSubtype description','2020-05-10 11:31:10','2020-05-10 11:31:10');
 /*!40000 ALTER TABLE `MalfunctionSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -240,7 +239,7 @@ CREATE TABLE `MalfunctionTypes` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `malfunction_types_type_name` (`typeName`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -249,7 +248,7 @@ CREATE TABLE `MalfunctionTypes` (
 
 LOCK TABLES `MalfunctionTypes` WRITE;
 /*!40000 ALTER TABLE `MalfunctionTypes` DISABLE KEYS */;
-INSERT INTO `MalfunctionTypes` VALUES (1,'malfunctionType typeName','2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `MalfunctionTypes` VALUES (1,'Voorwerp','2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'Verwittiging ASC','2020-05-14 14:31:34','2020-05-14 14:31:34'),(3,'Verwittiging (anderen)','2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `MalfunctionTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -287,7 +286,6 @@ CREATE TABLE `Malfunctions` (
 
 LOCK TABLES `Malfunctions` WRITE;
 /*!40000 ALTER TABLE `Malfunctions` DISABLE KEYS */;
-INSERT INTO `Malfunctions` VALUES (1,1,1,1,'lekkende kraan in kamer 304',1,'2020-04-15 13:03:57',6,'2020-05-10 11:31:10','2020-05-10 11:31:10');
 /*!40000 ALTER TABLE `Malfunctions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -316,7 +314,7 @@ CREATE TABLE `OperationalEvents` (
   KEY `operational_events_author_id` (`authorId`),
   CONSTRAINT `OperationalEvents_ibfk_1` FOREIGN KEY (`authorId`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `OperationalEvents_ibfk_2` FOREIGN KEY (`operationalId`) REFERENCES `Operationals` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -325,7 +323,7 @@ CREATE TABLE `OperationalEvents` (
 
 LOCK TABLES `OperationalEvents` WRITE;
 /*!40000 ALTER TABLE `OperationalEvents` DISABLE KEYS */;
-INSERT INTO `OperationalEvents` VALUES (1,1,1,'Seining persoon',NULL,NULL,NULL,NULL,'LOON','2020-03-16 23:57:10','2020-05-10 11:31:10','2020-05-10 11:31:10'),(2,1,1,'Seining persoon',NULL,NULL,NULL,NULL,'LAMA','2020-03-16 23:34:33','2020-05-10 11:31:10','2020-05-10 11:31:10'),(3,1,1,NULL,'PL03170104',NULL,NULL,NULL,'HANO','2020-03-16 22:05:18','2020-05-10 11:31:10','2020-05-10 11:31:10'),(4,1,1,NULL,'PL031770168',NULL,NULL,NULL,'CARMA','2020-03-16 21:34:37','2020-05-10 11:31:10','2020-05-10 11:31:10'),(5,1,1,'Verlies inschrijvingsbewijs',NULL,NULL,NULL,NULL,'KEMPLA','2020-03-16 18:13:48','2020-05-10 11:31:10','2020-05-10 11:31:10'),(6,1,1,'Seining persoon','PL03170202',NULL,1,NULL,'BIHORI','2020-03-16 00:18:57','2020-05-10 11:31:10','2020-05-10 11:31:10'),(7,1,1,NULL,'PL03170104',NULL,NULL,NULL,'HANO','2020-03-16 00:45:45','2020-05-10 11:31:10','2020-05-10 11:31:10'),(8,1,1,NULL,'PL03170315',NULL,NULL,NULL,'LRH','2020-03-16 01:21:25','2020-05-10 11:31:10','2020-05-10 11:31:10'),(9,1,1,NULL,'PL03170322',NULL,NULL,NULL,'LRH','2020-03-16 01:51:47','2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `OperationalEvents` VALUES (1,1,1,'Verlies inschrijvingsbewijs CIM NR 545102920 / 1ABC123',NULL,NULL,NULL,NULL,'KEMPLA','2020-03-16 18:13:48','2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,1,1,NULL,'PL031770168','Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht',NULL,NULL,'CARMA','2020-03-16 21:34:37','2020-05-14 14:31:34','2020-05-14 14:31:34'),(3,1,1,NULL,'PL03170104','Verwittigen labo, verwittigen team Vandevoorde',NULL,NULL,'HANO','2020-03-16 22:05:18','2020-05-14 14:31:34','2020-05-14 14:31:34'),(4,1,1,'Seining persoon - Jan Jansens - PZ LOON',NULL,NULL,NULL,NULL,'LOON','2020-03-16 23:57:10','2020-05-14 14:31:34','2020-05-14 14:31:34'),(5,1,1,'Seining Jan Jansens - PZ LAMA',NULL,NULL,NULL,NULL,'LAMA','2020-03-16 23:34:33','2020-05-14 14:31:34','2020-05-14 14:31:34'),(6,1,1,'Seining Jan Jansens - PZ Bihori','PL03170202','ONRUSTWEKKENDE VERDWIJNING MEERDERJARIGE\n  86 J dame vertrok te voet vanuit haar woning omstreeks 1600 u en keerde niet weer.\n  \n  Zoeking met Heli leverde niets op - einde 0015 u',1,NULL,'BIHORI','2020-03-16 00:18:57','2020-05-14 14:31:34','2020-05-14 14:31:34'),(7,1,1,NULL,'PL03170315','Autodiefstal te Rummen straat van een Mercedes E300\n  - Melding binnen 101 Limburg\n  - ANPR Hit te Nieuwerkerken richting Herk de Stad\n  - Voertuig onderschept te Herk de Stad',NULL,NULL,'LRH','2020-03-16 01:21:25','2020-05-14 14:31:34','2020-05-14 14:31:34'),(8,1,1,NULL,'PL03170322','Inbraak in woning doch tussen melding en twee dagen ervoor. Geen BIN opgestart door onduidelijk tijdstip.',NULL,NULL,'LRH','2020-03-16 01:21:25','2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `OperationalEvents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -339,14 +337,17 @@ DROP TABLE IF EXISTS `OperationalSubtypes`;
 CREATE TABLE `OperationalSubtypes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `operationalTypeId` int(11) DEFAULT NULL,
+  `eventTypeId` int(11) DEFAULT NULL,
   `typeName` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `eventTypeId` (`eventTypeId`),
   KEY `operational_subtypes_operational_type_id` (`operationalTypeId`),
-  CONSTRAINT `OperationalSubtypes_ibfk_1` FOREIGN KEY (`operationalTypeId`) REFERENCES `OperationalTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  CONSTRAINT `OperationalSubtypes_ibfk_1` FOREIGN KEY (`operationalTypeId`) REFERENCES `OperationalTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `OperationalSubtypes_ibfk_2` FOREIGN KEY (`eventTypeId`) REFERENCES `EventTypes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,7 +356,7 @@ CREATE TABLE `OperationalSubtypes` (
 
 LOCK TABLES `OperationalSubtypes` WRITE;
 /*!40000 ALTER TABLE `OperationalSubtypes` DISABLE KEYS */;
-INSERT INTO `OperationalSubtypes` VALUES (1,2,NULL,'operationalSubtype description','2020-05-10 11:31:10','2020-05-10 11:31:10'),(2,1,NULL,'operationalSubtype description','2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `OperationalSubtypes` VALUES (1,5,NULL,'Persoon',NULL,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,5,NULL,'Voertuig',NULL,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(3,5,NULL,'Voorwerp',NULL,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `OperationalSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -375,7 +376,7 @@ CREATE TABLE `OperationalTypes` (
   PRIMARY KEY (`id`),
   KEY `operational_types_event_type_id` (`eventTypeId`),
   CONSTRAINT `OperationalTypes_ibfk_1` FOREIGN KEY (`eventTypeId`) REFERENCES `EventTypes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -384,7 +385,7 @@ CREATE TABLE `OperationalTypes` (
 
 LOCK TABLES `OperationalTypes` WRITE;
 /*!40000 ALTER TABLE `OperationalTypes` DISABLE KEYS */;
-INSERT INTO `OperationalTypes` VALUES (1,1,'Helikopter ingezet','2020-05-10 11:31:10','2020-05-10 11:31:10'),(2,2,'Grensoverschrijdende achtervolging','2020-05-10 11:31:10','2020-05-10 11:31:10'),(3,3,'Helikopter ingezet','2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `OperationalTypes` VALUES (1,NULL,'Specifieke gebeurtenis','2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,NULL,'Grensoverschrijdende achtervolging','2020-05-14 14:31:34','2020-05-14 14:31:34'),(3,NULL,'BIN-alarm','2020-05-14 14:31:34','2020-05-14 14:31:34'),(4,NULL,'Signalering','2020-05-14 14:31:34','2020-05-14 14:31:34'),(5,NULL,'Bevraging GSM operatoren','2020-05-14 14:31:34','2020-05-14 14:31:34'),(6,NULL,'Zoeking met helikopter','2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `OperationalTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -412,44 +413,8 @@ CREATE TABLE `Operationals` (
 
 LOCK TABLES `Operationals` WRITE;
 /*!40000 ALTER TABLE `Operationals` DISABLE KEYS */;
-INSERT INTO `Operationals` VALUES (1,1,'2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `Operationals` VALUES (1,1,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `Operationals` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Replacements`
---
-
-DROP TABLE IF EXISTS `Replacements`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Replacements` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `authorId` int(11) DEFAULT NULL,
-  `administrativeId` int(11) DEFAULT NULL,
-  `absentee` varchar(255) DEFAULT NULL,
-  `substitute` varchar(255) DEFAULT NULL,
-  `monitoring` tinyint(1) DEFAULT NULL,
-  `date` datetime DEFAULT NULL,
-  `shift` tinyint(1) DEFAULT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `administrativeId` (`administrativeId`),
-  KEY `replacements_author_id` (`authorId`),
-  CONSTRAINT `Replacements_ibfk_1` FOREIGN KEY (`authorId`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `Replacements_ibfk_2` FOREIGN KEY (`administrativeId`) REFERENCES `Administratives` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Replacements`
---
-
-LOCK TABLES `Replacements` WRITE;
-/*!40000 ALTER TABLE `Replacements` DISABLE KEYS */;
-INSERT INTO `Replacements` VALUES (1,1,1,'Jan Jacobs','Geordy Hendricks',1,'2020-03-30 15:46:36',1,'2020-05-10 11:31:10','2020-05-10 11:31:10');
-/*!40000 ALTER TABLE `Replacements` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -468,7 +433,7 @@ CREATE TABLE `Reports` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `reports_date` (`date`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -477,7 +442,7 @@ CREATE TABLE `Reports` (
 
 LOCK TABLES `Reports` WRITE;
 /*!40000 ALTER TABLE `Reports` DISABLE KEYS */;
-INSERT INTO `Reports` VALUES (1,'2020-03-16 21:13:48',0,1,'2020-05-10 11:26:57','2020-05-10 11:26:57'),(2,'2020-03-16 21:13:48',0,1,'2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `Reports` VALUES (1,'2020-03-16 00:01:00',0,1,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `Reports` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -512,7 +477,7 @@ CREATE TABLE `SecretariatNotifications` (
 
 LOCK TABLES `SecretariatNotifications` WRITE;
 /*!40000 ALTER TABLE `SecretariatNotifications` DISABLE KEYS */;
-INSERT INTO `SecretariatNotifications` VALUES (1,1,1,'Jan Janssens Inp ziek',1,'2020-03-16 19:19:49',1,'2020-05-10 11:31:10','2020-05-10 11:31:10'),(2,1,1,'Remans Luc Inp ziek',1,'2020-03-16 19:21:46',1,'2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `SecretariatNotifications` VALUES (1,1,1,'Jan Janssens Inp ziek',1,'2020-03-16 19:19:49',1,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,1,1,'Remans Luc Inp ziek',1,'2020-03-16 19:21:46',1,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `SecretariatNotifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -540,7 +505,7 @@ CREATE TABLE `Technicals` (
 
 LOCK TABLES `Technicals` WRITE;
 /*!40000 ALTER TABLE `Technicals` DISABLE KEYS */;
-INSERT INTO `Technicals` VALUES (1,1,'2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `Technicals` VALUES (1,1,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `Technicals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -555,6 +520,8 @@ CREATE TABLE `Users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `subscription` TINYINT(1) DEFAULT 0,
   `accessRights` int(11) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
@@ -569,7 +536,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'jan_janssens','',0,'2020-05-10 11:31:10','2020-05-10 11:31:10'),(2,'chass_beerts','test',0,'2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `Users` VALUES (1,'chass_beerts','test',0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'jan_janssens','',0,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -600,7 +567,7 @@ CREATE TABLE `WorkplaceEvents` (
   CONSTRAINT `WorkplaceEvents_ibfk_1` FOREIGN KEY (`authorId`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `WorkplaceEvents_ibfk_2` FOREIGN KEY (`administrativeId`) REFERENCES `Administratives` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `WorkplaceEvents_ibfk_3` FOREIGN KEY (`workplaceTypeId`) REFERENCES `WorkplaceTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -629,7 +596,7 @@ CREATE TABLE `WorkplaceSubtypes` (
   PRIMARY KEY (`id`),
   KEY `workplace_subtypes_workplace_type_id` (`workplaceTypeId`),
   CONSTRAINT `WorkplaceSubtypes_ibfk_1` FOREIGN KEY (`workplaceTypeId`) REFERENCES `WorkplaceTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -638,7 +605,6 @@ CREATE TABLE `WorkplaceSubtypes` (
 
 LOCK TABLES `WorkplaceSubtypes` WRITE;
 /*!40000 ALTER TABLE `WorkplaceSubtypes` DISABLE KEYS */;
-INSERT INTO `WorkplaceSubtypes` VALUES (1,1,'workplaceSubtype typeName','workplaceSubtype description','2020-05-10 11:31:10','2020-05-10 11:31:10');
 /*!40000 ALTER TABLE `WorkplaceSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -656,7 +622,7 @@ CREATE TABLE `WorkplaceTypes` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `workplace_types_type_name` (`typeName`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -665,7 +631,7 @@ CREATE TABLE `WorkplaceTypes` (
 
 LOCK TABLES `WorkplaceTypes` WRITE;
 /*!40000 ALTER TABLE `WorkplaceTypes` DISABLE KEYS */;
-INSERT INTO `WorkplaceTypes` VALUES (1,'workplaceType typeName','2020-05-10 11:31:10','2020-05-10 11:31:10');
+INSERT INTO `WorkplaceTypes` VALUES (1,'Arbeidsongeval','2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'Arbeidsongeval','2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `WorkplaceTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

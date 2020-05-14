@@ -6,7 +6,6 @@ import Report from '../models/report';
 import { Op } from 'sequelize';
 import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
-import Replacement from 'src/models/replacement';
 import WorkplaceEvent from 'src/models/workplaceEvent';
 // const checkAuth = require('middleware/check-auth');
 
@@ -46,7 +45,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
   var reports: (
     | Defect[]
     | Malfunction[]
-    | Replacement[]
     | SecretariatNotification[]
   )[] = [];
 
@@ -64,11 +62,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
     include: [{ model: MalfunctionType }]
   });
 
-  let replacements = await Replacement.findAll({
-    where: {
-      monitoring: 1,
-    },
-  });
 
   let workplaceEvents = await WorkplaceEvent.findAll({
     where: {
@@ -84,7 +77,7 @@ router.get('/monitored', async (req: Request, res: Response) => {
   });
 
   let results = {
-    administrative: { replacements, workplaceEvents, secretariatNotifications },
+    administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
 
@@ -119,25 +112,6 @@ router.get('/search/', async (req: Request, res: Response) => {
     where: {
       [Op.or]: {
         description: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
-
-  result = await Replacement.findAll({
-    where: {
-      [Op.or]: {
-        absentee: {
-          [Op.like]: '%' + search + '%',
-        },
-        substitute: {
           [Op.like]: '%' + search + '%',
         },
         date: {
@@ -249,7 +223,6 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     include: [{ model: MalfunctionType }]
   })
 
-  let replacements = await administrative?.$get('replacements');
 
   let workplaceEvents = await WorkplaceEvent.findAll({
     where: {
@@ -258,13 +231,13 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     include: [{ model: WorkplaceType }]
   })
 
-  let secretariatNotifications = await administrative?.$get('replacements');
+  let secretariatNotifications = await administrative?.$get('secretariatNotifications');
   let operationalEvents = await operational?.$get('operationalEvents');
 
   let results = {
     report: report,
     operational: { operationalEvents },
-    administrative: { replacements, workplaceEvents, secretariatNotifications },
+    administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
 
@@ -296,24 +269,19 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
       monitoring: true,
     },
   });
-  let replacements = await administrative?.$get('replacements', {
-    where: {
-      monitoring: true,
-    },
-  });
   let workplaceEvents = await administrative?.$get('workplaceEvents', {
     where: {
       monitoring: true,
     },
   });
-  let secretariatNotifications = await administrative?.$get('replacements', {
+  let secretariatNotifications = await administrative?.$get('secretariatNotifications', {
     where: {
       monitoring: true,
     },
   });
 
   let results = {
-    administrative: { replacements, workplaceEvents, secretariatNotifications },
+    administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
 
