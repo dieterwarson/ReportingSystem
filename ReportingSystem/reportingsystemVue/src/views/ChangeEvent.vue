@@ -73,21 +73,19 @@
             <!-- Extra info -->
             <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
 
-            <input type="text" class="form-control form-control-lg" v-model="this.form.operationalMessage" @change="getOperationalMessage" />
+            <input type="text" class="form-control form-control-lg" v-model="form.operationalMessage" @change="getOperationalMessage" />
 
-            <input type="text" class="form-control form-control-lg" v-model="this.reportContent.operational.operationalEvents[
-              this.eventId - 1
-              ].description" @change="getOperationalMessage2" />
+            <!-- <input type="text" class="form-control form-control-lg" v-model="operationalDescription" @change="setinlink" />
 
-            <input type="text" class="form-control form-control-lg" v-model="this.reportContent.operational.operationalEvents[
+            <input type="text" class="form-control form-control-lg" v-model="reportContent.operational.operationalEvents[
               this.eventId - 1
-              ].description" @change="setinlink" />
+              ].description" @change="getOperationalMessage2" /> -->
 
           </div>
-          <div>message: {{this.form.operationalMessage}}</div>
+          <div>message: {{form.operationalMessage}}</div>
           <div>description: {{operationalDescription}}</div>
           <div>
-            reportContent: {{this.reportContent.operational.operationalEvents[
+            reportContent: {{reportContent.operational.operationalEvents[
               this.eventId - 1
               ].description}}
           </div>
@@ -247,14 +245,13 @@ export default Vue.extend({
           updatedAt: "2020-05-04T07:46:17.000Z"
         },
         operational: {
-          operationalEvents: [
-            {
+          operationalEvents: [{
               id: 1,
               authorId: 1,
               operationalId: 1,
               signaling: "Verlies inschrijvingsbewijs",
               plNumber: null,
-              description: null,
+              description: "beschrijving",
               monitoring: true,
               location: null,
               unit: "KEMPLA",
@@ -268,7 +265,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL03170104",
-              description: null,
+              description: "",
               monitoring: true,
               location: null,
               unit: "HANO",
@@ -282,7 +279,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL031770168",
-              description: null,
+              description: "",
               monitoring: true,
               location: null,
               unit: "CARMA",
@@ -296,7 +293,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "Seining persoon",
               plNumber: null,
-              description: null,
+              description: "",
               monitoring: true,
               location: null,
               unit: "LAMA",
@@ -310,7 +307,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "Seining persoon",
               plNumber: null,
-              description: null,
+              description: "help",
               monitoring: true,
               location: null,
               unit: "LOON",
@@ -324,7 +321,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "Seining persoon",
               plNumber: "PL03170202",
-              description: null,
+              description: "",
               monitoring: true,
               location: null,
               unit: "BIHORI",
@@ -338,7 +335,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL03170104",
-              description: null,
+              description: "",
               monitoring: true,
               location: null,
               unit: "HANO",
@@ -352,7 +349,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL03170315",
-              description: null,
+              description: "",
               monitoring: true,
               location: null,
               unit: "LRH",
@@ -366,7 +363,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL03170322",
-              description: null,
+              description: "",
               monitoring: true,
               location: null,
               unit: "LRH",
@@ -377,52 +374,46 @@ export default Vue.extend({
           ]
         },
         administrative: {
-          replacements: [
-            {
-              id: 1,
-              authorId: 1,
-              administrativeId: 1,
-              absentee: "Jan Jacobs",
-              substitute: "Geordy Hendricks",
-              monitoring: true,
-              date: "2020-03-30T15:46:36.000Z",
-              shift: true,
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            }
-          ],
+          replacements: [{
+            id: 1,
+            authorId: 1,
+            administrativeId: 1,
+            absentee: "Jan Jacobs",
+            substitute: "Geordy Hendricks",
+            monitoring: true,
+            date: "2020-03-30T15:46:36.000Z",
+            shift: true,
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }],
           workplaceEvents: [],
-          secretariatNotifications: [
-            {
-              id: 1,
-              authorId: 1,
-              administrativeId: 1,
-              absentee: "Jan Jacobs",
-              substitute: "Geordy Hendricks",
-              monitoring: true,
-              date: "2020-03-30T15:46:36.000Z",
-              shift: true,
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            }
-          ]
+          secretariatNotifications: [{
+            id: 1,
+            authorId: 1,
+            administrativeId: 1,
+            absentee: "Jan Jacobs",
+            substitute: "Geordy Hendricks",
+            monitoring: true,
+            date: "2020-03-30T15:46:36.000Z",
+            shift: true,
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }]
         },
         technical: {
           defects: [],
-          malfunctions: [
-            {
-              id: 1,
-              authorId: 1,
-              technicalId: 1,
-              malfunctionTypeId: 1,
-              description: "lekkende kraan in kamer 304",
-              monitoring: true,
-              date: "2020-04-15T13:03:57.000Z",
-              duration: 6,
-              createdAt: "2020-05-04T07:47:37.000Z",
-              updatedAt: "2020-05-04T07:47:37.000Z"
-            }
-          ]
+          malfunctions: [{
+            id: 1,
+            authorId: 1,
+            technicalId: 1,
+            malfunctionTypeId: 1,
+            description: "lekkende kraan in kamer 304",
+            monitoring: true,
+            date: "2020-04-15T13:03:57.000Z",
+            duration: 6,
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }]
         }
       },
       eventId: 0,
@@ -469,11 +460,9 @@ export default Vue.extend({
   mounted() {
     this.loadData();
 
-    // this.form.operationalMessage = this.reportContent.operational.operationalEvents[
-    //   this.eventId - 1
-    // ].description;
-
-    this.operationalDescription = "edscrip";
+    this.form.operationalMessage = String(this.reportContent.operational.operationalEvents[
+      this.eventId - 1
+    ].description);
   },
 
   methods: {
@@ -491,7 +480,6 @@ export default Vue.extend({
 
       this.step = String(this.$route.query.categorie);
       this.eventId = parseInt(String(this.$route.query.eventId));
-
 
       // this.form.operationalMessage = this.reportContent.operational.operationalEvents[
       //   this.eventId - 1
@@ -624,27 +612,31 @@ export default Vue.extend({
       // let temp = this.reportContent.operational.operationalEvents[
       //   this.eventId - 1
       // ].description;
-      this.operationalDescription = "bla";
-      this.reportContent.operational.operationalEvents[
-        this.eventId - 1
-      ].description = String("hi");
-      // this.form.operationalMessage;
-      // this.operationalDescription = this.form.operationalMessage;
-    },
-    getOperationalMessage2: function () {
-      this.operationalDescription = String(this.reportContent.operational.operationalEvents[
-        this.eventId - 1
-      ].description);
-    },
-    setinlink: function () {
-      const temp = this.reportContent.operational.operationalEvents[
-        this.eventId - 1
-      ].description;
+      this.operationalDescription = this.form.operationalMessage;
 
       this.reportContent.operational.operationalEvents[
         this.eventId - 1
-      ].description = temp;
-    }
+      ].description = this.form.operationalMessage;
+      // this.reportContent.operational.operationalEvents[
+      //   this.eventId - 1
+      // ].description = String("hi");
+      // this.form.operationalMessage;
+      // this.operationalDescription = this.form.operationalMessage;
+    },
+    // getOperationalMessage2: function () {
+    //   this.operationalDescription = String(this.reportContent.operational.operationalEvents[
+    //     this.eventId - 1
+    //   ].description);
+    // },
+    // setinlink: function () {
+    //   const temp = this.reportContent.operational.operationalEvents[
+    //     this.eventId - 1
+    //   ].description;
+
+    //   this.reportContent.operational.operationalEvents[
+    //     this.eventId - 1
+    //   ].description = temp;
+    // }
   }
 });
 </script>
