@@ -18,6 +18,12 @@ export default class User extends Model<User> {
   @Column
   accessRights!: number;
 
+  @Column
+  email!: string;
+
+  @Column
+  subscription!: boolean;
+
   @HasMany(() => Defect)
   defects!: Defect[];
 
