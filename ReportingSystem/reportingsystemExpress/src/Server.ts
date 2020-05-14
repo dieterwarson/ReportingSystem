@@ -36,7 +36,7 @@ import cronServer from './cron'
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+import {Op} from "sequelize";
 // var index = require('./routes/index');
 // var users = require('./routes/users');
 
@@ -470,7 +470,7 @@ app.post('/getFile', async (req, res) => {
 app.post('/addOperationalEvent', async (req, res) => {
   OperationalEvent.create({
     operationalId: 1,
-    authorId: 1,
+    authorId: 3,
     operationalTypeId: 7,
     monitoring: true,
     signaling: null,
@@ -766,6 +766,17 @@ app.post('/changeSubscription', async (req, res) => {
       )
     }
   })
+});
+
+app.post("/getOperationalEvents", async (req, res) => {
+  
+  console.log(req.body.plNumber);
+  var matched_events = await OperationalEvent.findAll({
+    where: {plNumber: {[Op.like]: req.body.plNumber}},
+    limit: 5
+  });
+  console.log(matched_events.length);
+  res.json(matched_events);
 })
 
 

@@ -123,5 +123,15 @@ export default {
     .catch(error => {
       alert(error);
     })
+  },
+  autoCompleteOperationalEvent(data: any) {
+    return Api()
+    .post("/getOperationalEvents", data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
   }
 };
