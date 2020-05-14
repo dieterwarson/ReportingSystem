@@ -283,7 +283,7 @@ export default Vue.extend({
       operationalId: 0,
       administrativeId: 0,
       technicalId: 0,
-      filteredTypes: Array,
+      filteredTypes: [],
       reportTypes: [],
       step: "Operational",
       reportContent: {
@@ -406,15 +406,15 @@ export default Vue.extend({
 
   methods: {
     loadData: function () {
-      ReportingService.getAllReports(
-        "/api/reports/content/" + this.$route.query.reportId
-      ).then(res => (this.reportContent = res));
 
       // this.loadReportContent();
 
       this.step = String(this.$route.query.categorie);
       this.eventId = parseInt(String(this.$route.query.eventId));
       this.subcategorie = String(this.$route.query.subcategorie);
+      ReportingService.getAllReports(
+        "/api/reports/content/" + this.$route.query.reportId
+      ).then(res => (this.reportContent = res));
 
       if (String(this.subcategorie) == String("operationalEvents")) {
         this.loadOperationalEventData();

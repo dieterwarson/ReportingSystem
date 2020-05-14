@@ -156,7 +156,7 @@
       <div v-for="event in reportContent.operational.operationalEvents" :key="event.id">
         <div class="col card h-100">
           <p class="card-text">
-            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(parseInt(event.id), 'operationalEvents')" />
+            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(event.id), 'operationalEvents')" />
           </p>
           <div class="card-body">
             <h3 class="card-title display-5">
@@ -186,7 +186,7 @@
       <div v-for="event in reportContent.administrative.workplaceEvents" :key="event.id">
         <div class="col card h-100">
           <p class="card-text">
-            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(parseInt(event.id), 'workplaceEvents')" />
+            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(event.id), 'workplaceEvents')" />
           </p>
           <div class="card-body">
             <h5 class="card-title">Voorval tijdens de dienst</h5>
@@ -205,7 +205,7 @@
       <div v-for="event in reportContent.administrative.secretariatNotifications" :key="event.id">
         <div class="col card h-100">
           <p class="card-text">
-            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(parseInt(event.id), 'secretariatNotifications')" />
+            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(event.id), 'secretariatNotifications')" />
           </p>
           <div class="card-body">
             <h5 class="card-title">Melding aan het secretariaat</h5>
@@ -230,7 +230,7 @@
       <div v-for="event in reportContent.technical.defects" :key="event.id">
         <div class="col card h-100">
           <p class="card-text">
-            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(parseInt(event.id), 'defects')" />
+            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(event.id), 'defects')" />
           </p>
           <div class="card-body">
             <h5 class="card-title">Logistiek</h5>
@@ -248,7 +248,7 @@
       <div v-for="event in reportContent.technical.malfunctions" :key="event.id">
         <div class="col card h-100">
           <p class="card-text">
-            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(parseInt(event.id), 'malfunctions')" />
+            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(event.id), 'malfunctions')" />
           </p>
           <div class="card-body">
             <h5 class="card-title">Technisch</h5>
@@ -629,9 +629,9 @@ export default Vue.extend({
         path: "changeEvent",
         query: {
           reportId: String(this.reportContent.report.id),
-          eventId: id,
-          categorie: this.step,
-          subcategorie: subcat
+          eventId: String(id),
+          categorie: String(this.step),
+          subcategorie: String(subcat)
         }
       });
     }
