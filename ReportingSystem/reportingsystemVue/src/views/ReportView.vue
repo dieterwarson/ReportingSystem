@@ -142,11 +142,11 @@
     </div>
   </div>
 
-    <div class="btn-group d-flex" role="group" aria-label="Justified button group">
-      <button id="operationalButton" type="button" class="btn btn-info" @click.prevent="getOperational">Operationeel</button>
-      <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
-      <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
-    </div>
+  <div class="btn-group d-flex" role="group" aria-label="Justified button group">
+    <button id="operationalButton" type="button" class="btn btn-info" @click.prevent="getOperational">Operationeel</button>
+    <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
+    <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
+  </div>
 
   <section v-if="step == 'Operational'" class="container">
     <div v-if="this.reportContent.operational == this.emptyReport.operational">
@@ -538,7 +538,7 @@ export default Vue.extend({
       };
       this.notificationContent = {
         administrative: {
-          replacements: [{
+          workplaceEvents: [{
             id: 1,
             authorId: 1,
             administrativeId: 1,
@@ -550,7 +550,6 @@ export default Vue.extend({
             createdAt: "2020-05-04T21:58:27.000Z",
             updatedAt: "2020-05-04T21:58:27.000Z"
           }],
-          workplaceEvents: [],
           secretariatNotifications: [{
             id: 1,
             authorId: 1,

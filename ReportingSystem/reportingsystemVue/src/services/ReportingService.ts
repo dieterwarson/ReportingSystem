@@ -142,8 +142,6 @@ export default {
         alert(error);
       });
   },
-
-
   loginUser(data: any) {
     return Api()
       .post('/loginUser', data)

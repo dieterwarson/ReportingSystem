@@ -28,7 +28,6 @@
               </div>
             </div>
           </div>
-          {{setOperationalId(this.reportContent.operational.operationalEvents[this.eventId-1].id)}}
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
             <div>
@@ -51,11 +50,11 @@
                     <div v-if="this.reportContent.operational.operationalEvents[this.eventId-1].date === String(null)">Geen datum beschikbaar.</div>
                     <div v-else>
                       Datum: {{ new Date(this.reportContent.operational.operationalEvents[this.eventId-1].date).toLocaleString("en-BE", {
-                      year: 'numeric',
-                      month: 'numeric',
-                      day: 'numeric',
-                      })
-                      }}
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        })
+                        }}
                     </div>
                   </div>
                   <!-- Unit -->
@@ -126,13 +125,13 @@
                 <div class="formcontainer btn-block">
                   <!-- Afwezige -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="this.reportContent.form.absentee === String(null)">Geen afwezige beschikbaar.</div>
-                    <div v-else>Afwezige: {{this.reportContent.form.absentee}}</div>
+                    <div v-if="this.form.absentee === String(null)">Geen afwezige beschikbaar.</div>
+                    <div v-else>Afwezige: {{form.absentee}}</div>
                   </div>
                   <!-- Vervanger -->
                   <div class="form-control form-control-lg no-edit">
                     <div v-if="this.form.substitute === String(null)">Geen vervanger beschikbaar.</div>
-                    <div v-else>Vervanger: {{this.form.substitute}}</div>
+                    <div v-else>Vervanger: {{form.substitute}}</div>
                   </div>
                 </div>
               </div>
@@ -215,9 +214,8 @@
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
             <div>
-
-              <!-- Extra info -->
-              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+              <!-- Beschrijving -->
+              <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
               <input type="text" class="form-control form-control-lg" v-model="form.defectMessage" @change="getDefectMessage" />
             </div>
 
@@ -267,11 +265,11 @@
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
             <div>
-
-              <!-- Extra info -->
-              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+              <!-- Beschrijving -->
+              <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
               <input type="text" class="form-control form-control-lg" v-model="form.malfunctionMessage" @change="getMalfunctionMessage" />
             </div>
+            message: {{form.malfunctionMessage}}
 
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeMalfunction">Opslaan</button>
@@ -291,14 +289,11 @@ import ReportingService from "../services/ReportingService";
 export default Vue.extend({
   data: function () {
     return {
-      operationalId: "",
+      operationalId: 0,
+      administrativeId: 0,
+      technicalId: 0,
       filteredTypes: [],
       reportTypes: [],
-      replacementDescription: "",
-      workplaceEventDescription: "",
-      secretariatNotificationDescription: "",
-      defectDescription: "",
-      malfunctionDescription: "",
       step: "Operational",
       reportContent: {
         report: {
@@ -316,7 +311,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "Verlies inschrijvingsbewijs",
               plNumber: null,
-              description: "bewijs verloren, nieuwe in maak",
+              description: null,
               monitoring: true,
               location: null,
               unit: "KEMPLA",
@@ -330,7 +325,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL03170104",
-              description: "",
+              description: null,
               monitoring: true,
               location: null,
               unit: "HANO",
@@ -344,7 +339,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL031770168",
-              description: "",
+              description: null,
               monitoring: true,
               location: null,
               unit: "CARMA",
@@ -358,7 +353,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "Seining persoon",
               plNumber: null,
-              description: "",
+              description: null,
               monitoring: true,
               location: null,
               unit: "LAMA",
@@ -372,7 +367,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "Seining persoon",
               plNumber: null,
-              description: "help",
+              description: null,
               monitoring: true,
               location: null,
               unit: "LOON",
@@ -386,7 +381,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "Seining persoon",
               plNumber: "PL03170202",
-              description: "",
+              description: null,
               monitoring: true,
               location: null,
               unit: "BIHORI",
@@ -400,7 +395,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL03170104",
-              description: "",
+              description: null,
               monitoring: true,
               location: null,
               unit: "HANO",
@@ -414,7 +409,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL03170315",
-              description: "",
+              description: null,
               monitoring: true,
               location: null,
               unit: "LRH",
@@ -428,7 +423,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: null,
               plNumber: "PL03170322",
-              description: "",
+              description: null,
               monitoring: true,
               location: null,
               unit: "LRH",
@@ -439,7 +434,19 @@ export default Vue.extend({
           ]
         },
         administrative: {
-          workplaceEvents: [],
+          workplaceEvents: [{
+            id: 1,
+            authorId: 1,
+            administrativeId: 1,
+            description: "ziek geworden",
+            absentee: "Jan Jacobs",
+            substitute: "Geordy Hendricks",
+            monitoring: true,
+            date: "2020-03-30T15:46:36.000Z",
+            shift: true,
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }],
           secretariatNotifications: [{
             id: 1,
             authorId: 1,
@@ -498,7 +505,7 @@ export default Vue.extend({
         //MALFUNCTION OBJECTS
         malfunctionMessage: "",
         malfunctionFailed: false,
-        malfunctionSucceeded: false,
+        malfunctionSucceeded: false
       }
     };
   },
@@ -508,8 +515,10 @@ export default Vue.extend({
   },
 
   methods: {
-    setOperationalId: function (id: string) {
-      this.operationalId = id;
+    setAdministrativeId: function () {
+      this.administrativeId = this.reportContent.administrative.operationalEvents[
+        this.eventId - 1
+      ].id;
     },
     loadData: function () {
       // ReportingService.getAllReports(
@@ -531,26 +540,67 @@ export default Vue.extend({
       this.loadMalfunctionData();
     },
     loadOperationalEventData: function () {
-      this.form.plNumber = String(this.reportContent.operational.operationalEvents[this.eventId - 1].plNumber);
-      this.form.location = String(this.reportContent.operational.operationalEvents[this.eventId - 1].location);
-      this.form.unit = String(this.reportContent.operational.operationalEvents[this.eventId - 1].unit);
-      this.form.operationalEventMessage = String(this.reportContent.operational.operationalEvents[
+      this.operationalId = this.reportContent.operational.operationalEvents[
         this.eventId - 1
-      ].description);
+      ].id;
+      this.form.plNumber = String(
+        this.reportContent.operational.operationalEvents[this.eventId - 1]
+        .plNumber
+      );
+      this.form.location = String(
+        this.reportContent.operational.operationalEvents[this.eventId - 1]
+        .location
+      );
+      this.form.unit = String(
+        this.reportContent.operational.operationalEvents[this.eventId - 1].unit
+      );
+      this.form.operationalEventMessage = String(
+        this.reportContent.operational.operationalEvents[this.eventId - 1]
+        .description
+      );
     },
     loadWorkplaceEventData: function () {
-      this.form.absentee = String(this.reportContent.administrative.workplaceEvents[this.eventId - 1].absentee);
-      this.form.substitute = String(this.reportContent.administrative.workplaceEvents[this.eventId - 1].substitute);
-      this.form.workplaceEventMessage = String(this.reportContent.administrative.workplaceEvents[this.eventId - 1].description)
+      this.administrativeId = this.reportContent.administrative.workplaceEvents[
+        this.eventId - 1
+      ].id;
+      this.form.absentee = String(
+        this.reportContent.administrative.workplaceEvents[this.eventId - 1]
+        .absentee
+      );
+      this.form.substitute = String(
+        this.reportContent.administrative.workplaceEvents[this.eventId - 1]
+        .substitute
+      );
+      this.form.workplaceEventMessage = String(
+        this.reportContent.administrative.workplaceEvents[this.eventId - 1]
+        .description
+      );
     },
     loadSecretariatNotificationData: function () {
-      this.form.secretariatNotificationMessage = String(this.reportContent.administrative.secretariatNotifications[this.eventId - 1].description)
+      this.administrativeId = this.reportContent.administrative.secretariatNotifications[
+        this.eventId - 1
+      ].id;
+      this.form.secretariatNotificationMessage = String(
+        this.reportContent.administrative.secretariatNotifications[
+          this.eventId - 1
+        ].description
+      );
     },
     loadDefectData: function () {
-      this.form.defectMessage = String(this.reportContent.administrative.defects[this.eventId - 1].description)
+      this.technicalId = this.reportContent.technical.defects[
+        this.eventId - 1
+      ].id;
+      this.form.defectMessage = String(
+        this.reportContent.technical.defects[this.eventId - 1].description
+      );
     },
     loadMalfunctionData: function () {
-      this.form.malfunctionMessage = String(this.reportContent.administrative.malfunctions[this.eventId - 1].description)
+      this.technicalId = this.reportContent.technical.malfunctions[
+        this.eventId - 1
+      ].id;
+      this.form.malfunctionMessage = String(
+        this.reportContent.technical.malfunctions[this.eventId - 1].description
+      );
     },
     getOperational: function () {
       if (this.step != "Operational") {
@@ -598,7 +648,7 @@ export default Vue.extend({
       await ReportingService.changeOperationalEvent({
         reportId: this.$route.query.reportId,
         operationalId: this.operationalId,
-        message: this.form.operationalEventMessage,
+        message: this.form.operationalEventMessage
       });
       this.form.operationalEventSucceeded = true;
     },
@@ -606,7 +656,7 @@ export default Vue.extend({
       await ReportingService.changeWorkplaceEvent({
         reportId: this.$route.query.reportId,
         administrativeId: this.administrativeId,
-        message: this.form.workplaceEventMessage,
+        message: this.form.workplaceEventMessage
       });
       this.form.operationalEventSucceeded = true;
     },
@@ -614,7 +664,7 @@ export default Vue.extend({
       await ReportingService.changeSecretariatNotification({
         reportId: this.$route.query.reportId,
         administrativeId: this.administrativeId,
-        message: this.form.secretariatNotificationMessage,
+        message: this.form.secretariatNotificationMessage
       });
       this.form.operationalEventSucceeded = true;
     },
@@ -622,7 +672,7 @@ export default Vue.extend({
       await ReportingService.changeDefect({
         reportId: this.$route.query.reportId,
         technicalId: this.technicalId,
-        message: this.form.defectMessage,
+        message: this.form.defectMessage
       });
       this.form.operationalEventSucceeded = true;
     },
@@ -630,7 +680,7 @@ export default Vue.extend({
       await ReportingService.changeMalfunction({
         reportId: this.$route.query.reportId,
         malfunctionId: this.malfunctionId,
-        message: this.form.malfunctionMessage,
+        message: this.form.malfunctionMessage
       });
       this.form.operationalEventSucceeded = true;
     },
@@ -644,12 +694,19 @@ export default Vue.extend({
       Array(String(this.filteredTypes)).push(str);
     },
     getOperationalEventMessage: function () {
-      this.reportContent.operational.operationalEvents[
-        this.eventId - 1
-      ].description = this.form.operationalEventMessage;
+      this.reportContent.operational.operationalEvents[this.eventId - 1].description = this.form.operationalEventMessage;
     },
-    getWorkforceMessage: function () {
-      return;
+    getWorkplaceEventMessage: function () {
+      this.reportContent.administrative.workplaceEvents[this.eventId - 1].description = this.form.workplaceEventMessage;
+    },
+    getSecretariatNotificationMessage: function () {
+      this.reportContent.administrative.secretariatNotifications[this.eventId - 1].description = this.form.secretariatNotificationMessage;
+    },
+    getDefectMessage: function () {
+      this.reportContent.technical.defects[this.eventId - 1].description = this.form.defectMessage;
+    },
+    getMalfunctionMessage: function () {
+      this.reportContent.technical.malfunctions[this.eventId - 1].description = this.form.malfunctionMessage;
     }
   }
 });
