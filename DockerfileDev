@@ -15,6 +15,14 @@ ADD ReportingSystem/setup/testdata.sql testdata.sql
 # fixes problem mysql-server not starting on Windows due to CRLF characters
 RUN  apt-get update && apt-get install -y dos2unix && dos2unix startServerDev.sh
 
+# install mysql server with default password, start it and insert testdata
+RUN apt-key update && apt-get update
+
+RUN echo 'mysql-server mysql-server/root_password password mysqlroot' | debconf-set-selections
+RUN echo 'mysql-server mysql-server/root_password_again password mysqlroot' | debconf-set-selections
+
+RUN apt-get install -y mysql-server
+
 RUN apt-get update \
     && apt-get install -y wget gnupg \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -32,19 +40,7 @@ RUN npm i puppeteer \
     && chown -R pptruser:pptruser /home/pptruser \
     && chown -R pptruser:pptruser /node_modules
 
-USER pptruser
 
-# install mysql server with default password, start it and insert testdata
-RUN apt-key update && apt-get update
-
-RUN echo 'mysql-server mysql-server/root_password password mysqlroot' | debconf-set-selections
-RUN echo 'mysql-server mysql-server/root_password_again password mysqlroot' | debconf-set-selections
-
-RUN apt-get install -y mysql-server
-
-
-# RUN mysql -fu root -pmysqlroot < "mysql_secure_install.sql" && \
-# mysql -fu root -pmysqlroot < "testdata.sql"
 
 # run the servers
 RUN chmod +x startServerDev.sh

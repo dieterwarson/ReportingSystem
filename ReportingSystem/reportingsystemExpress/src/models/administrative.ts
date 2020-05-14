@@ -8,7 +8,6 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import Report from './report';
-import Replacement from './replacement';
 import WorkplaceEvent from './workplaceEvent';
 import SecretariatNotification from './secretariatNotification';
 
@@ -22,9 +21,6 @@ export default class Administrative extends Model<Administrative> {
 
   @BelongsTo(() => Report)
   report!: Report;
-
-  @HasMany(() => Replacement)
-  replacements!: Replacement[];
 
   @HasMany(() => WorkplaceEvent)
   workplaceEvents!: WorkplaceEvent[];
