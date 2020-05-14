@@ -2,7 +2,7 @@
 <!-- script has to be implemented again to achieve the seperate forms -->
 <div class="container pt-5 pb-5">
   <h1>Wijzig gebeurtenis</h1>
-{{this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1]}}
+  {{this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1]}}
   <form id="changeOperationalEvent">
     <!-- Operationeel -->
     <section v-if="this.$route.query.categorie == 'Operational'">
@@ -33,7 +33,7 @@
               <!-- PL-nummer -->
               <div>
                 <div class="form-control form-control-lg no-edit">
-                  <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].plNumber === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].plNumber === null">Geen PL-nummer beschikbaar.</div>
+                  <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].plNumber === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].plNumber === null || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].plNumber == ''">Geen PL-nummer beschikbaar.</div>
                   <div v-else>PL-nummer: {{this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].plNumber}}</div>
                 </div>
               </div>
@@ -41,12 +41,12 @@
                 <div class="formcontainer btn-block">
                   <!-- Locatie -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].location === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].location == null">Geen adres beschikbaar.</div>
+                    <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].location === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].location == null || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].location == ''">Geen adres beschikbaar.</div>
                     <div v-else>Locatie: {{this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].location}}</div>
                   </div>
                   <!-- Datum -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].date === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].date == null">Geen datum beschikbaar.</div>
+                    <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].date === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].date == null || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].date == ''">Geen datum beschikbaar.</div>
                     <div v-else>
                       Datum: {{ new Date(this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].date).toLocaleString("en-BE", {
                         year: 'numeric',
@@ -58,12 +58,12 @@
                   </div>
                   <!-- Unit -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].unit === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].unit">Geen unit beschikbaar.</div>
+                    <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].unit === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].unit == null || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].unit == ''">Geen unit beschikbaar.</div>
                     <div v-else>Unit: {{this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].unit}}</div>
                   </div>
                   <!-- Signaling -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].signaling === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].signaling == null">Geen signalering beschikbaar.</div>
+                    <div v-if="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].signaling === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].signaling == null || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].signaling == ''">Geen signalering beschikbaar.</div>
                     <div v-else>Signalering: {{this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].signaling}}</div>
                   </div>
                 </div>
@@ -71,7 +71,7 @@
 
               <!-- Extra info -->
               <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="form.operationalEventMessage" @change="getOperationalEventMessage" />
+              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].description" />
             </div>
 
             <!-- Opslaan knop -->
@@ -115,12 +115,12 @@
                 <div class="formcontainer btn-block">
                   <!-- Afwezige -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].absentee === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].absentee == null">Geen afwezige beschikbaar.</div>
+                    <div v-if="this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].absentee === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].absentee == null || this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].absentee == ''">Geen afwezige beschikbaar.</div>
                     <div v-else>Afwezige: {{this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].absentee}}</div>
                   </div>
                   <!-- Vervanger -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].substitute === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].substitute == null">Geen vervanger beschikbaar.</div>
+                    <div v-if="this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].substitute === String(null) || this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].substitute == null || this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].substitute == ''">Geen vervanger beschikbaar.</div>
                     <div v-else>Vervanger: {{this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].substitute}}</div>
                   </div>
                 </div>
@@ -128,7 +128,7 @@
 
               <!-- Extra info -->
               <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="form.workplaceEventMessage" @change="getWorkplaceEventMessage" />
+              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].description" />
             </div>
 
             <!-- Opslaan knop -->
@@ -147,7 +147,7 @@
             <div>
               <!-- Beschrijving gebeurtenis -->
               <div class="form-control form-control-lg no-edit cropped">Beschrijving gebeurtenis: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="form.secretariatNotificationMessage" @change="getSecretariatNotificationMessage" />
+              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.administrative.secretariatNotifications[Number(this.$route.query.eventId) - 1].description" />
             </div>
             <p>message: {{form.secretariatNotificationMessage}}</p>
             <!-- Opslaan knop -->
@@ -189,7 +189,7 @@
             <div>
               <!-- Beschrijving -->
               <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="form.defectMessage" @change="getDefectMessage" />
+              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.technical.defects[Number(this.$route.query.eventId) - 1].description" />
             </div>
 
             <!-- Opslaan knop -->
@@ -225,7 +225,7 @@
             <div>
               <!-- Beschrijving -->
               <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="form.malfunctionMessage" @change="getMalfunctionMessage" />
+              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.technical.malfunctions[Number(this.$route.query.eventId) - 1].description" />
             </div>
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeMalfunction">Opslaan</button>
@@ -308,9 +308,9 @@ export default Vue.extend({
             authorId: 0,
             technicalId: 0,
             defectTypeId: 0,
-            description: '',
+            description: "",
             monitoring: true,
-            date: '',
+            date: "",
             createdAt: "",
             updatedAt: ""
           }],
@@ -364,35 +364,32 @@ export default Vue.extend({
 
   methods: {
     loadData: function () {
+      this.loadReportContent();
 
-      // this.loadReportContent();
-
-      this.step = String(this.$route.query.categorie);
-      this.eventId = parseInt(String(this.$route.query.eventId));
-      this.subcategorie = String(this.$route.query.subcategorie);
       ReportingService.getAllReports(
         "/api/reports/content/" + this.$route.query.reportId
       ).then(res => (this.reportContent = res));
 
-      if (String(this.$route.query.subcategorie) == String("operationalEvents")) {
-        this.loadOperationalEventData();
+      if (
+        String(this.$route.query.subcategorie) == String("operationalEvents")
+      ) {
         ReportingService.getAllReports("/api/reports/operationalTypes").then(
           res => (this.reportTypes = res)
         );
-      } else if (String(this.$route.query.subcategorie) == String("workplaceEvents")) {
-        this.loadWorkplaceEventData();
+      } else if (
+        String(this.$route.query.subcategorie) == String("workplaceEvents")
+      ) {
         ReportingService.getAllReports("/api/reports/workplaceTypes").then(
           res => (this.reportTypes = res)
         );
-      } else if (String(this.$route.query.subcategorie) == String("secretariatNotifications")) {
-        this.loadSecretariatNotificationData();
-      } else if (String(this.$route.query.subcategorie) == String("defects")) {
-        this.loadDefectData();
+      }
+      else if (String(this.$route.query.subcategorie) == String("defects")) {
         ReportingService.getAllReports("/api/reports/defectTypes").then(
           res => (this.reportTypes = res)
         );
-      } else if (String(this.$route.query.subcategorie) == String("malfunctions")) {
-        this.loadMalfunctionData();
+      } else if (
+        String(this.$route.query.subcategorie) == String("malfunctions")
+      ) {
         ReportingService.getAllReports("/api/reports/malfunctionTypes").then(
           res => (this.reportTypes = res)
         );
@@ -569,9 +566,9 @@ export default Vue.extend({
             authorId: 1,
             technicalId: 1,
             defectTypeId: 1,
-            description: 'krakende deur in kamer 512',
+            description: "krakende deur in kamer 512",
             monitoring: true,
-            date: '2020/04/15 13:03:57',
+            date: "2020/04/15 13:03:57",
             createdAt: "2020-05-04T07:47:37.000Z",
             updatedAt: "2020-05-04T07:47:37.000Z"
           }],
@@ -591,40 +588,21 @@ export default Vue.extend({
       };
     },
 
-    loadOperationalEventData: function () {
-      console.log("in functie");
-      this.operationalId = Number(this.reportContent.operational.operationalEvents[
-        Number(this.$route.query.eventId) - 1
-      ].id);
-      console.log(this.operationalId);
-
-      this.form.operationalEventMessage =
-        String(
-          this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1]
-          .description
-        ) === String(null) ?
-        "" :
-        String(this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1]
-          .description);
-      console.log(this.form.operationalEventMessage);
-    },
     loadWorkplaceEventData: function () {
-      this.administrativeId = Number(this.reportContent.administrative.workplaceEvents[
-        Number(this.$route.query.eventId) - 1
-      ].id);
       this.form.workplaceEventMessage =
         String(
-          this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1]
-          .description
+          this.reportContent.administrative.workplaceEvents[
+            Number(this.$route.query.eventId) - 1
+          ].description
         ) === String(null) ?
         "" :
-        String(this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1]
-          .description);
+        String(
+          this.reportContent.administrative.workplaceEvents[
+            Number(this.$route.query.eventId) - 1
+          ].description
+        );
     },
     loadSecretariatNotificationData: function () {
-      this.administrativeId = Number(this.reportContent.administrative.secretariatNotifications[
-        Number(this.$route.query.eventId) - 1
-      ].id);
       this.form.secretariatNotificationMessage =
         String(
           this.reportContent.administrative.secretariatNotifications[
@@ -632,72 +610,97 @@ export default Vue.extend({
           ].description
         ) === String(null) ?
         "" :
-        String(this.reportContent.administrative.secretariatNotifications[
-          Number(this.$route.query.eventId) - 1
-        ].description);
+        String(
+          this.reportContent.administrative.secretariatNotifications[
+            Number(this.$route.query.eventId) - 1
+          ].description
+        );
     },
     loadDefectData: function () {
-      this.technicalId = Number(this.reportContent.technical.defects[
-        Number(this.$route.query.eventId) - 1
-      ].id);
       this.form.defectMessage =
         String(
-          this.reportContent.technical.defects[Number(this.$route.query.eventId) - 1].description
+          this.reportContent.technical.defects[
+            Number(this.$route.query.eventId) - 1
+          ].description
         ) === String(null) ?
         "" :
-        String(this.reportContent.technical.defects[Number(this.$route.query.eventId) - 1].description);
+        String(
+          this.reportContent.technical.defects[
+            Number(this.$route.query.eventId) - 1
+          ].description
+        );
     },
     loadMalfunctionData: function () {
-      this.technicalId = Number(this.reportContent.technical.malfunctions[
-        Number(this.$route.query.eventId) - 1
-      ].id);
       this.form.malfunctionMessage =
         String(
-          this.reportContent.technical.malfunctions[Number(this.$route.query.eventId) - 1]
-          .description
+          this.reportContent.technical.malfunctions[
+            Number(this.$route.query.eventId) - 1
+          ].description
         ) === String(null) ?
         "" :
-        String(this.reportContent.technical.malfunctions[Number(this.$route.query.eventId) - 1]
-          .description);
+        String(
+          this.reportContent.technical.malfunctions[
+            Number(this.$route.query.eventId) - 1
+          ].description
+        );
     },
 
     async changeOperationalEvent() {
       await ReportingService.changeOperationalEvent({
         reportId: this.$route.query.reportId,
-        operationalId: this.operationalId,
-        message: this.form.operationalEventMessage
+        operationalId: this.reportContent.operational.operationalEvents[
+          Number(this.$route.query.eventId) - 1
+        ].id,
+        message: this.reportContent.operational.operationalEvents[
+          Number(this.$route.query.eventId) - 1
+        ].description
       });
       this.form.operationalEventSucceeded = true;
     },
     async changeWorkplaceEvent() {
       await ReportingService.changeWorkplaceEvent({
         reportId: this.$route.query.reportId,
-        administrativeId: this.administrativeId,
-        message: this.form.workplaceEventMessage
+        administrativeId: this.reportContent.administrative.workplaceEvents[
+          Number(this.$route.query.eventId) - 1
+        ].id,
+        message: this.reportContent.administrative.workplaceEvents[
+          Number(this.$route.query.eventId) - 1
+        ].description
       });
       this.form.workplaceEventSucceeded = true;
     },
     async changeSecretariatNotification() {
       await ReportingService.changeSecretariatNotification({
         reportId: this.$route.query.reportId,
-        administrativeId: this.administrativeId,
-        message: this.form.secretariatNotificationMessage
+        administrativeId: this.reportContent.administrative
+          .secretariatNotifications[Number(this.$route.query.eventId) - 1].id,
+        message: this.reportContent.administrative.secretariatNotifications[
+          Number(this.$route.query.eventId) - 1
+        ].description
       });
       this.form.secretariatNotificationSucceeded = true;
     },
     async changeDefect() {
       await ReportingService.changeDefect({
         reportId: this.$route.query.reportId,
-        technicalId: this.technicalId,
-        message: this.form.defectMessage
+        technicalId: this.reportContent.technical.defects[
+          Number(this.$route.query.eventId) - 1
+        ].id,
+        message: this.reportContent.technical.defects[
+          Number(this.$route.query.eventId) - 1
+        ].description
       });
       this.form.defectSucceeded = true;
     },
     async changeMalfunction() {
       await ReportingService.changeMalfunction({
         reportId: this.$route.query.reportId,
-        technicalId: this.technicalId,
-        message: this.form.malfunctionMessage
+        technicalId: this.reportContent.technical.malfunctions[
+          Number(this.$route.query.eventId) - 1
+        ].id,
+        message: this.reportContent.technical.malfunctions[
+          Number(this.$route.query.eventId) - 1
+        ].description
       });
       this.form.malfunctionSucceeded = true;
     },
@@ -710,32 +713,6 @@ export default Vue.extend({
       }
       this.filteredTypes.push(str);
       // Array(String(this.filteredTypes)).push(str);
-    },
-
-    getOperationalEventMessage: function () {
-      this.reportContent.operational.operationalEvents[
-        Number(this.$route.query.eventId) - 1
-      ].description = this.form.operationalEventMessage;
-    },
-    getWorkplaceEventMessage: function () {
-      this.reportContent.administrative.workplaceEvents[
-        Number(this.$route.query.eventId) - 1
-      ].description = this.form.workplaceEventMessage;
-    },
-    getSecretariatNotificationMessage: function () {
-      this.reportContent.administrative.secretariatNotifications[
-        Number(this.$route.query.eventId) - 1
-      ].description = this.form.secretariatNotificationMessage;
-    },
-    getDefectMessage: function () {
-      this.reportContent.technical.defects[
-        Number(this.$route.query.eventId) - 1
-      ].description = this.form.defectMessage;
-    },
-    getMalfunctionMessage: function () {
-      this.reportContent.technical.malfunctions[
-        Number(this.$route.query.eventId) - 1
-      ].description = this.form.malfunctionMessage;
     }
   }
 });
