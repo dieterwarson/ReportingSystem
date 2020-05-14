@@ -11,6 +11,15 @@
         <h4 id="smalltitle">Operationele gebeurtenis</h4>
         <div class="row">
           <!-- Checkboxes types -->
+            <div class="checkbox-container text-sm-left col-sm-4">
+              <div v-for="(value, index) in filteredTypes" :key="value.id">
+                <div class="typecontainer text-lg-left">
+                  <input type="checkbox" v-model="formType.parentId[index]" true-value="yes" false-value="no" />
+                  <label>{{value}}</label>
+                </div>
+              </div>
+            </div>
+
           <div v-if="this.reportTypes === []">
             <p>Er zijn nog geen types</p>
           </div>
@@ -71,7 +80,7 @@
 
               <!-- Extra info -->
               <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].description" />
+              <textarea type="text" class="form-control form-control-lg" v-model="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].description" />
             </div>
 
             <!-- Opslaan knop -->
@@ -128,7 +137,7 @@
 
               <!-- Extra info -->
               <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].description" />
+              <textarea type="text" class="form-control form-control-lg" v-model="this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1].description" />
             </div>
 
             <!-- Opslaan knop -->
@@ -147,7 +156,7 @@
             <div>
               <!-- Beschrijving gebeurtenis -->
               <div class="form-control form-control-lg no-edit cropped">Beschrijving gebeurtenis: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.administrative.secretariatNotifications[Number(this.$route.query.eventId) - 1].description" />
+              <textarea type="text" class="form-control form-control-lg" v-model="this.reportContent.administrative.secretariatNotifications[Number(this.$route.query.eventId) - 1].description" />
             </div>
             <p>message: {{form.secretariatNotificationMessage}}</p>
             <!-- Opslaan knop -->
@@ -189,7 +198,7 @@
             <div>
               <!-- Beschrijving -->
               <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.technical.defects[Number(this.$route.query.eventId) - 1].description" />
+              <textarea type="text" class="form-control form-control-lg" v-model="this.reportContent.technical.defects[Number(this.$route.query.eventId) - 1].description" />
             </div>
 
             <!-- Opslaan knop -->
@@ -225,7 +234,7 @@
             <div>
               <!-- Beschrijving -->
               <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-              <input type="text" class="form-control form-control-lg" v-model="this.reportContent.technical.malfunctions[Number(this.$route.query.eventId) - 1].description" />
+              <textarea type="text" class="form-control form-control-lg" v-model="this.reportContent.technical.malfunctions[Number(this.$route.query.eventId) - 1].description" />
             </div>
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeMalfunction">Opslaan</button>
@@ -426,7 +435,7 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "",
               plNumber: "PL03170104",
-              description: "",
+              description: "Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht",
               priority: null,
               location: "",
               unit: "HANO",
