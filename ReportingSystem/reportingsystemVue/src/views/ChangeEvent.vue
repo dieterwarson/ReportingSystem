@@ -2,7 +2,6 @@
 <!-- script has to be implemented again to achieve the seperate forms -->
 <div class="container pt-5 pb-5">
   <h1>Wijzig gebeurtenis</h1>
-  {{this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1]}}
   <form id="changeOperationalEvent">
     <!-- Operationeel -->
     <section v-if="this.$route.query.categorie == 'Operational'">
@@ -11,15 +10,6 @@
         <h4 id="smalltitle">Operationele gebeurtenis</h4>
         <div class="row">
           <!-- Checkboxes types -->
-            <div class="checkbox-container text-sm-left col-sm-4">
-              <div v-for="(value, index) in filteredTypes" :key="value.id">
-                <div class="typecontainer text-lg-left">
-                  <input type="checkbox" v-model="formType.parentId[index]" true-value="yes" false-value="no" />
-                  <label>{{value}}</label>
-                </div>
-              </div>
-            </div>
-
           <div v-if="this.reportTypes === []">
             <p>Er zijn nog geen types</p>
           </div>
@@ -81,7 +71,7 @@
               <!-- Extra info -->
               <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
               <textarea type="text" class="form-control form-control-lg" v-model="this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].description" />
-            </div>
+              </div>
 
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeOperationalEvent">Opslaan</button>
@@ -158,7 +148,6 @@
               <div class="form-control form-control-lg no-edit cropped">Beschrijving gebeurtenis: (aanpasbaar)</div>
               <textarea type="text" class="form-control form-control-lg" v-model="this.reportContent.administrative.secretariatNotifications[Number(this.$route.query.eventId) - 1].description" />
             </div>
-            <p>message: {{form.secretariatNotificationMessage}}</p>
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeSecretariatNotification">Opslaan</button>
             <small v-if="form.secretariatNotificationFailed">Er is iets misgegaan bij het aanpassen.</small>
@@ -344,23 +333,18 @@ export default Vue.extend({
       },
       form: {
         //OPERATIONALEVENT OBJECTS
-        operationalEventMessage: "",
         operationalEventFailed: false,
         operationalEventSucceeded: false,
         //WORKPLACEEVENT OBJECTS
-        workplaceEventMessage: "",
         workplaceEventFailed: false,
         workplaceEventSucceeded: false,
         //SECRETARIATNOTIFICATION OBJECTS
-        secretariatNotificationMessage: "",
         secretariatNotificationFailed: false,
         secretariatNotificationSucceeded: false,
         //DEFECT OBJECTS
-        defectMessage: "",
         defectFailed: false,
         defectSucceeded: false,
         //MALFUNCTION OBJECTS
-        malfunctionMessage: "",
         malfunctionFailed: false,
         malfunctionSucceeded: false
       }
@@ -373,7 +357,7 @@ export default Vue.extend({
 
   methods: {
     loadData: function () {
-      this.loadReportContent();
+      // this.loadReportContent();
 
       ReportingService.getAllReports(
         "/api/reports/content/" + this.$route.query.reportId
@@ -391,8 +375,7 @@ export default Vue.extend({
         ReportingService.getAllReports("/api/reports/workplaceTypes").then(
           res => (this.reportTypes = res)
         );
-      }
-      else if (String(this.$route.query.subcategorie) == String("defects")) {
+      } else if (String(this.$route.query.subcategorie) == String("defects")) {
         ReportingService.getAllReports("/api/reports/defectTypes").then(
           res => (this.reportTypes = res)
         );
@@ -596,64 +579,6 @@ export default Vue.extend({
         }
       };
     },
-
-    loadWorkplaceEventData: function () {
-      this.form.workplaceEventMessage =
-        String(
-          this.reportContent.administrative.workplaceEvents[
-            Number(this.$route.query.eventId) - 1
-          ].description
-        ) === String(null) ?
-        "" :
-        String(
-          this.reportContent.administrative.workplaceEvents[
-            Number(this.$route.query.eventId) - 1
-          ].description
-        );
-    },
-    loadSecretariatNotificationData: function () {
-      this.form.secretariatNotificationMessage =
-        String(
-          this.reportContent.administrative.secretariatNotifications[
-            Number(this.$route.query.eventId) - 1
-          ].description
-        ) === String(null) ?
-        "" :
-        String(
-          this.reportContent.administrative.secretariatNotifications[
-            Number(this.$route.query.eventId) - 1
-          ].description
-        );
-    },
-    loadDefectData: function () {
-      this.form.defectMessage =
-        String(
-          this.reportContent.technical.defects[
-            Number(this.$route.query.eventId) - 1
-          ].description
-        ) === String(null) ?
-        "" :
-        String(
-          this.reportContent.technical.defects[
-            Number(this.$route.query.eventId) - 1
-          ].description
-        );
-    },
-    loadMalfunctionData: function () {
-      this.form.malfunctionMessage =
-        String(
-          this.reportContent.technical.malfunctions[
-            Number(this.$route.query.eventId) - 1
-          ].description
-        ) === String(null) ?
-        "" :
-        String(
-          this.reportContent.technical.malfunctions[
-            Number(this.$route.query.eventId) - 1
-          ].description
-        );
-    },
-
     async changeOperationalEvent() {
       await ReportingService.changeOperationalEvent({
         reportId: this.$route.query.reportId,
