@@ -58,29 +58,6 @@
             </div>
             <div v-else class="row row-cols-1">
               <div
-                v-for="event in notificationContent.administrative.replacements"
-                :key="event.id" 
-              >
-                <div class="col card h-100">
-                  <div class="card-body">
-                    <h3 class="card-title display-5">
-                      {{ new Date(event.date).toLocaleString("en-BE", {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      }) }}
-                    </h3>
-                    <p class="card-text">{{ event.signaling }}</p>
-                    <h5>
-                      <span class="card-text badge badge-primary" data-toggle="tooltip" data-placement="top" title="PL-nummer">{{ event.plNumber }}</span>  
-                      <span class="card-text badge badge-danger" data-toggle="tooltip" data-placement="top" title="Eenheid">{{ event.unit }}</span> 
-                    </h5>
-                    <p class="card-text">{{ event.description }}</p>
-                    <p class="card-text">{{ event.location }}</p>
-                    <h5></h5>
-                  </div>
-                </div>
-              </div>
-              <div
                 v-for="event in notificationContent.administrative.workplaceEvents"
                 :key="event.id" 
               >
@@ -230,26 +207,6 @@
         <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
       </div>
       <div v-else class="row row-cols-1 row-cols-md-2">
-        <div
-          v-for="event in reportContent.administrative.replacements"
-          :key="event.id"
-        >
-          <div class="col card h-100">
-            <div class="card-body">
-              <h5 class="card-title">Vervanging</h5>
-              <h5 class="card-text">
-                {{ new Date(event.date).toLocaleString("en-BE", {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                }) }}
-              </h5>
-              <p class="card-text">
-                {{ event.absentee }} vervangen door {{ event.substitute }}
-              </p>
-            </div>
-          </div>
-        </div>
-
         <div
           v-for="event in reportContent.administrative.workplaceEvents"
           :key="event.id"

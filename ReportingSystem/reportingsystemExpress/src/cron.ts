@@ -2,6 +2,7 @@ const cron = require("node-cron");
 const nodemailer = require("nodemailer")
 import pdfGenerator from './pdfgenerator'
 import Report from './models/report';
+import User from './models/user';
 
 export default class cronServer{
 
@@ -44,13 +45,13 @@ export default class cronServer{
             ]
         };
 
-        transporter.sendMail(mailOptions, function(error:any, info:any){
+/*         transporter.sendMail(mailOptions, function(error:any, info:any){
             if(error){
                 return console.log(error);
             }
         
             console.log('Message sent: ' + info.response);
-        });
+        }); */
 
     }
 
@@ -61,6 +62,14 @@ export default class cronServer{
             nightShift: true,
           });
           // report1.save();          
+    }
+
+    async getEmails() {
+        let emails = await User.findAll({
+            attributes: ['username']
+        })
+
+        return emails;
     }
 
     

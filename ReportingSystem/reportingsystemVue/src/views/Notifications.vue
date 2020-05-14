@@ -16,32 +16,12 @@
               </div>
               <div v-else class="row row-cols-1">
                 <div
-                  v-for="event in monitored.administrative.replacements"
-                  :key="event.id"
-                >
-                  <div class="col">
-                    <div class="card h-100 mb-3">
-                      <h5 class="card-header bg-secondary">Vervanging</h5>
-                      <div class="card-body">
-                        <p class="card-text">
-                          {{ new Date(event.date).toLocaleString("en-BE") }}
-                        </p>
-                        <p class="card-text">
-                          {{ event.absentee }} vervangen door
-                          {{ event.substitute }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
                   v-for="event in monitored.administrative.workplaceEvents"
                   :key="event.id"
                 >
                   <div class="col">
                     <div class="card h-100 mb-3">
-                      <h5 class="card-header bg-secondary">Voorval tijdens de dienst</h5>
+                      <h5 class="card-header bg-secondary">Vervanging</h5>
                       <div class="card-body">
                         <p class="card-text">
                           {{ new Date(event.date).toLocaleString("en-BE") }}
@@ -139,8 +119,8 @@ export default Vue.extend({
   data: function() {
     return {
       step: "Operational",
-      monitored: {"administrative":{"replacements":[],"workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}},
-      emptyMonitored: {"administrative":{"replacements":[],"workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}}
+      monitored: {"administrative":{ "workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}},
+      emptyMonitored: {"administrative":{ "workplaceEvents":[],"secretariatNotifications":[]},"technical":{"defects":[],"malfunctions":[]}}
     };
   },
 
