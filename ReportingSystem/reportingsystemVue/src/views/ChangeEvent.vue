@@ -335,17 +335,10 @@ export default Vue.extend({
       },
       form: {
         //OPERATIONALEVENT OBJECTS
-        plNumber: "",
-        location: "",
-        unit: "",
-        date: "",
-        signaling: "",
         operationalEventMessage: "",
         operationalEventFailed: false,
         operationalEventSucceeded: false,
         //WORKPLACEEVENT OBJECTS
-        absentee: "",
-        substitute: "",
         workplaceEventMessage: "",
         workplaceEventFailed: false,
         workplaceEventSucceeded: false,
@@ -604,30 +597,6 @@ export default Vue.extend({
         Number(this.$route.query.eventId) - 1
       ].id);
       console.log(this.operationalId);
-      this.form.plNumber = String(
-        this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1]
-        .plNumber
-      );
-      console.log(this.form.plNumber);
-
-      this.form.location = String(
-        this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1]
-        .location
-      );
-      console.log(this.form.location);
-
-      this.form.date = String(this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].date);
-      console.log(this.form.date);
-
-      this.form.unit = String(
-        this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].unit
-      );
-      console.log(this.form.unit);
-
-      this.form.signaling = String(
-        this.reportContent.operational.operationalEvents[Number(this.$route.query.eventId) - 1].signaling
-      );
-      console.log(this.form.signaling);
 
       this.form.operationalEventMessage =
         String(
@@ -643,14 +612,6 @@ export default Vue.extend({
       this.administrativeId = Number(this.reportContent.administrative.workplaceEvents[
         Number(this.$route.query.eventId) - 1
       ].id);
-      this.form.absentee = String(
-        this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1]
-        .absentee
-      );
-      this.form.substitute = String(
-        this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1]
-        .substitute
-      );
       this.form.workplaceEventMessage =
         String(
           this.reportContent.administrative.workplaceEvents[Number(this.$route.query.eventId) - 1]
