@@ -1,32 +1,18 @@
 <template>
-  <!-- script has to be implemented again to achieve the seperate forms -->
-  <div class="container pt-5 pb-5">
-    <h1>Voeg gebeurtenis toe</h1>
-    <form id="addReport">
-      <div class="btn-group d-flex" role="group" aria-label="Justified button group">
-        <button
-          id="operationalButton"
-          type="button"
-          class="btn btn-info"
-          @click.prevent="getOperational"
-        >Operationeel</button>
-        <button
-          id="workForceButton"
-          type="button"
-          class="btn btn-primary"
-          @click.prevent="getWorkforce"
-        >Personeel</button>
-        <button
-          id="technicalButton"
-          type="button"
-          class="btn btn-primary"
-          @click.prevent="getTechnical"
-        >Technisch</button>
-      </div>
+<!-- script has to be implemented again to achieve the seperate forms -->
+<div class="container pt-5 pb-5">
+  <h1>Voeg gebeurtenis toe</h1>
+  <form id="addReport">
+    
+    <div class="btn-group d-flex" role="group" aria-label="Justified button group">
+      <button id="operationalButton" type="button" class="btn btn-info" @click.prevent="getOperational">Operationeel</button>
+      <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
+      <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
+    </div>
 
-      <section v-if="step == 'Operational'">
-        <h3>Operationeel</h3>
-        <!-- <div class="row">
+    <section v-if="step == 'Operational'">
+      <h3>Operationeel</h3>
+      <!-- <div class="row">
                     <div class="checkbox-container text-sm-left col-lg-3" >
                     <div class="text-sm-left">
                         <div class="text-sm-left">
@@ -85,71 +71,34 @@
                         </div>
                     </div>
         </div>-->
-        <!-- <div class="input-group col-lg-8"> -->
-        <div class="input-group">
-          <div class="input-group" style="height: 20%;">
-            <input
-              name="plNumber"
-              v-model="form.plNumber"
-              type="text"
-              placeholder="PL-nummer"
-              class="form-control form-control-lg"
-            />
-          </div>
-          <div class="input-group" style="height: 20%;">
-            <button
-              class="btn btn-block btn-success"
-              type="button"
-              @click.prevent="getFile"
-            >Zoek fiche</button>
-          </div>
-          <div class="input-group" style="height: 20%;">
-            <input
-              name="location"
-              v-model="form.location"
-              type="text"
-              placeholder="Adres"
-              class="form-control form-control-lg"
-            />
-            <input
-              name="date"
-              v-model="form.operationalDate"
-              type="text"
-              placeholder="Datum"
-              class="form-control form-control-lg"
-            />
-            <input
-              name="unit"
-              v-model="form.unit"
-              type="text"
-              placeholder="Unit"
-              class="form-control form-control-lg"
-            />
-          </div>
-          <div class="input-group" style="height: 39%;">
-            <input
-              v-model="form.operationalMessage"
-              type="text"
-              placeholder="Extra info"
-              class="form-control form-control-lg"
-            />
-          </div>
+      <!-- <div class="input-group col-lg-8"> -->
+      <div class="input-group">
+        <div class="input-group" style="height: 20%;">
+          <input name="plNumber" v-model="form.plNumber" type="text" placeholder="PL-nummer" class="form-control form-control-lg" />
         </div>
+        <div class="input-group" style="height: 20%;">
+          <button class="btn btn-block btn-success" type="button" @click.prevent="getFile">Zoek fiche</button>
+        </div>
+        <div class="input-group" style="height: 20%;">
+          <input name="location" v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg" />
+          <input name="date" v-model="form.operationalDate" type="text" placeholder="Datum" class="form-control form-control-lg" />
+          <input name="unit" v-model="form.unit" type="text" placeholder="Unit" class="form-control form-control-lg" />
+        </div>
+        <div class="input-group" style="height: 39%;">
+          <input v-model="form.operationalMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
+        </div>
+      </div>
 
-        <!-- </div> -->
+      <!-- </div> -->
 
-        <button
-          class="btn btn-large btn-block btn-success"
-          type="button"
-          @click.prevent="addReport"
-        >Opslaan</button>
-        <small v-if="form.operationalFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
-        <small v-if="form.operationalSucceeded">Het verslag is toegevoegd</small>
-      </section>
-      <section v-if="step == 'Workforce'">
-        <h3>Personeel</h3>
+      <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addReport">Opslaan</button>
+      <small v-if="form.operationalFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
+      <small v-if="form.operationalSucceeded">Het verslag is toegevoegd</small>
+    </section>
+    <section v-if="step == 'Workforce'">
+      <h3>Personeel</h3>
 
-        <!-- <div class="row">
+      <!-- <div class="row">
                 <div class="checkbox-container text-sm-left col-lg-3" >
                 <div class="text-sm-left">
                     <div class="text-sm-left">
@@ -170,99 +119,67 @@
                     </div>
         </div>-->
 
-        <!-- <div class="input-group col-lg-8"> -->
+      <!-- <div class="input-group col-lg-8"> -->
+      <div class="input-group">
+        <div class="input-group">
+          <input name="Name absentee" v-model="form.absentee" type="text" placeholder="Naam afwezige" class="form-control form-control-lg" />
+          <input name="Naam" v-model="form.replacement" type="text" placeholder="Naam vervanger" class="form-control form-control-lg" />
+        </div>
+      </div>
+
+      <input name="Message" v-model="form.workforceMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
+      <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addWorkForceEvent">Opslaan</button>
+      <small v-if="form.workForceFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
+      <small v-if="form.WorkForceSucceeded">Het verslag is toegevoegd</small>
+    </section>
+
+    <section v-if="step == 'Technical'">
+      <h3>Technisch</h3>
+      <div class="row">
+        <div class="checkbox-container text-sm-left col-lg-3">
+          <div class="text-sm-left">
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Technisch WKS" />
+              <label>Technisch WKS</label>
+              <div class="text-sm-left">
+                <div class="text-sm-left">
+                  <input class="text-sm-left" type="checkbox" name="Voorwerp" />
+                  <label>Voorwerp</label>
+                </div>
+                <div class="text-sm-left">
+                  <input type="checkbox" name="Verwittiging ASC" />
+                  <label>Verwittiging ASC</label>
+                </div>
+                <div class="text-sm-left">
+                  <input class="text-sm-left" type="checkbox" name="Verwittiging anderen" />
+                  <label>Verwittiging anderen</label>
+                </div>
+              </div>
+            </div>
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Logistiek" />
+              <label>Logistiek</label>
+              <div class="text-sm-left">
+                <div class="text-sm-left">
+                  <input class="text-sm-left" type="checkbox" name="Defect" />
+                  <label>Defect</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="input-group">
           <div class="input-group">
-            <input
-              name="Name absentee"
-              v-model="form.absentee"
-              type="text"
-              placeholder="Naam afwezige"
-              class="form-control form-control-lg"
-            />
-            <input
-              name="Naam"
-              v-model="form.replacement"
-              type="text"
-              placeholder="Naam vervanger"
-              class="form-control form-control-lg"
-            />
+            <input name="Message" v-model="form.technicalMessage" type="text" placeholder="Info over defect" class="form-control form-control-lg" />
           </div>
         </div>
-
-        <input
-          name="Message"
-          v-model="form.workforceMessage"
-          type="text"
-          placeholder="Extra info"
-          class="form-control form-control-lg"
-        />
-        <button
-          class="btn btn-large btn-block btn-success"
-          type="button"
-          @click.prevent="addWorkForceEvent"
-        >Opslaan</button>
-        <small v-if="form.workForceFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
-        <small v-if="form.WorkForceSucceeded">Het verslag is toegevoegd</small>
-      </section>
-
-      <section v-if="step == 'Technical'">
-        <h3>Technisch</h3>
-        <div class="row">
-          <div class="checkbox-container text-sm-left col-lg-3">
-            <div class="text-sm-left">
-              <div class="text-sm-left">
-                <input class="text-sm-left" type="checkbox" name="Technisch WKS" />
-                <label>Technisch WKS</label>
-                <div class="text-sm-left">
-                  <div class="text-sm-left">
-                    <input class="text-sm-left" type="checkbox" name="Voorwerp" />
-                    <label>Voorwerp</label>
-                  </div>
-                  <div class="text-sm-left">
-                    <input type="checkbox" name="Verwittiging ASC" />
-                    <label>Verwittiging ASC</label>
-                  </div>
-                  <div class="text-sm-left">
-                    <input class="text-sm-left" type="checkbox" name="Verwittiging anderen" />
-                    <label>Verwittiging anderen</label>
-                  </div>
-                </div>
-              </div>
-              <div class="text-sm-left">
-                <input class="text-sm-left" type="checkbox" name="Logistiek" />
-                <label>Logistiek</label>
-                <div class="text-sm-left">
-                  <div class="text-sm-left">
-                    <input class="text-sm-left" type="checkbox" name="Defect" />
-                    <label>Defect</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="input-group">
-            <div class="input-group">
-              <input
-                name="Message"
-                v-model="form.technicalMessage"
-                type="text"
-                placeholder="Info over defect"
-                class="form-control form-control-lg"
-              />
-            </div>
-          </div>
-          <button
-            class="btn btn-large btn-block btn-success"
-            type="button"
-            @click.prevent="addTechnicalEvent"
-          >Opslaan</button>
-        </div>
-        <small v-if="form.technicalFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
-        <small v-if="form.technicalSucceeded">Het verslag is toegevoegd</small>
-      </section>
-    </form>
-  </div>
+        <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addTechnicalEvent">Opslaan</button>
+      </div>
+      <small v-if="form.technicalFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
+      <small v-if="form.technicalSucceeded">Het verslag is toegevoegd</small>
+    </section>
+  </form>
+</div>
 </template>
 
 <script lang="ts">
@@ -322,12 +239,12 @@ export default Vue.extend({
     };
   },
   methods: {
-    getOperational: function() {
+    getOperational: function () {
       if (this.step != "Operational") {
         this.step = "Operational";
-        const operationalButton = document.getElementById("operationalButton")!;
-        const workForceButton = document.getElementById("workForceButton")!;
-        const technicalButton = document.getElementById("technicalButton")!;
+        const operationalButton = document.getElementById("operationalButton") !;
+        const workForceButton = document.getElementById("workForceButton") !;
+        const technicalButton = document.getElementById("technicalButton") !;
         operationalButton.classList.replace("btn-primary", "btn-info");
         workForceButton.classList.replace("btn-info", "btn-primary");
         technicalButton.classList.replace("btn-info", "btn-primary");
@@ -336,12 +253,12 @@ export default Vue.extend({
         this.form.technicalSucceeded = false;
       }
     },
-    getWorkforce: function() {
+    getWorkforce: function () {
       if (this.step != "Workforce") {
         this.step = "Workforce";
-        const operationalButton = document.getElementById("operationalButton")!;
-        const workForceButton = document.getElementById("workForceButton")!;
-        const technicalButton = document.getElementById("technicalButton")!;
+        const operationalButton = document.getElementById("operationalButton") !;
+        const workForceButton = document.getElementById("workForceButton") !;
+        const technicalButton = document.getElementById("technicalButton") !;
         operationalButton.classList.replace("btn-info", "btn-primary");
         workForceButton.classList.replace("btn-primary", "btn-info");
         technicalButton.classList.replace("btn-info", "btn-primary");
@@ -350,12 +267,12 @@ export default Vue.extend({
         this.form.technicalSucceeded = false;
       }
     },
-    getTechnical: function() {
+    getTechnical: function () {
       if (this.step != "Technical") {
         this.step = "Technical";
-        const operationalButton = document.getElementById("operationalButton")!;
-        const workForceButton = document.getElementById("workForceButton")!;
-        const technicalButton = document.getElementById("technicalButton")!;
+        const operationalButton = document.getElementById("operationalButton") !;
+        const workForceButton = document.getElementById("workForceButton") !;
+        const technicalButton = document.getElementById("technicalButton") !;
         operationalButton.classList.replace("btn-info", "btn-primary");
         workForceButton.classList.replace("btn-info", "btn-primary");
         technicalButton.classList.replace("btn-primary", "btn-info");
@@ -364,7 +281,7 @@ export default Vue.extend({
         this.form.technicalSucceeded = false;
       }
     },
-    saveButton: function() {
+    saveButton: function () {
       alert("send to db");
     },
     async getFile() {

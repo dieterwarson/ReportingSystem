@@ -142,11 +142,11 @@
     </div>
   </div>
 
-  <div class="btn-group d-flex" role="group" aria-label="Justified button group">
-    <button type="button" class="btn btn-primary" @click.prevent="getOperational">Operationeel</button>
-    <button type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
-    <button type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
-  </div>
+    <div class="btn-group d-flex" role="group" aria-label="Justified button group">
+      <button id="operationalButton" type="button" class="btn btn-info" @click.prevent="getOperational">Operationeel</button>
+      <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
+      <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
+    </div>
 
   <section v-if="step == 'Operational'" class="container">
     <div v-if="this.reportContent.operational == this.emptyReport.operational">
@@ -183,24 +183,6 @@
       <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
     </div>
     <div v-else class="row row-cols-1 row-cols-md-2">
-      <div v-for="event in reportContent.administrative.replacements" :key="event.id">
-        <div class="col card h-100">
-          <p class="card-text">
-            <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(parseInt(event.id), 'replacements')" />
-          </p>
-          <div class="card-body">
-            <h5 class="card-title">Vervanging</h5>
-            <h5 class="card-text">
-              {{ new Date(event.date).toLocaleString("en-BE", {
-                hour: '2-digit',
-                minute: '2-digit',
-                }) }}
-            </h5>
-            <p class="card-text">{{ event.absentee }} vervangen door {{ event.substitute }}</p>
-          </div>
-        </div>
-      </div>
-
       <div v-for="event in reportContent.administrative.workplaceEvents" :key="event.id">
         <div class="col card h-100">
           <p class="card-text">
@@ -495,10 +477,11 @@ export default Vue.extend({
           ]
         },
         administrative: {
-          replacements: [{
+          workplaceEvents: [{
             id: 1,
             authorId: 1,
             administrativeId: 1,
+            description: "ziek geworden",
             absentee: "Jan Jacobs",
             substitute: "Geordy Hendricks",
             monitoring: true,
@@ -507,7 +490,6 @@ export default Vue.extend({
             createdAt: "2020-05-04T07:47:37.000Z",
             updatedAt: "2020-05-04T07:47:37.000Z"
           }],
-          workplaceEvents: [],
           secretariatNotifications: [{
             id: 1,
             authorId: 1,
@@ -598,13 +580,46 @@ export default Vue.extend({
       } */
     },
     getOperational: function () {
-      if (this.step != "Operational") this.step = "Operational";
+      if (this.step != "Operational") {
+        this.step = "Operational";
+        const operationalButton = document.getElementById("operationalButton") !;
+        const workForceButton = document.getElementById("workForceButton") !;
+        const technicalButton = document.getElementById("technicalButton") !;
+        operationalButton.classList.replace("btn-primary", "btn-info");
+        workForceButton.classList.replace("btn-info", "btn-primary");
+        technicalButton.classList.replace("btn-info", "btn-primary");
+        this.form.operationalSucceeded = false;
+        this.form.workForceSucceeded = false;
+        this.form.technicalSucceeded = false;
+      }
     },
     getWorkforce: function () {
-      if (this.step != "Workforce") this.step = "Workforce";
+      if (this.step != "Workforce") {
+        this.step = "Workforce";
+        const operationalButton = document.getElementById("operationalButton") !;
+        const workForceButton = document.getElementById("workForceButton") !;
+        const technicalButton = document.getElementById("technicalButton") !;
+        operationalButton.classList.replace("btn-info", "btn-primary");
+        workForceButton.classList.replace("btn-primary", "btn-info");
+        technicalButton.classList.replace("btn-info", "btn-primary");
+        this.form.operationalSucceeded = false;
+        this.form.workForceSucceeded = false;
+        this.form.technicalSucceeded = false;
+      }
     },
     getTechnical: function () {
-      if (this.step != "Technical") this.step = "Technical";
+      if (this.step != "Technical") {
+        this.step = "Technical";
+        const operationalButton = document.getElementById("operationalButton") !;
+        const workForceButton = document.getElementById("workForceButton") !;
+        const technicalButton = document.getElementById("technicalButton") !;
+        operationalButton.classList.replace("btn-info", "btn-primary");
+        workForceButton.classList.replace("btn-info", "btn-primary");
+        technicalButton.classList.replace("btn-primary", "btn-info");
+        this.form.operationalSucceeded = false;
+        this.form.workForceSucceeded = false;
+        this.form.technicalSucceeded = false;
+      }
     },
     changeEventClick: function (id: string, subcat: string) {
       this.$router.push({

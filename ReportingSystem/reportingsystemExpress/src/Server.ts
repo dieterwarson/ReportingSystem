@@ -563,6 +563,86 @@ app.post('/changeOperationalEvent', async (req, res) => {
 
   OperationalEvent.sync();
 });
+app.post('/changeWorkplaceEvent', async (req, res) => {
+  const event = await WorkplaceEvent.findOne({
+    where: {
+      id: req.body.administrativeId,
+    },
+    include: [
+      {
+        model: Administrative,
+      },
+    ],
+  });
+  if (event != null) {
+    event.description = req.body.message;
+    event.save();
+  } else {
+    res.send(Error('File not found'));
+  }
+
+  WorkplaceEvent.sync();
+});
+app.post('/changeSecretariatNotification', async (req, res) => {
+  const event = await SecretariatNotification.findOne({
+    where: {
+      id: req.body.administrativeId,
+    },
+    include: [
+      {
+        model: Administrative,
+      },
+    ],
+  });
+  if (event != null) {
+    event.description = req.body.message;
+    event.save();
+  } else {
+    res.send(Error('File not found'));
+  }
+
+  SecretariatNotification.sync();
+});
+app.post('/changeDefect', async (req, res) => {
+  const event = await Defect.findOne({
+    where: {
+      id: req.body.technicalId,
+    },
+    include: [
+      {
+        model: Technical,
+      },
+    ],
+  });
+  if (event != null) {
+    event.description = req.body.message;
+    event.save();
+  } else {
+    res.send(Error('File not found'));
+  }
+
+  Defect.sync();
+});
+app.post('/changeMalfunction', async (req, res) => {
+  const event = await Malfunction.findOne({
+    where: {
+      id: req.body.technicalId,
+    },
+    include: [
+      {
+        model: Technical,
+      },
+    ],
+  });
+  if (event != null) {
+    event.description = req.body.message;
+    event.save();
+  } else {
+    res.send(Error('File not found'));
+  }
+
+  Malfunction.sync();
+});
 
 // USER
 interface INewUserData {

@@ -1,4 +1,3 @@
-/* eslint-disable */
 <template>
 <!-- script has to be implemented again to achieve the seperate forms -->
 <div class="container pt-5 pb-5">
@@ -8,80 +7,83 @@
     <section v-if="this.step == 'Operational'">
       <h3>Operationeel</h3>
       <br />
-      <div class="row">
-        <!-- Checkboxes types -->
-        <div v-if="this.reportTypes == []">
-          <p>Er zijn nog geen types</p>
-        </div>
-        <div v-else>
-          <div v-for="value in reportTypes" :key="value.id">
-            <div v-for="value in value" :key="value.id">{{filterTypes(value.typeName)}}</div>
+      <section v-if="this.subcategorie == 'operationalEvents'">
+        <h4>Operationele gebeurtenis</h4>
+        <br />
+        <div class="row">
+          <!-- Checkboxes types -->
+          <div v-if="this.reportTypes == []">
+            <p>Er zijn nog geen types</p>
           </div>
-          <div class="checkbox-container text-sm-left col-sm-4">
-            <div v-for="(value, index) in filteredTypes" :key="value.id">
-              <div class="typecontainer text-lg-left">
-                <input type="checkbox" v-model="formType.parentId[index]" true-value="yes" false-value="no" />
-                <label>{{value}}</label>
-              </div>
+          <div v-else>
+            <div v-for="value in reportTypes" :key="value.id">
+              <div v-for="value in value" :key="value.id">{{filterTypes(value.typeName)}}</div>
             </div>
-          </div>
-        </div>
-        {{setOperationalId(this.reportContent.operational.operationalEvents[this.eventId-1].id)}}
-        <!-- Invoervelden -->
-        <div class="text-sm-left col-lg">
-          <div>
-            <!-- PL-nummer -->
-            <div>
-              <div class="form-control form-control-lg no-edit">
-                <div v-if="this.reportContent.operational.operationalEvents[this.eventId-1].plNumber == null">Geen PL-nummer beschikbaar.</div>
-                <div v-else>PL-nummer: {{this.reportContent.operational.operationalEvents[this.eventId-1].plNumber}}</div>
-              </div>
-            </div>
-            <div class="input-group" style="height: 20%;">
-              <div class="formcontainer btn-block">
-                <!-- Locatie -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="this.reportContent.operational.operationalEvents[this.eventId-1].location == null">Geen adres beschikbaar.</div>
-                  <div v-else>Locatie: {{this.reportContent.operational.operationalEvents[this.eventId-1].location}}</div>
+            <div class="checkbox-container text-sm-left col-sm-4">
+              <div v-for="(value, index) in filteredTypes" :key="value.id">
+                <div class="typecontainer text-lg-left">
+                  <input type="checkbox" v-model="formType.parentId[index]" true-value="yes" false-value="no" />
+                  <label>{{value}}</label>
                 </div>
-                <!-- Datum -->
+              </div>
+            </div>
+          </div>
+          {{setOperationalId(this.reportContent.operational.operationalEvents[this.eventId-1].id)}}
+          <!-- Invoervelden -->
+          <div class="text-sm-left col-lg">
+            <div>
+              <!-- PL-nummer -->
+              <div>
                 <div class="form-control form-control-lg no-edit">
-                  <div v-if="this.reportContent.operational.operationalEvents[this.eventId-1].date == null">Geen datum beschikbaar.</div>
-                  <div v-else>
-                    Datum: {{ new Date(this.reportContent.operational.operationalEvents[this.eventId-1].date).toLocaleString("en-BE", {
+                  <div v-if="this.form.plNumber === String(null)">Geen PL-nummer beschikbaar.</div>
+                  <div v-else>PL-nummer: {{this.form.plNumber}}</div>
+                </div>
+              </div>
+              <div class="input-group" style="height: 20%;">
+                <div class="formcontainer btn-block">
+                  <!-- Locatie -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div v-if="this.form.location === String(null)">Geen adres beschikbaar.</div>
+                    <div v-else>Locatie: {{this.form.location}}</div>
+                  </div>
+                  <!-- Datum -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div v-if="this.reportContent.operational.operationalEvents[this.eventId-1].date === String(null)">Geen datum beschikbaar.</div>
+                    <div v-else>
+                      Datum: {{ new Date(this.reportContent.operational.operationalEvents[this.eventId-1].date).toLocaleString("en-BE", {
                       year: 'numeric',
                       month: 'numeric',
                       day: 'numeric',
                       })
                       }}
+                    </div>
+                  </div>
+                  <!-- Unit -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div v-if="this.form.unit === String(null)">Geen unit beschikbaar.</div>
+                    <div v-else>Unit: {{this.form.unit}}</div>
+                  </div>
+
+                  <!-- Signaling -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div v-if="this.reportContent.operational.operationalEvents[this.eventId-1].signaling === String(null)">Geen signalering beschikbaar.</div>
+                    <div v-else>Signalering: {{this.reportContent.operational.operationalEvents[this.eventId-1].signaling}}</div>
                   </div>
                 </div>
-                <!-- Unit -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="this.reportContent.operational.operationalEvents[this.eventId-1].unit == null">Geen unit beschikbaar.</div>
-                  <div v-else>Unit: {{this.reportContent.operational.operationalEvents[this.eventId-1].unit}}</div>
-                </div>
-
-                <!-- Signaling -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="this.reportContent.operational.operationalEvents[this.eventId-1].signaling == null">Geen signalering beschikbaar.</div>
-                  <div v-else>Signalering: {{this.reportContent.operational.operationalEvents[this.eventId-1].signaling}}</div>
-                </div>
               </div>
+
+              <!-- Extra info -->
+              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+              <input type="text" class="form-control form-control-lg" v-model="form.operationalEventMessage" @change="getOperationalEventMessage" />
             </div>
 
-            <!-- Extra info -->
-            <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-            <input type="text" class="form-control form-control-lg" v-model="form.operationalMessage" @change="getOperationalMessage" />
-
+            <!-- Opslaan knop -->
+            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeOperationalEvent">Opslaan</button>
+            <small v-if="form.operationalEventFailed">Er is iets misgegaan bij het aanpassen.</small>
+            <small v-if="form.operationalEventSucceeded">Het verslag is aangepast.</small>
           </div>
-
-          <!-- Opslaan knop -->
-          <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeOperationalEvent">Opslaan</button>
-          <small v-if="form.operationalFailed">Er is iets misgegaan bij het aanpassen.</small>
-          <small v-if="form.operationalSucceeded">Het verslag is aangepast.</small>
         </div>
-      </div>
+      </section>
     </section>
   </form>
 
@@ -90,57 +92,83 @@
     <section v-if="this.step == 'Workforce'">
       <h3>Personeel</h3>
       <br />
-      <div class="row">
-        <!-- Checkboxes types -->
-        <div class="checkbox-container text-sm-left col-sm-4">
-          <div class="text-sm-left">
-            <input type="checkbox" name="Signaling Person" class="text-sm-left" v-model="form.signalingPerson" />
-            <label>Personeel</label>
+      <section v-if="this.subcategorie == 'workplaceEvents'">
+        <h4>Werkplaatsgebeurtenis</h4>
+        <br />
+        <div class="row">
+          <!-- Checkboxes types -->
+          <div class="checkbox-container text-sm-left col-sm-4">
+            <div class="text-sm-left">
+              <input type="checkbox" name="Signaling Person" class="text-sm-left" v-model="form.signalingPerson" />
+              <label>Personeel</label>
+            </div>
+            <div class="text-sm-left">
+              <input type="checkbox" name="Signaling Person" class="text-sm-left" v-model="form.signalingPerson" />
+              <label>Ziektemelding</label>
+            </div>
+            <div class="text-sm-left">
+              <input type="checkbox" name="Signaling Vehicle" v-model="form.signalingVehicle" />
+              <label>Arbeidsongeval</label>
+            </div>
+            <div class="text-sm-left">
+              <input type="checkbox" name="Signaling Object" class="text-sm-left" v-model="form.signalingObject" />
+              <label>Voorval tijdens dienst</label>
+            </div>
+            <div class="text-sm-left">
+              <input type="checkbox" name="Signaling Person" class="text-sm-left" v-model="form.signalingPerson" />
+              <label>Melding secretariaat</label>
+            </div>
           </div>
-          <div class="text-sm-left">
-            <input type="checkbox" name="Signaling Person" class="text-sm-left" v-model="form.signalingPerson" />
-            <label>Ziektemelding</label>
-          </div>
-          <div class="text-sm-left">
-            <input type="checkbox" name="Signaling Vehicle" v-model="form.signalingVehicle" />
-            <label>Arbeidsongeval</label>
-          </div>
-          <div class="text-sm-left">
-            <input type="checkbox" name="Signaling Object" class="text-sm-left" v-model="form.signalingObject" />
-            <label>Voorval tijdens dienst</label>
-          </div>
-          <div class="text-sm-left">
-            <input type="checkbox" name="Signaling Person" class="text-sm-left" v-model="form.signalingPerson" />
-            <label>Melding secretariaat</label>
-          </div>
-        </div>
-        <!-- Invoervelden -->
-        <div class="text-sm-left col-lg">
-          <div>
-            <div class="input-group" style="height: 20%;">
-              <div class="formcontainer btn-block">
-                <!-- Afwezige -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="this.reportContent.administrative.replacements[this.eventId-1].absentee == null">Geen afwezige beschikbaar.</div>
-                  <div v-else>Afwezige: {{this.reportContent.administrative.replacements[this.eventId-1].absentee}}</div>
-                </div>
-                <!-- Vervanger -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="this.reportContent.administrative.replacements[this.eventId-1].substitute == null">Geen vervanger beschikbaar.</div>
-                  <div v-else>Vervanger: {{this.reportContent.administrative.replacements[this.eventId-1].substitute}}</div>
+          <!-- Invoervelden -->
+          <div class="text-sm-left col-lg">
+            <div>
+              <div class="input-group" style="height: 20%;">
+                <div class="formcontainer btn-block">
+                  <!-- Afwezige -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div v-if="this.reportContent.form.absentee === String(null)">Geen afwezige beschikbaar.</div>
+                    <div v-else>Afwezige: {{this.reportContent.form.absentee}}</div>
+                  </div>
+                  <!-- Vervanger -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div v-if="this.form.substitute === String(null)">Geen vervanger beschikbaar.</div>
+                    <div v-else>Vervanger: {{this.form.substitute}}</div>
+                  </div>
                 </div>
               </div>
+
+              <!-- Extra info -->
+              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+              <input type="text" class="form-control form-control-lg" v-model="form.workplaceEventMessage" @change="getWorkplaceEventMessage" />
             </div>
-            <!-- Extra info -->
-            <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-            <input type="text" class="form-control form-control-lg" v-model="form.workforceMessage" @change="getWorkforceMessage" />
+
+            <!-- Opslaan knop -->
+            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeWorkplaceEvent">Opslaan</button>
+            <small v-if="form.workplaceEventFailed">Er is iets misgegaan bij het aanpassen.</small>
+            <small v-if="form.workplaceEventSucceeded">Het verslag is aangepast.</small>
           </div>
-          <!-- Opslaan knop -->
-          <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addWorkForceEvent">Opslaan</button>
-          <small v-if="form.workForceFailed">Er is iets misgegaan bij het aanpassen.</small>
-          <small v-if="form.workForceSucceeded">Het verslag is aangepast.</small>
         </div>
-      </div>
+      </section>
+
+      <section v-else-if="this.subcategorie == 'secretariatNotifications'">
+        <h4>Secretariaatmeldingen</h4>
+        <br />
+        <div class="row">
+          <!-- Invoervelden -->
+          <div class="text-sm-left col-lg">
+            <div>
+              <!-- Beschrijving gebeurtenis -->
+              <div class="form-control form-control-lg no-edit cropped">Beschrijving gebeurtenis: (aanpasbaar)</div>
+              <input type="text" class="form-control form-control-lg" v-model="form.secretariatNotificationMessage" @change="getSecretariatNotificationMessage" />
+            </div>
+
+            <!-- Opslaan knop -->
+            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeSecretariatNotification">Opslaan</button>
+            <small v-if="form.secretariatNotificationFailed">Er is iets misgegaan bij het aanpassen.</small>
+            <small v-if="form.secretariatNotificationSucceeded">Het verslag is aangepast.</small>
+          </div>
+        </div>
+      </section>
     </section>
   </form>
 
@@ -149,57 +177,109 @@
     <section v-if="this.step == 'Technical'">
       <h3>Technisch</h3>
       <br />
-      <div class="row">
-        <!-- Checkboxes types -->
-        <div class="checkbox-container text-sm-left col-sm-4">
-          <div class="text-sm-left">
-            <input class="text-sm-left" type="checkbox" name="Technisch WKS" />
-            <label>Technisch WKS</label>
-          </div>
-          <div class="text-sm-left">
-            <input class="text-sm-left" type="checkbox" name="Voorwerp" />
-            <label>Voorwerp</label>
-          </div>
-          <div class="text-sm-left">
-            <input type="checkbox" name="Signaling Vehicle" v-model="form.signalingVehicle" />
-            <label>Arbeidsongeval</label>
-          </div>
-          <div class="text-sm-left">
-            <input type="checkbox" name="Verwittiging ASC" />
-            <label>Verwittiging ASC</label>
-          </div>
-          <div class="text-sm-left">
-            <input class="text-sm-left" type="checkbox" name="Verwittiging anderen" />
-            <label>Verwittiging anderen</label>
-          </div>
-          <div class="text-sm-left">
-            <input class="text-sm-left" type="checkbox" name="Logistiek" />
-            <label>Logistiek</label>
-          </div>
-          <div class="text-sm-left">
-            <input class="text-sm-left" type="checkbox" name="Defect" />
-            <label>Defect</label>
-          </div>
-        </div>
-        <!-- Invoervelden -->
-        <div class="text-sm-left col-lg">
-          <div>
-            <!-- Extra info -->
-            <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-            <input type="text" class="form-control form-control-lg" v-model="form.technicalMessage" />
-            <div>
-              hallo
-              {{this.reportContent.operational.operationalEvents[
-                this.eventId - 1
-                ].description}}
+      <section v-if="this.subcategorie == 'defects'">
+        <h4>Defect</h4>
+        <br />
+        <div class="row">
+          <!-- Checkboxes types -->
+          <div class="checkbox-container text-sm-left col-sm-4">
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Technisch WKS" />
+              <label>Technisch WKS</label>
+            </div>
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Voorwerp" />
+              <label>Voorwerp</label>
+            </div>
+            <div class="text-sm-left">
+              <input type="checkbox" name="Signaling Vehicle" v-model="form.signalingVehicle" />
+              <label>Arbeidsongeval</label>
+            </div>
+            <div class="text-sm-left">
+              <input type="checkbox" name="Verwittiging ASC" />
+              <label>Verwittiging ASC</label>
+            </div>
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Verwittiging anderen" />
+              <label>Verwittiging anderen</label>
+            </div>
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Logistiek" />
+              <label>Logistiek</label>
+            </div>
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Defect" />
+              <label>Defect</label>
             </div>
           </div>
-          <!-- Opslaan knop -->
-          <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addTechnicalEvent">Opslaan</button>
-          <small v-if="form.technicalFailed">Er is iets misgegaan bij het aanpassen.</small>
-          <small v-if="form.technicalSucceeded">Het verslag is aangepast.</small>
+          <!-- Invoervelden -->
+          <div class="text-sm-left col-lg">
+            <div>
+
+              <!-- Extra info -->
+              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+              <input type="text" class="form-control form-control-lg" v-model="form.defectMessage" @change="getDefectMessage" />
+            </div>
+
+            <!-- Opslaan knop -->
+            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeDefect">Opslaan</button>
+            <small v-if="form.defectFailed">Er is iets misgegaan bij het aanpassen.</small>
+            <small v-if="form.defectSucceeded">Het verslag is aangepast.</small>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <section v-else-if="this.subcategorie == 'malfunctions'">
+        <h4>Malfunctie</h4>
+        <br />
+        <div class="row">
+          <!-- Checkboxes types -->
+          <div class="checkbox-container text-sm-left col-sm-4">
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Technisch WKS" />
+              <label>Technisch WKS</label>
+            </div>
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Voorwerp" />
+              <label>Voorwerp</label>
+            </div>
+            <div class="text-sm-left">
+              <input type="checkbox" name="Signaling Vehicle" v-model="form.signalingVehicle" />
+              <label>Arbeidsongeval</label>
+            </div>
+            <div class="text-sm-left">
+              <input type="checkbox" name="Verwittiging ASC" />
+              <label>Verwittiging ASC</label>
+            </div>
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Verwittiging anderen" />
+              <label>Verwittiging anderen</label>
+            </div>
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Logistiek" />
+              <label>Logistiek</label>
+            </div>
+            <div class="text-sm-left">
+              <input class="text-sm-left" type="checkbox" name="Defect" />
+              <label>Defect</label>
+            </div>
+          </div>
+          <!-- Invoervelden -->
+          <div class="text-sm-left col-lg">
+            <div>
+
+              <!-- Extra info -->
+              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+              <input type="text" class="form-control form-control-lg" v-model="form.malfunctionMessage" @change="getMalfunctionMessage" />
+            </div>
+
+            <!-- Opslaan knop -->
+            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeMalfunction">Opslaan</button>
+            <small v-if="form.malfunctionFailed">Er is iets misgegaan bij het aanpassen.</small>
+            <small v-if="form.malfunctionSucceded">Het verslag is aangepast.</small>
+          </div>
+        </div>
+      </section>
     </section>
   </form>
 </div>
@@ -359,18 +439,6 @@ export default Vue.extend({
           ]
         },
         administrative: {
-          replacements: [{
-            id: 1,
-            authorId: 1,
-            administrativeId: 1,
-            absentee: "Jan Jacobs",
-            substitute: "Geordy Hendricks",
-            monitoring: true,
-            date: "2020-03-30T15:46:36.000Z",
-            shift: true,
-            createdAt: "2020-05-04T07:47:37.000Z",
-            updatedAt: "2020-05-04T07:47:37.000Z"
-          }],
           workplaceEvents: [],
           secretariatNotifications: [{
             id: 1,
@@ -401,42 +469,36 @@ export default Vue.extend({
         }
       },
       eventId: 0,
+      subcategorie: "",
       formType: {
         parentId: []
       },
       form: {
-        //OPERATIONAL OBJECTS
+        //OPERATIONALEVENT OBJECTS
         plNumber: "",
         location: "",
-        operationalDate: "",
-        operationalMessage: "",
-        operationalFailed: false,
-        operationalSucceeded: false,
         unit: "",
-        //WORKFORCE OBJECTS
-        absent: "",
-        replacement: "",
-        workforceMessage: "",
-        secretNotifications: null,
-        workplaceEvent: null,
-        workforceDescription: null,
-        monitoring: null,
-        workforceDate: null,
-        shift: null,
+        operationalEventMessage: "",
+        operationalEventFailed: false,
+        operationalEventSucceeded: false,
+        //WORKPLACEEVENT OBJECTS
         absentee: "",
-        substitute: null,
-        employee: null,
-        workplaceEventType: null,
-        workForceFailed: false,
-        workForceSucceeded: false,
-        //TECHNICAL OBJECTS
-        technicalMessage: "",
-        technicalProblems: null,
-        technicalDescription: null,
-        duration: null,
-        problemType: null,
-        technicalFailed: false,
-        technicalSucceeded: false
+        substitute: "",
+        workplaceEventMessage: "",
+        workplaceEventFailed: false,
+        workplaceEventSucceeded: false,
+        //SECRETARIATNOTIFICATION OBJECTS
+        secretariatNotificationMessage: "",
+        secretariatNotificationFailed: false,
+        secretariatNotificationSucceeded: false,
+        //DEFECT OBJECTS
+        defectMessage: "",
+        defectFailed: false,
+        defectSucceeded: false,
+        //MALFUNCTION OBJECTS
+        malfunctionMessage: "",
+        malfunctionFailed: false,
+        malfunctionSucceeded: false,
       }
     };
   },
@@ -460,12 +522,35 @@ export default Vue.extend({
 
       this.step = String(this.$route.query.categorie);
       this.eventId = parseInt(String(this.$route.query.eventId));
+      this.subcategorie = String(this.$route.query.subcategorie);
 
-      this.form.operationalMessage = String(this.reportContent.operational.operationalEvents[
+      this.loadOperationalEventData();
+      this.loadWorkplaceEventData();
+      this.loadSecretariatNotificationData();
+      this.loadDefectData();
+      this.loadMalfunctionData();
+    },
+    loadOperationalEventData: function () {
+      this.form.plNumber = String(this.reportContent.operational.operationalEvents[this.eventId - 1].plNumber);
+      this.form.location = String(this.reportContent.operational.operationalEvents[this.eventId - 1].location);
+      this.form.unit = String(this.reportContent.operational.operationalEvents[this.eventId - 1].unit);
+      this.form.operationalEventMessage = String(this.reportContent.operational.operationalEvents[
         this.eventId - 1
       ].description);
-
-      // this.loadDescriptions();
+    },
+    loadWorkplaceEventData: function () {
+      this.form.absentee = String(this.reportContent.administrative.workplaceEvents[this.eventId - 1].absentee);
+      this.form.substitute = String(this.reportContent.administrative.workplaceEvents[this.eventId - 1].substitute);
+      this.form.workplaceEventMessage = String(this.reportContent.administrative.workplaceEvents[this.eventId - 1].description)
+    },
+    loadSecretariatNotificationData: function () {
+      this.form.secretariatNotificationMessage = String(this.reportContent.administrative.secretariatNotifications[this.eventId - 1].description)
+    },
+    loadDefectData: function () {
+      this.form.defectMessage = String(this.reportContent.administrative.defects[this.eventId - 1].description)
+    },
+    loadMalfunctionData: function () {
+      this.form.malfunctionMessage = String(this.reportContent.administrative.malfunctions[this.eventId - 1].description)
     },
     getOperational: function () {
       if (this.step != "Operational") {
@@ -476,7 +561,7 @@ export default Vue.extend({
         operationalButton.classList.replace("btn-primary", "btn-info");
         workForceButton.classList.replace("btn-info", "btn-primary");
         technicalButton.classList.replace("btn-info", "btn-primary");
-        this.form.operationalSucceeded = false;
+        this.form.operationalEventSucceeded = false;
         this.form.workForceSucceeded = false;
         this.form.technicalSucceeded = false;
       }
@@ -490,7 +575,7 @@ export default Vue.extend({
         operationalButton.classList.replace("btn-info", "btn-primary");
         workForceButton.classList.replace("btn-primary", "btn-info");
         technicalButton.classList.replace("btn-info", "btn-primary");
-        this.form.operationalSucceeded = false;
+        this.form.operationalEventSucceeded = false;
         this.form.workForceSucceeded = false;
         this.form.technicalSucceeded = false;
       }
@@ -504,75 +589,52 @@ export default Vue.extend({
         operationalButton.classList.replace("btn-info", "btn-primary");
         workForceButton.classList.replace("btn-info", "btn-primary");
         technicalButton.classList.replace("btn-primary", "btn-info");
-        this.form.operationalSucceeded = false;
+        this.form.operationalEventSucceeded = false;
         this.form.workForceSucceeded = false;
         this.form.technicalSucceeded = false;
       }
     },
-    saveButton: function () {
-      alert("send to db");
-    },
-    async getFile() {
-      const response = await ReportingService.getFile({
-        plNumber: this.form.plNumber
-      });
-      this.form.operationalDate = new Date(response.date)
-        .toLocaleString("en-BE")
-        .replace(",", "");
-      this.form.operationalMessage = response.actions;
-      this.form.location = response.location;
-      this.form.unit = response.unit;
-    },
-    async addWorkForceEvent() {
-      const response = await ReportingService.addWorkForceEvent({
-        absentee: this.form.absentee,
-        replacement: this.form.replacement,
-        extra: this.form.workforceMessage
-      });
-      this.form.workForceSucceeded = true;
-      if (response.bool) {
-        this.form.absentee = "";
-        this.form.replacement = "";
-        this.form.workforceMessage = "";
-      }
-    },
-    async addTechnicalEvent() {
-      const response = await ReportingService.addTechnicalEvent({
-        description: this.form.technicalMessage
-      });
-      this.form.technicalSucceeded = true;
-      if (response.bool) {
-        this.form.technicalMessage = "";
-      }
-    },
     async changeOperationalEvent() {
-      const response = await ReportingService.changeOperationalEvent({
+      await ReportingService.changeOperationalEvent({
         reportId: this.$route.query.reportId,
         operationalId: this.operationalId,
-        message: this.form.operationalMessage
+        message: this.form.operationalEventMessage,
       });
-      this.form.operationalSucceeded = true;
-      if (response.bool) {
-        console.log(response.bool);
-        // this.form.plNumber = "";
-        // this.form.location = "";
-        // this.form.operationalDate = "";
-        // this.form.operationalMessage = "";
-        // this.form.crossBorderPursuit = false;
-        // this.form.specificEvent = false;
-        // this.form.BIN = false;
-        // this.form.telecomOperator = false;
-        // this.form.signalingPerson = false;
-        // this.form.signalingVehicle = false;
-        // this.form.signalingObject = false;
-        // this.form.collocation = false;
-        // this.form.firstSchouwarts = false;
-        // this.form.secondSchouwarts = false;
-        // this.form.sexualAgression = false;
-        // this.form.firstSASchouwarts = false;
-        // this.form.secondSASchouwarts = false;
-      }
+      this.form.operationalEventSucceeded = true;
     },
+    async changeWorkplaceEvent() {
+      await ReportingService.changeWorkplaceEvent({
+        reportId: this.$route.query.reportId,
+        administrativeId: this.administrativeId,
+        message: this.form.workplaceEventMessage,
+      });
+      this.form.operationalEventSucceeded = true;
+    },
+    async changeSecretariatNotification() {
+      await ReportingService.changeSecretariatNotification({
+        reportId: this.$route.query.reportId,
+        administrativeId: this.administrativeId,
+        message: this.form.secretariatNotificationMessage,
+      });
+      this.form.operationalEventSucceeded = true;
+    },
+    async changeDefect() {
+      await ReportingService.changeDefect({
+        reportId: this.$route.query.reportId,
+        technicalId: this.technicalId,
+        message: this.form.defectMessage,
+      });
+      this.form.operationalEventSucceeded = true;
+    },
+    async changeMalfunction() {
+      await ReportingService.changeMalfunction({
+        reportId: this.$route.query.reportId,
+        malfunctionId: this.malfunctionId,
+        message: this.form.malfunctionMessage,
+      });
+      this.form.operationalEventSucceeded = true;
+    },
+
     filterTypes: function (str: string) {
       for (let i = 0; i < this.filteredTypes.length; i++) {
         if (this.filteredTypes[i] === str) {
@@ -581,10 +643,10 @@ export default Vue.extend({
       }
       Array(String(this.filteredTypes)).push(str);
     },
-    getOperationalMessage: function () {
+    getOperationalEventMessage: function () {
       this.reportContent.operational.operationalEvents[
         this.eventId - 1
-      ].description = this.form.operationalMessage;
+      ].description = this.form.operationalEventMessage;
     },
     getWorkforceMessage: function () {
       return;

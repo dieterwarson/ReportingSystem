@@ -102,6 +102,48 @@ export default {
         alert(error);
       });
   },
+  changeWorkplaceEvent(data: any) {
+    return Api()
+      .post('/changeWorkplaceEvent', data)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  },
+  changeSecretariatNotification(data: any) {
+    return Api()
+      .post('/changeSecretariatNotification', data)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  },
+  changeDefect(data: any) {
+    return Api()
+      .post('/changeDefect', data)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  },
+  changeMalfunction(data: any) {
+    return Api()
+      .post('/changeMalfunction', data)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  },
+
+
   loginUser(data: any) {
     return Api()
       .post('/loginUser', data)
