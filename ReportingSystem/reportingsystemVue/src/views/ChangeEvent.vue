@@ -624,8 +624,10 @@ export default Vue.extend({
         workForceButton.classList.replace("btn-info", "btn-primary");
         technicalButton.classList.replace("btn-info", "btn-primary");
         this.form.operationalEventSucceeded = false;
-        this.form.workForceSucceeded = false;
-        this.form.technicalSucceeded = false;
+        this.form.workplaceEventSucceeded = false;
+        this.form.secretariatNotificationSucceeded = false;
+        this.form.defectSucceeded = false;
+        this.form.malfunctionSucceded = false;
       }
     },
     getWorkforce: function () {
@@ -638,8 +640,10 @@ export default Vue.extend({
         workForceButton.classList.replace("btn-primary", "btn-info");
         technicalButton.classList.replace("btn-info", "btn-primary");
         this.form.operationalEventSucceeded = false;
-        this.form.workForceSucceeded = false;
-        this.form.technicalSucceeded = false;
+        this.form.workplaceEventSucceeded = false;
+        this.form.secretariatNotificationSucceeded = false;
+        this.form.defectSucceeded = false;
+        this.form.malfunctionSucceded = false;
       }
     },
     getTechnical: function () {
@@ -652,8 +656,10 @@ export default Vue.extend({
         workForceButton.classList.replace("btn-info", "btn-primary");
         technicalButton.classList.replace("btn-primary", "btn-info");
         this.form.operationalEventSucceeded = false;
-        this.form.workForceSucceeded = false;
-        this.form.technicalSucceeded = false;
+        this.form.workplaceEventSucceeded = false;
+        this.form.secretariatNotificationSucceeded = false;
+        this.form.defectSucceeded = false;
+        this.form.malfunctionSucceded = false;
       }
     },
     async changeOperationalEvent() {
