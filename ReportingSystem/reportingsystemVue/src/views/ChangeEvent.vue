@@ -269,8 +269,8 @@
               <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
               <input type="text" class="form-control form-control-lg" v-model="form.malfunctionMessage" @change="getMalfunctionMessage" />
             </div>
-            message: {{form.malfunctionMessage}}
 
+            message: {{form.operationalEventMessage}}
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeMalfunction">Opslaan</button>
             <small v-if="form.malfunctionFailed">Er is iets misgegaan bij het aanpassen.</small>
@@ -555,9 +555,10 @@ export default Vue.extend({
         this.reportContent.operational.operationalEvents[this.eventId - 1].unit
       );
       this.form.operationalEventMessage = String(
-        this.reportContent.operational.operationalEvents[this.eventId - 1]
-        .description
-      );
+          this.reportContent.operational.operationalEvents[this.eventId - 1]
+          .description
+        ) === String(null) ? "" : this.reportContent.operational.operationalEvents[this.eventId - 1]
+        .description;
     },
     loadWorkplaceEventData: function () {
       this.administrativeId = this.reportContent.administrative.workplaceEvents[
@@ -572,35 +573,38 @@ export default Vue.extend({
         .substitute
       );
       this.form.workplaceEventMessage = String(
-        this.reportContent.administrative.workplaceEvents[this.eventId - 1]
-        .description
-      );
+          this.reportContent.administrative.workplaceEvents[this.eventId - 1]
+          .description
+        ) === String(null) ? "" : this.reportContent.administrative.workplaceEvents[this.eventId - 1]
+        .description;
     },
     loadSecretariatNotificationData: function () {
       this.administrativeId = this.reportContent.administrative.secretariatNotifications[
         this.eventId - 1
       ].id;
       this.form.secretariatNotificationMessage = String(
-        this.reportContent.administrative.secretariatNotifications[
-          this.eventId - 1
-        ].description
-      );
+          this.reportContent.administrative.secretariatNotifications[this.eventId - 1]
+          .description
+        ) === String(null) ? "" : this.reportContent.administrative.secretariatNotifications[this.eventId - 1]
+        .description;
     },
     loadDefectData: function () {
       this.technicalId = this.reportContent.technical.defects[
         this.eventId - 1
       ].id;
       this.form.defectMessage = String(
-        this.reportContent.technical.defects[this.eventId - 1].description
-      );
+          this.reportContent.technical.defects[this.eventId - 1].description
+        ) === String(null) ? "" : this.reportContent.technical.defects[this.eventId - 1]
+        .description;
     },
     loadMalfunctionData: function () {
       this.technicalId = this.reportContent.technical.malfunctions[
         this.eventId - 1
       ].id;
       this.form.malfunctionMessage = String(
-        this.reportContent.technical.malfunctions[this.eventId - 1].description
-      );
+          this.reportContent.technical.malfunctions[this.eventId - 1].description
+        ) === String(null) ? "" : this.reportContent.technical.malfunctions[this.eventId - 1]
+        .description;
     },
     getOperational: function () {
       if (this.step != "Operational") {
@@ -658,7 +662,7 @@ export default Vue.extend({
         administrativeId: this.administrativeId,
         message: this.form.workplaceEventMessage
       });
-      this.form.operationalEventSucceeded = true;
+      this.form.workplaceEventSucceeded = true;
     },
     async changeSecretariatNotification() {
       await ReportingService.changeSecretariatNotification({
@@ -666,7 +670,7 @@ export default Vue.extend({
         administrativeId: this.administrativeId,
         message: this.form.secretariatNotificationMessage
       });
-      this.form.operationalEventSucceeded = true;
+      this.form.secretariatNotificationSucceeded = true;
     },
     async changeDefect() {
       await ReportingService.changeDefect({
@@ -674,7 +678,7 @@ export default Vue.extend({
         technicalId: this.technicalId,
         message: this.form.defectMessage
       });
-      this.form.operationalEventSucceeded = true;
+      this.form.defectSucceeded = true;
     },
     async changeMalfunction() {
       await ReportingService.changeMalfunction({
@@ -682,7 +686,7 @@ export default Vue.extend({
         malfunctionId: this.malfunctionId,
         message: this.form.malfunctionMessage
       });
-      this.form.operationalEventSucceeded = true;
+      this.form.malfunctionSucceded = true;
     },
 
     filterTypes: function (str: string) {
@@ -694,19 +698,29 @@ export default Vue.extend({
       Array(String(this.filteredTypes)).push(str);
     },
     getOperationalEventMessage: function () {
-      this.reportContent.operational.operationalEvents[this.eventId - 1].description = this.form.operationalEventMessage;
+      this.reportContent.operational.operationalEvents[
+        this.eventId - 1
+      ].description = this.form.operationalEventMessage;
     },
     getWorkplaceEventMessage: function () {
-      this.reportContent.administrative.workplaceEvents[this.eventId - 1].description = this.form.workplaceEventMessage;
+      this.reportContent.administrative.workplaceEvents[
+        this.eventId - 1
+      ].description = this.form.workplaceEventMessage;
     },
     getSecretariatNotificationMessage: function () {
-      this.reportContent.administrative.secretariatNotifications[this.eventId - 1].description = this.form.secretariatNotificationMessage;
+      this.reportContent.administrative.secretariatNotifications[
+        this.eventId - 1
+      ].description = this.form.secretariatNotificationMessage;
     },
     getDefectMessage: function () {
-      this.reportContent.technical.defects[this.eventId - 1].description = this.form.defectMessage;
+      this.reportContent.technical.defects[
+        this.eventId - 1
+      ].description = this.form.defectMessage;
     },
     getMalfunctionMessage: function () {
-      this.reportContent.technical.malfunctions[this.eventId - 1].description = this.form.malfunctionMessage;
+      this.reportContent.technical.malfunctions[
+        this.eventId - 1
+      ].description = this.form.malfunctionMessage;
     }
   }
 });
