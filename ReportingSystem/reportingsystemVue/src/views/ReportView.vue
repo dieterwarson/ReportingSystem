@@ -503,7 +503,17 @@ export default Vue.extend({
           }]
         },
         technical: {
-          defects: [],
+          defects: [{
+            id: 1,
+            authorId: 1,
+            technicalId: 1,
+            defectTypeId: 1,
+            description: 'krakende deur in kamer 512',
+            monitoring: true,
+            date: '2020/04/15 13:03:57',
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }],
           malfunctions: [{
             id: 1,
             authorId: 1,

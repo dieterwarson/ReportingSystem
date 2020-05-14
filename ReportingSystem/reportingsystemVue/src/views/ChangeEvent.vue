@@ -269,8 +269,6 @@
               <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
               <input type="text" class="form-control form-control-lg" v-model="form.malfunctionMessage" @change="getMalfunctionMessage" />
             </div>
-
-            message: {{form.operationalEventMessage}}
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeMalfunction">Opslaan</button>
             <small v-if="form.malfunctionFailed">Er is iets misgegaan bij het aanpassen.</small>
@@ -460,7 +458,17 @@ export default Vue.extend({
           }]
         },
         technical: {
-          defects: [],
+          defects: [{
+            id: 1,
+            authorId: 1,
+            technicalId: 1,
+            defectTypeId: 1,
+            description: 'krakende deur in kamer 512',
+            monitoring: true,
+            date: '2020/04/15 13:03:57',
+            createdAt: "2020-05-04T07:47:37.000Z",
+            updatedAt: "2020-05-04T07:47:37.000Z"
+          }],
           malfunctions: [{
             id: 1,
             authorId: 1,
