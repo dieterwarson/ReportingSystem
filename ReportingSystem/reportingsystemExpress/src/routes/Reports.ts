@@ -319,74 +319,25 @@ router.get('/priority/:reportId', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/types', async (req: Request, res: Response) => {
-  var reports: (
-    | OperationalType[]
-    | WorkplaceType[]
-    | DefectType[]
-    | MalfunctionType[]
-    | number[]
-    | String[]
-  )[] = [];
-
-  var result;
-  result = await OperationalType.findAll({
+  let operationalTypes = await OperationalType.findAll({
     attributes: ['typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult OperationalType');
-    console.log(result);
-    console.log('\n\n\n\nreports OperationalType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
-  result = await WorkplaceType.findAll({
+  let workplaceTypes = await WorkplaceType.findAll({
     attributes: ['typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult WorkplaceType');
-    console.log(result);
-    console.log('\n\n\n\nreports WorkplaceType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
-  result = await DefectType.findAll({
+  let defectTypes = await DefectType.findAll({
     attributes: ['typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult DefectType');
-    console.log(result);
-    console.log('\n\n\n\nreports DefectType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
-  result = await MalfunctionType.findAll({
+  let malfunctionTypes = await MalfunctionType.findAll({
     attributes: ['typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult MalfunctionType');
-    console.log(result);
-    console.log('\n\n\n\nreports MalfunctionType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
-  
-  console.log('\n\n\n\nreports');
-  console.log(reports);
+  let result = {operationalTypes, workplaceTypes, defectTypes, malfunctionTypes};
 
-  res.send(reports);
-  return res.json({ reports });
+  res.send(result);
 });
 
 /******************************************************************************

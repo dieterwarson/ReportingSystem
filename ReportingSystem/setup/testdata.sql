@@ -631,7 +631,7 @@ CREATE TABLE `WorkplaceTypes` (
 
 LOCK TABLES `WorkplaceTypes` WRITE;
 /*!40000 ALTER TABLE `WorkplaceTypes` DISABLE KEYS */;
-INSERT INTO `WorkplaceTypes` VALUES (1,'Arbeidsongeval','2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'Arbeidsongeval','2020-05-14 14:31:34','2020-05-14 14:31:34');
+INSERT INTO `WorkplaceTypes` VALUES (1,'Arbeidsongeval','2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'Ziekte','2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `WorkplaceTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

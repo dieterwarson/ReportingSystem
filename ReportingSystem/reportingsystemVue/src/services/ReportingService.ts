@@ -1,5 +1,4 @@
 import Api from '@/services/api';
-import axios from "axios";
 
 export default {
   getFile(data: any) {
@@ -167,6 +166,16 @@ export default {
   changeSubscription(data: any) {
     return Api()
     .post("/changeSubscription", data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
+  getStatistics(data: any) {
+    return Api()
+    .post("api/statistics/getStatistics", data)
     .then(res => {
       return res.data;
     })
