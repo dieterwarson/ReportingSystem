@@ -381,7 +381,7 @@ router.get('/types', async (req: Request, res: Response) => {
       console.log(reports);
     }
   }
-  
+
   console.log('\n\n\n\nreports');
   console.log(reports);
 
@@ -511,6 +511,113 @@ router.get('/malfunctionTypes', async (req: Request, res: Response) => {
 
   res.send(reports);
   return res.json({ reports });
+});
+
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/operationalEvent"
+ ******************************************************************************/
+
+router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await OperationalEvent.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult operationalEvent');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
+});
+
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/workplaceEvent"
+ ******************************************************************************/
+
+router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await WorkplaceEvent.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult WorkplaceEvent');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/secretariatNotification"
+ ******************************************************************************/
+
+router.get('/secretariatNotification/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await SecretariatNotification.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult SecretariatNotification');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/defectEvent"
+ ******************************************************************************/
+
+router.get('/defectEvent/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await Defect.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult Defect');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/malfunctionEvent"
+ ******************************************************************************/
+
+router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await Malfunction.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult Malfunction');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
 });
 
 /******************************************************************************

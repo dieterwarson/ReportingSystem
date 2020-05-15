@@ -1,4 +1,8 @@
 <template>
+<!-- niet met reportContent werken om data van een event weer te geven als array met de id als index
+dat geeft fouten als een event niet het jusite id heeft, zoals bij technical was, die begon met 2 ipv 1
+waardoor [] op de array ging lezen op undefined
+  in plaats daarvan, werken met currentEvent, die wordt uit de db gehaald adhv zijn echte id-->
 <!-- script has to be implemented again to achieve the seperate forms -->
 <div class="container pt-5 pb-5">
   <h1>Wijzig gebeurtenis</h1>
@@ -12,7 +16,7 @@
         <div class="row">
           <!-- Checkboxes types -->
           <div>
-            <div v-if="reportTypes === []">
+            <div v-if="reportTypes == []">
               <p>Er zijn nog geen types</p>
             </div>
             <div v-else>
@@ -35,22 +39,22 @@
               <!-- PL-nummer -->
               <div>
                 <div class="form-control form-control-lg no-edit">
-                  <div v-if="reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].plNumber === String(null) || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].plNumber === null || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].plNumber == ''">Geen PL-nummer beschikbaar.</div>
-                  <div v-else>PL-nummer: {{reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].plNumber}}</div>
+                  <div v-if="currentEvent.plNumber == String(null) || currentEvent.plNumber == null || currentEvent.plNumber == ''">Geen PL-nummer beschikbaar.</div>
+                  <div v-else>PL-nummer: {{currentEvent.plNumber}}</div>
                 </div>
               </div>
               <div class="input-group" style="height: 20%;">
                 <div class="formcontainer btn-block">
                   <!-- Locatie -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].location === String(null) || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].location == null || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].location == ''">Geen adres beschikbaar.</div>
-                    <div v-else>Locatie: {{reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].location}}</div>
+                    <div v-if="currentEvent.location == String(null) || currentEvent.location == null || currentEvent.location == ''">Geen adres beschikbaar.</div>
+                    <div v-else>Locatie: {{currentEvent.location}}</div>
                   </div>
                   <!-- Datum -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].date === String(null) || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].date == null || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].date == ''">Geen datum beschikbaar.</div>
+                    <div v-if="currentEvent.date == String(null) || currentEvent.date == null || currentEvent.date == ''">Geen datum beschikbaar.</div>
                     <div v-else>
-                      Datum: {{ new Date(reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].date).toLocaleString("en-BE", {
+                      Datum: {{ new Date(currentEvent.date).toLocaleString("en-BE", {
                         year: 'numeric',
                         month: 'numeric',
                         day: 'numeric',
@@ -60,20 +64,20 @@
                   </div>
                   <!-- Unit -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].unit === String(null) || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].unit == null || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].unit == ''">Geen unit beschikbaar.</div>
-                    <div v-else>Unit: {{reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].unit}}</div>
+                    <div v-if="currentEvent.unit == String(null) || currentEvent.unit == null || currentEvent.unit == ''">Geen unit beschikbaar.</div>
+                    <div v-else>Unit: {{currentEvent.unit}}</div>
                   </div>
                   <!-- Signaling -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].signaling === String(null) || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].signaling == null || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].signaling == ''">Geen signalering beschikbaar.</div>
-                    <div v-else>Signalering: {{reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].signaling}}</div>
+                    <div v-if="currentEvent.signaling == String(null) || currentEvent.signaling == null || currentEvent.signaling == ''">Geen signalering beschikbaar.</div>
+                    <div v-else>Signalering: {{currentEvent.signaling}}</div>
                   </div>
                 </div>
               </div>
 
               <!-- Extra info -->
               <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-              <textarea type="text" class="form-control form-control-lg" v-model="reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].description"></textarea>
+              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
             </div>
 
             <!-- Opslaan knop -->
@@ -96,7 +100,7 @@
         <div class="row">
           <!-- Checkboxes types -->
           <div>
-            <div v-if="reportTypes === []">
+            <div v-if="reportTypes == []">
               <p>Er zijn nog geen types</p>
             </div>
             <div v-else>
@@ -120,20 +124,20 @@
                 <div class="formcontainer btn-block">
                   <!-- Afwezige -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="reportContent.administrative.workplaceEvents[Number($route.query.eventId) - 1].absentee === String(null) || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].absentee == null || reportContent.administrative.workplaceEvents[Number($route.query.eventId) - 1].absentee == ''">Geen afwezige beschikbaar.</div>
-                    <div v-else>Afwezige: {{reportContent.administrative.workplaceEvents[Number($route.query.eventId) - 1].absentee}}</div>
+                    <div v-if="currentEvent.absentee == String(null) || currentEvent.absentee == null || currentEvent.absentee == ''">Geen afwezige beschikbaar.</div>
+                    <div v-else>Afwezige: {{currentEvent.absentee}}</div>
                   </div>
                   <!-- Vervanger -->
                   <div class="form-control form-control-lg no-edit">
-                    <div v-if="reportContent.administrative.workplaceEvents[Number($route.query.eventId) - 1].substitute === String(null) || reportContent.operational.operationalEvents[Number($route.query.eventId) - 1].substitute == null || reportContent.administrative.workplaceEvents[Number($route.query.eventId) - 1].substitute == ''">Geen vervanger beschikbaar.</div>
-                    <div v-else>Vervanger: {{reportContent.administrative.workplaceEvents[Number($route.query.eventId) - 1].substitute}}</div>
+                    <div v-if="currentEvent.substitute == String(null) || currentEvent.substitute == null || currentEvent.substitute == ''">Geen vervanger beschikbaar.</div>
+                    <div v-else>Vervanger: {{currentEvent.substitute}}</div>
                   </div>
                 </div>
               </div>
 
               <!-- Extra info -->
               <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-              <textarea type="text" class="form-control form-control-lg" v-model="reportContent.administrative.workplaceEvents[Number($route.query.eventId) - 1].description"></textarea>
+              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
             </div>
 
             <!-- Opslaan knop -->
@@ -152,7 +156,7 @@
             <div>
               <!-- Beschrijving gebeurtenis -->
               <div class="form-control form-control-lg no-edit cropped">Beschrijving gebeurtenis: (aanpasbaar)</div>
-              <textarea type="text" class="form-control form-control-lg" v-model="reportContent.administrative.secretariatNotifications[Number($route.query.eventId) - 1].description"></textarea>
+              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
             </div>
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeSecretariatNotification">Opslaan</button>
@@ -174,7 +178,7 @@
         <div class="row">
           <!-- Checkboxes types -->
           <div>
-            <div v-if="reportTypes === []">
+            <div v-if="reportTypes == []">
               <p>Er zijn nog geen types</p>
             </div>
             <div v-else>
@@ -196,10 +200,7 @@
             <div>
               <!-- Beschrijving -->
               <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-              <!-- <textarea type="text" class="form-control form-control-lg" v-model="reportContent.technical.defects[Number($route.query.eventId) - 1].description"></textarea> -->
-              {{reportContent.technical.defects[Number($route.query.eventId) - 1]}}
-              {{reportContent.technical.defects}}
-              <p>$route.query.eventId: {{$route.query.eventId}} is 1 te hoog</p>
+              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
             </div>
 
             <!-- Opslaan knop -->
@@ -215,7 +216,7 @@
         <div class="row">
           <!-- Checkboxes types -->
           <div>
-            <div v-if="reportTypes === []">
+            <div v-if="reportTypes == []">
               <p>Er zijn nog geen types</p>
             </div>
             <div v-else>
@@ -237,7 +238,7 @@
             <div>
               <!-- Beschrijving -->
               <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-              <textarea type="text" class="form-control form-control-lg" v-model="reportContent.technical.malfunctions[Number($route.query.eventId) - 1].description"></textarea>
+              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
             </div>
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeMalfunction">Opslaan</button>
@@ -257,7 +258,29 @@ import ReportingService from "../services/ReportingService";
 export default Vue.extend({
   data: function () {
     return {
-      test: "",
+      currentEvent: {
+        id: 0,
+        authorId: 0,
+        operationalId: 0,
+        administrativeId: 0,
+        technicalId: 0,
+        defectTypeId: 0,
+        date: "",
+        temporary: false,
+        nightShift: true,
+        signaling: "",
+        plNumber: "",
+        description: "",
+        priority: null,
+        location: "",
+        unit: "",
+        absentee: "",
+        substitute: "",
+        monitoring: true,
+        shift: true,
+        createdAt: "",
+        updatedAt: ""
+      },
       operationalId: 0,
       administrativeId: 0,
       technicalId: 0,
@@ -377,26 +400,37 @@ export default Vue.extend({
       ReportingService.getAllReports(
         "/api/reports/content/" + this.$route.query.reportId
       ).then(res => (this.reportContent = res));
+      console.log(this.reportContent);
 
-      if (
-        String(this.$route.query.subcategorie) == String("operationalEvents")
-      ) {
+      if (String(this.$route.query.subcategorie) == String("operationalEvents")) {
+        ReportingService.getReportEvent(
+          "/api/reports/operationalEvent/" + this.$route.query.eventId
+        ).then(res => (this.currentEvent = res));
         ReportingService.getAllReports("/api/reports/operationalTypes").then(
           res => (this.reportTypes = res)
         );
-      } else if (
-        String(this.$route.query.subcategorie) == String("workplaceEvents")
-      ) {
+      } else if (String(this.$route.query.subcategorie) == String("workplaceEvents")) {
+        ReportingService.getReportEvent(
+          "/api/reports/workplaceEvent/" + this.$route.query.eventId
+        ).then(res => (this.currentEvent = res));
         ReportingService.getAllReports("/api/reports/workplaceTypes").then(
           res => (this.reportTypes = res)
         );
+      } else if (String(this.$route.query.subcategorie) == String("secretariatNotifications")) {
+        ReportingService.getReportEvent(
+          "/api/reports/secretariatNotification/" + this.$route.query.eventId
+        ).then(res => (this.currentEvent = res));
       } else if (String(this.$route.query.subcategorie) == String("defects")) {
+        ReportingService.getReportEvent(
+          "/api/reports/defectEvent/" + this.$route.query.eventId
+        ).then(res => (this.currentEvent = res));
         ReportingService.getAllReports("/api/reports/defectTypes").then(
           res => (this.reportTypes = res)
         );
-      } else if (
-        String(this.$route.query.subcategorie) == String("malfunctions")
-      ) {
+      } else if (String(this.$route.query.subcategorie) == String("malfunctions")) {
+        ReportingService.getReportEvent(
+          "/api/reports/malfunctionEvent/" + this.$route.query.eventId
+        ).then(res => (this.currentEvent = res));
         ReportingService.getAllReports("/api/reports/malfunctionTypes").then(
           res => (this.reportTypes = res)
         );
@@ -597,66 +631,47 @@ export default Vue.extend({
     async changeOperationalEvent() {
       await ReportingService.changeOperationalEvent({
         reportId: this.$route.query.reportId,
-        operationalId: this.reportContent.operational.operationalEvents[
-          Number(this.$route.query.eventId) - 1
-        ].id,
-        message: this.reportContent.operational.operationalEvents[
-          Number(this.$route.query.eventId) - 1
-        ].description
+        operationalId: this.currentEvent.id,
+        message: this.currentEvent.description
       });
       this.form.operationalEventSucceeded = true;
     },
     async changeWorkplaceEvent() {
       await ReportingService.changeWorkplaceEvent({
         reportId: this.$route.query.reportId,
-        administrativeId: this.reportContent.administrative.workplaceEvents[
-          Number(this.$route.query.eventId) - 1
-        ].id,
-        message: this.reportContent.administrative.workplaceEvents[
-          Number(this.$route.query.eventId) - 1
-        ].description
+        administrativeId: this.currentEvent.id,
+        message: this.currentEvent.description
       });
       this.form.workplaceEventSucceeded = true;
     },
     async changeSecretariatNotification() {
       await ReportingService.changeSecretariatNotification({
         reportId: this.$route.query.reportId,
-        administrativeId: this.reportContent.administrative
-          .secretariatNotifications[Number(this.$route.query.eventId) - 1].id,
-        message: this.reportContent.administrative.secretariatNotifications[
-          Number(this.$route.query.eventId) - 1
-        ].description
+        administrativeId: this.currentEvent.id,
+        message: this.currentEvent.description
       });
       this.form.secretariatNotificationSucceeded = true;
     },
     async changeDefect() {
       await ReportingService.changeDefect({
         reportId: this.$route.query.reportId,
-        technicalId: this.reportContent.technical.defects[
-          Number(this.$route.query.eventId) - 1
-        ].id,
-        message: this.reportContent.technical.defects[
-          Number(this.$route.query.eventId) - 1
-        ].description
+        technicalId: this.currentEvent.id,
+        message: this.currentEvent.description
       });
       this.form.defectSucceeded = true;
     },
     async changeMalfunction() {
       await ReportingService.changeMalfunction({
         reportId: this.$route.query.reportId,
-        technicalId: this.reportContent.technical.malfunctions[
-          Number(this.$route.query.eventId) - 1
-        ].id,
-        message: this.reportContent.technical.malfunctions[
-          Number(this.$route.query.eventId) - 1
-        ].description
+        technicalId: this.currentEvent.id,
+        message: this.currentEvent.description
       });
       this.form.malfunctionSucceeded = true;
     },
 
     filterTypes: function (str: string) {
       for (let i = 0; i < this.filteredTypes.length; i++) {
-        if (this.filteredTypes[i] === str) {
+        if (this.filteredTypes[i] == str) {
           return;
         }
       }
