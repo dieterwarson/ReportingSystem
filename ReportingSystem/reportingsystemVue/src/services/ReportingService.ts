@@ -133,5 +133,15 @@ export default {
     .catch(error => {
       alert(error);
     })
-  }
+  },
+  getSearchReports(url: string) {
+    return Api()
+      .get(url)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      });
+  },
 };
