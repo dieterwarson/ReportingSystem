@@ -400,7 +400,6 @@ export default Vue.extend({
       ReportingService.getAllReports(
         "/api/reports/content/" + this.$route.query.reportId
       ).then(res => (this.reportContent = res));
-      console.log(this.reportContent);
 
       if (String(this.$route.query.subcategorie) == String("operationalEvents")) {
         ReportingService.getReportEvent(
@@ -676,7 +675,6 @@ export default Vue.extend({
         }
       }
       this.filteredTypes.push(str);
-      // Array(String(this.filteredTypes)).push(str);
     }
   }
 });
