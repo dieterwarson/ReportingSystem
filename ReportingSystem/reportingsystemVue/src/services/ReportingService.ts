@@ -173,6 +173,16 @@ export default {
       alert(error);
     })
   },
+  getReportEvent(url: string) {
+    return Api()
+      .get(url)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  },
   getStatistics(data: any) {
     return Api()
     .post("api/statistics/getStatistics", data)
