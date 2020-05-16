@@ -1,5 +1,4 @@
 import Api from '@/services/api';
-import axios from "axios";
 
 export default {
   getFile(data: any) {
@@ -184,4 +183,14 @@ export default {
         alert(error);
       });
   },
+  getStatistics(data: any) {
+    return Api()
+    .post("api/statistics/getStatistics", data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  }
 };
