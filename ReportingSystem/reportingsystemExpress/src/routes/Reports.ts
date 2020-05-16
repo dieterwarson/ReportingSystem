@@ -8,7 +8,7 @@ import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import WorkplaceEvent from 'src/models/workplaceEvent';
 // const checkAuth = require('middleware/check-auth');
- 
+
 import DefectType from 'src/models/defectType'
 import MalfunctionType from 'src/models/malfunctionType';
 import WorkplaceType from 'src/models/workplaceType';
@@ -88,110 +88,49 @@ router.get('/monitored', async (req: Request, res: Response) => {
  *                      Search Reports - "GET /api/reports/search"
  ******************************************************************************/
 
-router.get('/search/',  async (req: Request, res: Response) => {
-  const search = 'l';
+router.get('/search/:keyword', async (req: Request, res: Response) => {
+  const search = req.param('keyword');
 
-  var result;
-  result = await Defect.findAll({
-    where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
+  let reports = await Report.findAll();
 
-  result = await Malfunction.findAll({
-    where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
+  // let operational = await report?.$get('operational');
+  // let operationalEvents = await operational?.$get('operationalEvents');
 
-  result = await WorkplaceEvent.findAll({
-    where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: '%' + search + '%',
-        },
-        absentee: {
-          [Op.like]: '%' + search + '%',
-        },
-        substitute: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
+  // let technical = await report?.$get('technical');
 
-  result = await SecretariatNotification.findAll({
-    where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-        shift: {
-          [Op.like]: '%' + search + '%',
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
+  // let defects = await Defect.findAll({
+  //   where: {
+  //     technicalId: technical?.id
+  //   },
+  //   include: [{ model: DefectType }]
+  // })
 
-  result = await OperationalEvent.findAll({
-    where: {
-      [Op.or]: {
-        signaling: {
-          [Op.like]: '%' + search + '%',
-        },
-        plNumber: {
-          [Op.like]: '%' + search + '%',
-        },
-        description: {
-          [Op.like]: '%' + search + '%',
-        },
-        location: {
-          [Op.like]: '%' + search + '%',
-        },
-        unit: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
+  // let malfunctions = await Malfunction.findAll({
+  //   where: {
+  //     technicalId: technical?.id
+  //   },
+  //   include: [{ model: MalfunctionType }]
+  // })
+
+  // let administrative = await report?.$get('administrative');
+
+  // let workplaceEvents = await WorkplaceEvent.findAll({
+  //   where: {
+  //     administrativeId: administrative?.id
+  //   },
+  //   include: [{ model: WorkplaceType }]
+  // })
+
+  // let secretariatNotifications = await administrative?.$get('secretariatNotifications');
+
+  // let results = {
+  //   report: report,
+  //   operational: { operationalEvents },
+  //   administrative: { workplaceEvents, secretariatNotifications },
+  //   technical: { defects, malfunctions },
+  // };
+
+  res.send(reports);
 });
 
 /******************************************************************************
