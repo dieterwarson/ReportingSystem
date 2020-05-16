@@ -1,9 +1,8 @@
---  Sample report database
-
-DROP DATABASE IF EXISTS reports;
-CREATE DATABASE IF NOT EXISTS reports;
-
-USE reports;
+-- MySQL dump 10.13  Distrib 5.7.30, for Linux (x86_64)
+--
+-- Host: localhost    Database: reports
+-- ------------------------------------------------------
+-- Server version	5.7.30-0ubuntu0.18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -459,6 +458,7 @@ CREATE TABLE `SecretariatNotifications` (
   `description` varchar(255) DEFAULT NULL,
   `monitoring` tinyint(1) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
+  `shift` tinyint(1) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -555,6 +555,7 @@ CREATE TABLE `WorkplaceEvents` (
   `substitute` varchar(255) DEFAULT NULL,
   `monitoring` tinyint(1) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
+  `shift` tinyint(1) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -640,3 +641,5 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-05-16 19:05:56

@@ -62,6 +62,11 @@ const routes = [
     component: () => import(/* webChunckName: "Admin" */ '../views/Admin.vue'),
   },
   {
+    path: '/changeevent',
+    name: 'ChangeEvent',
+    component: () => import(/* webChunckName: "ChangeEvent" */ '../views/ChangeEvent.vue'),
+  },
+  {
     path: '/userlist',
     name: 'Userlist',
     component: () => import(/*webChunckName: "Userlist" */ '../views/Userlist.vue'),

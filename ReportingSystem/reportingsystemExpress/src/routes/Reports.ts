@@ -12,6 +12,7 @@ import WorkplaceEvent from 'src/models/workplaceEvent';
 import DefectType from 'src/models/defectType'
 import MalfunctionType from 'src/models/malfunctionType';
 import WorkplaceType from 'src/models/workplaceType';
+import OperationalType from 'src/models/operationalType';
 
 // Init router
 const router = Router();
@@ -79,7 +80,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
-
 
   res.send(results);
 });
@@ -181,7 +181,6 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   };
 
   res.send(results);
-
 });
 
 /******************************************************************************
@@ -201,24 +200,23 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
 
   let defects = await technical?.$get('defects', {
     where: {
-      monitoring: true
-    }
+      monitoring: true,
+    },
   });
   let malfunctions = await technical?.$get('malfunctions', {
     where: {
-      monitoring: true
-    }
+      monitoring: true,
+    },
   });
-
   let workplaceEvents = await administrative?.$get('workplaceEvents', {
     where: {
-      monitoring: true
-    }
+      monitoring: true,
+    },
   });
   let secretariatNotifications = await administrative?.$get('secretariatNotifications', {
     where: {
-      monitoring: true
-    }
+      monitoring: true,
+    },
   });
 
   let results = {
@@ -227,9 +225,7 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
   };
 
   res.send(results);
-
 });
-
 
 /******************************************************************************
  *      Get all the priority operationalEvents - "GET /api/reports/priority/:reportId"
@@ -246,16 +242,272 @@ router.get('/priority/:reportId', async (req: Request, res: Response) => {
 
   let operationalEvents = await operational?.$get('operationalEvents', {
     where: {
-      priority: true
-    }
+      priority: true,
+    },
   });
 
   let results = {
-    operational: { operationalEvents }
+    operational: { operationalEvents },
   };
 
   res.send(results);
+});
 
+/******************************************************************************
+ *             Get types from Reports - "GET /api/reports/types"
+ ******************************************************************************/
+
+router.get('/types', async (req: Request, res: Response) => {
+  let operationalTypes = await OperationalType.findAll({
+    attributes: ['typeName'],
+  });
+
+  let workplaceTypes = await WorkplaceType.findAll({
+    attributes: ['typeName'],
+  });
+
+  let defectTypes = await DefectType.findAll({
+    attributes: ['typeName'],
+  });
+
+  let malfunctionTypes = await MalfunctionType.findAll({
+    attributes: ['typeName'],
+  });
+
+  let result = {operationalTypes, workplaceTypes, defectTypes, malfunctionTypes};
+
+  res.send(result);
+});
+
+/******************************************************************************
+ *             Get types from Reports - "GET /api/reports/operationalTypes"
+ ******************************************************************************/
+
+router.get('/operationalTypes', async (req: Request, res: Response) => {
+  var reports: (
+    OperationalType[]
+  )[] = [];
+
+  var result;
+  result = await OperationalType.findAll({
+    attributes: ['typeName'],
+  });
+  if (result.length != 0) {
+    console.log('\n\n\n\nresult OperationalType');
+    console.log(result);
+    console.log('\n\n\n\nreports OperationalType');
+
+    if (!reports.includes(result)) {
+      reports.push(result);
+      console.log(reports);
+    }
+  }
+
+  console.log('\n\n\n\nreports');
+  console.log(reports);
+
+  res.send(reports);
+  return res.json({ reports });
+});
+
+/******************************************************************************
+ *             Get types from Reports - "GET /api/reports/workplaceTypes"
+ ******************************************************************************/
+
+router.get('/workplaceTypes', async (req: Request, res: Response) => {
+  var reports: (
+    WorkplaceType[]
+  )[] = [];
+
+  var result;
+  result = await WorkplaceType.findAll({
+    attributes: ['typeName'],
+  });
+  if (result.length != 0) {
+    console.log('\n\n\n\nresult WorkplaceType');
+    console.log(result);
+    console.log('\n\n\n\nreports WorkplaceType');
+
+    if (!reports.includes(result)) {
+      reports.push(result);
+      console.log(reports);
+    }
+  }
+
+  console.log('\n\n\n\nreports');
+  console.log(reports);
+
+  res.send(reports);
+  return res.json({ reports });
+});
+
+/******************************************************************************
+ *             Get types from Reports - "GET /api/reports/defectTypes"
+ ******************************************************************************/
+
+router.get('/defectTypes', async (req: Request, res: Response) => {
+  var reports: (
+    DefectType[]
+  )[] = [];
+
+  var result;
+  result = await DefectType.findAll({
+    attributes: ['typeName'],
+  });
+  if (result.length != 0) {
+    console.log('\n\n\n\nresult DefectType');
+    console.log(result);
+    console.log('\n\n\n\nreports DefectType');
+
+    if (!reports.includes(result)) {
+      reports.push(result);
+      console.log(reports);
+    }
+  }
+
+  console.log('\n\n\n\nreports');
+  console.log(reports);
+
+  res.send(reports);
+  return res.json({ reports });
+});
+
+/******************************************************************************
+ *             Get types from Reports - "GET /api/reports/malfunctionTypes"
+ ******************************************************************************/
+
+router.get('/malfunctionTypes', async (req: Request, res: Response) => {
+  var reports: (
+    MalfunctionType[]
+  )[] = [];
+
+  var result;
+  result = await MalfunctionType.findAll({
+    attributes: ['typeName'],
+  });
+  if (result.length != 0) {
+    console.log('\n\n\n\nresult MalfunctionType');
+    console.log(result);
+    console.log('\n\n\n\nreports MalfunctionType');
+
+    if (!reports.includes(result)) {
+      reports.push(result);
+      console.log(reports);
+    }
+  }
+
+  console.log('\n\n\n\nreports');
+  console.log(reports);
+
+  res.send(reports);
+  return res.json({ reports });
+});
+
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/operationalEvent"
+ ******************************************************************************/
+
+router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await OperationalEvent.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult operationalEvent');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
+});
+
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/workplaceEvent"
+ ******************************************************************************/
+
+router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await WorkplaceEvent.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult WorkplaceEvent');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/secretariatNotification"
+ ******************************************************************************/
+
+router.get('/secretariatNotification/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await SecretariatNotification.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult SecretariatNotification');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/defectEvent"
+ ******************************************************************************/
+
+router.get('/defectEvent/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await Defect.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult Defect');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/malfunctionEvent"
+ ******************************************************************************/
+
+router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const result = await Malfunction.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (result != null) {
+    console.log('\n\n\n\nresult Malfunction');
+    console.log(result);
+
+    res.send(result);
+    return res.json({ result });
+  }
+  return false;
 });
 
 /******************************************************************************
