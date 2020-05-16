@@ -114,263 +114,263 @@ const user1 = new User({
   password: '',
   accessRights: 0,
 });
-user1.save();
+// user1.save();
 
 const user2 = new User({
   username: 'chass_beerts',
   password: 'test',
   accessRights: 0,
 });
- user2.save();
+//  user2.save();
 
 const report1 = new Report({
   date: new Date('2020/03/16 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-report1.save();
+// report1.save();
 
 const report2 = new Report({
   date: new Date('2020/03/16 12:01:00'),
   temporary: false,
   nightShift: false,
 });
-report2.save();
+// report2.save();
 
 const report3 = new Report({
   date: new Date('2020/03/17 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-report3.save();
+// report3.save();
 
 const report4 = new Report({
   date: new Date('2020/03/17 12:01:00'),
   temporary: false,
   nightShift: false,
 });
-report4.save();
+// report4.save();
 
 const report5 = new Report({
   date: new Date('2020/03/18 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-report5.save();
+// report5.save();
 
 const report6 = new Report({
   date: new Date('2020/03/18 12:01:00'),
   temporary: false,
   nightShift: false,
 });
-report6.save();
+// report6.save();
 
 const report7 = new Report({
   date: new Date('2020/03/19 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-report7.save();
+// report7.save();
 
 const report8 = new Report({
   date: new Date('2020/03/19 12:01:00'),
   temporary: false,
   nightShift: false,
 });
-report8.save();
+// report8.save();
 
 const report9 = new Report({
   date: new Date('2020/03/20 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-report9.save();
+// report9.save();
 
 const report10 = new Report({
   date: new Date('2020/03/20 12:01:00'),
   temporary: false,
   nightShift: false,
 });
-report10.save();
+// report10.save();
 
 const report11 = new Report({
   date: new Date('2020/03/21 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-report11.save();
+// report11.save();
 
 const report12 = new Report({
   date: new Date('2020/03/21 12:01:00'),
   temporary: false,
   nightShift: false,
 });
-report12.save();
+// report12.save();
 
 const report13 = new Report({
   date: new Date('2020/03/22 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-report13.save();
+// report13.save();
 
 const report14 = new Report({
   date: new Date('2020/03/22 12:01:00'),
   temporary: false,
   nightShift: false,
 });
-report14.save();
+// report14.save();
 
 const report15 = new Report({
   date: new Date('2020/03/23 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-report15.save();
+// report15.save();
 
 const report16 = new Report({
   date: new Date('2020/03/23 12:01:00'),
   temporary: false,
   nightShift: false,
 });
-report16.save();
+// report16.save();
 
 const report17 = new Report({
   date: new Date('2020/03/24 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-report17.save();
+// report17.save();
 
 const report18 = new Report({
   date: new Date('2020/03/24 12:01:00'),
   temporary: false,
   nightShift: false,
 });
-report18.save();
+// report18.save();
 
 
 const technical1 = new Technical({
   reportId: 1,
 });
-technical1.save();
+// technical1.save();
 
 const technical2 = new Technical({
   reportId: 2,
 });
-technical2.save();
+// technical2.save();
 
 const technical3 = new Technical({
   reportId: 3,
 });
-technical3.save();
+// technical3.save();
 
 const technical4 = new Technical({
   reportId: 4,
 });
-technical4.save();
+// technical4.save();
 
 const technical5 = new Technical({
   reportId: 11,
 });
-technical5.save();
+// technical5.save();
 
 const technical6 = new Technical({
   reportId: 12,
 });
-technical6.save();
+// technical6.save();
 
 
 const administrative1 = new Administrative({
   reportId: 1,
 });
-administrative1.save();
+// administrative1.save();
 
 const administrative2 = new Administrative({
   reportId: 3,
 });
-administrative2.save();
+// administrative2.save();
 
 const administrative3 = new Administrative({
   reportId: 5,
 });
-administrative3.save();
+// administrative3.save();
 
 const administrative4 = new Administrative({
   reportId: 6,
 });
-administrative4.save();
+// administrative4.save();
 
 const administrative5 = new Administrative({
   reportId: 13,
 });
-administrative5.save();
+// administrative5.save();
 
 const administrative6 = new Administrative({
   reportId: 14,
 });
-administrative6.save();
+// administrative6.save();
 
 const administrative7 = new Administrative({
   reportId: 15,
 });
-administrative7.save();
+// administrative7.save();
 
 const administrative8 = new Administrative({
   reportId: 16,
 });
-administrative8.save();
+// administrative8.save();
 
 
 const operational1 = new Operational({
   reportId: 2,
 });
-operational1.save();
+// operational1.save();
 
 const operational2 = new Operational({
   reportId: 4,
 });
-operational2.save();
+// operational2.save();
 
 const operational3 = new Operational({
   reportId: 5,
 });
-operational3.save();
+// operational3.save();
 
 const operational4 = new Operational({
   reportId: 7,
 });
-operational4.save();
+// operational4.save();
 
 const operational5 = new Operational({
   reportId: 8,
 });
-operational5.save();
+// operational5.save();
 
 const operational6 = new Operational({
   reportId: 9,
 });
-operational6.save();
+// operational6.save();
 
 const operational7 = new Operational({
   reportId: 10,
 });
-operational7.save();
+// operational7.save();
 
 const operational8 = new Operational({
   reportId: 16,
 });
-operational8.save();
+// operational8.save();
 
 const operational9 = new Operational({
   reportId: 17,
 });
-operational9.save();
+// operational9.save();
 
 const operational10 = new Operational({
   reportId: 18,
 });
-operational10.save();
+// operational10.save();
 
 
 const workplaceEvent1 = new WorkplaceEvent({
@@ -383,7 +383,7 @@ const workplaceEvent1 = new WorkplaceEvent({
   monitoring: true,
   date: new Date('2020/03/16 9:10:23'),
 });
-workplaceEvent1.save();
+// workplaceEvent1.save();
 
 const workplaceEvent2 = new WorkplaceEvent({
   authorId: 2,
@@ -395,7 +395,7 @@ const workplaceEvent2 = new WorkplaceEvent({
   monitoring: true,
   date: new Date('2020/03/18 13:03:14'),
 });
-workplaceEvent2.save();
+// workplaceEvent2.save();
 
 const workplaceEvent3 = new WorkplaceEvent({
   authorId: 1,
@@ -407,7 +407,7 @@ const workplaceEvent3 = new WorkplaceEvent({
   monitoring: true,
   date: new Date('2020/03/22 7:59:34'),
 });
-workplaceEvent3.save();
+// workplaceEvent3.save();
 
 const workplaceEvent4 = new WorkplaceEvent({
   authorId: 2,
@@ -419,7 +419,7 @@ const workplaceEvent4 = new WorkplaceEvent({
   monitoring: false,
   date: new Date('2020/03/22 19:00:54'),
 });
-workplaceEvent4.save();
+// workplaceEvent4.save();
 
 const workplaceEvent5 = new WorkplaceEvent({
   authorId: 2,
@@ -431,18 +431,18 @@ const workplaceEvent5 = new WorkplaceEvent({
   monitoring: true,
   date: new Date('2020/03/22 20:26:14'),
 });
-workplaceEvent5.save();
+// workplaceEvent5.save();
 
 
 const workplaceType1 = new WorkplaceType({
   typeName: 'Arbeidsongeval',
 });
-workplaceType1.save();
+// workplaceType1.save();
 
 const workplaceType2 = new WorkplaceType({
   typeName: 'Ziekte',
 });
-workplaceType2.save();
+// workplaceType2.save();
 
 
 const secretariatNotification1 = new SecretariatNotification({
@@ -452,7 +452,7 @@ const secretariatNotification1 = new SecretariatNotification({
   monitoring: true,
   date: new Date('2020/03/22 20:30:46'),
 });
- secretariatNotification1.save();
+//  secretariatNotification1.save();
 
 const secretariatNotification2 = new SecretariatNotification({
   authorId: 2,
@@ -461,7 +461,7 @@ const secretariatNotification2 = new SecretariatNotification({
   monitoring: true,
   date: new Date('2020/03/18 13:05:24'),
 });
-secretariatNotification2.save();
+// secretariatNotification2.save();
 
 const secretariatNotification3 = new SecretariatNotification({
   authorId: 2,
@@ -470,7 +470,7 @@ const secretariatNotification3 = new SecretariatNotification({
   monitoring: false,
   date: new Date('2020/03/22 19:06:54'),
 });
-secretariatNotification3.save();
+// secretariatNotification3.save();
 
 
 const operationalEvent1 = new OperationalEvent({
@@ -483,7 +483,7 @@ const operationalEvent1 = new OperationalEvent({
   unit: 'KEMPLA',
   date: new Date('2020/03/16 18:13:48'),
 });
- operationalEvent1.save();
+//  operationalEvent1.save();
 
 const operationalEvent2 = new OperationalEvent({
   authorId: 2,
@@ -495,7 +495,7 @@ const operationalEvent2 = new OperationalEvent({
   unit: 'CARMA',
   date: new Date('2020/03/16 21:34:37'),
 });
- operationalEvent2.save();
+//  operationalEvent2.save();
 
 const operationalEvent3 = new OperationalEvent({
   authorId: 2,
@@ -507,7 +507,7 @@ const operationalEvent3 = new OperationalEvent({
   unit: 'HANO',
   date: new Date('2020/03/16 22:05:18'),
 });
- operationalEvent3.save();
+//  operationalEvent3.save();
 
 const operationalEvent4 = new OperationalEvent({
   authorId: 2,
@@ -519,7 +519,7 @@ const operationalEvent4 = new OperationalEvent({
   unit: 'LAMA',
   date: new Date('2020/03/16 23:34:33'),
 });
- operationalEvent4.save();
+//  operationalEvent4.save();
 
 const operationalEvent5 = new OperationalEvent({
   authorId: 2,
@@ -531,7 +531,7 @@ const operationalEvent5 = new OperationalEvent({
   unit: 'LOON',
   date: new Date('2020/03/16 23:57:10'),
 });
- operationalEvent5.save();
+//  operationalEvent5.save();
 
 const operationalEvent6 = new OperationalEvent({
   authorId: 2,
@@ -547,7 +547,7 @@ const operationalEvent6 = new OperationalEvent({
   unit: 'BIHORI',
   date: new Date('2020/03/17 00:18:57'),
 });
- operationalEvent6.save();
+//  operationalEvent6.save();
 
 const operationalEvent7 = new OperationalEvent({
   authorId: 2,
@@ -562,7 +562,7 @@ const operationalEvent7 = new OperationalEvent({
   unit: 'LRH',
   date: new Date('2020/03/17 01:21:25'),
 });
- operationalEvent7.save();
+//  operationalEvent7.save();
 
 const operationalEvent8 = new OperationalEvent({
   authorId: 2,
@@ -574,7 +574,7 @@ const operationalEvent8 = new OperationalEvent({
   unit: 'LRH',
   date: new Date('2020/03/17 01:21:25'),
 });
- operationalEvent8.save();
+//  operationalEvent8.save();
 
 const operationalEvent9 = new OperationalEvent({
   authorId: 1,
@@ -586,7 +586,7 @@ const operationalEvent9 = new OperationalEvent({
   unit: 'LAMA',
   date: new Date('2020/03/23 13:21:25'),
 });
- operationalEvent9.save();
+//  operationalEvent9.save();
 
 const operationalEvent10 = new OperationalEvent({
   authorId: 2,
@@ -598,34 +598,34 @@ const operationalEvent10 = new OperationalEvent({
   unit: 'LOON',
   date: new Date('2020/03/24 02:21:25'),
 });
- operationalEvent10.save();
+//  operationalEvent10.save();
 
 const eventType1 = new EventType({
   operationalEventId: 1,
   operationalTypeId: 5,
   operationalSubtypeId: 3,
 });
-eventType1.save();
+// eventType1.save();
 
 const eventType2 = new EventType({
   operationalEventId: 4,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
-eventType2.save();
+// eventType2.save();
 
 const eventType3 = new EventType({
   operationalEventId: 6,
   operationalTypeId: 6,
 });
-eventType3.save();
+// eventType3.save();
 
 const eventType4 = new EventType({
   operationalEventId: 5,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
-eventType4.save();
+// eventType4.save();
 
 
 const eventType5 = new EventType({
@@ -633,94 +633,94 @@ const eventType5 = new EventType({
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
-eventType5.save();
+// eventType5.save();
 
 const eventType6 = new EventType({
   operationalEventId: 7,
   operationalTypeId: 1,
 });
-eventType6.save();
+// eventType6.save();
 
 const eventType7 = new EventType({
   operationalEventId: 8,
   operationalTypeId: 3,
 });
-eventType7.save();
+// eventType7.save();
 
 const eventType8 = new EventType({
   operationalEventId: 2,
   operationalTypeId: 4,
 });
-eventType8.save();
+// eventType8.save();
 
 const eventType9 = new EventType({
   operationalEventId: 3,
   operationalTypeId: 1,
 });
-eventType9.save();
+// eventType9.save();
 
 const eventType10 = new EventType({
   operationalEventId: 9,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
-eventType10.save();
+// eventType10.save();
 
 const eventType11 = new EventType({
   operationalEventId: 10,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
-eventType11.save();
+// eventType11.save();
 
 
 const operationalType1 = new OperationalType({
   typeName: 'Specifieke gebeurtenis',
 });
-operationalType1.save();
+// operationalType1.save();
 
 const operationalType2 = new OperationalType({
   typeName: 'Grensoverschrijdende achtervolging',
 });
-operationalType2.save();
+// operationalType2.save();
 
 const operationalType3 = new OperationalType({
   typeName: 'BIN-alarm',
 });
-operationalType3.save();
+// operationalType3.save();
 
 const operationalType4 = new OperationalType({
   typeName: 'Bevraging GSM operatoren',
 });
-operationalType4.save();
+// operationalType4.save();
 
 const operationalType5 = new OperationalType({
   typeName: 'Signalering',
 });
-operationalType5.save();
+// operationalType5.save();
 
 const operationalType6 = new OperationalType({
   typeName: 'Zoeking met helikopter',
 });
-operationalType6.save();
+// operationalType6.save();
 
 const operationalSubtype1 = new OperationalSubtype({
   operationalTypeId: 5,
   typeName: 'Persoon',
 });
-operationalSubtype1.save();
+// operationalSubtype1.save();
 
 const operationalSubtype2 = new OperationalSubtype({
   operationalTypeId: 5,
   typeName: 'Voertuig',
 });
-operationalSubtype2.save();
+// operationalSubtype2.save();
 
 const operationalSubtype3 = new OperationalSubtype({
   operationalTypeId: 5,
   typeName: 'Voorwerp',
 });
-operationalSubtype3.save();
+// operationalSubtype3.save();
 
 
 const defect1 = new Defect({
@@ -731,7 +731,7 @@ const defect1 = new Defect({
   monitoring: true,
   date: new Date('2020/03/17 13:03:57'),
 });
-defect1.save();
+// defect1.save();
 
 const defect2 = new Defect({
   technicalId: 4,
@@ -741,7 +741,7 @@ const defect2 = new Defect({
   monitoring: false,
   date: new Date('2020/03/21 06:14:23'),
 });
-defect2.save();
+// defect2.save();
 
 const defect3 = new Defect({
   technicalId: 4,
@@ -751,7 +751,7 @@ const defect3 = new Defect({
   monitoring: true,
   date: new Date('2020/03/21 11:00:03'),
 });
-defect3.save();
+// defect3.save();
 
 const defect4 = new Defect({
   technicalId: 4,
@@ -761,13 +761,13 @@ const defect4 = new Defect({
   monitoring: true,
   date: new Date('2020/03/21 15:33:47'),
 });
-defect4.save();
+// defect4.save();
 
 
 const defectType1 = new DefectType({
   typeName: 'Schade aan voertuig',
 });
-defectType1.save();
+// defectType1.save();
 
 
 const malfunction1 = new Malfunction({
@@ -779,7 +779,7 @@ const malfunction1 = new Malfunction({
   date: new Date('2020/03/16 10:46:45'),
   duration: '2:16'
 });
-malfunction1.save();
+// malfunction1.save();
 
 const malfunction2 = new Malfunction({
   technicalId: 3,
@@ -790,7 +790,7 @@ const malfunction2 = new Malfunction({
   date: new Date('2020/03/17 03:03:57'),
   duration: '5:07'
 });
-malfunction2.save();
+// malfunction2.save();
 
 const malfunction3 = new Malfunction({
   technicalId: 4,
@@ -801,7 +801,7 @@ const malfunction3 = new Malfunction({
   date: new Date('2020/03/17 04:23:57'),
   duration: '1:56'
 });
-malfunction3.save();
+// malfunction3.save();
 
 const malfunction4 = new Malfunction({
   technicalId: 5,
@@ -812,7 +812,7 @@ const malfunction4 = new Malfunction({
   date: new Date('2020/03/21 01:15:34'),
   duration: '0:29'
 });
-malfunction4.save();
+// malfunction4.save();
 
 const malfunction5 = new Malfunction({
   technicalId: 6,
@@ -823,23 +823,23 @@ const malfunction5 = new Malfunction({
   date: new Date('2020/03/21 16:26:24'),
   duration: '0:13'
 });
-malfunction5.save();
+// malfunction5.save();
 
 
 const malfunctionType1 = new MalfunctionType({
   typeName: 'Voorwerp',
 });
-malfunctionType1.save();
+// malfunctionType1.save();
 
 const malfunctionType2 = new MalfunctionType({
   typeName: 'Verwittiging ASC',
 });
-malfunctionType2.save();
+// malfunctionType2.save();
 
 const malfunctionType3 = new MalfunctionType({
   typeName: 'Verwittiging (anderen)',
 });
-malfunctionType3.save();
+// malfunctionType3.save();
 
 
 const dummyData1 = new DummyDatabase({
@@ -849,7 +849,7 @@ const dummyData1 = new DummyDatabase({
   date: new Date('2020/04/13 12:40:32'),
   actions: 'NAV zelfmoord te Overpelt',
 });
- dummyData1.save();
+//  dummyData1.save();
 
 const dummyData2 = new DummyDatabase({
   plNumber: 'PL12536433',
@@ -858,7 +858,7 @@ const dummyData2 = new DummyDatabase({
   date: new Date('2020/04/13 12:40:32'),
   actions: 'NAV zelfmoord',
 });
- dummyData2.save();
+//  dummyData2.save();
 sequelize.sync();
 
 // DummyDatabase.sync();
