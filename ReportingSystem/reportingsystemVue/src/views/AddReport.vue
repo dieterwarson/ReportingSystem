@@ -220,7 +220,6 @@ export default Vue.extend({
         workforceDescription: null,
         monitoring: null,
         workforceDate: null,
-        shift: null,
         absentee: "",
         substitute: null,
         employee: null,

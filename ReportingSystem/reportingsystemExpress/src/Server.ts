@@ -915,7 +915,6 @@ app.post('/addWorkForceEvent', async (req, res) => {
     substitute: req.body.replacement,
     monitoring: true,
     date: Date.now(),
-    shift: true,
   })
     .then(function () {
       res.send({

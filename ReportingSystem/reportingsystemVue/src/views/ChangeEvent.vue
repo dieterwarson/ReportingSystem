@@ -269,7 +269,6 @@ export default Vue.extend({
         absentee: "",
         substitute: "",
         monitoring: true,
-        shift: true,
         createdAt: "",
         updatedAt: ""
       },
@@ -314,7 +313,6 @@ export default Vue.extend({
             substitute: "",
             monitoring: true,
             date: "",
-            shift: true,
             createdAt: "",
             updatedAt: ""
           }],
@@ -325,7 +323,6 @@ export default Vue.extend({
             description: "",
             monitoring: true,
             date: "",
-            shift: true,
             createdAt: "",
             updatedAt: ""
           }]
@@ -350,7 +347,7 @@ export default Vue.extend({
             description: "",
             monitoring: true,
             date: "",
-            duration: 0,
+            duration: "",
             createdAt: "",
             updatedAt: ""
           }]
@@ -576,7 +573,6 @@ export default Vue.extend({
             substitute: "Geordy Hendricks",
             monitoring: true,
             date: "2020-03-30T15:46:36.000Z",
-            shift: true,
             createdAt: "2020-05-04T07:47:37.000Z",
             updatedAt: "2020-05-04T07:47:37.000Z"
           }],
@@ -587,7 +583,6 @@ export default Vue.extend({
             description: "ongeval",
             monitoring: true,
             date: "2020-03-30T10:46:36.000Z",
-            shift: true,
             createdAt: "2020-05-04T07:47:37.000Z",
             updatedAt: "2020-05-04T07:47:37.000Z"
           }]
@@ -612,7 +607,7 @@ export default Vue.extend({
             description: "lekkende kraan in kamer 304",
             monitoring: true,
             date: "2020-04-15T13:03:57.000Z",
-            duration: 6,
+            duration: "",
             createdAt: "2020-05-04T07:47:37.000Z",
             updatedAt: "2020-05-04T07:47:37.000Z"
           }]

@@ -265,7 +265,7 @@ CREATE TABLE `Malfunctions` (
   `description` varchar(255) DEFAULT NULL,
   `monitoring` tinyint(1) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
-  `duration` int(11) DEFAULT NULL,
+  `duration` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),

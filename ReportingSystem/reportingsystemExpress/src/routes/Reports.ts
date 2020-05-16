@@ -155,9 +155,6 @@ router.get('/search/', async (req: Request, res: Response) => {
         date: {
           // TODO vergelijken met data verkregen via date picker
         },
-        shift: {
-          [Op.like]: '%' + search + '%',
-        },
       },
     },
   });
