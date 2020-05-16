@@ -35,55 +35,51 @@ waardoor [] op de array ging lezen op undefined
           </div>
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
-            <div>
-              <!-- PL-nummer -->
-              <div>
+            <div class="input-group" style="height: 20%;">
+              <div class="formcontainer btn-block">
+                <!-- PL-nummer -->
                 <div class="form-control form-control-lg no-edit">
                   <div v-if="currentEvent.plNumber == String(null) || currentEvent.plNumber == null || currentEvent.plNumber == ''">Geen PL-nummer beschikbaar.</div>
                   <div v-else>PL-nummer: {{currentEvent.plNumber}}</div>
                 </div>
-              </div>
-              <div class="input-group" style="height: 20%;">
-                <div class="formcontainer btn-block">
-                  <!-- Locatie -->
-                  <div class="form-control form-control-lg no-edit">
-                    <div v-if="currentEvent.location == String(null) || currentEvent.location == null || currentEvent.location == ''">Geen adres beschikbaar.</div>
-                    <div v-else>Locatie: {{currentEvent.location}}</div>
-                  </div>
-                  <!-- Datum -->
-                  <div class="form-control form-control-lg no-edit">
-                    <div v-if="currentEvent.date == String(null) || currentEvent.date == null || currentEvent.date == ''">Geen datum beschikbaar.</div>
-                    <div v-else>
-                      Datum: {{ new Date(currentEvent.date).toLocaleString("en-BE", {
+                <!-- Locatie -->
+                <div class="form-control form-control-lg no-edit">
+                  <div v-if="currentEvent.location == String(null) || currentEvent.location == null || currentEvent.location == ''">Geen adres beschikbaar.</div>
+                  <div v-else>Locatie: {{currentEvent.location}}</div>
+                </div>
+                <!-- Datum -->
+                <div class="form-control form-control-lg no-edit">
+                  <div v-if="currentEvent.date == String(null) || currentEvent.date == null || currentEvent.date == ''">Geen datum beschikbaar.</div>
+                  <div v-else>
+                    Datum: {{ new Date(currentEvent.date).toLocaleString("en-BE", {
                         year: 'numeric',
                         month: 'numeric',
                         day: 'numeric',
                         })
                         }}
-                    </div>
-                  </div>
-                  <!-- Unit -->
-                  <div class="form-control form-control-lg no-edit">
-                    <div v-if="currentEvent.unit == String(null) || currentEvent.unit == null || currentEvent.unit == ''">Geen unit beschikbaar.</div>
-                    <div v-else>Unit: {{currentEvent.unit}}</div>
-                  </div>
-                  <!-- Signaling -->
-                  <div class="form-control form-control-lg no-edit">
-                    <div v-if="currentEvent.signaling == String(null) || currentEvent.signaling == null || currentEvent.signaling == ''">Geen signalering beschikbaar.</div>
-                    <div v-else>Signalering: {{currentEvent.signaling}}</div>
                   </div>
                 </div>
+                <!-- Unit -->
+                <div class="form-control form-control-lg no-edit">
+                  <div v-if="currentEvent.unit == String(null) || currentEvent.unit == null || currentEvent.unit == ''">Geen unit beschikbaar.</div>
+                  <div v-else>Unit: {{currentEvent.unit}}</div>
+                </div>
+                <!-- Signaling -->
+                <div class="form-control form-control-lg no-edit">
+                  <div v-if="currentEvent.signaling == String(null) || currentEvent.signaling == null || currentEvent.signaling == ''">Geen signalering beschikbaar.</div>
+                  <div v-else>Signalering: {{currentEvent.signaling}}</div>
+                </div>
+
+                <!-- Extra info -->
+                <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+                <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
+
+                <!-- Opslaan knop -->
+                <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeOperationalEvent">Opslaan</button>
+                <small v-if="form.operationalEventFailed">Er is iets misgegaan bij het aanpassen.</small>
+                <small v-if="form.operationalEventSucceeded">Het verslag is aangepast.</small>
               </div>
-
-              <!-- Extra info -->
-              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
             </div>
-
-            <!-- Opslaan knop -->
-            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeOperationalEvent">Opslaan</button>
-            <small v-if="form.operationalEventFailed">Er is iets misgegaan bij het aanpassen.</small>
-            <small v-if="form.operationalEventSucceeded">Het verslag is aangepast.</small>
           </div>
         </div>
       </section>
@@ -119,31 +115,29 @@ waardoor [] op de array ging lezen op undefined
           </div>
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
-            <div>
-              <div class="input-group" style="height: 20%;">
-                <div class="formcontainer btn-block">
-                  <!-- Afwezige -->
-                  <div class="form-control form-control-lg no-edit">
-                    <div v-if="currentEvent.absentee == String(null) || currentEvent.absentee == null || currentEvent.absentee == ''">Geen afwezige beschikbaar.</div>
-                    <div v-else>Afwezige: {{currentEvent.absentee}}</div>
-                  </div>
-                  <!-- Vervanger -->
-                  <div class="form-control form-control-lg no-edit">
-                    <div v-if="currentEvent.substitute == String(null) || currentEvent.substitute == null || currentEvent.substitute == ''">Geen vervanger beschikbaar.</div>
-                    <div v-else>Vervanger: {{currentEvent.substitute}}</div>
-                  </div>
+            <div class="input-group" style="height: 20%;">
+              <div class="formcontainer btn-block">
+                <!-- Afwezige -->
+                <div class="form-control form-control-lg no-edit">
+                  <div v-if="currentEvent.absentee == String(null) || currentEvent.absentee == null || currentEvent.absentee == ''">Geen afwezige beschikbaar.</div>
+                  <div v-else>Afwezige: {{currentEvent.absentee}}</div>
                 </div>
+                <!-- Vervanger -->
+                <div class="form-control form-control-lg no-edit">
+                  <div v-if="currentEvent.substitute == String(null) || currentEvent.substitute == null || currentEvent.substitute == ''">Geen vervanger beschikbaar.</div>
+                  <div v-else>Vervanger: {{currentEvent.substitute}}</div>
+                </div>
+
+                <!-- Extra info -->
+                <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+                <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
+
+                <!-- Opslaan knop -->
+                <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeWorkplaceEvent">Opslaan</button>
+                <small v-if="form.workplaceEventFailed">Er is iets misgegaan bij het aanpassen.</small>
+                <small v-if="form.workplaceEventSucceeded">Het verslag is aangepast.</small>
               </div>
-
-              <!-- Extra info -->
-              <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
             </div>
-
-            <!-- Opslaan knop -->
-            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeWorkplaceEvent">Opslaan</button>
-            <small v-if="form.workplaceEventFailed">Er is iets misgegaan bij het aanpassen.</small>
-            <small v-if="form.workplaceEventSucceeded">Het verslag is aangepast.</small>
           </div>
         </div>
       </section>
@@ -153,15 +147,17 @@ waardoor [] op de array ging lezen op undefined
         <div class="row">
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
-            <div>
-              <!-- Beschrijving gebeurtenis -->
-              <div class="form-control form-control-lg no-edit cropped">Beschrijving gebeurtenis: (aanpasbaar)</div>
-              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
+            <div class="input-group" style="height: 20%;">
+              <div class="formcontainer btn-block">
+                <!-- Beschrijving gebeurtenis -->
+                <div class="form-control form-control-lg no-edit cropped">Beschrijving gebeurtenis: (aanpasbaar)</div>
+                <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
+                <!-- Opslaan knop -->
+                <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeSecretariatNotification">Opslaan</button>
+                <small v-if="form.secretariatNotificationFailed">Er is iets misgegaan bij het aanpassen.</small>
+                <small v-if="form.secretariatNotificationSucceeded">Het verslag is aangepast.</small>
+              </div>
             </div>
-            <!-- Opslaan knop -->
-            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeSecretariatNotification">Opslaan</button>
-            <small v-if="form.secretariatNotificationFailed">Er is iets misgegaan bij het aanpassen.</small>
-            <small v-if="form.secretariatNotificationSucceeded">Het verslag is aangepast.</small>
           </div>
         </div>
       </section>
@@ -197,11 +193,9 @@ waardoor [] op de array ging lezen op undefined
           </div>
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
-            <div>
-              <!-- Beschrijving -->
-              <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
-            </div>
+            <!-- Beschrijving -->
+            <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
+            <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
 
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeDefect">Opslaan</button>
@@ -235,11 +229,9 @@ waardoor [] op de array ging lezen op undefined
           </div>
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
-            <div>
-              <!-- Beschrijving -->
-              <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-              <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
-            </div>
+            <!-- Beschrijving -->
+            <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
+            <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
             <!-- Opslaan knop -->
             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeMalfunction">Opslaan</button>
             <small v-if="form.malfunctionFailed">Er is iets misgegaan bij het aanpassen.</small>
