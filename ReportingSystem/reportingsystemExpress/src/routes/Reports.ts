@@ -15,6 +15,7 @@ import WorkplaceType from 'src/models/workplaceType';
 import OperationalType from 'src/models/operationalType';
 import Operational from 'src/models/operational';
 import Administrative from 'src/models/administrative';
+import Technical from 'src/models/technical';
 
 // Init router
 const router = Router();
@@ -123,7 +124,9 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     });
     if (event != null) {
-      reportIds.push(event.reportId)
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(event.reportId);
+      }
     }
   }
 
@@ -149,52 +152,80 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     });
     if (event != null) {
-      // reportIds.push(event.reportId);
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(event.reportId);
+      }
     }
   }
 
+  const secretariatNotifications = await SecretariatNotification.findAll({
+    where: {
+      [Op.or]: {
+        description: {
+          [Op.like]: searchString,
+        },
+      }
+    }
+  })
+  for (let i in secretariatNotifications) {
+    const event = await Administrative.findOne({
+      where: {
+        id: secretariatNotifications[i].administrativeId
+      }
+    });
+    if (event != null) {
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(event.reportId);
+      }
+    }
+  }
 
-  let allReports = await Report.findAll();
+  const defects = await Defect.findAll({
+    where: {
+      [Op.or]: {
+        description: {
+          [Op.like]: searchString,
+        },
+      }
+    }
+  })
+  for (let i in defects) {
+    const event = await Technical.findOne({
+      where: {
+        id: defects[i].technicalId
+      }
+    });
+    if (event != null) {
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(event.reportId);
+      }
+    }
+  }
 
-  // let operational = await report?.$get('operational');
-  // let operationalEvents = await operational?.$get('operationalEvents');
-
-  // let technical = await report?.$get('technical');
-
-  // let defects = await Defect.findAll({
-  //   where: {
-  //     technicalId: technical?.id
-  //   },
-  //   include: [{ model: DefectType }]
-  // })
-
-  // let malfunctions = await Malfunction.findAll({
-  //   where: {
-  //     technicalId: technical?.id
-  //   },
-  //   include: [{ model: MalfunctionType }]
-  // })
-
-  // let administrative = await report?.$get('administrative');
-
-  // let workplaceEvents = await WorkplaceEvent.findAll({
-  //   where: {
-  //     administrativeId: administrative?.id
-  //   },
-  //   include: [{ model: WorkplaceType }]
-  // })
-
-  // let secretariatNotifications = await administrative?.$get('secretariatNotifications');
-
-  // let results = {
-  //   report: report,
-  //   operational: { operationalEvents },
-  //   administrative: { workplaceEvents, secretariatNotifications },
-  //   technical: { defects, malfunctions },
-  // };
+  const malfunctions = await Malfunction.findAll({
+    where: {
+      [Op.or]: {
+        description: {
+          [Op.like]: searchString,
+        },
+      }
+    }
+  })
+  for (let i in malfunctions) {
+    const event = await Technical.findOne({
+      where: {
+        id: malfunctions[i].technicalId
+      }
+    });
+    if (event != null) {
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(event.reportId);
+      }
+    }
+  }
 
   res.send(reportIds);
-  return res.json({ allReports });
+  return res.json({ reportIds });
 });
 
 /******************************************************************************
