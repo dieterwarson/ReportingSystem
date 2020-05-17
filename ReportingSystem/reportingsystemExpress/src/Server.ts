@@ -735,7 +735,7 @@ const defect1 = new Defect({
 // defect1.save();
 
 const defect2 = new Defect({
-  technicalId: 4,
+  technicalId: 5,
   authorId: 1,
   defectTypeId: 1,
   description: 'Voertuig P321 achterlicht kapot',
@@ -745,7 +745,7 @@ const defect2 = new Defect({
 // defect2.save();
 
 const defect3 = new Defect({
-  technicalId: 4,
+  technicalId: 5,
   authorId: 1,
   defectTypeId: 1,
   description: 'Voertuig P256 voorlicht kapot',
@@ -755,7 +755,7 @@ const defect3 = new Defect({
 // defect3.save();
 
 const defect4 = new Defect({
-  technicalId: 4,
+  technicalId: 6,
   authorId: 2,
   defectTypeId: 1,
   description: 'Voertuig P320 voorlicht kapot',
@@ -819,7 +819,7 @@ const malfunction5 = new Malfunction({
   technicalId: 6,
   authorId: 2,
   malfunctionTypeId: 3,
-  description: 'stroom uit hoofdgebouw',
+  description: 'stroom uitgevallen hoofdgebouw',
   monitoring: true,
   date: new Date('2020/03/21 16:26:24'),
   duration: '0:13'
