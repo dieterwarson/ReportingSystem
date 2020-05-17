@@ -61,6 +61,7 @@
       <div class="container">
         <div class="row">
           <div class="col-sm">
+            <!-- TODO vorige shift is nog hardcoded -->
             <router-link
               to="/reportView?reportId=1"
               tag="button"
@@ -129,9 +130,12 @@ export default Vue.extend({
   // }
 methods: {
   searchReports: function() {
-    ReportingService.getSearchReports(
-      "/api/reports/search/" + this.keyword
-    ).then
+    this.$router.push({
+      path: "reports",
+      query: {
+        keyword : this.keyword
+      }
+    })
   }
 }
 });
