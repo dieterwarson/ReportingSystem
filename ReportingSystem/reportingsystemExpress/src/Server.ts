@@ -600,6 +600,7 @@ const operationalEvent10 = new OperationalEvent({
 });
 //  operationalEvent10.save();
 
+
 const eventType1 = new EventType({
   operationalEventId: 1,
   operationalTypeId: 5,
@@ -626,7 +627,6 @@ const eventType4 = new EventType({
   operationalSubtypeId: 1,
 });
 // eventType4.save();
-
 
 const eventType5 = new EventType({
   operationalEventId: 6,
@@ -703,6 +703,7 @@ const operationalType6 = new OperationalType({
   typeName: 'Zoeking met helikopter',
 });
 // operationalType6.save();
+
 
 const operationalSubtype1 = new OperationalSubtype({
   operationalTypeId: 5,

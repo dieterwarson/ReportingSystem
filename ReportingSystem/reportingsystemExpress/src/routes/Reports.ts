@@ -149,7 +149,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     });
     if (event != null) {
-      reportIds.push(event.reportId);
+      // reportIds.push(event.reportId);
     }
   }
 
