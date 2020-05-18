@@ -243,8 +243,8 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     }
   }
   
-  console.log(typeof reportIds);
-  console.log(typeof reportIds[0]);
+  console.log(typeof reportIds);  // object
+  console.log(typeof reportIds[0]); // number
 
   res.send(reportIds);
   return res.json({ reportIds });
