@@ -5,6 +5,10 @@ import OperationalType from 'src/models/operationalType';
 import WorkplaceType from 'src/models/workplaceType';
 import DefectType from 'src/models/defectType';
 import MalfunctionType from 'src/models/malfunctionType';
+import EventType from 'src/models/eventType';
+import OperationalSubtype from 'src/models/operationalSubtype'
+import OperationalEvent from 'src/models/operationalEvent';
+import WorkplaceEvent from 'src/models/workplaceEvent';
 
 // Init router
 const router = Router();
@@ -73,19 +77,24 @@ router.get('/types', async (req: Request, res: Response) => {
 
 
 router.post('/getStatistics', async (req, res) => {
-  var reports: (OperationalType[] | number[] | String[])[] = [];
-  console.log(req.body);
+  var reports: (WorkplaceEvent[] | number[] | String[])[] = [];
   const types = req.body;
   for (let i in types) {
     var type = types[i];
-    var result;
-    result = await OperationalType.findAll({
-      where: {
-        typeName: {
-          [Op.like]: '' + type,
-        },
-      },
+    var result = [];
+    result = await WorkplaceEvent.findAll({
+      include: [{
+        model: WorkplaceType,
+        /*where: {
+          typeName: {
+            [Op.like]: '' + type,
+          },
+        },*/
+      }]
+        
     });
+
+    console.log(result);
     if (result.length != 0) {
       reports.push(result);
       // Add the typeName and number of its occurrences to reports
@@ -96,6 +105,32 @@ router.post('/getStatistics', async (req, res) => {
 
   res.send(reports);
 });
+
+/* await User.findAll({
+  include: {
+    model: Tool,
+    as: 'Instruments',
+    where: {
+      size: { [Op.ne]: 'small' }
+    }
+  }
+}); 
+
+    result = await OperationalEvent.findAll({
+      include: [{
+        model: EventType,
+        required: true,
+        include: [{
+          model: OperationalType,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+      }]
+    });
+*/
 
 /******************************************************************************
  *                                     Export
