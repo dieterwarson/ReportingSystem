@@ -6,8 +6,9 @@
         <br>
         <input type="password" name="password" v-model="input.password" placeholder="Wachtwoord" class="form-control form-control-lg">
         <br>
+        <small v-if="output.failed" name="response">Verkeerde gebruikersnaam of wachtwoord</small>
+        <br>
         <button class="btn btn-lg btn-primary" type="button" v-on:click="login()" >Aanmelden</button>
-        <input type="text" name="resp" v-model="output.response" class="form-control form-control-lf">
     </form>
   </div>
 </template>
@@ -27,8 +28,7 @@ export default Vue.extend({
                 password: ""
             },
             output: {
-                errors: {},
-                response: ""
+                failed: false
             }
         }
     },
@@ -40,6 +40,11 @@ export default Vue.extend({
             });
             this.input.username = "";
             this.input.password = "";
+            if (response.failed) {
+                this.output.failed = true;
+            } else {
+                this.output.failed = false;
+            }
         }
 
     } 

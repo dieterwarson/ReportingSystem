@@ -13,7 +13,7 @@
             <p v-if="user.accessRights == 1" class="card-text">Supervisor</p>
             <p v-if="user.accessRights == 2" class="card-text">Secretariaat</p>
             <label><input name="Subscription" type="checkbox" @change="changeSubscription(user)" v-model="user.subscription">Toegevoegd aan maillijst</label>
-
+            <button type="button" class="btn btn-danger btn-block" @click="deleteUser(user)">Gebruiker verwijderen</button>
         </div>
     </div>
     </div>
@@ -41,17 +41,15 @@ export default Vue.extend({
             );
         },
         changeSubscription: function(user: any) {
-            if (user.subscription){
-                ReportingService.changeSubscription({
-                    id: user.id,
-                    subscription: true,
-                });
-            } else {
-                ReportingService.changeSubscription({
-                    id: user.id,
-                    subscription: false,
-                })
-            }
+            ReportingService.changeSubscription({
+                id: user.id,
+                subscription: !user.subscription,
+            });
+        },
+        deleteUser: function(user: any) {
+            ReportingService.deleteUser({
+                id: user.id,
+            });
         }
     }
 })

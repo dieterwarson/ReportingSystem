@@ -24,6 +24,9 @@ export default class User extends Model<User> {
   @Column
   subscription!: boolean;
 
+  @Column
+  loggedIn!: boolean;
+
   @HasMany(() => Defect)
   defects!: Defect[];
 

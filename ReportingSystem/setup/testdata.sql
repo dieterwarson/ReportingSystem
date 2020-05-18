@@ -522,6 +522,7 @@ CREATE TABLE `Users` (
   `password` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `subscription` TINYINT(1) DEFAULT 0,
+  `loggedIn` TINYINT(1) DEFAULT 0,
   `accessRights` int(11) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
@@ -536,7 +537,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'chass_beerts','test',0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'jan_janssens','',0,'2020-05-14 14:31:34','2020-05-14 14:31:34');
+INSERT INTO `Users` VALUES (1,'chass_beerts','test', 'test@gmail.com', 0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'jan_janssens','', 'test@gmail.com',1, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 

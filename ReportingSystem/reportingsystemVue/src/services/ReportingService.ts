@@ -82,6 +82,16 @@ export default {
       alert(error);
     });
   },
+  getAccessRoleData(url: string) {
+    return Api()
+    .get(url)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
   addWorkForceEvent(data: any) {
     return Api()
       .post('/addWorkForceEvent', data)
@@ -111,7 +121,7 @@ export default {
         return;
       })
       .catch(error => {
-        alert(error);
+        return error.response.data;
       });
   },
   changeSubscription(data: any) {
@@ -133,5 +143,30 @@ export default {
     .catch(error => {
       alert(error);
     })
-  }
+  },
+  deleteUser(data: any) {
+    return Api()
+    .post("/deleteUser", data)
+    .then(res => {
+      window.location.href = "/userlist";
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
+  checkAuthentication(){
+    return Api()
+    
+    .post('/checkAuthentication', {token: window.localStorage.getItem('token')})
+    .then(res => {
+      if (res.data.check) {
+        return true;
+      } else {
+        window.location.href = '/login'
+      }
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
 };

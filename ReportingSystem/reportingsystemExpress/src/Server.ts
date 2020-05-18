@@ -10,7 +10,6 @@ import OperationalEvent from './models/operationalEvent';
 import SecretariatNotification from './models/secretariatNotification';
 import User from './models/user';
 import DummyDatabase from './models/dummyDataBase';
-
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import path from 'path';
@@ -41,7 +40,6 @@ import {Op} from "sequelize";
 
 // Init express
 const app = express();
-
 /************************************************************************************
  *                              Set basic express settings
  ***********************************************************************************/
@@ -50,6 +48,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
+
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === 'development') {
@@ -106,6 +105,7 @@ app.get('*', (req: Request, res: Response) => {
 // Om de volgende data toe te voegen, moeten de save()'s uncomment worden
 // Na eenmaal toevoegen, dus eenmaal herstarten via nodemon, moeten de save()'s terug gecomment worden
 // Anders wordt elke keer nodemon hetstart opnieuw al deze kolommen toegevoegd
+
 
 const user1 = new User({
   username: 'jan_janssens',
@@ -648,6 +648,7 @@ app.post('/addUser',  async (req, res) => {
         accessRights: userData.accessRights,
         email: userData.mail,
         subscription: userData.subscription,
+        loggedIn: false
       }).then(function() {
           res.json({
           message: "Gebruiker aangemaakt"
@@ -762,6 +763,11 @@ app.post('/loginUser', async (req, res) => {
       let user = users[0];
       let passwordHash = user.password;
       if (bcrypt.compareSync(req.body.password, passwordHash, 10)) {
+        User.update(
+          {loggedIn: true},
+          {where: {username: req.body.username}}
+        );
+        User.sync();
         const token = jwt.sign({
           username: user.username,
           id: user.id,
@@ -769,21 +775,25 @@ app.post('/loginUser', async (req, res) => {
         },
         process.env.JWT_KEY,
         {
-          expiresIn: '12h'
+          expiresIn: '1h'
         })
+
+        
         res.json({
           message: "Authenticatie geslaagd",
           token: token,
           redirect: "/"
         });
       } else {
-        res.json({
-          message: "password doesnt match?"
+        res.status(409).json({
+          message: "password doesnt match",
+          failed: true
         });
       }
     } else {
-      res.json({
-        message: "user bestaat niet"
+      res.status(409).json({
+        message: "user doesnt exist",
+        failed: true
       });
     }
   });
@@ -810,7 +820,6 @@ app.post('/changeSubscription', async (req, res) => {
 });
 
 app.post("/getOperationalEvents", async (req, res) => {
-  
   console.log(req.body.plNumber);
   var matched_events = await OperationalEvent.findAll({
     where: {plNumber: {[Op.like]: req.body.plNumber}},
@@ -820,6 +829,43 @@ app.post("/getOperationalEvents", async (req, res) => {
   res.json(matched_events);
 })
 
+app.post("/deleteUser", async (req, res) => {
+  User.destroy(
+    {where: {
+      id: req.body.id,
+    }}
+  );
+  
+  res.json({
+    message: "User deleted"
+  })
+})
+
+app.post("/checkAuthentication", async (req, res) => {
+  const decoded = jwt.decode(req.body.token);
+    jwt.verify(req.body.token, process.env.JWT_KEY, function(err: Error) {
+      var matched_users_promise = User.findAll({
+        where: {
+          username: decoded.username,
+          loggedIn: true
+        }
+      });
+      matched_users_promise.then(function(user){
+        if (err) {
+          if (user[0]) {
+            user[0].update({
+              loggedIn : false
+            });
+          }
+          return res.json({check: false, message: "Failed to authenticate token"});
+        } else if (user.length < 0) {
+          return res.json({check: false, message: "Failed to authenticate token"});
+        } else {
+          res.json({check: true, message: 'Authentication succesfull'})
+        }
+      })   
+  })
+})
 
 let cronInstance = new cronServer(1);
 
