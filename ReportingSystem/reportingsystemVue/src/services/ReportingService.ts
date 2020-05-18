@@ -173,6 +173,26 @@ export default {
       alert(error);
     })
   },
+  autoCompleteOperationalEvent(data: any) {
+    return Api()
+    .post("/getOperationalEvents", data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
+  getSearchReports(url: string) {
+    return Api()
+      .get(url)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      });
+  },
   getReportEvent(url: string) {
     return Api()
       .get(url)

@@ -13,6 +13,8 @@ import DefectType from 'src/models/defectType'
 import MalfunctionType from 'src/models/malfunctionType';
 import WorkplaceType from 'src/models/workplaceType';
 import OperationalType from 'src/models/operationalType';
+import Operational from 'src/models/operational';
+import Administrative from 'src/models/administrative';
 
 // Init router
 const router = Router();
@@ -88,110 +90,111 @@ router.get('/monitored', async (req: Request, res: Response) => {
  *                      Search Reports - "GET /api/reports/search"
  ******************************************************************************/
 
-router.get('/search/', async (req: Request, res: Response) => {
-  const search = 'l';
+router.get('/search/:keyword', async (req: Request, res: Response) => {
+  const search: string = req.param('keyword');
+  const searchString: string = '%' + search + '%';
+  let reportIds: number[] = [];
 
-  var result;
-  result = await Defect.findAll({
-    where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
-
-  result = await Malfunction.findAll({
-    where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
-
-  result = await WorkplaceEvent.findAll({
-    where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: '%' + search + '%',
-        },
-        absentee: {
-          [Op.like]: '%' + search + '%',
-        },
-        substitute: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
-
-  result = await SecretariatNotification.findAll({
-    where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: '%' + search + '%',
-        },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-        shift: {
-          [Op.like]: '%' + search + '%',
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
-  }
-
-  result = await OperationalEvent.findAll({
+  const operationalEvents = await OperationalEvent.findAll({
     where: {
       [Op.or]: {
         signaling: {
-          [Op.like]: '%' + search + '%',
+          [Op.like]: searchString,
         },
         plNumber: {
-          [Op.like]: '%' + search + '%',
+          [Op.like]: searchString,
         },
         description: {
-          [Op.like]: '%' + search + '%',
+          [Op.like]: searchString,
         },
         location: {
-          [Op.like]: '%' + search + '%',
+          [Op.like]: searchString,
         },
         unit: {
-          [Op.like]: '%' + search + '%',
+          [Op.like]: searchString,
         },
-        date: {
-          // TODO vergelijken met data verkregen via date picker
-        },
-      },
-    },
-  });
-  if (result.length !== 0) {
-    return res.json({ result });
+      }
+    }
+  })
+  for (let i in operationalEvents) {
+    const event = await Operational.findOne({
+      where: {
+        id: operationalEvents[i].operationalId
+      }
+    });
+    if (event != null) {
+      reportIds.push(event.reportId)
+    }
   }
+
+  const workplaceEvents = await WorkplaceEvent.findAll({
+    where: {
+      [Op.or]: {
+        description: {
+          [Op.like]: searchString,
+        },
+        absentee: {
+          [Op.like]: searchString,
+        },
+        substitute: {
+          [Op.like]: searchString,
+        },
+      }
+    }
+  })
+  for (let i in workplaceEvents) {
+    const event = await Administrative.findOne({
+      where: {
+        id: workplaceEvents[i].administrativeId
+      }
+    });
+    if (event != null) {
+      // reportIds.push(event.reportId);
+    }
+  }
+
+
+  let allReports = await Report.findAll();
+
+  // let operational = await report?.$get('operational');
+  // let operationalEvents = await operational?.$get('operationalEvents');
+
+  // let technical = await report?.$get('technical');
+
+  // let defects = await Defect.findAll({
+  //   where: {
+  //     technicalId: technical?.id
+  //   },
+  //   include: [{ model: DefectType }]
+  // })
+
+  // let malfunctions = await Malfunction.findAll({
+  //   where: {
+  //     technicalId: technical?.id
+  //   },
+  //   include: [{ model: MalfunctionType }]
+  // })
+
+  // let administrative = await report?.$get('administrative');
+
+  // let workplaceEvents = await WorkplaceEvent.findAll({
+  //   where: {
+  //     administrativeId: administrative?.id
+  //   },
+  //   include: [{ model: WorkplaceType }]
+  // })
+
+  // let secretariatNotifications = await administrative?.$get('secretariatNotifications');
+
+  // let results = {
+  //   report: report,
+  //   operational: { operationalEvents },
+  //   administrative: { workplaceEvents, secretariatNotifications },
+  //   technical: { defects, malfunctions },
+  // };
+
+  res.send(reportIds);
+  return res.json({ allReports });
 });
 
 /******************************************************************************
@@ -335,7 +338,7 @@ router.get('/types', async (req: Request, res: Response) => {
     attributes: ['typeName'],
   });
 
-  let result = {operationalTypes, workplaceTypes, defectTypes, malfunctionTypes};
+  let result = { operationalTypes, workplaceTypes, defectTypes, malfunctionTypes };
 
   res.send(result);
 });
