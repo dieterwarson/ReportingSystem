@@ -37,6 +37,25 @@ router.get('/all', async (req: Request, res: Response) => {
   res.send(reports);
 });
 
+
+/******************************************************************************
+ *                   Get All Reports - "GET /api/reports/one/:reportId"
+ ******************************************************************************/
+
+router.get('/one/:reportId', async (req: Request, res: Response) => {
+  const reportId = Number(req.param('reportId'));
+
+  const report = await Report.findOne({
+    where: {
+      id: reportId,
+    },
+    attributes: ['id', 'date'],
+  });
+
+  res.send(report);
+  return res.json({ report });
+});
+
 /******************************************************************************
  *             Get All monitored Reports - "GET /api/reports/monitored"
  ******************************************************************************/
@@ -88,14 +107,14 @@ router.get('/monitored', async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                      Search Reports - "GET /api/reports/search"
+ *                      Search Reports - "GET /api/reports/search/:keyword"
  ******************************************************************************/
 
 router.get('/search/:keyword', async (req: Request, res: Response) => {
   const search: string = req.param('keyword');
   const searchString: string = '%' + search + '%';
   let reportIds: number[] = [];
-
+  
   const operationalEvents = await OperationalEvent.findAll({
     where: {
       [Op.or]: {
@@ -223,7 +242,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
-
+  
   res.send(reportIds);
   return res.json({ reportIds });
 });
@@ -232,6 +251,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
  *        Get the content of a report - "GET /api/reports/content/:reportId"
  ******************************************************************************/
 router.get('/content/:reportId', async (req: Request, res: Response) => {
+  var results;
   let reportId = req.param('reportId');
   let report = await Report.findOne({
     where: {
@@ -242,40 +262,51 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   let technical = await report?.$get('technical');
   let administrative = await report?.$get('administrative');
   let operational = await report?.$get('operational');
-
-  let defects = await Defect.findAll({
-    where: {
-      technicalId: technical?.id
-    },
-    include: [{ model: DefectType }]
-  })
-
-  let malfunctions = await Malfunction.findAll({
-    where: {
-      technicalId: technical?.id
-    },
-    include: [{ model: MalfunctionType }]
-  })
-
-
-  let workplaceEvents = await WorkplaceEvent.findAll({
-    where: {
-      administrativeId: administrative?.id
-    },
-    include: [{ model: WorkplaceType }]
-  })
-
   let secretariatNotifications = await administrative?.$get('secretariatNotifications');
   let operationalEvents = await operational?.$get('operationalEvents');
+  let workplaceEvents = {};
+  let defects = {};
+  let malfunctions = {};
 
-  let results = {
-    report: report,
-    operational: { operationalEvents },
-    administrative: { workplaceEvents, secretariatNotifications },
-    technical: { defects, malfunctions },
-  };
+  if (technical != null) {
+    defects = await Defect.findAll({
+      where: {
+        technicalId: technical?.id
+      },
+      include: [{ model: DefectType }]
+    })
 
+    malfunctions = await Malfunction.findAll({
+      where: {
+        technicalId: technical?.id
+      },
+      include: [{ model: MalfunctionType }]
+    })
+  } else {
+    results = {
+      report: report,
+      operational: { operationalEvents },
+      administrative: { workplaceEvents, secretariatNotifications },
+      technical: { defects, malfunctions },
+    };
+  }
+  if (administrative != null) {
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        administrativeId: administrative?.id
+      },
+      include: [{ model: WorkplaceType }]
+    })
+  } else {
+    results = {
+      report: report,
+      operational: { operationalEvents },
+      administrative: { workplaceEvents, secretariatNotifications },
+      technical: { defects, malfunctions },
+    };
+  }
   res.send(results);
+  return res.json({ results });
 });
 
 /******************************************************************************

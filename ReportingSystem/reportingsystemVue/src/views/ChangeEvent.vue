@@ -275,7 +275,7 @@ export default Vue.extend({
       operationalId: 0,
       administrativeId: 0,
       technicalId: 0,
-      filteredTypes: [],
+      filteredTypes: [] as string[],
       reportTypes: [],
       step: "Operational",
       reportContent: {
