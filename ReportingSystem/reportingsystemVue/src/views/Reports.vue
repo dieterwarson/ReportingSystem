@@ -64,6 +64,10 @@ export default Vue.extend({
           "/api/reports/search/" + this.keyword
         ).then(res => (arr = res));
 
+        ReportingService.getSearchReports(
+          "/api/reports/search/" + this.keyword
+        ).then(res => (this.reportIds = res));
+
         console.log(arr); // []
         console.log(arr[0]); // undefined
         console.log(arr.length);  // 0
