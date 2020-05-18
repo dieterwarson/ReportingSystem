@@ -31,7 +31,7 @@ import ReportingService from "../services/ReportingService";
 export default Vue.extend({
   data: function() {
     return {
-      reportIds: [] as any[],
+      reportIds: [] as number[],
       reports: [] as any[],
       keyword: "",
       len: 0
@@ -59,9 +59,27 @@ export default Vue.extend({
       } else {
         // haalt juist alle reports op die aan de search voldoen
         // reportIds wordt juist gevuld
+        var arr: number[] = [];
         ReportingService.getSearchReports(
           "/api/reports/search/" + this.keyword
-        ).then(res => (this.reportIds = res));
+        ).then(res => (arr = res));
+
+        console.log(arr); // []
+        console.log(arr[0]); // undefined
+        console.log(arr.length);  // 0
+        console.log(typeof arr);  // object
+        console.log(typeof arr[0]); //undefined
+        console.log(typeof arr.length); // number
+
+        var te = [5, 4];
+        console.log(this.reportIds[0]); // undefined
+        console.log(this.reportIds);  // [__ob__: Et]
+        console.log(te);  // (2) [5, 4]
+        console.log(te[0]); //  5
+        console.log(typeof this.reportIds[0]);  // undefined
+        console.log(typeof this.reportIds); // object
+        console.log(typeof te); // object
+        console.log(typeof te[0]);  // number
 
         // de get functie zelf werkt, maar die gaat gwn niet in de loop
         for (const id in this.reportIds) {

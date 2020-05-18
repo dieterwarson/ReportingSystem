@@ -113,7 +113,7 @@ router.get('/monitored', async (req: Request, res: Response) => {
 router.get('/search/:keyword', async (req: Request, res: Response) => {
   const search: string = req.param('keyword');
   const searchString: string = '%' + search + '%';
-  let reportIds: number[] = [];
+  let reportIds: Number[] = [];
   
   const operationalEvents = await OperationalEvent.findAll({
     where: {
@@ -144,7 +144,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       if (!reportIds.includes(event.reportId)) {
-        reportIds.push(event.reportId);
+        reportIds.push(Number(event.reportId));
       }
     }
   }
@@ -172,7 +172,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       if (!reportIds.includes(event.reportId)) {
-        reportIds.push(event.reportId);
+        reportIds.push(Number(event.reportId));
       }
     }
   }
@@ -194,7 +194,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       if (!reportIds.includes(event.reportId)) {
-        reportIds.push(event.reportId);
+        reportIds.push(Number(event.reportId));
       }
     }
   }
@@ -216,7 +216,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       if (!reportIds.includes(event.reportId)) {
-        reportIds.push(event.reportId);
+        reportIds.push(Number(event.reportId));
       }
     }
   }
@@ -238,11 +238,14 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       if (!reportIds.includes(event.reportId)) {
-        reportIds.push(event.reportId);
+        reportIds.push(Number(event.reportId));
       }
     }
   }
   
+  console.log(typeof reportIds);
+  console.log(typeof reportIds[0]);
+
   res.send(reportIds);
   return res.json({ reportIds });
 });
