@@ -1,6 +1,5 @@
 <template>
   <div v-if="reports">
-    {{reports}}
     <h1>Verslagen</h1>
     <div class="container my-2" v-for="value in reports" :key="value.id">
       <button

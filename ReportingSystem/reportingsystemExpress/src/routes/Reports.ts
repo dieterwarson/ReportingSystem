@@ -293,45 +293,70 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     },
   });
 
-  let technical = await report?.$get('technical');
-  let administrative = await report?.$get('administrative');
-  let operational = await report?.$get('operational');
-
-  let secretariatNotifications = await administrative?.$get('secretariatNotifications');
-  let operationalEvents = await operational?.$get('operationalEvents');
-
-  let workplaceEvents = {};
-  let defects = {};
-  let malfunctions = {};
-
-  defects = await Defect.findAll({
+  let operational = await Operational.findOne({
     where: {
-      technicalId: technical?.id
-    },
-    include: [{ model: DefectType }]
-  })
-
-  malfunctions = await Malfunction.findAll({
+      reportId: reportId
+    }
+  });
+  let administrative = await Administrative.findOne({
     where: {
-      technicalId: technical?.id
-    },
-    include: [{ model: MalfunctionType }]
-  })
-
-  workplaceEvents = await WorkplaceEvent.findAll({
+      reportId: reportId
+    }
+  });
+  let technical = await Technical.findOne({
     where: {
-      administrativeId: administrative?.id
-    },
-    include: [{ model: WorkplaceType }]
-  })
-  
+      reportId: reportId
+    }
+  });
+
+  let operationalEvents: OperationalEvent[] = [];
+  let secretariatNotifications: SecretariatNotification[] = [];
+  let workplaceEvents: WorkplaceEvent[] = [];
+  let defects: Defect[] = [];
+  let malfunctions: Malfunction[] = [];
+
+  if (operational != null) {
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        operationalId: operational.id
+      }
+    })
+  }
+  if (technical != null) {
+    defects = await Defect.findAll({
+      where: {
+        technicalId: technical.id
+      },
+      include: [{ model: DefectType }]
+    })
+
+    malfunctions = await Malfunction.findAll({
+      where: {
+        technicalId: technical.id
+      },
+      include: [{ model: MalfunctionType }]
+    })
+  }
+  if (administrative != null) {
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        administrativeId: administrative.id
+      },
+      include: [{ model: WorkplaceType }]
+    })
+
+    secretariatNotifications = await SecretariatNotification.findAll({
+      where: {
+        administrativeId: administrative.id
+      }
+    })
+  }
   results = {
     report: report,
     operational: { operationalEvents },
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
-
   res.send(results);
   return res.json({ results });
 });
@@ -341,42 +366,59 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
  ******************************************************************************/
 router.get('/notifications/:reportId', async (req: Request, res: Response) => {
   let reportId = req.param('reportId');
-  let report = await Report.findOne({
+
+  let administrative = await Administrative.findOne({
     where: {
-      id: reportId,
-    },
+      reportId: reportId
+    }
+  });
+  let technical = await Technical.findOne({
+    where: {
+      reportId: reportId
+    }
   });
 
-  let technical = await report?.$get('technical');
-  let administrative = await report?.$get('administrative');
-  let operational = await report?.$get('operational');
+  let secretariatNotifications: SecretariatNotification[] = [];
+  let workplaceEvents: WorkplaceEvent[] = [];
+  let defects: Defect[] = [];
+  let malfunctions: Malfunction[] = [];
 
-  let defects = await technical?.$get('defects', {
-    where: {
-      monitoring: true,
-    },
-  });
-  let malfunctions = await technical?.$get('malfunctions', {
-    where: {
-      monitoring: true,
-    },
-  });
-  let workplaceEvents = await administrative?.$get('workplaceEvents', {
-    where: {
-      monitoring: true,
-    },
-  });
-  let secretariatNotifications = await administrative?.$get('secretariatNotifications', {
-    where: {
-      monitoring: true,
-    },
-  });
+  if (technical != null) {
+    defects = await Defect.findAll({
+      where: {
+        technicalId: technical.id,
+        monitoring: true
+      },
+    })
+
+    malfunctions = await Malfunction.findAll({
+      where: {
+        technicalId: technical.id,
+        monitoring: true
+      },
+    })
+  }
+  if (administrative != null) {
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        administrativeId: administrative.id,
+        monitoring: true
+      },
+    })
+
+    secretariatNotifications = await SecretariatNotification.findAll({
+      where: {
+        administrativeId: administrative.id,
+        monitoring: true
+      }
+    })
+  }
 
   let results = {
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
-
+  
   res.send(results);
 });
 
@@ -385,23 +427,30 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
  ******************************************************************************/
 router.get('/priority/:reportId', async (req: Request, res: Response) => {
   let reportId = req.param('reportId');
-  let report = await Report.findOne({
+
+  let operational = await Operational.findOne({
     where: {
-      id: reportId,
-    },
+      reportId: reportId
+    }
   });
 
-  let operational = await report?.$get('operational');
+  let operationalEvents: OperationalEvent[] = [];
 
-  let operationalEvents = await operational?.$get('operationalEvents', {
-    where: {
-      priority: true,
-    },
-  });
+  if (operational != null) {
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        operationalId: operational.id,
+        priority: true
+      },
+    })
+  }
 
   let results = {
     operational: { operationalEvents },
   };
+
+  console.log(operational);
+
 
   res.send(results);
 });
