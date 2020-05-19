@@ -387,6 +387,9 @@
 </template>
 
 <script lang="ts">
+/// BUG TODO veel reports laten events zien waarvan de datum niet overeenkomt met die van het report,
+// hier is nochtans rekening mee gehouden in testdata,
+// hierdoor tonen reports 7, 8, 13, 15, 18 geen events
 import Vue from "vue";
 import ReportingService from "../services/ReportingService";
 export default Vue.extend({
