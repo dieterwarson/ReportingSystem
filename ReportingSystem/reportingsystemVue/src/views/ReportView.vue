@@ -155,7 +155,11 @@
     <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
     <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
   </div>
-
+{{reportContent}}
+----------
+{{reportContent.operational}}
+----------
+{{reportContent.operational.operationalEvents}}
   <section v-if="step == 'Operational'" class="container">
     <div v-if="this.reportContent.operational == this.emptyReport.operational">
       <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
@@ -295,8 +299,8 @@ export default Vue.extend({
       step: "Operational",
       reportContent: {
         report: {
-          id: 1,
-          date: "2020-03-16T21:13:48.000Z",
+          id: 0,
+          date: "",
           temporary: false,
           nightShift: true,
           createdAt: "",

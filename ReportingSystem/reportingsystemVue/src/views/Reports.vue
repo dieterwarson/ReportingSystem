@@ -1,9 +1,6 @@
 <template>
   <div v-if="reports">
-    <p>{{ reportIds }}</p>
-    <p>{{ reports }}</p>
-    <p>{{ reportIds.length }}</p>
-    <p>{{ len }}</p>
+    {{reports}}
     <h1>Verslagen</h1>
     <div class="container my-2" v-for="value in reports" :key="value.id">
       <button
@@ -34,7 +31,7 @@ export default Vue.extend({
       reportIds: [] as number[],
       reports: [] as any[],
       keyword: "",
-      len: 0
+      plNumber: ""
     };
   },
 
@@ -42,68 +39,48 @@ export default Vue.extend({
     this.loadData();
   },
 
+  watch: {
+    reportIds: function() {
+      this.reportIds.forEach(id => {
+        ReportingService.getAllReports("/api/reports/one/" + id).then(res =>
+          this.reports.push(res)
+        );
+      });
+    }
+  },
+
   methods: {
     loadData: function() {
       if (this.$route.query.keyword != null) {
         this.keyword = String(this.$route.query.keyword);
       }
+      if (this.$route.query.plNumber != null) {
+        this.plNumber = String(this.$route.query.plNumber);
+      }
 
       if (
-        this.keyword == "" ||
-        this.keyword == null ||
-        this.keyword == undefined
+        (this.keyword == "" ||
+          this.keyword == null ||
+          this.keyword == undefined) &&
+        (this.plNumber == "" ||
+          this.plNumber == null ||
+          this.plNumber == undefined)
       ) {
         ReportingService.getAllReports("/api/reports/all").then(
           res => (this.reports = res)
         );
-      } else {
-        // haalt juist alle reports op die aan de search voldoen
-        // reportIds wordt juist gevuld
-        var arr: number[] = [];
+      } else if (
+        this.keyword == "" ||
+        this.keyword == null ||
+        this.keyword == undefined
+      ) {
         ReportingService.getSearchReports(
-          "/api/reports/search/" + this.keyword
-        ).then(res => (arr = res));
-
+          "/api/reports/pl/" + this.plNumber
+        ).then(res => (this.reportIds = res));
+      } else {
         ReportingService.getSearchReports(
           "/api/reports/search/" + this.keyword
         ).then(res => (this.reportIds = res));
-
-        console.log(arr); // []
-        console.log(arr[0]); // undefined
-        console.log(arr.length);  // 0
-        console.log(typeof arr);  // object
-        console.log(typeof arr[0]); //undefined
-        console.log(typeof arr.length); // number
-
-        var te = [5, 4];
-        console.log(this.reportIds[0]); // undefined
-        console.log(this.reportIds);  // [__ob__: Et]
-        console.log(te);  // (2) [5, 4]
-        console.log(te[0]); //  5
-        console.log(typeof this.reportIds[0]);  // undefined
-        console.log(typeof this.reportIds); // object
-        console.log(typeof te); // object
-        console.log(typeof te[0]);  // number
-
-        // de get functie zelf werkt, maar die gaat gwn niet in de loop
-        for (const id in this.reportIds) {
-          ReportingService.getAllReports("/api/reports/one/" + id).then(res =>
-            this.reports.push(res)
-          );
-        }
-
-        // miss is het iets met de lengte, ik heb hier geprobeerd om met echt een number te werken, maar werkt ook niet
-        this.len = this.reportIds.length;
-        for (let i = 0; i < this.len; i++) {
-          // die geraakt hier niet in
-          this.reportIds.push(1);
-        }
-
-        this.reportIds.forEach(element => {
-          // hier geraakt die ook niet in
-          console.log(element);
-          this.reportIds.push(element);
-        });
       }
     },
 

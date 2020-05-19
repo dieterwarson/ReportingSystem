@@ -10,7 +10,7 @@
         </div>
         <div class="col my-1">
           <div class="input-group">
-            <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="PL-nummer" />
+            <input type="text" class="form-control" id="inlineFormInputGroupUsername" v-model="plNumber" placeholder="PL-nummer" />
           </div>
         </div>
 
@@ -69,7 +69,8 @@ import jwt from "jsonwebtoken";
 export default Vue.extend({
   data: function () {
     return {
-      keyword: ""
+      keyword: "",
+      plNumber: ""
     };
   },
   name: "Home",
@@ -98,7 +99,8 @@ export default Vue.extend({
       this.$router.push({
         path: "reports",
         query: {
-          keyword: String(this.keyword)
+          keyword: String(this.keyword),
+          plNumber: String(this.plNumber)
         }
       })
     }

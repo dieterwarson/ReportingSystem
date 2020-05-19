@@ -242,12 +242,43 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
-  
-  console.log(typeof reportIds);  // object
-  console.log(typeof reportIds[0]); // number
 
   res.send(reportIds);
-  return res.json({ reportIds });
+});
+
+
+/******************************************************************************
+ *                      Search Reports - "GET /api/reports/pl/:pl"
+ ******************************************************************************/
+
+router.get('/pl/:pl', async (req: Request, res: Response) => {
+  const pl: string = req.param('pl');
+  const plString: string = '%' + pl + '%';
+  let reportIds: Number[] = [];
+
+  const operationalEvents = await OperationalEvent.findAll({
+    where: {
+      [Op.or]: {
+        plNumber: {
+          [Op.like]: plString,
+        },
+      }
+    }
+  })
+  for (let i in operationalEvents) {
+    const event = await Operational.findOne({
+      where: {
+        id: operationalEvents[i].operationalId
+      }
+    });
+    if (event != null) {
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(Number(event.reportId));
+      }
+    }
+  }
+
+  res.send(reportIds);
 });
 
 /******************************************************************************
@@ -262,14 +293,31 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     },
   });
 
+  let operational: Operational[] | null | undefined;
+
   let technical = await report?.$get('technical');
   let administrative = await report?.$get('administrative');
-  let operational = await report?.$get('operational');
+  // operational = await report?.$get('operational');
+  operational = await Operational.findAll({
+    where: {
+      reportId: reportId
+    }
+  })
+
   let secretariatNotifications = await administrative?.$get('secretariatNotifications');
-  let operationalEvents = await operational?.$get('operationalEvents');
+  // // let operationalEvents = await operational?.$get('operationalEvents');
+
   let workplaceEvents = {};
   let defects = {};
   let malfunctions = {};
+
+  console.log("\n\n\n\n");
+  console.log(operational);
+  console.log("\n\n\n\n");
+
+  console.log("\n\n\n\n");
+  // console.log(operationalEvents);
+  console.log("\n\n\n\n");
 
   if (technical != null) {
     defects = await Defect.findAll({
@@ -288,7 +336,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   } else {
     results = {
       report: report,
-      operational: { operationalEvents },
+      // operational: { operationalEvents },
       administrative: { workplaceEvents, secretariatNotifications },
       technical: { defects, malfunctions },
     };
@@ -303,7 +351,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   } else {
     results = {
       report: report,
-      operational: { operationalEvents },
+      // operational: { operationalEvents },
       administrative: { workplaceEvents, secretariatNotifications },
       technical: { defects, malfunctions },
     };
