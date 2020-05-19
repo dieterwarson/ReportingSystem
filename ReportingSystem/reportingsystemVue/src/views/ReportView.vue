@@ -155,12 +155,10 @@
     <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
     <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
   </div>
-{{reportContent}}
-----------
-{{reportContent.operational}}
-----------
-{{reportContent.operational.operationalEvents}}
   <section v-if="step == 'Operational'" class="container">
+    {{reportContent.operational}}
+    -----
+    {{emptyReport.operational}}
     <div v-if="this.reportContent.operational == this.emptyReport.operational">
       <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
     </div>
