@@ -5,9 +5,6 @@ import OperationalType from 'src/models/operationalType';
 import WorkplaceType from 'src/models/workplaceType';
 import DefectType from 'src/models/defectType';
 import MalfunctionType from 'src/models/malfunctionType';
-import EventType from 'src/models/eventType';
-import OperationalSubtype from 'src/models/operationalSubtype'
-import OperationalEvent from 'src/models/operationalEvent';
 import WorkplaceEvent from 'src/models/workplaceEvent';
 
 // Init router
