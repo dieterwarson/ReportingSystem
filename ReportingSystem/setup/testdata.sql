@@ -222,6 +222,7 @@ CREATE TABLE `MalfunctionSubtypes` (
 
 LOCK TABLES `MalfunctionSubtypes` WRITE;
 /*!40000 ALTER TABLE `MalfunctionSubtypes` DISABLE KEYS */;
+INSERT INTO `MalfunctionSubtypes` VALUES (1,1,'Infrastructuur','Iets kapot','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,'Elektronica','Storing','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,3,'Elektriciteit','Iets kapot','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `MalfunctionSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,6 +265,7 @@ CREATE TABLE `Malfunctions` (
   `authorId` int(11) DEFAULT NULL,
   `technicalId` int(11) DEFAULT NULL,
   `malfunctionTypeId` int(11) DEFAULT NULL,
+  `malfunctionSubtypeId` int(11) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `monitoring` tinyint(1) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
@@ -286,7 +288,7 @@ CREATE TABLE `Malfunctions` (
 
 LOCK TABLES `Malfunctions` WRITE;
 /*!40000 ALTER TABLE `Malfunctions` DISABLE KEYS */;
-INSERT INTO `Malfunctions` VALUES (1,1,1,1,'lekkende kraan in kamer 304',1,'2020-03-16 10:46:45','2:16','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,1,2,1,'krakende deur in kamer 104',1,'2020-03-17 03:03:57','5:07','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,1,2,1,'niet sluitend raam in kamer 302',1,'2020-03-17 04:23:57','1:56','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,1,6,2,'alarm kapot verdieping 2',1,'2020-03-21 01:15:34','0:29','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,2,4,3,'stroom uitgevallen hoofdgebouw',1,'2020-03-21 16:26:24','0:13','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `Malfunctions` VALUES (1,1,1,1,1,'lekkende kraan in kamer 304',1,'2020-03-16 10:46:45','2:16','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,1,2,1,1,'krakende deur in kamer 104',1,'2020-03-17 03:03:57','5:07','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,1,2,1,1,'niet sluitend raam in kamer 302',1,'2020-03-17 04:23:57','1:56','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,1,6,2,2,'alarm kapot verdieping 2',1,'2020-03-21 01:15:34','0:29','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,2,4,3,3,'stroom uitgevallen hoofdgebouw',1,'2020-03-21 16:26:24','0:13','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `Malfunctions` ENABLE KEYS */;
 UNLOCK TABLES;
 
