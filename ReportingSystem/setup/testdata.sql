@@ -558,6 +558,7 @@ CREATE TABLE `WorkplaceEvents` (
   `authorId` int(11) DEFAULT NULL,
   `administrativeId` int(11) DEFAULT NULL,
   `workplaceTypeId` int(11) DEFAULT NULL,
+  `workplaceSubtypeId` int(11) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `absentee` varchar(255) DEFAULT NULL,
   `substitute` varchar(255) DEFAULT NULL,
@@ -581,7 +582,7 @@ CREATE TABLE `WorkplaceEvents` (
 
 LOCK TABLES `WorkplaceEvents` WRITE;
 /*!40000 ALTER TABLE `WorkplaceEvents` DISABLE KEYS */;
-INSERT INTO `WorkplaceEvents` VALUES (1,1,1,1,'Jacob sleutelbeen gebroken','Jacob Franssen','James Brook',1,'2020-03-16 9:10:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,5,2,'Ziekte','Remans Luc','Jan Janssens',1,'2020-03-18 13:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,1,3,1,'Hans verstuikte voet','Hans Hendrickx','Adam Franssen',1,'2020-03-22 7:59:34','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,2,6,2,'Ziekte','James Brook','Jacob Franssen',0,'2020-03-22 19:00:54','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,2,6,2,'Ziekte','Jan Janssens','Remans Luc',1,'2020-03-22 20:26:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,1,7,1,'Jan arm gebroken','Jan Janssens','James Brook',1,'2020-03-23 9:10:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,2,8,2,'Ziekte','Remans Luc','Jacob Franssen',1,'2020-03-23 13:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,1,2,2,'Ziekte','Jacob Franssen','Jan Janssens',1,'2020-03-17 09:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `WorkplaceEvents` VALUES (1,1,1,1,1,'Jacob sleutelbeen gebroken','Jacob Franssen','James Brook',1,'2020-03-16 9:10:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,5,2,1,'Ziekte','Remans Luc','Jan Janssens',1,'2020-03-18 13:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,1,3,1,1,'Hans verstuikte voet','Hans Hendrickx','Adam Franssen',1,'2020-03-22 7:59:34','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,2,6,2,1,'Ziekte','James Brook','Jacob Franssen',0,'2020-03-22 19:00:54','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,2,6,2,1,'Ziekte','Jan Janssens','Remans Luc',1,'2020-03-22 20:26:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,1,7,1,1,'Jan arm gebroken','Jan Janssens','James Brook',1,'2020-03-23 9:10:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,2,8,2,1,'Ziekte','Remans Luc','Jacob Franssen',1,'2020-03-23 13:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,1,2,2,1,'Ziekte','Jacob Franssen','Jan Janssens',1,'2020-03-17 09:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `WorkplaceEvents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -611,6 +612,7 @@ CREATE TABLE `WorkplaceSubtypes` (
 
 LOCK TABLES `WorkplaceSubtypes` WRITE;
 /*!40000 ALTER TABLE `WorkplaceSubtypes` DISABLE KEYS */;
+INSERT INTO `WorkplaceSubtypes` VALUES (1,1,'Ziek','Ziek','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `WorkplaceSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
