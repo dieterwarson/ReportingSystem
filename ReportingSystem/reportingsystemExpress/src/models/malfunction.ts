@@ -42,6 +42,7 @@ export default class Malfunction extends Model<Malfunction> {
 
   @BelongsTo(() => MalfunctionSubtype)
   malfunctionSubtype!: MalfunctionSubtype;
+  
   @Column
   description!: string;
 

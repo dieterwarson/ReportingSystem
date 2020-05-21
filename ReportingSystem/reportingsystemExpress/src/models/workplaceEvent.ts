@@ -9,6 +9,7 @@ import {
 import WorkplaceType from './workplaceType';
 import Administrative from './administrative';
 import User from './user';
+import WorkplaceSubtype from './workplaceSubtype';
 
 @Table
 export default class WorkplaceEvent extends Model<WorkplaceEvent> {
@@ -35,6 +36,13 @@ export default class WorkplaceEvent extends Model<WorkplaceEvent> {
   @BelongsTo(() => WorkplaceType)
   workplaceType!: WorkplaceType;
     
+  @ForeignKey(() => WorkplaceSubtype)
+  @Column
+  workplaceSubtypeId!: number;
+
+  @BelongsTo(() => WorkplaceSubtype)
+  workplaceSubtype!: WorkplaceSubtype;
+
   @Column
   description!: string;
 
