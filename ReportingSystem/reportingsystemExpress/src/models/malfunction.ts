@@ -9,6 +9,7 @@ import {
 import MalfunctionType from './malfunctionType';
 import Technical from './technical';
 import User from './user';
+import MalfunctionSubtype from './malfunctionSubtype';
 
 @Table
 export default class Malfunction extends Model<Malfunction> {
@@ -35,6 +36,12 @@ export default class Malfunction extends Model<Malfunction> {
   @BelongsTo(() => MalfunctionType)
   malfunctionType!: MalfunctionType;
 
+  @ForeignKey(() => MalfunctionSubtype)
+  @Column
+  malfunctionSubtypeId!: number;
+
+  @BelongsTo(() => MalfunctionSubtype)
+  malfunctionSubtype!: MalfunctionSubtype;
   @Column
   description!: string;
 
