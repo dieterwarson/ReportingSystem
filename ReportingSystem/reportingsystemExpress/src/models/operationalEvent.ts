@@ -39,7 +39,7 @@ export default class OperationalEvent extends Model<OperationalEvent> {
   description!: string;
   
   @Column
-  priority!: boolean;
+  monitoring!: boolean;
 
   @Column
   location!: string;

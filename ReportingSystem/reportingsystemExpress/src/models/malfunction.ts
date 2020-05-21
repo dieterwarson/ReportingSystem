@@ -45,5 +45,5 @@ export default class Malfunction extends Model<Malfunction> {
   date!: Date;
 
   @Column
-  duration!: string;
+  duration!: number;
 }

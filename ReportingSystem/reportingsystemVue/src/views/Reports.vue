@@ -1,9 +1,12 @@
 <template>
-<div v-if="reports">
-  <h1>Verslagen</h1>
-  <div class="container my-2" v-for="value in reports" :key="value.id">
-    <button class="btn btn-secondary btn-lg btn-block" v-on:click="reportClick(parseInt(value.id))">
-      {{
+  <div v-if="reports">
+    <h1>Verslagen</h1>
+    <div class="container my-2" v-for="value in reports" :key="value.id">
+      <button
+        class="btn btn-secondary btn-lg btn-block"
+        v-on:click="reportClick(parseInt(value.id))"
+      >
+        {{
           new Date(value.date).toLocaleString([], {
             year: 'numeric',
             month: 'numeric',
@@ -13,19 +16,18 @@
             hour12: false,
           })
         }}
-    </button>
+      </button>
+    </div>
   </div>
-</div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import ReportingService from '../services/ReportingService';
 export default Vue.extend({
-  data: function () {
+  data: function() {
     return {
       reports: [],
-      keyword: "",
     };
   },
 
@@ -34,28 +36,14 @@ export default Vue.extend({
   },
 
   methods: {
-    loadData: function () {
-      this.keyword = String(this.$route.query.keyword);
-
-      if (this.keyword == "") {
-        const response = ReportingService.getAllReports('/api/reports/all').then(
-          (res) => (this.reports = res)
-        );
-      } else {
-        const response = ReportingService.getSearchReports(
-          "/api/reports/search/" + this.keyword).then(
-          (res) => (this.reports = res)
-        );
-      }
+    loadData: function() {
+      const response = ReportingService.getAllReports('/api/reports/all').then(
+        (res) => (this.reports = res)
+      );
     },
 
-    reportClick: function (id: string) {
-      this.$router.push({
-        path: 'reportView',
-        query: {
-          reportId: id
-        }
-      });
+    reportClick: function(id: string) {
+      this.$router.push({ path: 'reportView', query: { reportId: id } });
     },
   },
 });

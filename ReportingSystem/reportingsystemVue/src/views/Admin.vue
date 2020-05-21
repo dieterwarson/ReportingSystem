@@ -11,11 +11,8 @@
         <section v-if="option == 'newUser'">
             <div class="input-group-vertical mt-2">
                 <input name="username" v-model="newUserData.username" type="text" placeholder="Gebruikersnaam" class="form-control form-control-lg">
-                <input name="email" v-model="newUserData.email" type="email" placeholder="email" class="form-control form-control-lg">
                 <input name="password" v-model="newUserData.password" type="password" placeholder="Wachtwoord" class="form-control form-control-lg">
                 <input name="passwordCheck" v-model="newUserData.rptPassword" type="password" placeholder="Herhaal wachtwoord" class="form-control form-control-lg">
-                <input name="accessRights" v-model="newUserData.accessRights" type="number" :min="0" :max="2" placeholder="Toegangsrechten" class="form-control form-control-lg">
-                <label><input name="Subscription" v-model="newUserData.subscription" type="checkbox">Toevoegen aan maillijst</label>
                 <small v-if="newUserData.passwordComp">De wachtwoorden komen niet overeen!</small>
                 <small v-if="newUserData.passwordCheck">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
                 <small v-if="changePassword.completed">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
@@ -33,6 +30,7 @@
         <section v-if="option == 'changeAccess'">
             <div class="input-group-vertical mt-2">
                 <input name="username" v-model="changeAccesRights.username" type="text" placeholder="Gebruikersnaam" class="form-control form-control-lg">
+                <input name="rights" v-model="changeAccesRights.rights" type="text" placeholder="Huidige toegangsrechten" class="form-control form-control-lg">
                 <input name="newRights" v-model="changeAccesRights.newRights" type="text" placeholder="Nieuwe toegangsrechten" class="form-control form-control-lg">
                 <small v-if="changeAccesRights.completed">De toegangsrechten zijn gewijzigd!</small>
                 <button type="button" class="btn btn-success btn-block" @click.prevent="doChangeAccess" >Verander toegangsrechten</button>
@@ -72,19 +70,6 @@
         </section>
     </div>
 
-    <div class="container mb-2">
-        <div class="row">
-            <div class="col-sm">
-                <router-link
-              to="/userlist"
-              tag="button"
-              class="btn btn-primary btn-block"
-              >Gebruikerslijst</router-link
-            >
-            </div>
-        </div>
-    </div>
-
 
 </div>
 
@@ -102,9 +87,6 @@ export default Vue.extend({
                 username: "",
                 password: "",
                 rptPassword: "",
-                email: "",
-                accessRights: 0,
-                subscription: false,
                 passwordCheck: false,
                 passwordComp: false,
                 completed: false
@@ -169,18 +151,12 @@ export default Vue.extend({
                 const response = await ReportingService.addUser({
                     username: this.newUserData.username,
                     password: this.newUserData.password,
-                    rptPassword: this.newUserData.rptPassword,
-                    accessRights: this.newUserData.accessRights,
-                    mail: this.newUserData.email,
-                    subscription : this.newUserData.subscription
+                    accessRights: 1
                 });
             }
             this.newUserData.username = ""
             this.newUserData.password = "";
             this.newUserData.rptPassword = "";
-            this.newUserData.email = "";
-            this.newUserData.accessRights = 0;
-            this.newUserData.subscription = false;
             this.newUserData.completed = true;
         },
         async doChangePassword() {
@@ -189,8 +165,7 @@ export default Vue.extend({
             if (!this.changePassword.passwordComp /*&& !this.changePassword.passwordCheck*/){
                 const response = await ReportingService.changePassword({
                     username: this.changePassword.username,
-                    Password: this.changePassword.newPassword,
-                    rptPassword: this.changePassword.rptPassword
+                    newPassword: this.changePassword.newPassword,
                 });
             }
             this.changePassword.newPassword = "";
@@ -203,6 +178,7 @@ export default Vue.extend({
                 newAcces: this.changeAccesRights.newRights
             });
             this.changeAccesRights.username = "";
+            this.changeAccesRights.rights = "";
             this.changeAccesRights.newRights = "";
             this.changeAccesRights.completed = true;
         },
@@ -214,45 +190,24 @@ export default Vue.extend({
             this.addField.completed = true;
             this.addField.newField = "";
         },
-        checkUsername: function(username: string) {
-            if (/^[a-z0-9_-]{3,15}$/.test(username)) {
-                return true;
-            } else {
-                return false;
-            }
-        },
         checkPasswords: function(password1 : string, password2 : string){
-            if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password1)){    //Check if password is at least 6 long and at least one uppercase
-                const test = new String(password1)
-                if (test.localeCompare(password2) == 0) {
-                    return false
-                } else {
-                    return true
-                }
+            const test = new String(password1)
+            if (test.localeCompare(password2) == 0) {
+                return false
             } else {
-                return false;
+                return true
             }
-           
-        },
-        checkAccessRights: function(accessRights : number){
-            if (accessRights >= 0 && accessRights < 3)
-                return true;
-            else
-                return false;
         },
         emptyAllFields: function() {
             this.newUserData.username = "";
             this.newUserData.password = "";
             this.newUserData.rptPassword = "";
-            this.newUserData.email = "";
-            this.newUserData.accessRights = 0;
-            this.newUserData.subscription = false;
-
             this.newUserData.passwordCheck = false;
             this.newUserData.passwordComp = false;
             this.newUserData.completed = false;
 
             this.changeAccesRights.username = "";
+            this.changeAccesRights.rights = "";
             this.changeAccesRights.newRights = "";
             this.changeAccesRights.completed = false;
 

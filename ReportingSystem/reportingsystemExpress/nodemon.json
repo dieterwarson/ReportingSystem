@@ -2,8 +2,5 @@
   "watch": ["src"],
   "ext": "ts",
   "ignore": ["src/public"],
-  "exec": "ts-node -r tsconfig-paths/register ./src --env=development",
-  "env": {
-    "JWT_KEY": "9k5NiCrACn21VT2QWQkb"
-  }
+  "exec": "ts-node -r tsconfig-paths/register ./src --env=development"
 }

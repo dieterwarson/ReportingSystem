@@ -7,7 +7,6 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import OperationalType from './operationalType';
-import EventType from './eventType';
 
 @Table
 export default class OperationalSubtype extends Model<OperationalSubtype> {
@@ -19,13 +18,6 @@ export default class OperationalSubtype extends Model<OperationalSubtype> {
 
   @BelongsTo(() => OperationalType)
   operationalType!: OperationalType;
-
-  @ForeignKey(() => EventType)
-  @Column
-  eventTypeId!: number;
-
-  @BelongsTo(() => EventType)
-  eventType!: EventType;
     
   @Column
   typeName!: string;
