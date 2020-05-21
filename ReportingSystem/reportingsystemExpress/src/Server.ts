@@ -728,6 +728,7 @@ const defect1 = new Defect({
   technicalId: 4,
   authorId: 2,
   defectTypeId: 1,
+  defectSubtypeId: 1,
   description: 'Voertuig P320 achterlicht kapot',
   monitoring: true,
   date: new Date('2020/03/17 13:03:57'),
@@ -738,6 +739,7 @@ const defect2 = new Defect({
   technicalId: 5,
   authorId: 1,
   defectTypeId: 1,
+  defectSubtypeId: 1,
   description: 'Voertuig P321 achterlicht kapot',
   monitoring: false,
   date: new Date('2020/03/21 06:14:23'),
@@ -748,6 +750,7 @@ const defect3 = new Defect({
   technicalId: 5,
   authorId: 1,
   defectTypeId: 1,
+  defectSubtypeId: 1,
   description: 'Voertuig P256 voorlicht kapot',
   monitoring: true,
   date: new Date('2020/03/21 11:00:03'),
@@ -758,6 +761,7 @@ const defect4 = new Defect({
   technicalId: 6,
   authorId: 2,
   defectTypeId: 1,
+  defectSubtypeId: 1,
   description: 'Voertuig P320 voorlicht kapot',
   monitoring: true,
   date: new Date('2020/03/21 15:33:47'),
@@ -769,6 +773,14 @@ const defectType1 = new DefectType({
   typeName: 'Schade aan voertuig',
 });
 // defectType1.save();
+
+
+const defectSubtype1 = new DefectSubtype({
+  defectTypeId: 1,
+  typeName: 'Voertuig',
+  description: 'Zichtbare schade'
+});
+// defectSubtype1.save();
 
 
 const malfunction1 = new Malfunction({

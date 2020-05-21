@@ -70,6 +70,7 @@ CREATE TABLE `DefectSubtypes` (
 
 LOCK TABLES `DefectSubtypes` WRITE;
 /*!40000 ALTER TABLE `DefectSubtypes` DISABLE KEYS */;
+INSERT INTO `DefectSubtypes` VALUES (1,1,'Voertuig','Zichtbare schade','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `DefectSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,6 +113,7 @@ CREATE TABLE `Defects` (
   `technicalId` int(11) DEFAULT NULL,
   `authorId` int(11) DEFAULT NULL,
   `defectTypeId` int(11) DEFAULT NULL,
+  `defectSubtypeId` int(11) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `monitoring` tinyint(1) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
@@ -133,7 +135,7 @@ CREATE TABLE `Defects` (
 
 LOCK TABLES `Defects` WRITE;
 /*!40000 ALTER TABLE `Defects` DISABLE KEYS */;
-INSERT INTO `Defects` VALUES (1,4,2,1,'Voertuig P320 achterlicht kapot',1,'2020-03-21 13:03:57','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,1,1,'Voertuig P321 achterlicht kapot',0,'2020-03-17 06:14:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,2,1,1,'Voertuig P256 voorlicht kapot',1,'2020-03-17 11:00:03','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,6,1,1,'Voertuig P320 voorlicht kapot',1,'2020-03-21 05:33:47','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `Defects` VALUES (1,4,2,1,1,'Voertuig P320 achterlicht kapot',1,'2020-03-21 13:03:57','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,1,1,1,'Voertuig P321 achterlicht kapot',0,'2020-03-17 06:14:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,2,1,1,1,'Voertuig P256 voorlicht kapot',1,'2020-03-17 11:00:03','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,6,1,1,1,'Voertuig P320 voorlicht kapot',1,'2020-03-21 05:33:47','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `Defects` ENABLE KEYS */;
 UNLOCK TABLES;
 
