@@ -848,6 +848,28 @@ const malfunctionType3 = new MalfunctionType({
 // malfunctionType3.save();
 
 
+const malfunctionSubtype1 = new MalfunctionSubtype({
+  malfunctinoTypeId: 1,
+  typeName: 'Infrastructuur',
+  description: 'Iets kapot',
+});
+// malfunctionSubtype1.save();
+
+const malfunctionSubtype2 = new MalfunctionSubtype({
+  malfunctinoTypeId: 1,
+  typeName: 'Elektronica',
+  description: 'Storing',
+});
+// malfunctionSubtype2.save();
+
+const malfunctionSubtype3 = new MalfunctionSubtype({
+  malfunctinoTypeId: 1,
+  typeName: 'Elektriciteit',
+  description: 'Uitgevallen',
+});
+// malfunctionSubtype3.save();
+
+
 const dummyData1 = new DummyDatabase({
   plNumber: 'PL12536432',
   unit: 'CARMA',

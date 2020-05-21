@@ -222,7 +222,7 @@ CREATE TABLE `MalfunctionSubtypes` (
 
 LOCK TABLES `MalfunctionSubtypes` WRITE;
 /*!40000 ALTER TABLE `MalfunctionSubtypes` DISABLE KEYS */;
-INSERT INTO `MalfunctionSubtypes` VALUES (1,1,'Infrastructuur','Iets kapot','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,'Elektronica','Storing','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,3,'Elektriciteit','Iets kapot','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `MalfunctionSubtypes` VALUES (1,1,'Infrastructuur','Iets kapot','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,'Elektronica','Storing','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,3,'Elektriciteit','Uitgevallen','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `MalfunctionSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
