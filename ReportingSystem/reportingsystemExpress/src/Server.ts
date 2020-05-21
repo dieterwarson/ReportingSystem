@@ -956,6 +956,11 @@ app.post('/addTechnicalEvent', async (req, res) => {
 });
 
 app.post('/changeOperationalEvent', async (req, res) => {
+/**
+ * TODO
+ * moet nog aangepast worden om type toe te voegen
+ */
+
   console.log("\n\nbody:\n");
   console.log(req.body);
 
@@ -983,7 +988,22 @@ app.post('/changeOperationalEvent', async (req, res) => {
 
   OperationalEvent.sync();
 });
+
 app.post('/changeWorkplaceEvent', async (req, res) => {
+  let type = req.body.type;
+
+  let workplaceType = await WorkplaceType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceTypeId = null
+  if (workplaceType != null) {
+    workplaceTypeId = workplaceType.id
+  }
+
   const event = await WorkplaceEvent.findOne({
     where: {
       id: req.body.administrativeId,
@@ -994,8 +1014,10 @@ app.post('/changeWorkplaceEvent', async (req, res) => {
       },
     ],
   });
+
   if (event != null) {
     event.description = req.body.message;
+    event.workplaceTypeId = workplaceTypeId;
     event.save();
   } else {
     res.send(Error('File not found'));
@@ -1003,6 +1025,7 @@ app.post('/changeWorkplaceEvent', async (req, res) => {
 
   WorkplaceEvent.sync();
 });
+
 app.post('/changeSecretariatNotification', async (req, res) => {
   const event = await SecretariatNotification.findOne({
     where: {
@@ -1023,17 +1046,22 @@ app.post('/changeSecretariatNotification', async (req, res) => {
 
   SecretariatNotification.sync();
 });
+
 app.post('/changeDefect', async (req, res) => {
   let type = req.body.type;
 
-  /**
-   * types bevat alleen de namen
-   * eerst adhv de namen de originale types finden
-   * dan heb ik de types en de id's ervan
-   * een Defect heeft maar 1 defectType, dus maar 1 defectTypeId
-   * ik heb de id van de type
-   * ik moet in event dan de defectTypeId veranderen naar het verkregen id
-   */
+  let defectType = await DefectType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectTypeId = null
+  if (defectType != null) {
+    defectTypeId = defectType.id
+  }
+
   const event = await Defect.findOne({
     where: {
       id: req.body.technicalId,
@@ -1044,8 +1072,10 @@ app.post('/changeDefect', async (req, res) => {
       },
     ],
   });
+
   if (event != null) {
     event.description = req.body.message;
+    event.defectTypeId = defectTypeId;
     event.save();
   } else {
     res.send(Error('File not found'));
@@ -1053,11 +1083,9 @@ app.post('/changeDefect', async (req, res) => {
 
   Defect.sync();
 });
+
 app.post('/changeMalfunction', async (req, res) => {
   let type = req.body.type;
-  console.log("\n\n\ntype:\n");
-  console.log(type);
-  console.log("\n\n\n\n");
 
   let malfunctionType = await MalfunctionType.findOne({
     where: {
@@ -1065,16 +1093,11 @@ app.post('/changeMalfunction', async (req, res) => {
     },
     attributes: ['id', 'typeName'],
   });
-  console.log(malfunctionType);
-  console.log("\n\n\n\n");
 
   let malfunctionTypeId = null
   if (malfunctionType != null) {
     malfunctionTypeId = malfunctionType.id
   }
-  console.log("\n\n\ntypeId:\n");
-  console.log(malfunctionTypeId);
-  console.log("\n\n\n\n");
 
   const event = await Malfunction.findOne({
     where: {
@@ -1087,10 +1110,6 @@ app.post('/changeMalfunction', async (req, res) => {
     ],
   });
 
-  console.log("\n\n\nevent oud:\n");
-  console.log(event);
-  console.log("\n\n\n\n");
-
   if (event != null) {
     event.description = req.body.message;
     event.malfunctionTypeId = malfunctionTypeId;
@@ -1098,9 +1117,6 @@ app.post('/changeMalfunction', async (req, res) => {
   } else {
     res.send(Error('File not found'));
   }
-  console.log("\n\n\nevent new:\n");
-  console.log(event);
-  console.log("\n\n\n\n");
 
   Malfunction.sync();
 });
@@ -1114,8 +1130,6 @@ interface INewUserData {
   accessRights: number;
   subscription: boolean;
 }
-
-
 
 function checkUsername(username: string) {
   if (/^[a-z0-9_-]{3,15}$/.test(username)) {

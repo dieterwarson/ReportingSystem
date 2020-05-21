@@ -484,6 +484,12 @@ router.get('/types', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/operationalTypes', async (req: Request, res: Response) => {
+  /**
+   * TODO
+   * operationalEvent heeft meerdere EventTypes
+   * er moet gekeken worden anar EventType
+   * en dan op die eventType moet er gekeken worden naar OperationalType
+   */
   let operationalTypes = await OperationalType.findAll({
     attributes: ['typeName'],
   });

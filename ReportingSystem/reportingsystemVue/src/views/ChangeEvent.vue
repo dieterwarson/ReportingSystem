@@ -142,8 +142,10 @@
                       </div>
                     </div>
                   </div>
-                  <button @click.prevent="uncheckAll" class="btn btn-danger">Deselecteer keuze</button>
-                  <span>Types: {{ typeSelected }}</span>
+                  <button
+                    @click.prevent="uncheckAll"
+                    class="btn btn-danger extraPadding"
+                  >Deselecteer keuze</button>
                 </div>
               </form>
             </div>
@@ -251,8 +253,10 @@
                       </div>
                     </div>
                   </div>
-                  <button @click.prevent="uncheckAll" class="btn btn-danger">Deselecteer keuze</button>
-                  <span>Types: {{ typeSelected }}</span>
+                  <button
+                    @click.prevent="uncheckAll"
+                    class="btn btn-danger extraPadding"
+                  >Deselecteer keuze</button>
                 </div>
               </form>
             </div>
@@ -303,8 +307,10 @@
                       </div>
                     </div>
                   </div>
-                  <button @click.prevent="uncheckAll" class="btn btn-danger">Deselecteer keuze</button>
-                  <span>Types: {{ typeSelected }}</span>
+                  <button
+                    @click.prevent="uncheckAll"
+                    class="btn btn-danger extraPadding"
+                  >Deselecteer keuze</button>
                 </div>
               </form>
             </div>
@@ -453,6 +459,7 @@ export default Vue.extend({
           ]
         }
       },
+      reportId: 0,
       eventId: 0,
       categorie: "",
       subcategorie: "",
@@ -485,12 +492,14 @@ export default Vue.extend({
   methods: {
     loadData: function() {
       // this.loadReportContent();
-
-      ReportingService.getAllReports(
-        "/api/reports/content/" + this.$route.query.reportId
-      ).then(res => (this.reportContent = res));
       this.categorie = String(this.$route.query.categorie);
       this.subcategorie = String(this.$route.query.subcategorie);
+      this.reportId = Number(this.$route.query.reportId);
+      this.eventId = Number(this.$route.query.eventId);
+
+      ReportingService.getAllReports(
+        "/api/reports/content/" + String(this.reportId)
+      ).then(res => (this.reportContent = res));
 
       if (this.subcategorie == "operationalEvents") {
         this.loadOperationalEvent();
@@ -522,11 +531,12 @@ export default Vue.extend({
 
     loadOperationalEvent: function() {
       ReportingService.getReportEvent(
-        "/api/reports/operationalEvent/" + this.$route.query.eventId
+        "/api/reports/operationalEvent/" + String(this.eventId)
       ).then(res => (this.currentEvent = res));
 
+      // TODO moet nog veradnert worden naar meerdere types eventType
       // ReportingService.getEventType(
-      //   "/api/reports/operationalEventType/" + this.$route.query.eventId
+      //   "/api/reports/operationalEventType/" + String(this.eventId)
       // ).then(res => (this.typeSelected = res));
 
       ReportingService.getAllReports("/api/reports/operationalTypes").then(
@@ -535,11 +545,11 @@ export default Vue.extend({
     },
     loadWorkplaceEvent: function() {
       ReportingService.getReportEvent(
-        "/api/reports/workplaceEvent/" + this.$route.query.eventId
+        "/api/reports/workplaceEvent/" + String(this.eventId)
       ).then(res => (this.currentEvent = res));
 
       ReportingService.getEventType(
-        "/api/reports/workplaceEventType/" + this.$route.query.eventId
+        "/api/reports/workplaceEventType/" + String(this.eventId)
       ).then(res => (this.typeSelected = res));
 
       ReportingService.getAllReports("/api/reports/workplaceTypes").then(
@@ -548,16 +558,16 @@ export default Vue.extend({
     },
     loadSecretariatNotification: function() {
       ReportingService.getReportEvent(
-        "/api/reports/secretariatNotification/" + this.$route.query.eventId
+        "/api/reports/secretariatNotification/" + String(this.eventId)
       ).then(res => (this.currentEvent = res));
     },
     loadDefect: function() {
       ReportingService.getReportEvent(
-        "/api/reports/defectEvent/" + this.$route.query.eventId
+        "/api/reports/defectEvent/" + String(this.eventId)
       ).then(res => (this.currentEvent = res));
 
       ReportingService.getEventType(
-        "/api/reports/defectType/" + this.$route.query.eventId
+        "/api/reports/defectType/" + String(this.eventId)
       ).then(res => (this.typeSelected = res));
 
       ReportingService.getAllReports("/api/reports/defectTypes").then(
@@ -566,11 +576,11 @@ export default Vue.extend({
     },
     loadMalfunction: function() {
       ReportingService.getReportEvent(
-        "/api/reports/malfunctionEvent/" + this.$route.query.eventId
+        "/api/reports/malfunctionEvent/" + String(this.eventId)
       ).then(res => (this.currentEvent = res));
 
       ReportingService.getEventType(
-        "/api/reports/malfunctionType/" + this.$route.query.eventId
+        "/api/reports/malfunctionType/" + String(this.eventId)
       ).then(res => (this.typeSelected = res));
 
       ReportingService.getAllReports("/api/reports/malfunctionTypes").then(
@@ -780,31 +790,34 @@ export default Vue.extend({
     },
     async changeOperationalEvent() {
       await ReportingService.changeOperationalEvent({
-        reportId: this.$route.query.reportId,
+        reportId: String(this.reportId),
         operationalId: this.currentEvent.id,
         message: this.currentEvent.description
+        // TODO type toevoegen
       });
       this.operationalEventSucceeded = true;
     },
     async changeWorkplaceEvent() {
       await ReportingService.changeWorkplaceEvent({
-        reportId: this.$route.query.reportId,
+        reportId: String(this.reportId),
         administrativeId: this.currentEvent.id,
-        message: this.currentEvent.description
+        message: this.currentEvent.description,
+        type: this.typeSelected
       });
       this.workplaceEventSucceeded = true;
     },
     async changeSecretariatNotification() {
       await ReportingService.changeSecretariatNotification({
-        reportId: this.$route.query.reportId,
+        reportId: String(this.reportId),
         administrativeId: this.currentEvent.id,
-        message: this.currentEvent.description
+        message: this.currentEvent.description,
+        type: this.typeSelected
       });
       this.secretariatNotificationSucceeded = true;
     },
     async changeDefect() {
       await ReportingService.changeDefect({
-        reportId: this.$route.query.reportId,
+        reportId: String(this.reportId),
         technicalId: this.currentEvent.id,
         message: this.currentEvent.description,
         type: this.typeSelected
@@ -813,7 +826,7 @@ export default Vue.extend({
     },
     async changeMalfunction() {
       await ReportingService.changeMalfunction({
-        reportId: this.$route.query.reportId,
+        reportId: String(this.reportId),
         technicalId: this.currentEvent.id,
         message: this.currentEvent.description,
         type: this.typeSelected
@@ -847,5 +860,10 @@ export default Vue.extend({
 
 #smalltitle {
   padding-bottom: 1rem;
+}
+
+.extraPadding {
+  border-top: 1rem;
+  border-bottom: 1rem;
 }
 </style>
