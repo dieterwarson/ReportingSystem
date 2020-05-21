@@ -13,6 +13,9 @@ export default class Report extends Model<Report> {
   @Column
   temporary!: boolean;
 
+  @Column
+  nightShift!: boolean;
+
   @HasOne(() => Technical)
   technical!: Technical;
 

@@ -49,7 +49,4 @@ export default class WorkplaceEvent extends Model<WorkplaceEvent> {
 
   @Column
   date!: Date;
-
-  @Column
-  shift!: boolean;
 }

@@ -1,9 +1,8 @@
---  Sample report database
-
-DROP DATABASE IF EXISTS reports;
-CREATE DATABASE IF NOT EXISTS reports;
-
-USE reports;
+-- MySQL dump 10.13  Distrib 5.7.30, for Linux (x86_64)
+--
+-- Host: localhost    Database: reports
+-- ------------------------------------------------------
+-- Server version	5.7.30-0ubuntu0.18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -133,7 +132,6 @@ CREATE TABLE `Defects` (
 
 LOCK TABLES `Defects` WRITE;
 /*!40000 ALTER TABLE `Defects` DISABLE KEYS */;
-INSERT INTO `Defects` VALUES (1,4,2,1,'Voertuig P320 achterlicht kapot',1,'2020-03-17 13:03:57','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,5,1,1,'Voertuig P321 achterlicht kapot',0,'2020-03-21 06:14:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,5,1,1,'Voertuig P256 voorlicht kapot',1,'2020-03-21 11:00:03','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,6,2,1,'Voertuig P320 voorlicht kapot',1,'2020-03-21 15:33:47','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `Defects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -286,7 +284,6 @@ CREATE TABLE `Malfunctions` (
 
 LOCK TABLES `Malfunctions` WRITE;
 /*!40000 ALTER TABLE `Malfunctions` DISABLE KEYS */;
-INSERT INTO `Malfunctions` VALUES (1,1,1,1,'lekkende kraan in kamer 304',1,'2020-03-16 10:46:45','2:16','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,3,1,1,'krakende deur in kamer 104',1,'2020-03-17 03:03:57','5:07','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,4,2,1,'niet sluitend raam in kamer 302',1,'2020-03-17 04:23:57','1:56','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,5,1,2,'alarm kapot verdieping 2',1,'2020-03-21 01:15:34','0:29','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,2,3,'stroom uitgevallen hoofdgebouw',1,'2020-03-21 16:26:24','0:13','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `Malfunctions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -575,7 +572,6 @@ CREATE TABLE `WorkplaceEvents` (
 
 LOCK TABLES `WorkplaceEvents` WRITE;
 /*!40000 ALTER TABLE `WorkplaceEvents` DISABLE KEYS */;
-INSERT INTO `WorkplaceEvents` VALUES (1,1,1,1,'Jacob sleutelbeen gebroken','Jacob Franssen','James Brook',1,'2020-03-16 9:10:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,4,2,'Ziekte','Remans Luc','Jan Janssens',1,'2020-03-18 13:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,1,5,1,'Hans verstuikte voet','Hans Hendrickx','Adam Franssen',1,'2020-03-22 7:59:34','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,2,6,2,'Ziekte','James Brook','Jacob Franssen',0,'2020-03-22 19:00:54','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,2,6,2,'Ziekte','Jan Janssens','Remans Luc',1,'2020-03-22 20:26:14','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `WorkplaceEvents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -643,3 +639,5 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-05-17 12:46:47

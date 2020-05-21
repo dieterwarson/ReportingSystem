@@ -6,8 +6,8 @@
         <br>
         <input type="password" name="password" v-model="input.password" placeholder="Wachtwoord" class="form-control form-control-lg">
         <br>
-        <button class="btn btn-lg btn-primary" type="button" v-on:click="login(input.username, input.password)" >Aanmelden</button>
-
+        <button class="btn btn-lg btn-primary" type="button" v-on:click="login()" >Aanmelden</button>
+        <input type="text" name="resp" v-model="output.response" class="form-control form-control-lf">
     </form>
   </div>
 </template>
@@ -16,6 +16,7 @@
 import Vue from 'vue';
 import axios from "axios";
 import router from "../router/index"
+import ReportingService from '../services/ReportingService';
 //import service from "../axios/service";
 export default Vue.extend({
     name: 'Login',
@@ -26,32 +27,21 @@ export default Vue.extend({
                 password: ""
             },
             output: {
-                errors: {}
+                errors: {},
+                response: ""
             }
         }
-    }
-    /*,
+    },
     methods: { 
-        login:(e) => {
-            e.preventDefault();
-            email : String;
-            password : String;
-            let login = () => {
-                let data = {
-                    email: this.input.email,
-                    password: this.input.password
-                }
-                axios.post("", data)
-                .then((response) => {
-                    console.log("Logged in");
-                    router.push("/Home");
-                })
-                .catch((errors) => {
-                    console.log("Cannot log in");
-                })
-            } 
-            login();
+        async login() {
+            const response = await ReportingService.loginUser({
+                username: this.input.username,
+                password: this.input.password
+            });
+            this.input.username = "";
+            this.input.password = "";
         }
-    } */
+
+    } 
 })
 </script>
