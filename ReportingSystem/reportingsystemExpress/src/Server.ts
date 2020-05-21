@@ -37,7 +37,7 @@ import cronServer from './cron'
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 // var index = require('./routes/index');
 // var users = require('./routes/users');
 
@@ -1024,6 +1024,16 @@ app.post('/changeSecretariatNotification', async (req, res) => {
   SecretariatNotification.sync();
 });
 app.post('/changeDefect', async (req, res) => {
+  let type = req.body.type;
+
+  /**
+   * types bevat alleen de namen
+   * eerst adhv de namen de originale types finden
+   * dan heb ik de types en de id's ervan
+   * een Defect heeft maar 1 defectType, dus maar 1 defectTypeId
+   * ik heb de id van de type
+   * ik moet in event dan de defectTypeId veranderen naar het verkregen id
+   */
   const event = await Defect.findOne({
     where: {
       id: req.body.technicalId,
@@ -1044,6 +1054,28 @@ app.post('/changeDefect', async (req, res) => {
   Defect.sync();
 });
 app.post('/changeMalfunction', async (req, res) => {
+  let type = req.body.type;
+  console.log("\n\n\ntype:\n");
+  console.log(type);
+  console.log("\n\n\n\n");
+
+  let malfunctionType = await MalfunctionType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+  console.log(malfunctionType);
+  console.log("\n\n\n\n");
+
+  let malfunctionTypeId = null
+  if (malfunctionType != null) {
+    malfunctionTypeId = malfunctionType.id
+  }
+  console.log("\n\n\ntypeId:\n");
+  console.log(malfunctionTypeId);
+  console.log("\n\n\n\n");
+
   const event = await Malfunction.findOne({
     where: {
       id: req.body.technicalId,
@@ -1054,12 +1086,21 @@ app.post('/changeMalfunction', async (req, res) => {
       },
     ],
   });
+
+  console.log("\n\n\nevent oud:\n");
+  console.log(event);
+  console.log("\n\n\n\n");
+
   if (event != null) {
     event.description = req.body.message;
+    event.malfunctionTypeId = malfunctionTypeId;
     event.save();
   } else {
     res.send(Error('File not found'));
   }
+  console.log("\n\n\nevent new:\n");
+  console.log(event);
+  console.log("\n\n\n\n");
 
   Malfunction.sync();
 });
@@ -1292,10 +1333,10 @@ app.post('/changeSubscription', async (req, res) => {
 });
 
 app.post("/getOperationalEvents", async (req, res) => {
-  
+
   console.log(req.body.plNumber);
   var matched_events = await OperationalEvent.findAll({
-    where: {plNumber: {[Op.like]: req.body.plNumber}},
+    where: { plNumber: { [Op.like]: req.body.plNumber } },
     limit: 5
   });
   console.log(matched_events.length);

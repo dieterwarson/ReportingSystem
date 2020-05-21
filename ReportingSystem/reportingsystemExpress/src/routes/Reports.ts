@@ -53,7 +53,6 @@ router.get('/one/:reportId', async (req: Request, res: Response) => {
   });
 
   res.send(report);
-  return res.json({ report });
 });
 
 /******************************************************************************
@@ -358,7 +357,6 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     technical: { defects, malfunctions },
   };
   res.send(results);
-  return res.json({ results });
 });
 
 /******************************************************************************
@@ -418,7 +416,7 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
-  
+
   res.send(results);
 });
 
@@ -458,7 +456,7 @@ router.get('/priority/:reportId', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/types"
  ******************************************************************************/
-
+// normaal gezien ongebruikt
 router.get('/types', async (req: Request, res: Response) => {
   let operationalTypes = await OperationalType.findAll({
     attributes: ['typeName'],
@@ -486,30 +484,12 @@ router.get('/types', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/operationalTypes', async (req: Request, res: Response) => {
-  var reports: (
-    OperationalType[]
-  )[] = [];
-
-  var result;
-  result = await OperationalType.findAll({
+  let operationalTypes = await OperationalType.findAll({
     attributes: ['typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult OperationalType');
-    console.log(result);
-    console.log('\n\n\n\nreports OperationalType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
-
-  console.log('\n\n\n\nreports');
-  console.log(reports);
-
-  res.send(reports);
-  return res.json({ reports });
+  let results = { operationalTypes };
+  res.send(results);
 });
 
 /******************************************************************************
@@ -517,30 +497,12 @@ router.get('/operationalTypes', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/workplaceTypes', async (req: Request, res: Response) => {
-  var reports: (
-    WorkplaceType[]
-  )[] = [];
-
-  var result;
-  result = await WorkplaceType.findAll({
+  let workplaceTypes = await WorkplaceType.findAll({
     attributes: ['typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult WorkplaceType');
-    console.log(result);
-    console.log('\n\n\n\nreports WorkplaceType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
-
-  console.log('\n\n\n\nreports');
-  console.log(reports);
-
-  res.send(reports);
-  return res.json({ reports });
+  let results = { workplaceTypes }
+  res.send(results);
 });
 
 /******************************************************************************
@@ -548,30 +510,12 @@ router.get('/workplaceTypes', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/defectTypes', async (req: Request, res: Response) => {
-  var reports: (
-    DefectType[]
-  )[] = [];
-
-  var result;
-  result = await DefectType.findAll({
+  let defectTypes = await DefectType.findAll({
     attributes: ['typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult DefectType');
-    console.log(result);
-    console.log('\n\n\n\nreports DefectType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
-
-  console.log('\n\n\n\nreports');
-  console.log(reports);
-
-  res.send(reports);
-  return res.json({ reports });
+  let results = { defectTypes }
+  res.send(results);
 });
 
 /******************************************************************************
@@ -579,35 +523,17 @@ router.get('/defectTypes', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/malfunctionTypes', async (req: Request, res: Response) => {
-  var reports: (
-    MalfunctionType[]
-  )[] = [];
-
-  var result;
-  result = await MalfunctionType.findAll({
+  let malfunctionTypes = await MalfunctionType.findAll({
     attributes: ['typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult MalfunctionType');
-    console.log(result);
-    console.log('\n\n\n\nreports MalfunctionType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
-
-  console.log('\n\n\n\nreports');
-  console.log(reports);
-
-  res.send(reports);
-  return res.json({ reports });
+  let results = { malfunctionTypes }
+  res.send(results);
 });
 
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/operationalEvent"
+ *             Get event from Reports - "GET /api/reports/operationalEvent/:id"
  ******************************************************************************/
 
 router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
@@ -622,14 +548,13 @@ router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
 });
 
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/workplaceEvent"
+ *             Get event from Reports - "GET /api/reports/workplaceEvent/:id"
  ******************************************************************************/
 
 router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
@@ -644,13 +569,12 @@ router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
 });
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/secretariatNotification"
+ *             Get event from Reports - "GET /api/reports/secretariatNotification/:id"
  ******************************************************************************/
 
 router.get('/secretariatNotification/:id', async (req: Request, res: Response) => {
@@ -665,13 +589,12 @@ router.get('/secretariatNotification/:id', async (req: Request, res: Response) =
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
 });
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/defectEvent"
+ *             Get event from Reports - "GET /api/reports/defectEvent/:id"
  ******************************************************************************/
 
 router.get('/defectEvent/:id', async (req: Request, res: Response) => {
@@ -686,13 +609,12 @@ router.get('/defectEvent/:id', async (req: Request, res: Response) => {
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
 });
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/malfunctionEvent"
+ *             Get event from Reports - "GET /api/reports/malfunctionEvent/:id"
  ******************************************************************************/
 
 router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
@@ -707,9 +629,92 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/workplaceEventType/:id"
+ ******************************************************************************/
+
+router.get('/workplaceEventType/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const event = await WorkplaceEvent.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (event != null) {
+    let workplaceTypeId = event.workplaceTypeId;
+
+    if (workplaceTypeId != null) {
+      const workplaceType = await WorkplaceType.findOne({
+        where: {
+          id: workplaceTypeId
+        }
+      })
+      if (workplaceType != null) {
+        res.send(workplaceType.typeName);
+      }
+    }
+  }
+  res.send("");
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/defectType/:id"
+ ******************************************************************************/
+
+router.get('/defectType/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const event = await Defect.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (event != null) {
+    let defectTypeId = event.defectTypeId;
+
+    if (defectTypeId != null) {
+      const defectType = await DefectType.findOne({
+        where: {
+          id: defectTypeId
+        }
+      })
+      if (defectType != null) {
+        res.send(defectType.typeName);
+      }
+    }
+  }
+  res.send("");
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/malfunctionType/:id"
+ ******************************************************************************/
+
+router.get('/malfunctionType/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const event = await Malfunction.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (event != null) {
+    let malfunctionTypeId = event.malfunctionTypeId;
+
+    if (malfunctionTypeId != null) {
+      const malfunctionType = await MalfunctionType.findOne({
+        where: {
+          id: malfunctionTypeId
+        }
+      })
+      if (malfunctionType != null) {
+        res.send(malfunctionType.typeName);
+      }
+    }
+  }
+  res.send("");
 });
 
 /******************************************************************************

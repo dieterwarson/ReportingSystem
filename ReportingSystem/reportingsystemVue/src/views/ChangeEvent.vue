@@ -1,255 +1,347 @@
 <template>
-<!-- niet met reportContent werken om data van een event weer te geven als array met de id als index
-dat geeft fouten als een event niet het jusite id heeft, zoals bij technical was, die begon met 2 ipv 1
-waardoor [] op de array ging lezen op undefined
-  in plaats daarvan, werken met currentEvent, die wordt uit de db gehaald adhv zijn echte id-->
-<!-- script has to be implemented again to achieve the seperate forms -->
-<div class="container pt-5 pb-5">
-  <h1>Wijzig gebeurtenis</h1>
-  <form id="changeOperationalEvent">
-    <!-- Operationeel -->
-    <fieldset v-if="$route.query.categorie == 'Operational'">
-      <h3 id="smalltitle">Operationeel</h3>
-      <!-- OperationalEvents -->
-      <section v-if="$route.query.subcategorie == 'operationalEvents'">
-        <h4 id="smalltitle">Operationele gebeurtenis</h4>
-        <div class="row">
-          <!-- Checkboxes types -->
-          <div>
-            <div v-if="reportTypes == []">
-              <p>Er zijn nog geen types</p>
-            </div>
-            <div v-else>
-              <div v-for="value in reportTypes" :key="value.id">
-                <div v-for="value in value" :key="value.id">{{filterTypes(value.typeName)}}</div>
+  <!-- script has to be implemented again to achieve the seperate forms -->
+  <div class="container pt-5 pb-5">
+    <h1>Wijzig gebeurtenis</h1>
+    <form id="changeOperationalEvent">
+      <!-- Operationeel -->
+      <fieldset v-if="categorie == 'Operational'">
+        <h3 id="smalltitle">Operationeel</h3>
+        <!-- OperationalEvents -->
+        <section v-if="subcategorie == 'operationalEvents'">
+          <h4 id="smalltitle">Operationele gebeurtenis</h4>
+          <div class="row">
+            <!-- Checkboxes types -->
+            <!-- <div>
+              <div v-if="(Object.keys(reportTypes).length === 0)">
+                <p>Er zijn nog geen types</p>
               </div>
-              <div class="checkbox-container text-sm-left col-sm-4">
-                <div v-for="(value, index) in filteredTypes" :key="value.id">
-                  <div class="typecontainer text-lg-left">
-                    <input type="checkbox" v-model="formType.parentId[index]" true-value="yes" false-value="no" />
-                    <label>{{value}}</label>
+              <form v-else id="typeSelector">
+                <div class="text-sm-left">
+                  <input
+                    type="checkbox"
+                    id="operationalParent"
+                    v-on:change="selectAll('operational')"
+                  />
+                  <label>
+                    <h5>Operationeel</h5>
+                  </label>
+                  <div class="checkbox-container text-sm-left col-sm-4">
+                    <div v-for="value in reportTypes.operationalTypes" :key="value.id">
+                      <div class="typecontainer text-lg-left" id="operational">
+                        <input
+                          type="checkbox"
+                          :id="value.typeName"
+                          :value="value.typeName"
+                          v-model="selectedTypes"
+                        />
+                        <label>{{ value.typeName }}</label>
+                      </div>
+                    </div>
                   </div>
+                  <span>Types: {{ selectedTypes }}</span>
                 </div>
-              </div>
-            </div>
-          </div>
-          <!-- Invoervelden -->
-          <div class="text-sm-left col-lg">
-            <div class="input-group" style="height: 20%;">
-              <div class="formcontainer btn-block">
-                <!-- PL-nummer -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="currentEvent.plNumber == String(null) || currentEvent.plNumber == null || currentEvent.plNumber == ''">Geen PL-nummer beschikbaar.</div>
-                  <div v-else>PL-nummer: {{currentEvent.plNumber}}</div>
-                </div>
-                <!-- Locatie -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="currentEvent.location == String(null) || currentEvent.location == null || currentEvent.location == ''">Geen adres beschikbaar.</div>
-                  <div v-else>Locatie: {{currentEvent.location}}</div>
-                </div>
-                <!-- Datum -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="currentEvent.date == String(null) || currentEvent.date == null || currentEvent.date == ''">Geen datum beschikbaar.</div>
-                  <div v-else>
-                    Datum: {{ new Date(currentEvent.date).toLocaleString("en-BE", {
-                        year: 'numeric',
-                        month: 'numeric',
-                        day: 'numeric',
-                        })
-                        }}
+              </form>
+            </div>-->
+            <!-- Invoervelden -->
+            <div class="text-sm-left col-lg">
+              <div class="input-group" style="height: 20%;">
+                <div class="formcontainer btn-block">
+                  <!-- PL-nummer -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div
+                      v-if="currentEvent.plNumber == String(null) || currentEvent.plNumber == null || currentEvent.plNumber == ''"
+                    >Geen PL-nummer beschikbaar.</div>
+                    <div v-else>PL-nummer: {{currentEvent.plNumber}}</div>
                   </div>
-                </div>
-                <!-- Unit -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="currentEvent.unit == String(null) || currentEvent.unit == null || currentEvent.unit == ''">Geen unit beschikbaar.</div>
-                  <div v-else>Unit: {{currentEvent.unit}}</div>
-                </div>
-                <!-- Signaling -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="currentEvent.signaling == String(null) || currentEvent.signaling == null || currentEvent.signaling == ''">Geen signalering beschikbaar.</div>
-                  <div v-else>Signalering: {{currentEvent.signaling}}</div>
-                </div>
-
-                <!-- Extra info -->
-                <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-                <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
-
-                <!-- Opslaan knop -->
-                <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeOperationalEvent">Opslaan</button>
-                <small v-if="form.operationalEventFailed">Er is iets misgegaan bij het aanpassen.</small>
-                <small v-if="form.operationalEventSucceeded">Het verslag is aangepast.</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </fieldset>
-  </form>
-
-  <form id="changeWorkforce">
-    <!-- Personeel -->
-    <fieldset v-if="$route.query.categorie == 'Workforce'">
-      <h3 id="smalltitle">Personeel</h3>
-      <!-- WorkplaceEvents -->
-      <section v-if="$route.query.subcategorie == 'workplaceEvents'">
-        <h4 id="smalltitle">Werkplaatsgebeurtenis</h4>
-        <div class="row">
-          <!-- Checkboxes types -->
-          <div>
-            <div v-if="reportTypes == []">
-              <p>Er zijn nog geen types</p>
-            </div>
-            <div v-else>
-              <div v-for="value in reportTypes" :key="value.id">
-                <div v-for="value in value" :key="value.id">{{filterTypes(value.typeName)}}</div>
-              </div>
-              <div class="checkbox-container text-sm-left col-sm-4">
-                <div v-for="(value, index) in filteredTypes" :key="value.id">
-                  <div class="typecontainer text-lg-left">
-                    <input type="checkbox" v-model="formType.parentId[index]" true-value="yes" false-value="no" />
-                    <label>{{value}}</label>
+                  <!-- Locatie -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div
+                      v-if="currentEvent.location == String(null) || currentEvent.location == null || currentEvent.location == ''"
+                    >Geen adres beschikbaar.</div>
+                    <div v-else>Locatie: {{currentEvent.location}}</div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Invoervelden -->
-          <div class="text-sm-left col-lg">
-            <div class="input-group" style="height: 20%;">
-              <div class="formcontainer btn-block">
-                <!-- Afwezige -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="currentEvent.absentee == String(null) || currentEvent.absentee == null || currentEvent.absentee == ''">Geen afwezige beschikbaar.</div>
-                  <div v-else>Afwezige: {{currentEvent.absentee}}</div>
-                </div>
-                <!-- Vervanger -->
-                <div class="form-control form-control-lg no-edit">
-                  <div v-if="currentEvent.substitute == String(null) || currentEvent.substitute == null || currentEvent.substitute == ''">Geen vervanger beschikbaar.</div>
-                  <div v-else>Vervanger: {{currentEvent.substitute}}</div>
-                </div>
-
-                <!-- Extra info -->
-                <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
-                <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
-
-                <!-- Opslaan knop -->
-                <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeWorkplaceEvent">Opslaan</button>
-                <small v-if="form.workplaceEventFailed">Er is iets misgegaan bij het aanpassen.</small>
-                <small v-if="form.workplaceEventSucceeded">Het verslag is aangepast.</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- SecretariatNotifications -->
-      <section v-else-if="$route.query.subcategorie == 'secretariatNotifications'">
-        <h4 id="smalltitle">Secretariaatmeldingen</h4>
-        <div class="row">
-          <!-- Invoervelden -->
-          <div class="text-sm-left col-lg">
-            <div class="input-group" style="height: 20%;">
-              <div class="formcontainer btn-block">
-                <!-- Beschrijving gebeurtenis -->
-                <div class="form-control form-control-lg no-edit cropped">Beschrijving gebeurtenis: (aanpasbaar)</div>
-                <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
-                <!-- Opslaan knop -->
-                <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeSecretariatNotification">Opslaan</button>
-                <small v-if="form.secretariatNotificationFailed">Er is iets misgegaan bij het aanpassen.</small>
-                <small v-if="form.secretariatNotificationSucceeded">Het verslag is aangepast.</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </fieldset>
-  </form>
-
-  <form id="changeTechnical">
-    <!-- Technisch -->
-    <fieldset v-if="$route.query.categorie == 'Technical'">
-      <h3 id="smalltitle">Technisch</h3>
-      <!-- Defects -->
-      <section v-if="$route.query.subcategorie == 'defects'">
-        <h4 id="smalltitle">Defect</h4>
-        <div class="row">
-          <!-- Checkboxes types -->
-          <div>
-            <div v-if="reportTypes == []">
-              <p>Er zijn nog geen types</p>
-            </div>
-            <div v-else>
-              <div v-for="value in reportTypes" :key="value.id">
-                <div v-for="value in value" :key="value.id">{{filterTypes(value.typeName)}}</div>
-              </div>
-              <div class="checkbox-container text-sm-left col-sm-4">
-                <div v-for="(value, index) in filteredTypes" :key="value.id">
-                  <div class="typecontainer text-lg-left">
-                    <input type="checkbox" v-model="formType.parentId[index]" true-value="yes" false-value="no" />
-                    <label>{{value}}</label>
+                  <!-- Datum -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div
+                      v-if="currentEvent.date == String(null) || currentEvent.date == null || currentEvent.date == ''"
+                    >Geen datum beschikbaar.</div>
+                    <div v-else>
+                      Datum: {{ new Date(currentEvent.date).toLocaleString("en-BE", {
+                      year: 'numeric',
+                      month: 'numeric',
+                      day: 'numeric',
+                      })
+                      }}
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Invoervelden -->
-          <div class="text-sm-left col-lg">
-            <!-- Beschrijving -->
-            <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-            <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
-
-            <!-- Opslaan knop -->
-            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeDefect">Opslaan</button>
-            <small v-if="form.defectFailed">Er is iets misgegaan bij het aanpassen.</small>
-            <small v-if="form.defectSucceeded">Het verslag is aangepast.</small>
-          </div>
-        </div>
-      </section>
-      <!-- Malfunctions -->
-      <section v-else-if="$route.query.subcategorie == 'malfunctions'">
-        <h4 id="smalltitle">Malfunctie</h4>
-        <div class="row">
-          <!-- Checkboxes types -->
-          <div>
-            <div v-if="reportTypes == []">
-              <p>Er zijn nog geen types</p>
-            </div>
-            <div v-else>
-              <div v-for="value in reportTypes" :key="value.id">
-                <div v-for="value in value" :key="value.id">{{filterTypes(value.typeName)}}</div>
-              </div>
-              <div class="checkbox-container text-sm-left col-sm-4">
-                <div v-for="(value, index) in filteredTypes" :key="value.id">
-                  <div class="typecontainer text-lg-left">
-                    <input type="checkbox" v-model="formType.parentId[index]" true-value="yes" false-value="no" />
-                    <label>{{value}}</label>
+                  <!-- Unit -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div
+                      v-if="currentEvent.unit == String(null) || currentEvent.unit == null || currentEvent.unit == ''"
+                    >Geen unit beschikbaar.</div>
+                    <div v-else>Unit: {{currentEvent.unit}}</div>
                   </div>
+                  <!-- Signaling -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div
+                      v-if="currentEvent.signaling == String(null) || currentEvent.signaling == null || currentEvent.signaling == ''"
+                    >Geen signalering beschikbaar.</div>
+                    <div v-else>Signalering: {{currentEvent.signaling}}</div>
+                  </div>
+                  <!-- Extra info -->
+                  <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+                  <textarea
+                    type="text"
+                    class="form-control form-control-lg"
+                    v-model="currentEvent.description"
+                  ></textarea>
+                  <!-- Opslaan knop -->
+                  <button
+                    class="btn btn-large btn-block btn-success"
+                    type="button"
+                    @click.prevent="changeOperationalEvent"
+                  >Opslaan</button>
+                  <small v-if="operationalEventFailed">Er is iets misgegaan bij het aanpassen.</small>
+                  <small v-if="operationalEventSucceeded">Het verslag is aangepast.</small>
                 </div>
               </div>
             </div>
           </div>
-          <!-- Invoervelden -->
-          <div class="text-sm-left col-lg">
-            <!-- Beschrijving -->
-            <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
-            <textarea type="text" class="form-control form-control-lg" v-model="currentEvent.description"></textarea>
-            <!-- Opslaan knop -->
-            <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="changeMalfunction">Opslaan</button>
-            <small v-if="form.malfunctionFailed">Er is iets misgegaan bij het aanpassen.</small>
-            <small v-if="form.malfunctionSucceeded">Het verslag is aangepast.</small>
+        </section>
+      </fieldset>
+    </form>
+
+    <form id="changeWorkforce">
+      <!-- Personeel -->
+      <fieldset v-if="categorie == 'Workforce'">
+        <h3 id="smalltitle">Personeel</h3>
+        <!-- WorkplaceEvents -->
+        <section v-if="subcategorie == 'workplaceEvents'">
+          <h4 id="smalltitle">Werkplaatsgebeurtenis</h4>
+          <div class="row">
+            <!-- Checkboxes types -->
+            <div>
+              <div v-if="(Object.keys(reportTypes).length === 0)">
+                <p>Er zijn nog geen types</p>
+              </div>
+              <form v-else id="typeSelector">
+                <div class="text-sm-left">
+                  <label>
+                    <h5>Logistiek</h5>
+                  </label>
+                  <div class="checkbox-container text-sm-left col-sm-4">
+                    <div v-for="value in reportTypes.workplaceTypes" :key="value.id">
+                      <div class="typecontainer text-lg-left" id="workplace">
+                        <input
+                          type="radio"
+                          :id="value.typeName"
+                          :value="value.typeName"
+                          v-model="typeSelected"
+                        />
+                        <label>{{ value.typeName }}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <button @click.prevent="uncheckAll" class="btn btn-danger">Deselecteer keuze</button>
+                  <span>Types: {{ typeSelected }}</span>
+                </div>
+              </form>
+            </div>
+            <!-- Invoervelden -->
+            <div class="text-sm-left col-lg">
+              <div class="input-group" style="height: 20%;">
+                <div class="formcontainer btn-block">
+                  <!-- Afwezige -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div
+                      v-if="currentEvent.absentee == String(null) || currentEvent.absentee == null || currentEvent.absentee == ''"
+                    >Geen afwezige beschikbaar.</div>
+                    <div v-else>Afwezige: {{currentEvent.absentee}}</div>
+                  </div>
+                  <!-- Vervanger -->
+                  <div class="form-control form-control-lg no-edit">
+                    <div
+                      v-if="currentEvent.substitute == String(null) || currentEvent.substitute == null || currentEvent.substitute == ''"
+                    >Geen vervanger beschikbaar.</div>
+                    <div v-else>Vervanger: {{currentEvent.substitute}}</div>
+                  </div>
+                  <!-- Extra info -->
+                  <div class="form-control form-control-lg no-edit cropped">Extra info: (aanpasbaar)</div>
+                  <textarea
+                    type="text"
+                    class="form-control form-control-lg"
+                    v-model="currentEvent.description"
+                  ></textarea>
+                  <!-- Opslaan knop -->
+                  <button
+                    class="btn btn-large btn-block btn-success"
+                    type="button"
+                    @click.prevent="changeWorkplaceEvent"
+                  >Opslaan</button>
+                  <small v-if="workplaceEventFailed">Er is iets misgegaan bij het aanpassen.</small>
+                  <small v-if="workplaceEventSucceeded">Het verslag is aangepast.</small>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
-    </fieldset>
-  </form>
-</div>
+        </section>
+        <!-- SecretariatNotifications -->
+        <section v-else-if="subcategorie == 'secretariatNotifications'">
+          <h4 id="smalltitle">Secretariaatmeldingen</h4>
+          <div class="row">
+            <!-- Invoervelden -->
+            <div class="text-sm-left col-lg">
+              <div class="input-group" style="height: 20%;">
+                <div class="formcontainer btn-block">
+                  <!-- Beschrijving gebeurtenis -->
+                  <div
+                    class="form-control form-control-lg no-edit cropped"
+                  >Beschrijving gebeurtenis: (aanpasbaar)</div>
+                  <textarea
+                    type="text"
+                    class="form-control form-control-lg"
+                    v-model="currentEvent.description"
+                  ></textarea>
+                  <!-- Opslaan knop -->
+                  <button
+                    class="btn btn-large btn-block btn-success"
+                    type="button"
+                    @click.prevent="changeSecretariatNotification"
+                  >Opslaan</button>
+                  <small
+                    v-if="secretariatNotificationFailed"
+                  >Er is iets misgegaan bij het aanpassen.</small>
+                  <small v-if="secretariatNotificationSucceeded">Het verslag is aangepast.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </fieldset>
+    </form>
+
+    <form id="changeTechnical">
+      <!-- Technisch -->
+      <fieldset v-if="categorie == 'Technical'">
+        <h3 id="smalltitle">Technisch</h3>
+        <!-- Defects -->
+        <section v-if="subcategorie == 'defects'">
+          <h4 id="smalltitle">Defect</h4>
+          <div class="row">
+            <!-- Checkboxes types -->
+            <div>
+              <div v-if="(Object.keys(reportTypes).length === 0)">
+                <p>Er zijn nog geen types</p>
+              </div>
+              <form v-else id="typeSelector">
+                <div class="text-sm-left">
+                  <label>
+                    <h5>Technisch</h5>
+                  </label>
+                  <div class="checkbox-container text-sm-left col-sm-4">
+                    <div v-for="value in reportTypes.defectTypes" :key="value.id">
+                      <div class="typecontainer text-lg-left" id="defect">
+                        <input
+                          type="radio"
+                          :id="value.typeName"
+                          :value="value.typeName"
+                          v-model="typeSelected"
+                        />
+                        <label>{{ value.typeName }}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <button @click.prevent="uncheckAll" class="btn btn-danger">Deselecteer keuze</button>
+                  <span>Types: {{ typeSelected }}</span>
+                </div>
+              </form>
+            </div>
+            <!-- Invoervelden -->
+            <div class="text-sm-left col-lg">
+              <!-- Beschrijving -->
+              <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
+              <textarea
+                type="text"
+                class="form-control form-control-lg"
+                v-model="currentEvent.description"
+              ></textarea>
+              <!-- Opslaan knop -->
+              <button
+                class="btn btn-large btn-block btn-success"
+                type="button"
+                @click.prevent="changeDefect"
+              >Opslaan</button>
+              <small v-if="defectFailed">Er is iets misgegaan bij het aanpassen.</small>
+              <small v-if="defectSucceeded">Het verslag is aangepast.</small>
+            </div>
+          </div>
+        </section>
+        <!-- Malfunctions -->
+        <section v-else-if="subcategorie == 'malfunctions'">
+          <h4 id="smalltitle">Malfunctie</h4>
+          <div class="row">
+            <!-- Checkboxes types -->
+            <div>
+              <div v-if="(Object.keys(reportTypes).length === 0)">
+                <p>Er zijn nog geen types</p>
+              </div>
+              <form v-else id="typeSelector">
+                <div class="text-sm-left">
+                  <label>
+                    <h5>Technisch</h5>
+                  </label>
+                  <div class="checkbox-container text-sm-left col-sm-4">
+                    <div v-for="value in reportTypes.malfunctionTypes" :key="value.id">
+                      <div class="typecontainer text-lg-left" id="malfunction">
+                        <input
+                          type="radio"
+                          :id="value.typeName"
+                          :value="value.typeName"
+                          v-model="typeSelected"
+                        />
+                        <label>{{ value.typeName }}</label>
+                      </div>
+                    </div>
+                  </div>
+                  <button @click.prevent="uncheckAll" class="btn btn-danger">Deselecteer keuze</button>
+                  <span>Types: {{ typeSelected }}</span>
+                </div>
+              </form>
+            </div>
+            <!-- Invoervelden -->
+            <div class="text-sm-left col-lg">
+              <!-- Beschrijving -->
+              <div class="form-control form-control-lg no-edit cropped">Beschrijving: (aanpasbaar)</div>
+              <textarea
+                type="text"
+                class="form-control form-control-lg"
+                v-model="currentEvent.description"
+              ></textarea>
+              <!-- Opslaan knop -->
+              <button
+                class="btn btn-large btn-block btn-success"
+                type="button"
+                @click="changeMalfunction"
+              >Opslaan</button>
+              <small v-if="malfunctionFailed">Er is iets misgegaan bij het aanpassen.</small>
+              <small v-if="malfunctionSucceeded">Het verslag is aangepast.</small>
+            </div>
+          </div>
+        </section>
+      </fieldset>
+    </form>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import ReportingService from "../services/ReportingService";
 export default Vue.extend({
-  data: function () {
+  data: function() {
     return {
+      reportTypes: {},
+      selectedTypes: [],
+      typeSelected: "",
       currentEvent: {
         id: 0,
         authorId: 0,
@@ -275,8 +367,6 @@ export default Vue.extend({
       operationalId: 0,
       administrativeId: 0,
       technicalId: 0,
-      filteredTypes: [] as string[],
-      reportTypes: [],
       step: "Operational",
       reportContent: {
         report: {
@@ -288,143 +378,207 @@ export default Vue.extend({
           updatedAt: ""
         },
         operational: {
-          operationalEvents: [{
-            id: 0,
-            authorId: 0,
-            operationalId: 0,
-            signaling: "",
-            plNumber: "",
-            description: "",
-            priority: null,
-            location: "",
-            unit: "",
-            date: "",
-            createdAt: "",
-            updatedAt: ""
-          }]
+          operationalEvents: [
+            {
+              id: 0,
+              authorId: 0,
+              operationalId: 0,
+              signaling: "",
+              plNumber: "",
+              description: "",
+              priority: null,
+              location: "",
+              unit: "",
+              date: "",
+              createdAt: "",
+              updatedAt: ""
+            }
+          ]
         },
         administrative: {
-          workplaceEvents: [{
-            id: 0,
-            authorId: 0,
-            administrativeId: 0,
-            description: "",
-            absentee: "",
-            substitute: "",
-            monitoring: true,
-            date: "",
-            createdAt: "",
-            updatedAt: ""
-          }],
-          secretariatNotifications: [{
-            id: 0,
-            authorId: 0,
-            administrativeId: 0,
-            description: "",
-            monitoring: true,
-            date: "",
-            createdAt: "",
-            updatedAt: ""
-          }]
+          workplaceEvents: [
+            {
+              id: 0,
+              authorId: 0,
+              administrativeId: 0,
+              description: "",
+              absentee: "",
+              substitute: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: ""
+            }
+          ],
+          secretariatNotifications: [
+            {
+              id: 0,
+              authorId: 0,
+              administrativeId: 0,
+              description: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: ""
+            }
+          ]
         },
         technical: {
-          defects: [{
-            id: 0,
-            authorId: 0,
-            technicalId: 0,
-            defectTypeId: 0,
-            description: "",
-            monitoring: true,
-            date: "",
-            createdAt: "",
-            updatedAt: ""
-          }],
-          malfunctions: [{
-            id: 0,
-            authorId: 0,
-            technicalId: 0,
-            malfunctionTypeId: 0,
-            description: "",
-            monitoring: true,
-            date: "",
-            duration: "",
-            createdAt: "",
-            updatedAt: ""
-          }]
+          defects: [
+            {
+              id: 0,
+              authorId: 0,
+              technicalId: 0,
+              defectTypeId: 0,
+              description: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: ""
+            }
+          ],
+          malfunctions: [
+            {
+              id: 0,
+              authorId: 0,
+              technicalId: 0,
+              malfunctionTypeId: 0,
+              description: "",
+              monitoring: true,
+              date: "",
+              duration: "",
+              createdAt: "",
+              updatedAt: ""
+            }
+          ]
         }
       },
       eventId: 0,
+      categorie: "",
       subcategorie: "",
-      formType: {
-        parentId: []
-      },
-      form: {
-        //OPERATIONALEVENT OBJECTS
-        operationalEventFailed: false,
-        operationalEventSucceeded: false,
-        //WORKPLACEEVENT OBJECTS
-        workplaceEventFailed: false,
-        workplaceEventSucceeded: false,
-        //SECRETARIATNOTIFICATION OBJECTS
-        secretariatNotificationFailed: false,
-        secretariatNotificationSucceeded: false,
-        //DEFECT OBJECTS
-        defectFailed: false,
-        defectSucceeded: false,
-        //MALFUNCTION OBJECTS
-        malfunctionFailed: false,
-        malfunctionSucceeded: false
-      }
+      // OperationalEvent status
+      operationalEventFailed: false,
+      operationalEventSucceeded: false,
+      // WorkplaceEvent status
+      workplaceEventFailed: false,
+      workplaceEventSucceeded: false,
+      // SecretariatNotification status
+      secretariatNotificationFailed: false,
+      secretariatNotificationSucceeded: false,
+      // Defect status
+      defectFailed: false,
+      defectSucceeded: false,
+      // Malfunction status
+      malfunctionFailed: false,
+      malfunctionSucceeded: false
     };
   },
-
   mounted() {
     this.loadData();
   },
+  // watch: {
+  //   selectedTypes: function() {
+  //     this.getStatistics();
+  //   }
+  // },
 
   methods: {
-    loadData: function () {
+    loadData: function() {
       // this.loadReportContent();
 
       ReportingService.getAllReports(
         "/api/reports/content/" + this.$route.query.reportId
       ).then(res => (this.reportContent = res));
+      this.categorie = String(this.$route.query.categorie);
+      this.subcategorie = String(this.$route.query.subcategorie);
 
-      if (String(this.$route.query.subcategorie) == String("operationalEvents")) {
-        ReportingService.getReportEvent(
-          "/api/reports/operationalEvent/" + this.$route.query.eventId
-        ).then(res => (this.currentEvent = res));
-        ReportingService.getAllReports("/api/reports/operationalTypes").then(
-          res => (this.reportTypes = res)
-        );
-      } else if (String(this.$route.query.subcategorie) == String("workplaceEvents")) {
-        ReportingService.getReportEvent(
-          "/api/reports/workplaceEvent/" + this.$route.query.eventId
-        ).then(res => (this.currentEvent = res));
-        ReportingService.getAllReports("/api/reports/workplaceTypes").then(
-          res => (this.reportTypes = res)
-        );
-      } else if (String(this.$route.query.subcategorie) == String("secretariatNotifications")) {
-        ReportingService.getReportEvent(
-          "/api/reports/secretariatNotification/" + this.$route.query.eventId
-        ).then(res => (this.currentEvent = res));
-      } else if (String(this.$route.query.subcategorie) == String("defects")) {
-        ReportingService.getReportEvent(
-          "/api/reports/defectEvent/" + this.$route.query.eventId
-        ).then(res => (this.currentEvent = res));
-        ReportingService.getAllReports("/api/reports/defectTypes").then(
-          res => (this.reportTypes = res)
-        );
-      } else if (String(this.$route.query.subcategorie) == String("malfunctions")) {
-        ReportingService.getReportEvent(
-          "/api/reports/malfunctionEvent/" + this.$route.query.eventId
-        ).then(res => (this.currentEvent = res));
-        ReportingService.getAllReports("/api/reports/malfunctionTypes").then(
-          res => (this.reportTypes = res)
-        );
+      if (this.subcategorie == "operationalEvents") {
+        this.loadOperationalEvent();
+      } else if (this.subcategorie == "workplaceEvents") {
+        this.loadWorkplaceEvent();
+      } else if (this.subcategorie == "secretariatNotifications") {
+        this.loadSecretariatNotification();
+      } else if (this.subcategorie == "defects") {
+        this.loadDefect();
+      } else if (this.subcategorie == "malfunctions") {
+        this.loadMalfunction();
       }
     },
-    loadReportContent: function () {
+    selectAll: function(section: string) {
+      const checks = document.querySelectorAll(
+        "#" + section + ' input[type="checkbox"]'
+      );
+
+      const parent = document.getElementById(
+        section + "Parent"
+      ) as HTMLInputElement;
+      const status = parent.checked;
+
+      for (let i = 0; i < checks.length; i++) {
+        const check = checks[i] as HTMLInputElement;
+        if (check.checked != status) check.click();
+      }
+    },
+
+    loadOperationalEvent: function() {
+      ReportingService.getReportEvent(
+        "/api/reports/operationalEvent/" + this.$route.query.eventId
+      ).then(res => (this.currentEvent = res));
+
+      // ReportingService.getEventType(
+      //   "/api/reports/operationalEventType/" + this.$route.query.eventId
+      // ).then(res => (this.typeSelected = res));
+
+      ReportingService.getAllReports("/api/reports/operationalTypes").then(
+        res => (this.reportTypes = res)
+      );
+    },
+    loadWorkplaceEvent: function() {
+      ReportingService.getReportEvent(
+        "/api/reports/workplaceEvent/" + this.$route.query.eventId
+      ).then(res => (this.currentEvent = res));
+
+      ReportingService.getEventType(
+        "/api/reports/workplaceEventType/" + this.$route.query.eventId
+      ).then(res => (this.typeSelected = res));
+
+      ReportingService.getAllReports("/api/reports/workplaceTypes").then(
+        res => (this.reportTypes = res)
+      );
+    },
+    loadSecretariatNotification: function() {
+      ReportingService.getReportEvent(
+        "/api/reports/secretariatNotification/" + this.$route.query.eventId
+      ).then(res => (this.currentEvent = res));
+    },
+    loadDefect: function() {
+      ReportingService.getReportEvent(
+        "/api/reports/defectEvent/" + this.$route.query.eventId
+      ).then(res => (this.currentEvent = res));
+
+      ReportingService.getEventType(
+        "/api/reports/defectType/" + this.$route.query.eventId
+      ).then(res => (this.typeSelected = res));
+
+      ReportingService.getAllReports("/api/reports/defectTypes").then(
+        res => (this.reportTypes = res)
+      );
+    },
+    loadMalfunction: function() {
+      ReportingService.getReportEvent(
+        "/api/reports/malfunctionEvent/" + this.$route.query.eventId
+      ).then(res => (this.currentEvent = res));
+
+      ReportingService.getEventType(
+        "/api/reports/malfunctionType/" + this.$route.query.eventId
+      ).then(res => (this.typeSelected = res));
+
+      ReportingService.getAllReports("/api/reports/malfunctionTypes").then(
+        res => (this.reportTypes = res)
+      );
+    },
+
+    loadReportContent: function() {
       this.reportContent = {
         report: {
           id: 1,
@@ -435,7 +589,8 @@ export default Vue.extend({
           updatedAt: "2020-05-04T07:46:17.000Z"
         },
         operational: {
-          operationalEvents: [{
+          operationalEvents: [
+            {
               id: 1,
               authorId: 1,
               operationalId: 1,
@@ -455,7 +610,8 @@ export default Vue.extend({
               operationalId: 1,
               signaling: "",
               plNumber: "PL03170104",
-              description: "Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht",
+              description:
+                "Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht",
               priority: null,
               location: "",
               unit: "HANO",
@@ -564,53 +720,61 @@ export default Vue.extend({
           ]
         },
         administrative: {
-          workplaceEvents: [{
-            id: 1,
-            authorId: 1,
-            administrativeId: 1,
-            description: "ziek geworden",
-            absentee: "Jan Jacobs",
-            substitute: "Geordy Hendricks",
-            monitoring: true,
-            date: "2020-03-30T15:46:36.000Z",
-            createdAt: "2020-05-04T07:47:37.000Z",
-            updatedAt: "2020-05-04T07:47:37.000Z"
-          }],
-          secretariatNotifications: [{
-            id: 1,
-            authorId: 1,
-            administrativeId: 1,
-            description: "ongeval",
-            monitoring: true,
-            date: "2020-03-30T10:46:36.000Z",
-            createdAt: "2020-05-04T07:47:37.000Z",
-            updatedAt: "2020-05-04T07:47:37.000Z"
-          }]
+          workplaceEvents: [
+            {
+              id: 1,
+              authorId: 1,
+              administrativeId: 1,
+              description: "ziek geworden",
+              absentee: "Jan Jacobs",
+              substitute: "Geordy Hendricks",
+              monitoring: true,
+              date: "2020-03-30T15:46:36.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            }
+          ],
+          secretariatNotifications: [
+            {
+              id: 1,
+              authorId: 1,
+              administrativeId: 1,
+              description: "ongeval",
+              monitoring: true,
+              date: "2020-03-30T10:46:36.000Z",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            }
+          ]
         },
         technical: {
-          defects: [{
-            id: 1,
-            authorId: 1,
-            technicalId: 1,
-            defectTypeId: 1,
-            description: "krakende deur in kamer 512",
-            monitoring: true,
-            date: "2020/04/15 13:03:57",
-            createdAt: "2020-05-04T07:47:37.000Z",
-            updatedAt: "2020-05-04T07:47:37.000Z"
-          }],
-          malfunctions: [{
-            id: 1,
-            authorId: 1,
-            technicalId: 1,
-            malfunctionTypeId: 1,
-            description: "lekkende kraan in kamer 304",
-            monitoring: true,
-            date: "2020-04-15T13:03:57.000Z",
-            duration: "",
-            createdAt: "2020-05-04T07:47:37.000Z",
-            updatedAt: "2020-05-04T07:47:37.000Z"
-          }]
+          defects: [
+            {
+              id: 1,
+              authorId: 1,
+              technicalId: 1,
+              defectTypeId: 1,
+              description: "krakende deur in kamer 512",
+              monitoring: true,
+              date: "2020/04/15 13:03:57",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            }
+          ],
+          malfunctions: [
+            {
+              id: 1,
+              authorId: 1,
+              technicalId: 1,
+              malfunctionTypeId: 1,
+              description: "lekkende kraan in kamer 304",
+              monitoring: true,
+              date: "2020-04-15T13:03:57.000Z",
+              duration: "",
+              createdAt: "2020-05-04T07:47:37.000Z",
+              updatedAt: "2020-05-04T07:47:37.000Z"
+            }
+          ]
         }
       };
     },
@@ -620,7 +784,7 @@ export default Vue.extend({
         operationalId: this.currentEvent.id,
         message: this.currentEvent.description
       });
-      this.form.operationalEventSucceeded = true;
+      this.operationalEventSucceeded = true;
     },
     async changeWorkplaceEvent() {
       await ReportingService.changeWorkplaceEvent({
@@ -628,7 +792,7 @@ export default Vue.extend({
         administrativeId: this.currentEvent.id,
         message: this.currentEvent.description
       });
-      this.form.workplaceEventSucceeded = true;
+      this.workplaceEventSucceeded = true;
     },
     async changeSecretariatNotification() {
       await ReportingService.changeSecretariatNotification({
@@ -636,32 +800,28 @@ export default Vue.extend({
         administrativeId: this.currentEvent.id,
         message: this.currentEvent.description
       });
-      this.form.secretariatNotificationSucceeded = true;
+      this.secretariatNotificationSucceeded = true;
     },
     async changeDefect() {
       await ReportingService.changeDefect({
         reportId: this.$route.query.reportId,
         technicalId: this.currentEvent.id,
-        message: this.currentEvent.description
+        message: this.currentEvent.description,
+        type: this.typeSelected
       });
-      this.form.defectSucceeded = true;
+      this.defectSucceeded = true;
     },
     async changeMalfunction() {
       await ReportingService.changeMalfunction({
         reportId: this.$route.query.reportId,
         technicalId: this.currentEvent.id,
-        message: this.currentEvent.description
+        message: this.currentEvent.description,
+        type: this.typeSelected
       });
-      this.form.malfunctionSucceeded = true;
+      this.malfunctionSucceeded = true;
     },
-
-    filterTypes: function (str: string) {
-      for (let i = 0; i < this.filteredTypes.length; i++) {
-        if (this.filteredTypes[i] == str) {
-          return;
-        }
-      }
-      this.filteredTypes.push(str);
+    uncheckAll: function() {
+      this.typeSelected = "";
     }
   }
 });

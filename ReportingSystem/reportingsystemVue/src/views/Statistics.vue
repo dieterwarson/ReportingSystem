@@ -11,9 +11,11 @@
           <input
             type="checkbox"
             id="operationalParent"
-            v-on:change="selectAll('operational')"
+            @change="selectAll('operational')"
           />
-          <label><h5>Operationeel</h5></label>
+          <label>
+            <h5>Operationeel</h5>
+          </label>
           <div class="checkbox-container text-sm-left col-sm-4">
             <div
               v-for="value in this.reportTypes.operationalTypes"
@@ -33,9 +35,11 @@
           <input
             type="checkbox"
             id="workplaceParent"
-            v-on:change="selectAll('workplace')"
+            @change="selectAll('workplace')"
           />
-          <label><h5>Voorval tijdens de dienst</h5></label>
+          <label>
+            <h5>Voorval tijdens de dienst</h5>
+          </label>
           <div class="checkbox-container text-sm-left col-sm-4">
             <div
               v-for="value in this.reportTypes.workplaceTypes"
@@ -55,9 +59,11 @@
           <input
             type="checkbox"
             id="defectParent"
-            v-on:change="selectAll('defect')"
+            @change="selectAll('defect')"
           />
-          <label><h5>Logistiek</h5></label>
+          <label>
+            <h5>Logistiek</h5>
+          </label>
           <div class="checkbox-container text-sm-left col-sm-4">
             <div v-for="value in this.reportTypes.defectTypes" :key="value.id">
               <div class="typecontainer text-lg-left" id="defect">
@@ -74,9 +80,11 @@
           <input
             type="checkbox"
             id="malfunctionParent"
-            v-on:change="selectAll('malfunction')"
+            @change="selectAll('malfunction')"
           />
-          <label><h5>Technisch</h5></label>
+          <label>
+            <h5>Technisch</h5>
+          </label>
           <div class="checkbox-container text-sm-left col-sm-4">
             <div
               v-for="value in this.reportTypes.malfunctionTypes"
@@ -110,7 +118,7 @@ export default Vue.extend({
     return {
       reportTypes: {},
       selectedTypes: [],
-      statisticsData: {},
+      statisticsData: {}
     };
   },
 
@@ -120,11 +128,11 @@ export default Vue.extend({
 
   methods: {
     loadData: function() {
-       ReportingService.getAllReports("/api/statistics/types").then(
-        (res) => (this.reportTypes = res)
+      ReportingService.getAllReports("/api/statistics/types").then(
+        res => (this.reportTypes = res)
       );
 
-/*       this.reportTypes = {
+      /*       this.reportTypes = {
         operationalTypes: [
           { id: 1, typeName: "Specifieke gebeurtenis" },
           { id: 2, typeName: "Grensoverschrijdende achtervolging" },
@@ -165,16 +173,16 @@ export default Vue.extend({
     getStatistics: function() {
       if (this.selectedTypes != []) {
         ReportingService.getStatistics(this.selectedTypes).then(
-          (res) => (this.statisticsData = res)
+          res => (this.statisticsData = res)
         );
       }
-    },
+    }
   },
   watch: {
     selectedTypes: function() {
       // alert("request");
       this.getStatistics();
-    },
-  },
+    }
+  }
 });
 </script>
