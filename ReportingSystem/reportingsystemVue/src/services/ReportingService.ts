@@ -82,9 +82,9 @@ export default {
       alert(error);
     });
   },
-  getAccessRoleData(url: string) {
+  getAccessRoleData() {
     return Api()
-    .get(url)
+    .get('/roles')
     .then(res => {
       return res.data;
     })
@@ -117,13 +117,14 @@ export default {
       .post('/loginUser', data)
       .then(res => {
         window.localStorage.setItem("token",res.data.token);
-        window.location = res.data.redirect;
+        window.location.href = res.data.redirect;
         return;
       })
       .catch(error => {
         return error.response.data;
       });
   },
+  
   changeSubscription(data: any) {
     return Api()
     .post("/changeSubscription", data)
@@ -154,16 +155,22 @@ export default {
       alert(error);
     })
   },
+  addTypes(data: any) {
+    return Api()
+    .post("/addTypes", data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
   checkAuthentication(){
     return Api()
-    
+  
     .post('/checkAuthentication', {token: window.localStorage.getItem('token')})
     .then(res => {
-      if (res.data.check) {
-        return true;
-      } else {
-        window.location.href = '/login'
-      }
+      return res.data.check;
     })
     .catch(error => {
       alert(error);

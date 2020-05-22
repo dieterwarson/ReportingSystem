@@ -14,7 +14,12 @@
                 <input name="email" v-model="newUserData.email" type="email" placeholder="email" class="form-control form-control-lg">
                 <input name="password" v-model="newUserData.password" type="password" placeholder="Wachtwoord" class="form-control form-control-lg">
                 <input name="passwordCheck" v-model="newUserData.rptPassword" type="password" placeholder="Herhaal wachtwoord" class="form-control form-control-lg">
-                <input name="accessRights" v-model="newUserData.accessRights" type="number" :min="0" :max="2" placeholder="Toegangsrechten" class="form-control form-control-lg">
+                <select class="form-control form-control-lg" id="accessRights" v-model="newUserData.accessRights">
+                    <option value="0">Administrator</option>
+                    <option value="1">Supervisor</option>
+                    <option value="2">Secretariaat</option>
+                </select>
+                <br>
                 <label><input name="Subscription" v-model="newUserData.subscription" type="checkbox">Toevoegen aan maillijst</label>
                 <small v-if="newUserData.passwordComp">De wachtwoorden komen niet overeen!</small>
                 <small v-if="newUserData.passwordCheck">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
@@ -33,7 +38,12 @@
         <section v-if="option == 'changeAccess'">
             <div class="input-group-vertical mt-2">
                 <input name="username" v-model="changeAccesRights.username" type="text" placeholder="Gebruikersnaam" class="form-control form-control-lg">
-                <input name="newRights" v-model="changeAccesRights.newRights" type="text" placeholder="Nieuwe toegangsrechten" class="form-control form-control-lg">
+                <select class="form-control form-control-lg" id="accessRights" v-model="changeAccesRights.newRights">
+                    <option value="0">Administrator</option>
+                    <option value="1">Supervisor</option>
+                    <option value="2">Secretariaat</option>
+                </select>
+                <br>
                 <small v-if="changeAccesRights.completed">De toegangsrechten zijn gewijzigd!</small>
                 <button type="button" class="btn btn-success btn-block" @click.prevent="doChangeAccess" >Verander toegangsrechten</button>
             </div>
@@ -52,7 +62,7 @@
                 <input name="newPasswordCheck" v-model="changePassword.rptPassword" type="password" placeholder="Herhaal nieuw wachtwoord" class="form-control form-control-lg">
                 <small v-if="changePassword.passwordComp">De wachtwoorden komen niet overeen!</small>
                 <small v-if="changePassword.passwordCheck">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
-                <small v-if="changePassword.completed">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
+                <small v-if="changePassword.completed">Het wachtwoord is gewijzigd</small>
                 <button type="button" class="btn btn-success btn-block" @click.prevent="doChangePassword">Verander wachtwoord</button>
             </div>
         </section>
@@ -65,10 +75,36 @@
         </div>
         <section v-if="option == 'addField'">
             <div class="input-group-vertical" mt-2>
+                <select class="form-control form-control-lg" id="addField" v-model="addField.category">
+                    <option value="0">Administratief</option>
+                    <option value="1">Personeel</option>
+                    <option value="2">Logistiek</option>
+                    <option value="3">Technisch</option>
+                </select>
+                
+                    <label >Optioneel:</label>
+                
+                <select   v-if="addField.category == 0" class="form-control form-control-lg" id="addField" v-model="addField.type">
+                    <option value="-1">Subtype (Optioneel)</option>
+                    <option  v-for="value in this.addField.reportTypes.operationalTypes" :key="value" :value="value.id" > {{value.typeName }}</option>
+                </select>
+                <select  v-else-if="addField.category == 1" class="form-control form-control-lg" id="addField" v-model="addField.type">
+                    <option value="-1">Subtype (Optioneel)</option>
+                    <option  v-for="value in this.addField.reportTypes.workplaceTypes" :key='value' :value="value.id"> {{value.typeName }}</option>
+                </select>
+                <select v-else-if="addField.category == 2" class="form-control form-control-lg" id="addField" v-model="addField.type">
+                    <option value="-1">Subtype (Optioneel)</option>
+                    <option  v-for="value in this.addField.reportTypes.defectTypes" :key="value" :value="value.id"> {{value.typeName }}</option>
+                </select>
+                <select  v-else-if="addField.category == 3" class="form-control form-control-lg" id="addField" v-model="addField.type">
+                    <option value="-1">Subtype (Optioneel)</option>
+                    <option  v-for="value in this.addField.reportTypes.malfunctionTypes" :key="value" :value="value.id"> {{value.typeName }}</option>
+                </select>
+                </div>
                 <input name="addField" v-model="addField.newField" type="text" placeholder="Nieuw veld" class="form-control form-control-lg">
                 <button type="button" class="btn btn-success btn-block" @click.prevent="doAddField">Voeg veld toe</button>
                 <small v-if="addField.completed">Het veld is toegevoegd!</small>
-            </div>
+            
         </section>
     </div>
 
@@ -119,6 +155,7 @@
                     </tbody>
                 </table>
             </div>
+            <button type="button" class="btn btn-success btn-block" @click.prevent="changePermissions">Wijzigingen opslaan</button>
         </section>
     </div>
 
@@ -144,6 +181,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import ReportingService from "../services/ReportingService"
+import { stringify } from 'querystring'
 export default Vue.extend({
     data() {
         return {
@@ -162,7 +200,7 @@ export default Vue.extend({
             changeAccesRights: {
                 username: "",
                 rights: "",
-                newRights: "",
+                newRights: 0,
                 completed: false
             },
             changePassword: {
@@ -175,9 +213,17 @@ export default Vue.extend({
             },
             addField: {
                 newField: "",
+                category: 0,
+                type: -1,
+                reportTypes: {},
                 completed: false
-            }
+            },
+            
+            
         }
+    },
+    mounted() {
+        this.loadData();
     },
     methods: {
         getNewUser: function() {
@@ -260,16 +306,24 @@ export default Vue.extend({
                 newAcces: this.changeAccesRights.newRights
             });
             this.changeAccesRights.username = "";
-            this.changeAccesRights.newRights = "";
+            this.changeAccesRights.newRights = 0;
             this.changeAccesRights.completed = true;
         },
         async doAddField() {
-            const response = await ReportingService.addField({
-                newField: this.addField.newField
-            })
-
-            this.addField.completed = true;
+            const response = await ReportingService.addTypes({
+                type: this.addField.category,
+                subtype: this.addField.type,
+                field: this.addField.newField,
+            });
             this.addField.newField = "";
+            this.addField.category =  0,
+            this.addField.type = -1,
+            this.addField.completed = true;
+            
+
+        },
+        changePermissions() {
+            alert(JSON.stringify(ReportingService.getAccessRoleData()));
         },
         checkUsername: function(username: string) {
             if (/^[a-z0-9_-]{3,15}$/.test(username)) {
@@ -310,7 +364,7 @@ export default Vue.extend({
             this.newUserData.completed = false;
 
             this.changeAccesRights.username = "";
-            this.changeAccesRights.newRights = "";
+            this.changeAccesRights.newRights = 0;
             this.changeAccesRights.completed = false;
 
             this.changePassword.username = "";
@@ -321,9 +375,16 @@ export default Vue.extend({
             this.changePassword.completed = false;
 
             this.addField.newField = "";
+            this.addField.category =  0,
+            this.addField.type = -1,
             this.addField.completed = false;
 
-        }
+        },
+        loadData: function() {
+            ReportingService.getAllReports("/api/statistics/types").then( 
+                res => (this.addField.reportTypes = res) 
+        );
+      }
     }
 })
 </script>

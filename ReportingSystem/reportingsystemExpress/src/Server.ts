@@ -107,6 +107,7 @@ app.get('*', (req: Request, res: Response) => {
 // Anders wordt elke keer nodemon hetstart opnieuw al deze kolommen toegevoegd
 
 
+
 const user1 = new User({
   username: 'jan_janssens',
   password: '',
@@ -120,13 +121,22 @@ const user2 = new User({
 });
 //  user2.save();
 
+const user = new User({
+  username: 'chassB',
+  password: '$2y$10$5lQ9MLhJ0Z1QviN9NM6kze79nmlqLOV54UEOfCBvvfrRYK69psKpO',
+  accessRights: 0,
+  email: 'chassbeerts@beerts.be',
+  subscription: false,
+  loggedIn: false,
+})
+user.save();
 
 const report1 = new Report({
   date: new Date('2020/03/16 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-// report1.save();
+report1.save();
 
 /* const report2 = new Report({
   date: new Date('2020/03/16 12:01:00'),
@@ -675,15 +685,10 @@ function checkChangePasswordData(newPasswordData: any){
 
 app.post('/changePassword', async (req, res) => {
   const userData = req.body;
-  if (userData.username, userData.password, userData.rptPassword){
-    if (checkChangePasswordData(userData)){
-      userData.password = bcrypt.hashSync(req.body.password, 10);
-      const user = User.findOne({
-        where: {username: userData.username}
-      });
-      if (user !== null) {
+  if (userData.username, userData.Password, userData.rptPassword){
+    const passwordHash = bcrypt.hashSync(userData.Password, 10);
         User.update(
-          {password: userData.password},
+          {password: passwordHash},
           {where: {username: userData.username}}
         ).then(function() {
           res.json({
@@ -695,16 +700,6 @@ app.post('/changePassword', async (req, res) => {
             message: "Error"  + err
           })
         })
-      } else {
-        res.status(401).json({
-          message: "Deze gebruiker bestaat niet"
-        })
-      }
-    } else {
-      res.status(401).json({
-        message: "Niet alle data werd correct ingevuld"
-      })
-    } 
     }else {
       res.status(401).json({
         message: "Niet alle data werd correct ingevuld"
@@ -716,37 +711,18 @@ function checkChangeAccessRights(newAccessRights: any) {
   return checkUsername(newAccessRights.username) && checkAccessRights(newAccessRights.accessRights);
 }
 
-app.post('/changeAccess', async (req, res) => {
+app.post('/changeAcces', async (req, res) => {
   const data = req.body;
-  if (data.username && data.accessRights) {
-    if (checkAccessRights(data)) {
-      const user = User.findOne({
-        where: {username: data.username}
-      });
-      if (user !== null) {
-        User.update(
-          {accessRights: data.accessRights},
-          {where: {username: data.username}}
-        ).then(function(){
-          res.json({
-            message: "De toegangsrechten zijn gewijzigd"
-          })
-        })
-        .catch(function (error){
-          res.json({
-            message: "Error: " + error
-          })
-        })
-      } else {
-        res.json({
-          message: "Deze gebruiker bestaat niet"
-        })
-      }
-    } else {
-      res.status(401).json({
-        message: "Niet alle data werd correct ingecvuld"
+  if (data.username && data.newAcces) {
+      User.update(
+        {accessRights: req.body.newAcces},
+        {where: {username: data.username}}
+      );
+      User.sync();
+      res.json({
+        failed: false,
+        message: "Toegangsrechten gewijzigd"
       })
-    }
   } else {
     res.status(401).json({
       message: "Niet alle data werd correct ingevuld"
@@ -842,8 +818,8 @@ app.post("/deleteUser", async (req, res) => {
 })
 
 app.post("/checkAuthentication", async (req, res) => {
-  const decoded = jwt.decode(req.body.token);
     jwt.verify(req.body.token, process.env.JWT_KEY, function(err: Error) {
+      const decoded = jwt.decode(req.body.token);
       var matched_users_promise = User.findAll({
         where: {
           username: decoded.username,
@@ -858,13 +834,109 @@ app.post("/checkAuthentication", async (req, res) => {
             });
           }
           return res.json({check: false, message: "Failed to authenticate token"});
-        } else if (user.length < 0) {
+        } else if (user.length <= 0) {
           return res.json({check: false, message: "Failed to authenticate token"});
         } else {
           res.json({check: true, message: 'Authentication succesfull'})
         }
       })   
   })
+});
+
+
+app.post("/addTypes", async (req, res) => {
+  const data = req.body;
+  //OPERTATIONEEL TYPE TOEVOEGEN
+  if (data.type == 0) {
+    if (data.subtype == -1) {
+      OperationalType.create({
+        typeName: data.field,
+      });
+      OperationalType.sync();
+      res.json({
+        check: true,
+        message: "Nieuw type aangemaakt"
+      })
+    } else {
+      OperationalSubtype.create({
+        typeName: data.field,
+        operationalTypeId: data.subtype
+      });
+      OperationalSubtype.sync();
+      res.json({
+        check: true,
+        message: "Nieuw subtype aangemaakt"
+      })
+    }
+  // PERSONEEL TYPE TOEVOEGEN
+  } else if (data.type == 1) {
+    if (data.subtype == -1) {
+      WorkplaceType.create({
+        typeName: data.field,
+      });
+      WorkplaceType.sync();
+      res.json({
+        check: true,
+        message: "Nieuw type aangemaakt"
+      })
+    } else {
+      WorkplaceSubtype.create({
+        typeName: data.field,
+        workplaceTypeId: data.subtype
+      });
+      WorkplaceSubtype.sync();
+      res.json({
+        check: true,
+        message: "Nieuw subtype aangemaakt"
+      })
+    }
+  //LOGISTIEK TYPE TOEVOEGEN
+  } else if (data.type == 2) { //LOG
+    if (data.subtype == -1) {
+      DefectType.create({
+        typeName: data.field,
+      });
+      DefectType.sync();
+      res.json({
+        check: true,
+        message: "Nieuw type aangemaakt"
+      })
+    } else {
+      DefectSubtype.create({
+        typeName: data.field,
+        defectTypeId: data.subtype
+      });
+      DefectSubtype.sync();
+      res.json({
+        check: true,
+        message: "Nieuw subtype aangemaakt"
+      })
+    }
+  //TECHNISCH TYPE TOEVOEGEN
+  } else if (data.type == 3) { //TECH
+    if (data.subtype == -1) {
+      MalfunctionType.create({
+        typeName: data.field,
+      });
+      MalfunctionType.sync();
+      res.json({
+        check: true,
+        message: "Nieuw type aangemaakt"
+      })
+    } else {
+      MalfunctionSubtype.create({
+        typeName: data.field,
+        operationalTypeId: data.subtype
+      });
+      MalfunctionSubtype.sync();
+      res.json({
+        check: true,
+        message: "Nieuw subtype aangemaakt"
+      })
+    }
+  } else {
+    console.log("fout type")
+  }
 })
 
 let cronInstance = new cronServer(1);
