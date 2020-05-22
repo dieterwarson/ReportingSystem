@@ -1000,10 +1000,10 @@ app.post('/addTechnicalEvent', async (req, res) => {
 });
 
 app.post('/changeOperationalEvent', async (req, res) => {
-/**
- * TODO
- * moet nog aangepast worden om type toe te voegen
- */
+  /**
+   * TODO
+   * moet nog aangepast worden om type toe te voegen
+   */
 
   console.log("\n\nbody:\n");
   console.log(req.body);
@@ -1035,6 +1035,7 @@ app.post('/changeOperationalEvent', async (req, res) => {
 
 app.post('/changeWorkplaceEvent', async (req, res) => {
   let type = req.body.type;
+  let subtype = req.body.subtype;
 
   let workplaceType = await WorkplaceType.findOne({
     where: {
@@ -1043,9 +1044,21 @@ app.post('/changeWorkplaceEvent', async (req, res) => {
     attributes: ['id', 'typeName'],
   });
 
-  let workplaceTypeId = null
+  let workplaceSubtype = await WorkplaceSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceTypeId = null;
   if (workplaceType != null) {
-    workplaceTypeId = workplaceType.id
+    workplaceTypeId = workplaceType.id;
+  }
+
+  let workplaceSubtypeId = null;
+  if (workplaceSubtype != null) {
+    workplaceSubtypeId = workplaceSubtype.id;
   }
 
   const event = await WorkplaceEvent.findOne({
@@ -1062,12 +1075,14 @@ app.post('/changeWorkplaceEvent', async (req, res) => {
   if (event != null) {
     event.description = req.body.message;
     event.workplaceTypeId = workplaceTypeId;
+    event.workplaceSubtypeId = workplaceSubtypeId;
     event.save();
   } else {
-    res.send(Error('File not found'));
+    res.send(false);
   }
 
   WorkplaceEvent.sync();
+  res.send(true);
 });
 
 app.post('/changeSecretariatNotification', async (req, res) => {
@@ -1093,6 +1108,7 @@ app.post('/changeSecretariatNotification', async (req, res) => {
 
 app.post('/changeDefect', async (req, res) => {
   let type = req.body.type;
+  let subtype = req.body.subtype;
 
   let defectType = await DefectType.findOne({
     where: {
@@ -1101,9 +1117,21 @@ app.post('/changeDefect', async (req, res) => {
     attributes: ['id', 'typeName'],
   });
 
-  let defectTypeId = null
+  let defectSubtype = await DefectSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectTypeId = null;
   if (defectType != null) {
     defectTypeId = defectType.id
+  }
+
+  let defectSubtypeId = null;
+  if (defectSubtype != null) {
+    defectSubtypeId = defectSubtype.id;
   }
 
   const event = await Defect.findOne({
@@ -1120,16 +1148,19 @@ app.post('/changeDefect', async (req, res) => {
   if (event != null) {
     event.description = req.body.message;
     event.defectTypeId = defectTypeId;
+    event.defectSubtypeId = defectSubtypeId;
     event.save();
   } else {
-    res.send(Error('File not found'));
+    res.send(false);
   }
 
   Defect.sync();
+  res.send(true);
 });
 
 app.post('/changeMalfunction', async (req, res) => {
   let type = req.body.type;
+  let subtype = req.body.subtype;
 
   let malfunctionType = await MalfunctionType.findOne({
     where: {

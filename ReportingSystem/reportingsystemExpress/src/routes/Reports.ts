@@ -16,6 +16,9 @@ import OperationalType from 'src/models/operationalType';
 import Operational from 'src/models/operational';
 import Administrative from 'src/models/administrative';
 import Technical from 'src/models/technical';
+import WorkplaceSubtype from 'src/models/workplaceSubtype';
+import DefectSubtype from 'src/models/defectSubtype';
+import MalfunctionSubtype from 'src/models/malfunctionSubtype';
 
 // Init router
 const router = Router();
@@ -504,10 +507,14 @@ router.get('/operationalTypes', async (req: Request, res: Response) => {
 
 router.get('/workplaceTypes', async (req: Request, res: Response) => {
   let workplaceTypes = await WorkplaceType.findAll({
-    attributes: ['typeName'],
+    attributes: ['id', 'typeName'],
   });
 
-  let results = { workplaceTypes }
+  let workplaceSubtypes = await WorkplaceSubtype.findAll({
+    attributes: ['workplaceTypeId', 'typeName'],
+  })
+
+  let results = { workplaceTypes, workplaceSubtypes }
   res.send(results);
 });
 
@@ -517,10 +524,14 @@ router.get('/workplaceTypes', async (req: Request, res: Response) => {
 
 router.get('/defectTypes', async (req: Request, res: Response) => {
   let defectTypes = await DefectType.findAll({
-    attributes: ['typeName'],
+    attributes: ['id', 'typeName'],
   });
 
-  let results = { defectTypes }
+  let defectSubtypes = await DefectSubtype.findAll({
+    attributes: ['defectTypeId', 'typeName'],
+  })
+
+  let results = { defectTypes, defectSubtypes }
   res.send(results);
 });
 
@@ -530,10 +541,14 @@ router.get('/defectTypes', async (req: Request, res: Response) => {
 
 router.get('/malfunctionTypes', async (req: Request, res: Response) => {
   let malfunctionTypes = await MalfunctionType.findAll({
-    attributes: ['typeName'],
+    attributes: ['id', 'typeName'],
   });
 
-  let results = { malfunctionTypes }
+  let malfunctionSubtypes = await MalfunctionSubtype.findAll({
+    attributes: ['malfunctionTypeId', 'typeName'],
+  })
+
+  let results = { malfunctionTypes, malfunctionSubtypes }
   res.send(results);
 });
 
@@ -640,38 +655,57 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/workplaceEventType/:id"
+ *             Get event from Reports - "GET /api/reports/workplaceEventTypes/:id"
  ******************************************************************************/
 
-router.get('/workplaceEventType/:id', async (req: Request, res: Response) => {
+router.get('/workplaceEventTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const event = await WorkplaceEvent.findOne({
     where: {
       id: eventId
-    },
+    }
   });
   if (event != null) {
     let workplaceTypeId = event.workplaceTypeId;
+    let workplaceSubtypeId = event.workplaceSubtypeId;
 
+    let type;
+    let typeName = "";
     if (workplaceTypeId != null) {
-      const workplaceType = await WorkplaceType.findOne({
+      type = await WorkplaceType.findOne({
         where: {
           id: workplaceTypeId
         }
       })
-      if (workplaceType != null) {
-        res.send(workplaceType.typeName);
+      if (type != null) {
+        typeName = type.typeName;
       }
     }
+
+    let subtype;
+    let subtypeName = "";
+    if (workplaceSubtypeId != null) {
+      subtype = await WorkplaceSubtype.findOne({
+        where: {
+          id: workplaceSubtypeId
+        }
+      });
+      if (subtype != null) {
+        subtypeName = subtype.typeName;
+      }
+    }
+
+    const result = { typeName, subtypeName };
+    res.send(result);
   }
   res.send("");
 });
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/defectType/:id"
+ *             Get event from Reports - "GET /api/reports/defectTypes/:id"
  ******************************************************************************/
 
-router.get('/defectType/:id', async (req: Request, res: Response) => {
+router.get('/defectTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const event = await Defect.findOne({
     where: {
@@ -680,26 +714,45 @@ router.get('/defectType/:id', async (req: Request, res: Response) => {
   });
   if (event != null) {
     let defectTypeId = event.defectTypeId;
+    let defectSubtypeId = event.defectSubtypeId;
 
+    let type;
+    let typeName = "";
     if (defectTypeId != null) {
-      const defectType = await DefectType.findOne({
+      type = await DefectType.findOne({
         where: {
           id: defectTypeId
         }
       })
-      if (defectType != null) {
-        res.send(defectType.typeName);
+      if (type != null) {
+        typeName = type.typeName;
       }
     }
+
+    let subtype;
+    let subtypeName = "";
+    if (defectSubtypeId != null) {
+      subtype = await DefectSubtype.findOne({
+        where: {
+          id: defectSubtypeId
+        }
+      });
+      if (subtype != null) {
+        subtypeName = subtype.typeName;
+      }
+    }
+
+    const result = { typeName, subtypeName };
+    res.send(result);
   }
   res.send("");
 });
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/malfunctionType/:id"
+ *             Get event from Reports - "GET /api/reports/malfunctionTypes/:id"
  ******************************************************************************/
 
-router.get('/malfunctionType/:id', async (req: Request, res: Response) => {
+router.get('/malfunctionTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const event = await Malfunction.findOne({
     where: {
@@ -708,17 +761,36 @@ router.get('/malfunctionType/:id', async (req: Request, res: Response) => {
   });
   if (event != null) {
     let malfunctionTypeId = event.malfunctionTypeId;
+    let malfunctionSubtypeId = event.malfunctionSubtypeId;
 
+    let type;
+    let typeName = "";
     if (malfunctionTypeId != null) {
-      const malfunctionType = await MalfunctionType.findOne({
+      type = await MalfunctionType.findOne({
         where: {
           id: malfunctionTypeId
         }
       })
-      if (malfunctionType != null) {
-        res.send(malfunctionType.typeName);
+      if (type != null) {
+        typeName = type.typeName;
       }
     }
+
+    let subtype;
+    let subtypeName = "";
+    if (malfunctionSubtypeId != null) {
+      subtype = await MalfunctionSubtype.findOne({
+        where: {
+          id: malfunctionSubtypeId
+        }
+      });
+      if (subtype != null) {
+        subtypeName = subtype.typeName;
+      }
+    }
+
+    const result = { typeName, subtypeName };
+    res.send(result);
   }
   res.send("");
 });
