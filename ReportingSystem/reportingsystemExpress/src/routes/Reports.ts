@@ -19,6 +19,7 @@ import Technical from 'src/models/technical';
 import WorkplaceSubtype from 'src/models/workplaceSubtype';
 import DefectSubtype from 'src/models/defectSubtype';
 import MalfunctionSubtype from 'src/models/malfunctionSubtype';
+import OperationalSubtype from 'src/models/operationalSubtype';
 
 // Init router
 const router = Router();
@@ -487,17 +488,15 @@ router.get('/types', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/operationalTypes', async (req: Request, res: Response) => {
-  /**
-   * TODO
-   * operationalEvent heeft meerdere EventTypes
-   * er moet gekeken worden anar EventType
-   * en dan op die eventType moet er gekeken worden naar OperationalType
-   */
   let operationalTypes = await OperationalType.findAll({
-    attributes: ['typeName'],
+    attributes: ['id', 'typeName'],
   });
 
-  let results = { operationalTypes };
+  let operationalSubtypes = await OperationalSubtype.findAll({
+    attributes: ['operationalTypeId', 'typeName'],
+  })
+
+  let results = { operationalTypes , operationalSubtypes};
   res.send(results);
 });
 
@@ -652,6 +651,60 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
     res.send(result);
   }
   return false;
+});
+
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/operationalEventTypes/:id"
+ ******************************************************************************/
+/**
+ * TODO
+ * operationalEvent heeft meerdere EventTypes
+ * er moet gekeken worden anar EventType
+ * en dan op die eventType moet er gekeken worden naar OperationalType
+ */
+
+router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => {
+  // const eventId = req.param('id');
+  // const event = await WorkplaceEvent.findOne({
+  //   where: {
+  //     id: eventId
+  //   }
+  // });
+  // if (event != null) {
+  //   let workplaceTypeId = event.workplaceTypeId;
+  //   let workplaceSubtypeId = event.workplaceSubtypeId;
+
+  //   let type;
+  //   let typeName = "";
+  //   if (workplaceTypeId != null) {
+  //     type = await WorkplaceType.findOne({
+  //       where: {
+  //         id: workplaceTypeId
+  //       }
+  //     })
+  //     if (type != null) {
+  //       typeName = type.typeName;
+  //     }
+  //   }
+
+  //   let subtype;
+  //   let subtypeName = "";
+  //   if (workplaceSubtypeId != null) {
+  //     subtype = await WorkplaceSubtype.findOne({
+  //       where: {
+  //         id: workplaceSubtypeId
+  //       }
+  //     });
+  //     if (subtype != null) {
+  //       subtypeName = subtype.typeName;
+  //     }
+  //   }
+
+  //   const result = { typeName, subtypeName };
+  //   res.send(result);
+  // }
+  res.send("");
 });
 
 /******************************************************************************

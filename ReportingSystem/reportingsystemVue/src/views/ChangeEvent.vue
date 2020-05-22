@@ -13,37 +13,28 @@
         <h4 id="smalltitle">Operationele gebeurtenis</h4>
         <div class="row">
           <!-- Checkboxes types -->
-          <!-- <div>
-              <div v-if="(Object.keys(reportTypes).length === 0)">
-                <p>Er zijn nog geen types</p>
-              </div>
-              <form v-else id="typeSelector">
-                <div class="text-sm-left">
-                  <input
-                    type="checkbox"
-                    id="operationalParent"
-                    v-on:change="selectAll('operational')"
-                  />
-                  <label>
-                    <h5>Operationeel</h5>
-                  </label>
-                  <div class="checkbox-container text-sm-left col-sm-4">
-                    <div v-for="value in reportTypes.operationalTypes" :key="value.id">
-                      <div class="typecontainer text-lg-left" id="operational">
-                        <input
-                          type="checkbox"
-                          :id="value.typeName"
-                          :value="value.typeName"
-                          v-model="selectedTypes"
-                        />
-                        <label>{{ value.typeName }}</label>
-                      </div>
+          <div>
+            <div v-if="(Object.keys(reportTypes).length === 0)">
+              <p>Er zijn nog geen types</p>
+            </div>
+            <form v-else id="typeSelector">
+              <div class="text-sm-left">
+                <input type="checkbox" id="operationalParent" @change="selectAll('operational')" />
+                <label>
+                  <h5>Operationeel</h5>
+                </label>
+                <div class="checkbox-container text-sm-left col-sm-4">
+                  <div v-for="value in reportTypes.operationalTypes" :key="value.id">
+                    <div class="typecontainer text-lg-left" id="operational">
+                      <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes" />
+                      <label>{{ value.typeName }}</label>
                     </div>
                   </div>
-                  <span>Types: {{ selectedTypes }}</span>
                 </div>
-              </form>
-            </div>-->
+                <span>Types: {{ selectedTypes }}</span>
+              </div>
+            </form>
+          </div>
           <!-- Invoervelden -->
           <div class="text-sm-left col-lg">
             <div class="input-group" style="height: 20%;">

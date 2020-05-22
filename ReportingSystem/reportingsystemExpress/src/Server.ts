@@ -1145,16 +1145,11 @@ app.post('/changeDefect', async (req, res) => {
     ],
   });
 
-  if (event != null) {
-    console.log(event);
-    console.log("\n\n\n\n");
-    
+  if (event != null) {    
     event.description = req.body.message;
     event.defectTypeId = defectTypeId;
     event.defectSubtypeId = defectSubtypeId;
-    event.save();
-    console.log(event);
-    
+    event.save();    
   } else {
     res.send(false);
   }
