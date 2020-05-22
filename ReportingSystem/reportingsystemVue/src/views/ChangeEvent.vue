@@ -734,23 +734,14 @@ export default Vue.extend({
       this.operationalEventSucceeded = true;
     },
     async changeWorkplaceEvent() {
-      let resultBool = false;
       await ReportingService.changeWorkplaceEvent({
         reportId: String(this.reportId),
         administrativeId: this.currentEvent.id,
         message: this.currentEvent.description,
         type: this.typeSelected.typeName,
         subtype: this.typeSelected.subtypeName
-      }).then(
-        res => (resultBool = res)
-      );
-      if (resultBool) {
-        this.workplaceEventFailed = false;
-        this.workplaceEventSucceeded = true;
-      } else {
-        this.workplaceEventFailed = true;
-        this.workplaceEventSucceeded = false;
-      }
+      });
+      this.workplaceEventSucceeded = true;
     },
     async changeSecretariatNotification() {
       await ReportingService.changeSecretariatNotification({

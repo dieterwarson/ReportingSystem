@@ -1146,10 +1146,15 @@ app.post('/changeDefect', async (req, res) => {
   });
 
   if (event != null) {
+    console.log(event);
+    console.log("\n\n\n\n");
+    
     event.description = req.body.message;
     event.defectTypeId = defectTypeId;
     event.defectSubtypeId = defectSubtypeId;
     event.save();
+    console.log(event);
+    
   } else {
     res.send(false);
   }
@@ -1169,9 +1174,21 @@ app.post('/changeMalfunction', async (req, res) => {
     attributes: ['id', 'typeName'],
   });
 
+  let malfunctionSubtype = await MalfunctionSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
   let malfunctionTypeId = null
   if (malfunctionType != null) {
     malfunctionTypeId = malfunctionType.id
+  }
+
+  let malfunctionSubtypeId = null;
+  if (malfunctionSubtype != null) {
+    malfunctionSubtypeId = malfunctionSubtype.id;
   }
 
   const event = await Malfunction.findOne({
@@ -1188,12 +1205,14 @@ app.post('/changeMalfunction', async (req, res) => {
   if (event != null) {
     event.description = req.body.message;
     event.malfunctionTypeId = malfunctionTypeId;
+    event.malfunctionSubtypeId = malfunctionSubtypeId;
     event.save();
   } else {
-    res.send(Error('File not found'));
+    res.send(false);
   }
 
   Malfunction.sync();
+  res.send(true);
 });
 
 // USER
