@@ -6,12 +6,41 @@ export default {
   props: {
     chartdata: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
 
-  mounted () {
-    this.renderChart(this.chartdata, this.options)
-  }
+  data: function() {
+    return {
+      options: {
+        scales: {
+          xAxes: [
+            {
+              type: "time",
+              time: {
+                    displayFormats: {
+                        quarter: 'D/M'
+                    }
+              },
+              distribution: "linear",
+            },
+          ],
+        },
+      },
+    };
+  },
+
+  watch: {
+    chartdata: {
+      handler() {
+        this.renderChart(this.chartdata, this.options);
+      },
+      deep: true,
+    },
+  },
+
+  mounted() {
+    this.renderChart(this.chartdata, this.options);
+  },
 };
 </script>
