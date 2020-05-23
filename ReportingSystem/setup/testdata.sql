@@ -180,6 +180,8 @@ DROP TABLE IF EXISTS `EventTypes`;
 CREATE TABLE `EventTypes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `operationalEventId` int(11) DEFAULT NULL,
+  `operationalTypeId` int(11) DEFAULT NULL,
+  `operationalSubtypeId` int(11) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -194,7 +196,7 @@ CREATE TABLE `EventTypes` (
 
 LOCK TABLES `EventTypes` WRITE;
 /*!40000 ALTER TABLE `EventTypes` DISABLE KEYS */;
-INSERT INTO `EventTypes` VALUES (1,4,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,7,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,8,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,6,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,5,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,2,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,3,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,9,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,10,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `EventTypes` VALUES (1,4,5,3'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,1,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,7,6,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,8,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,7,1,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,8,3,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,2,4,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,3,1,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,9,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,10,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `EventTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -344,7 +346,6 @@ DROP TABLE IF EXISTS `OperationalSubtypes`;
 CREATE TABLE `OperationalSubtypes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `operationalTypeId` int(11) DEFAULT NULL,
-  `eventTypeId` int(11) DEFAULT NULL,
   `typeName` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
@@ -363,7 +364,7 @@ CREATE TABLE `OperationalSubtypes` (
 
 LOCK TABLES `OperationalSubtypes` WRITE;
 /*!40000 ALTER TABLE `OperationalSubtypes` DISABLE KEYS */;
-INSERT INTO `OperationalSubtypes` VALUES (1,5,NULL,'Persoon',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,5,NULL,'Voertuig',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,5,NULL,'Voorwerp',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `OperationalSubtypes` VALUES (1,6,'Persoon',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,6,'Voertuig',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,6,'Voorwerp',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `OperationalSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -376,7 +377,6 @@ DROP TABLE IF EXISTS `OperationalTypes`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `OperationalTypes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `eventTypeId` int(11) DEFAULT NULL,
   `typeName` varchar(255) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
@@ -392,7 +392,7 @@ CREATE TABLE `OperationalTypes` (
 
 LOCK TABLES `OperationalTypes` WRITE;
 /*!40000 ALTER TABLE `OperationalTypes` DISABLE KEYS */;
-INSERT INTO `OperationalTypes` VALUES (1,NULL,'Specifieke gebeurtenis','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,NULL,'Grensoverschrijdende achtervolging','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,NULL,'Zoeking met helikopter','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,NULL,'Bevraging GSM operatoren','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,NULL,'BIN-alarm','2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,NULL,'Signalering','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `OperationalTypes` VALUES (1,'Specifieke gebeurtenis','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,'Grensoverschrijdende achtervolging','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,'Zoeking met helikopter','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,'Bevraging GSM operatoren','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,'BIN-alarm','2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,'Signalering','2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `OperationalTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 

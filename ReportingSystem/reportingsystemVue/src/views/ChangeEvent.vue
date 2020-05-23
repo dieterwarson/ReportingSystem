@@ -24,14 +24,25 @@
                   <h5>Operationeel</h5>
                 </label>
                 <div class="checkbox-container text-sm-left col-sm-4">
-                  <div v-for="value in reportTypes.operationalTypes" :key="value.id">
+                  <div v-for="type in reportTypes.operationalTypes" :key="type.id">
                     <div class="typecontainer text-lg-left" id="operational">
-                      <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes" />
-                      <label>{{ value.typeName }}</label>
+                      <input type="checkbox" :id="type.typeName" :value="type.typeName" v-model="operationalTypeSelected.selectedTypes" />
+                      <label>{{ type.typeName }}</label>
                     </div>
+
+                    <div v-for="subtype in reportTypes.operationalSubtypes" :key="subtype.id">
+                      <div v-if="subtype.operationalTypeId == type.id">
+                        <div class="subtypecontainer text-lg-left" id="operational">
+                          <input type="checkbox" :id="type.typeName" :value="subtype.typeName" v-model="operationalTypeSelected.selectedSubtypes" @change="selectOperationalParent(subtype.operationalTypeId)" />
+                          <label>{{ subtype.typeName }}</label>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
-                <span>Types: {{ selectedTypes }}</span>
+                <span>Types: {{ operationalTypeSelected.selectedTypes }}</span>
+                <span>Subtypes: {{ operationalTypeSelected.selectedSubtypes }}</span>
               </div>
             </form>
           </div>
@@ -281,6 +292,8 @@ export default Vue.extend({
   data: function () {
     return {
       reportTypes: {
+        operationalTypes: {},
+        operationalSubtypes: {},
         workplaceTypes: {},
         workplaceSubtypes: {},
         defectTypes: {},
@@ -288,13 +301,14 @@ export default Vue.extend({
         malfunctionTypes: {},
         malfunctionSubtypes: {}
       },
-      selectedTypes: [],
+      operationalTypeSelected: {
+        selectedTypes: [] as string[],
+        selectedSubtypes: [] as string[],
+      },
       typeSelected: {
         typeName: "",
         subtypeName: ""
       },
-      // typeSelected: "",
-      // subtypeSelected: "",
       currentEvent: {
         id: 0,
         authorId: 0,
@@ -420,11 +434,6 @@ export default Vue.extend({
   mounted() {
     this.loadData();
   },
-  // watch: {
-  //   selectedTypes: function() {
-  //     this.getStatistics();
-  //   }
-  // },
 
   methods: {
     loadData: function () {
@@ -719,8 +728,9 @@ export default Vue.extend({
       await ReportingService.changeOperationalEvent({
         reportId: String(this.reportId),
         operationalId: this.currentEvent.id,
-        message: this.currentEvent.description
-        // TODO type toevoegen
+        message: this.currentEvent.description,
+        types: this.operationalTypeSelected.selectedTypes,
+        subtypes: this.operationalTypeSelected.selectedSubtypes
       });
       this.operationalEventSucceeded = true;
     },
@@ -764,7 +774,7 @@ export default Vue.extend({
     },
     uncheckAll: function () {
       this.typeSelected.typeName = "";
-      this.typeSelected.subtypeName = "";
+      this.deselectSubtype();
     },
     deselectSubtype: function () {
       this.typeSelected.subtypeName = "";
@@ -785,6 +795,24 @@ export default Vue.extend({
         const element = parentTypes[i];
         if (parentId == element.id) {
           this.typeSelected.typeName = element.typeName;
+        }
+      }
+    },
+
+    selectOperationalParent: function (parentId: number) {
+      const parentTypes: any = this.reportTypes.operationalTypes;
+
+      for (let i = 0; i < parentTypes.length; i++) {
+        const element = parentTypes[i];
+        if (parentId == element.id) {
+          if (this.operationalTypeSelected.selectedTypes.includes(element.typeName)) {
+            // const index = this.operationalTypeSelected.selectedTypes.indexOf(element.typeName);
+            // if (index > -1) {
+            //   this.operationalTypeSelected.selectedTypes.splice(index, 1);
+            // }
+          } else {
+            this.operationalTypeSelected.selectedTypes.push(element.typeName);
+          }
         }
       }
     }

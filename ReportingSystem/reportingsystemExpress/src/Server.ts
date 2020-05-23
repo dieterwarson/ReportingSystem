@@ -607,27 +607,28 @@ const operationalEvent10 = new OperationalEvent({
 
 
 const eventType1 = new EventType({
-  operationalEventId: 1,
+  operationalEventId: 4,
   operationalTypeId: 5,
   operationalSubtypeId: 3,
 });
 // eventType1.save();
 
 const eventType2 = new EventType({
-  operationalEventId: 4,
+  operationalEventId: 1,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
 // eventType2.save();
 
 const eventType3 = new EventType({
-  operationalEventId: 6,
+  operationalEventId: 7,
   operationalTypeId: 6,
+  operationalSubtypeId: null,
 });
 // eventType3.save();
 
 const eventType4 = new EventType({
-  operationalEventId: 5,
+  operationalEventId: 8,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
@@ -643,24 +644,28 @@ const eventType5 = new EventType({
 const eventType6 = new EventType({
   operationalEventId: 7,
   operationalTypeId: 1,
+  operationalSubtypeId: null,
 });
 // eventType6.save();
 
 const eventType7 = new EventType({
   operationalEventId: 8,
   operationalTypeId: 3,
+  operationalSubtypeId: null,
 });
 // eventType7.save();
 
 const eventType8 = new EventType({
   operationalEventId: 2,
   operationalTypeId: 4,
+  operationalSubtypeId: null,
 });
 // eventType8.save();
 
 const eventType9 = new EventType({
   operationalEventId: 3,
   operationalTypeId: 1,
+  operationalSubtypeId: null,
 });
 // eventType9.save();
 
@@ -1000,14 +1005,10 @@ app.post('/addTechnicalEvent', async (req, res) => {
 });
 
 app.post('/changeOperationalEvent', async (req, res) => {
-  /**
-   * TODO
-   * moet nog aangepast worden om type toe te voegen
-   */
-
   console.log("\n\nbody:\n");
   console.log(req.body);
-
+  const selectedTypes = req.body.types;
+  const selectedSubtypes = req.body.subtypes;
 
   const event = await OperationalEvent.findOne({
     where: {
@@ -1020,17 +1021,40 @@ app.post('/changeOperationalEvent', async (req, res) => {
     ],
   });
   if (event != null) {
-    console.log("\n\nevent oud:\n");
-    console.log(event.description);
+    let eventTypes = await EventType.findAll({
+      where: {
+        operationalEventId: event.id
+      }
+    });
+    if (eventTypes != null) {
+      for (let i = 0; i < eventTypes.length; i++) {
+        const eventType = eventTypes[i];
+
+        let type = await OperationalType.findOrCreate({
+          where: {
+            eventTypeId: eventType.id
+          }
+        });
+        let subtype = await OperationalSubtype.findOrCreate({
+          where: {
+            eventTypeId: eventType.id
+          }
+        });
+      }
+    }
+
+
     event.description = req.body.message;
     event.save();
-    console.log("\n\nevent nieuw:\n");
-    console.log(event.description);
   } else {
     res.send(Error('File not found'));
   }
 
+
+
+
   OperationalEvent.sync();
+  EventType.sync();
 });
 
 app.post('/changeWorkplaceEvent', async (req, res) => {
@@ -1145,11 +1169,11 @@ app.post('/changeDefect', async (req, res) => {
     ],
   });
 
-  if (event != null) {    
+  if (event != null) {
     event.description = req.body.message;
     event.defectTypeId = defectTypeId;
     event.defectSubtypeId = defectSubtypeId;
-    event.save();    
+    event.save();
   } else {
     res.send(false);
   }
