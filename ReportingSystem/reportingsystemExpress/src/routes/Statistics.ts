@@ -8,6 +8,8 @@ import MalfunctionType from 'src/models/malfunctionType';
 import WorkplaceEvent from 'src/models/workplaceEvent';
 import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
+import OperationalEvent from 'src/models/operationalEvent';
+import EventType from 'src/models/eventType';
 
 // Init router
 const router = Router();
