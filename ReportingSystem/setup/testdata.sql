@@ -343,6 +343,64 @@ INSERT INTO `OperationalEvents` VALUES (1,2,2,NULL,'PL03170104','Verwittigen lab
 UNLOCK TABLES;
 
 --
+-- Table structure for table `OperationalSubtypes`
+--
+
+DROP TABLE IF EXISTS `OperationalSubtypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `OperationalSubtypes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `operationalTypeId` int(11) DEFAULT NULL,
+  `typeName` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `eventTypeId` (`eventTypeId`),
+  KEY `operational_subtypes_operational_type_id` (`operationalTypeId`),
+  CONSTRAINT `OperationalSubtypes_ibfk_1` FOREIGN KEY (`operationalTypeId`) REFERENCES `OperationalTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+ 
+--
+-- Dumping data for table `OperationalSubtypes`
+--
+ 
+LOCK TABLES `OperationalSubtypes` WRITE;
+/*!40000 ALTER TABLE `OperationalSubtypes` DISABLE KEYS */;
+INSERT INTO `OperationalSubtypes` VALUES (1,6,'Persoon',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,6,'Voertuig',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,6,'Voorwerp',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+/*!40000 ALTER TABLE `OperationalSubtypes` ENABLE KEYS */;
+UNLOCK TABLES;
+ 
+--
+-- Table structure for table `OperationalTypes`
+--
+ 
+DROP TABLE IF EXISTS `OperationalTypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `OperationalTypes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `typeName` varchar(255) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `operational_types_event_type_id` (`eventTypeId`),
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+ 
+--
+-- Dumping data for table `OperationalTypes`
+--
+ 
+LOCK TABLES `OperationalTypes` WRITE;
+/*!40000 ALTER TABLE `OperationalTypes` DISABLE KEYS */;
+INSERT INTO `OperationalTypes` VALUES (1,'Specifieke gebeurtenis','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,'Grensoverschrijdende achtervolging','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,'Zoeking met helikopter','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,'Bevraging GSM operatoren','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,'BIN-alarm','2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,'Signalering','2020-05-17 12:45:39','2020-05-17 12:45:39');
+/*!40000 ALTER TABLE `OperationalTypes` ENABLE KEYS */;
+UNLOCK TABLES;
+ 
+--
 -- Table structure for table `Operationals`
 --
 
