@@ -18,7 +18,7 @@
             </div>
             <form v-else id="typeSelector">
               <div class="text-sm-left">
-                <input type="checkbox" id="operationalParent" @change="selectAll('operational')" />
+                <input type="checkbox" id="operationalParent" @change="selectAllOperational" />
                 <label>
                   <h5>Operationeel</h5>
                 </label>
@@ -39,7 +39,9 @@
                     </div>
                   </div>
                 </div>
-                <button @click.prevent="uncheckAllOperational" class="btn btn-danger extraMargin">Deselecteer keuze</button>
+                <span>Types: {{ operationalTypeSelected.selectedTypes }}</span>
+                <span>Subtypes: {{ operationalTypeSelected.selectedSubtypes }}</span>
+                <button @click.prevent="uncheckAllOperational(false)" class="btn btn-danger extraMargin">Deselecteer alles</button>
               </div>
             </form>
           </div>
@@ -493,19 +495,20 @@ export default Vue.extend({
       //   this.loadMalfunction();
       // }
     },
-    selectAll: function (section: string) {
-      const checks = document.querySelectorAll(
-        "#" + section + ' input[type="checkbox"]'
-      );
+    selectAllOperational: function () {
+      if (this.reportTypes.operationalTypes.length == this.operationalTypeSelected.selectedTypes.length && this.reportTypes.operationalSubtypes.length == this.operationalTypeSelected.selectedSubtypes.length) {
+        this.uncheckAllOperational(false);
 
-      const parent = document.getElementById(
-        section + "Parent"
-      ) as HTMLInputElement;
-      const status = parent.checked;
-
-      for (let i = 0; i < checks.length; i++) {
-        const check = checks[i] as HTMLInputElement;
-        if (check.checked != status) check.click();
+      } else {
+        this.uncheckAllOperational(true);
+        for (let i = 0; i < this.reportTypes.operationalTypes.length; i++) {
+          const type = this.reportTypes.operationalTypes[i];
+          this.operationalTypeSelected.selectedTypes.push(type.typeName);
+        }
+        for (let i = 0; i < this.reportTypes.operationalSubtypes.length; i++) {
+          const subtype = this.reportTypes.operationalSubtypes[i];
+          this.operationalTypeSelected.selectedSubtypes.push(subtype.typeName);
+        }
       }
     },
 
@@ -828,9 +831,12 @@ export default Vue.extend({
     deselectSubtype: function () {
       this.typeSelected.subtypeName = "";
     },
-    uncheckAllOperational: function () {
+    uncheckAllOperational: function (status: boolean) {
       this.operationalTypeSelected.selectedTypes = [];
       this.operationalTypeSelected.selectedSubtypes = [];
+
+      const cb = document.getElementById("operationalParent") as HTMLInputElement;
+      cb.checked = status;
     },
 
     selectParent: function (parentId: number, parent: string) {
@@ -861,8 +867,14 @@ export default Vue.extend({
       for (let i = 0; i < parentTypes.length; i++) {
         const parentType = parentTypes[i];
         if (parentType.id == parentId) {
-          if (!this.operationalTypeSelected.selectedTypes.includes(parentType.typeName)) {
-            this.operationalTypeSelected.selectedTypes.push(parentType.typeName);
+          if (
+            !this.operationalTypeSelected.selectedTypes.includes(
+              parentType.typeName
+            )
+          ) {
+            this.operationalTypeSelected.selectedTypes.push(
+              parentType.typeName
+            );
           }
         }
       }
@@ -889,24 +901,35 @@ export default Vue.extend({
               const curSubtype = allSubtypes[j];
 
               // als huidig subtype in selectedSubtypes voorkomt, dan verwijderen uit selectedSubtypes
-              if (this.operationalTypeSelected.selectedSubtypes.includes(curSubtype.typeName) && curSubtype.operationalTypeId == parentId) {
-                const index = this.operationalTypeSelected.selectedSubtypes.indexOf(curSubtype.typeName);
+              if (
+                this.operationalTypeSelected.selectedSubtypes.includes(
+                  curSubtype.typeName
+                ) &&
+                curSubtype.operationalTypeId == parentId
+              ) {
+                const index = this.operationalTypeSelected.selectedSubtypes.indexOf(
+                  curSubtype.typeName
+                );
 
                 if (index > -1) {
-                  this.operationalTypeSelected.selectedSubtypes.splice(index, 1);
+                  this.operationalTypeSelected.selectedSubtypes.splice(
+                    index,
+                    1
+                  );
                 }
               }
             }
 
             // na loop over subtypes parentType verwijderen uit selectedTypes
-            const index = this.operationalTypeSelected.selectedTypes.indexOf(parentType.typeName);
+            const index = this.operationalTypeSelected.selectedTypes.indexOf(
+              parentType.typeName
+            );
 
             if (index > -1) {
               this.operationalTypeSelected.selectedTypes.splice(index, 1);
             }
           }
         }
-
       }
     }
   }
