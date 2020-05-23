@@ -1005,15 +1005,12 @@ app.post('/addTechnicalEvent', async (req, res) => {
 });
 
 app.post('/changeOperationalEvent', async (req, res) => {
-  console.log("\n\nbody:\n");
-  console.log(req.body);
   const selectedTypes = req.body.types;
   const selectedSubtypes = req.body.subtypes;
-  let subtypesClone = selectedSubtypes.slice(0);
 
   const event = await OperationalEvent.findOne({
     where: {
-      id: req.body.operationalId,
+      id: req.body.operationalEventId,
     },
     include: [
       {
@@ -1029,29 +1026,12 @@ app.post('/changeOperationalEvent', async (req, res) => {
       where: {
         operationalEventId: event.id
       }
-    })
+    });
 
     for (let i = 0; i < selectedTypes.length; i++) {
       const curType = selectedTypes[i];
-
-      let curEventType = new EventType({
-        operationalEventId: event.id,
-        operationalTypeId: null,
-        operationalSubtypeId: null,
-      });
-
-      for (let j = 0; j < subtypesClone.length; j++) {
-        const curSubtype = subtypesClone[j];
-
-        let curSubtypeObject = await OperationalSubtype.findOne({
-          where: {
-            typeName: curSubtype
-          }
-        });
-        if (curSubtypeObject != null) {
-          curEventType.operationalSubtypeId = curSubtypeObject.id;
-        }
-      }
+      let curTypeId = null;
+      let curSubtypeId = null;      
 
       let curTypeObject = await OperationalType.findOne({
         where: {
@@ -1059,16 +1039,59 @@ app.post('/changeOperationalEvent', async (req, res) => {
         }
       });
       if (curTypeObject != null) {
-        curEventType.operationalTypeId = curTypeObject.id;
-      }
+        curTypeId = curTypeObject.id;
+      
+        for (let j = 0; j < selectedSubtypes.length; j++) {
+          const curSubtype = selectedSubtypes[j];
+          
+          let curSubtypeObject = await OperationalSubtype.findOne({
+            where: {
+              typeName: curSubtype
+            }
+          });
+          if (curSubtypeObject != null) {
+            curSubtypeId = curSubtypeObject.id;
+            if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
+              await EventType.create({
+                operationalEventId: event.id,
+                operationalTypeId: curTypeId,
+                operationalSubtypeId: curSubtypeId,
+              });
 
-      curEventType.save();
+            }
+          }
+
+
+        }
+        if (selectedSubtypes.length == 0) {
+          await EventType.create({
+            operationalEventId: event.id,
+            operationalTypeId: curTypeId,
+            operationalSubtypeId: null,
+          });
+
+        }
+
+
+        EventType.sync();
+      }
     }
+
+    let test = await EventType.findAll({
+      where: {
+        operationalEventId: event.id
+      }
+    });
+    console.log("\ntest:");
+    console.log(test);
+    
+
   } else {
-    res.send(Error('File not found'));
+    res.send(false);
   }
-  // OperationalEvent.sync();
-  // EventType.sync();
+
+  OperationalEvent.sync();
+  res.send(true);
 });
 
 app.post('/changeWorkplaceEvent', async (req, res) => {
