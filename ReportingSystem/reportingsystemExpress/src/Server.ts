@@ -37,7 +37,7 @@ import cronServer from './cron'
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 // var index = require('./routes/index');
 // var users = require('./routes/users');
 
@@ -377,6 +377,7 @@ const workplaceEvent1 = new WorkplaceEvent({
   authorId: 1,
   administrativeId: 1,
   workplaceTypeId: 1,
+  workplaceSubtypeId: 1,
   description: 'Jacob sleutelbeen gebroken',
   absentee: 'Jacob Franssen',
   substitute: 'James Brook',
@@ -389,6 +390,7 @@ const workplaceEvent2 = new WorkplaceEvent({
   authorId: 2,
   administrativeId: 4,
   workplaceTypeId: 2,
+  workplaceSubtypeId: 1,
   description: 'Ziekte',
   absentee: 'Remans Luc',
   substitute: 'Jan Janssens',
@@ -401,6 +403,7 @@ const workplaceEvent3 = new WorkplaceEvent({
   authorId: 1,
   administrativeId: 5,
   workplaceTypeId: 1,
+  workplaceSubtypeId: 1,
   description: 'Hans verstuikte voet',
   absentee: 'Hans Hendrickx',
   substitute: 'Adam Franssen',
@@ -413,6 +416,7 @@ const workplaceEvent4 = new WorkplaceEvent({
   authorId: 2,
   administrativeId: 6,
   workplaceTypeId: 2,
+  workplaceSubtypeId: 1,
   description: 'Ziekte',
   absentee: 'James Brook',
   substitute: 'Jacob Franssen',
@@ -425,6 +429,7 @@ const workplaceEvent5 = new WorkplaceEvent({
   authorId: 2,
   administrativeId: 6,
   workplaceTypeId: 2,
+  workplaceSubtypeId: 1,
   description: 'Ziekte',
   absentee: 'Jan Janssens',
   substitute: 'Remans Luc',
@@ -602,27 +607,28 @@ const operationalEvent10 = new OperationalEvent({
 
 
 const eventType1 = new EventType({
-  operationalEventId: 1,
+  operationalEventId: 4,
   operationalTypeId: 5,
   operationalSubtypeId: 3,
 });
 // eventType1.save();
 
 const eventType2 = new EventType({
-  operationalEventId: 4,
+  operationalEventId: 1,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
 // eventType2.save();
 
 const eventType3 = new EventType({
-  operationalEventId: 6,
+  operationalEventId: 7,
   operationalTypeId: 6,
+  operationalSubtypeId: null,
 });
 // eventType3.save();
 
 const eventType4 = new EventType({
-  operationalEventId: 5,
+  operationalEventId: 8,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
@@ -638,24 +644,28 @@ const eventType5 = new EventType({
 const eventType6 = new EventType({
   operationalEventId: 7,
   operationalTypeId: 1,
+  operationalSubtypeId: null,
 });
 // eventType6.save();
 
 const eventType7 = new EventType({
   operationalEventId: 8,
   operationalTypeId: 3,
+  operationalSubtypeId: null,
 });
 // eventType7.save();
 
 const eventType8 = new EventType({
   operationalEventId: 2,
   operationalTypeId: 4,
+  operationalSubtypeId: null,
 });
 // eventType8.save();
 
 const eventType9 = new EventType({
   operationalEventId: 3,
   operationalTypeId: 1,
+  operationalSubtypeId: null,
 });
 // eventType9.save();
 
@@ -728,6 +738,7 @@ const defect1 = new Defect({
   technicalId: 4,
   authorId: 2,
   defectTypeId: 1,
+  defectSubtypeId: 1,
   description: 'Voertuig P320 achterlicht kapot',
   monitoring: true,
   date: new Date('2020/03/17 13:03:57'),
@@ -738,6 +749,7 @@ const defect2 = new Defect({
   technicalId: 5,
   authorId: 1,
   defectTypeId: 1,
+  defectSubtypeId: 1,
   description: 'Voertuig P321 achterlicht kapot',
   monitoring: false,
   date: new Date('2020/03/21 06:14:23'),
@@ -748,6 +760,7 @@ const defect3 = new Defect({
   technicalId: 5,
   authorId: 1,
   defectTypeId: 1,
+  defectSubtypeId: 1,
   description: 'Voertuig P256 voorlicht kapot',
   monitoring: true,
   date: new Date('2020/03/21 11:00:03'),
@@ -758,6 +771,7 @@ const defect4 = new Defect({
   technicalId: 6,
   authorId: 2,
   defectTypeId: 1,
+  defectSubtypeId: 1,
   description: 'Voertuig P320 voorlicht kapot',
   monitoring: true,
   date: new Date('2020/03/21 15:33:47'),
@@ -771,10 +785,19 @@ const defectType1 = new DefectType({
 // defectType1.save();
 
 
+const defectSubtype1 = new DefectSubtype({
+  defectTypeId: 1,
+  typeName: 'Voertuig',
+  description: 'Zichtbare schade'
+});
+// defectSubtype1.save();
+
+
 const malfunction1 = new Malfunction({
   technicalId: 1,
   authorId: 1,
   malfunctionTypeId: 1,
+  malfunctionSubtypeId: 1,
   description: 'lekkende kraan in kamer 304',
   monitoring: true,
   date: new Date('2020/03/16 10:46:45'),
@@ -786,6 +809,7 @@ const malfunction2 = new Malfunction({
   technicalId: 3,
   authorId: 1,
   malfunctionTypeId: 1,
+  malfunctionSubtypeId: 1,
   description: 'krakende deur in kamer 104',
   monitoring: true,
   date: new Date('2020/03/17 03:03:57'),
@@ -797,6 +821,7 @@ const malfunction3 = new Malfunction({
   technicalId: 4,
   authorId: 2,
   malfunctionTypeId: 1,
+  malfunctionSubtypeId: 1,
   description: 'niet sluitend raam in kamer 302',
   monitoring: true,
   date: new Date('2020/03/17 04:23:57'),
@@ -808,6 +833,7 @@ const malfunction4 = new Malfunction({
   technicalId: 5,
   authorId: 1,
   malfunctionTypeId: 2,
+  malfunctionSubtypeId: 1,
   description: 'alarm kapot verdieping 2',
   monitoring: true,
   date: new Date('2020/03/21 01:15:34'),
@@ -819,6 +845,7 @@ const malfunction5 = new Malfunction({
   technicalId: 6,
   authorId: 2,
   malfunctionTypeId: 3,
+  malfunctionSubtypeId: 1,
   description: 'stroom uitgevallen hoofdgebouw',
   monitoring: true,
   date: new Date('2020/03/21 16:26:24'),
@@ -841,6 +868,28 @@ const malfunctionType3 = new MalfunctionType({
   typeName: 'Verwittiging (anderen)',
 });
 // malfunctionType3.save();
+
+
+const malfunctionSubtype1 = new MalfunctionSubtype({
+  malfunctinoTypeId: 1,
+  typeName: 'Infrastructuur',
+  description: 'Iets kapot',
+});
+// malfunctionSubtype1.save();
+
+const malfunctionSubtype2 = new MalfunctionSubtype({
+  malfunctinoTypeId: 1,
+  typeName: 'Elektronica',
+  description: 'Storing',
+});
+// malfunctionSubtype2.save();
+
+const malfunctionSubtype3 = new MalfunctionSubtype({
+  malfunctinoTypeId: 1,
+  typeName: 'Elektriciteit',
+  description: 'Uitgevallen',
+});
+// malfunctionSubtype3.save();
 
 
 const dummyData1 = new DummyDatabase({
@@ -958,7 +1007,9 @@ app.post('/addTechnicalEvent', async (req, res) => {
 app.post('/changeOperationalEvent', async (req, res) => {
   console.log("\n\nbody:\n");
   console.log(req.body);
-
+  const selectedTypes = req.body.types;
+  const selectedSubtypes = req.body.subtypes;
+  let subtypesClone = selectedSubtypes.slice(0);
 
   const event = await OperationalEvent.findOne({
     where: {
@@ -971,19 +1022,83 @@ app.post('/changeOperationalEvent', async (req, res) => {
     ],
   });
   if (event != null) {
-    console.log("\n\nevent oud:\n");
-    console.log(event.description);
     event.description = req.body.message;
     event.save();
-    console.log("\n\nevent nieuw:\n");
-    console.log(event.description);
+
+    await EventType.destroy({
+      where: {
+        operationalEventId: event.id
+      }
+    })
+
+    for (let i = 0; i < selectedTypes.length; i++) {
+      const curType = selectedTypes[i];
+
+      let curEventType = new EventType({
+        operationalEventId: event.id,
+        operationalTypeId: null,
+        operationalSubtypeId: null,
+      });
+
+      for (let j = 0; j < subtypesClone.length; j++) {
+        const curSubtype = subtypesClone[j];
+
+        let curSubtypeObject = await OperationalSubtype.findOne({
+          where: {
+            typeName: curSubtype
+          }
+        });
+        if (curSubtypeObject != null) {
+          curEventType.operationalSubtypeId = curSubtypeObject.id;
+        }
+      }
+
+      let curTypeObject = await OperationalType.findOne({
+        where: {
+          typeName: curType
+        }
+      });
+      if (curTypeObject != null) {
+        curEventType.operationalTypeId = curTypeObject.id;
+      }
+
+      curEventType.save();
+    }
   } else {
     res.send(Error('File not found'));
   }
-
-  OperationalEvent.sync();
+  // OperationalEvent.sync();
+  // EventType.sync();
 });
+
 app.post('/changeWorkplaceEvent', async (req, res) => {
+  let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let workplaceType = await WorkplaceType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceSubtype = await WorkplaceSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceTypeId = null;
+  if (workplaceType != null) {
+    workplaceTypeId = workplaceType.id;
+  }
+
+  let workplaceSubtypeId = null;
+  if (workplaceSubtype != null) {
+    workplaceSubtypeId = workplaceSubtype.id;
+  }
+
   const event = await WorkplaceEvent.findOne({
     where: {
       id: req.body.administrativeId,
@@ -994,15 +1109,20 @@ app.post('/changeWorkplaceEvent', async (req, res) => {
       },
     ],
   });
+
   if (event != null) {
     event.description = req.body.message;
+    event.workplaceTypeId = workplaceTypeId;
+    event.workplaceSubtypeId = workplaceSubtypeId;
     event.save();
   } else {
-    res.send(Error('File not found'));
+    res.send(false);
   }
 
   WorkplaceEvent.sync();
+  res.send(true);
 });
+
 app.post('/changeSecretariatNotification', async (req, res) => {
   const event = await SecretariatNotification.findOne({
     where: {
@@ -1023,7 +1143,35 @@ app.post('/changeSecretariatNotification', async (req, res) => {
 
   SecretariatNotification.sync();
 });
+
 app.post('/changeDefect', async (req, res) => {
+  let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let defectType = await DefectType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectSubtype = await DefectSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectTypeId = null;
+  if (defectType != null) {
+    defectTypeId = defectType.id
+  }
+
+  let defectSubtypeId = null;
+  if (defectSubtype != null) {
+    defectSubtypeId = defectSubtype.id;
+  }
+
   const event = await Defect.findOne({
     where: {
       id: req.body.technicalId,
@@ -1034,16 +1182,48 @@ app.post('/changeDefect', async (req, res) => {
       },
     ],
   });
+
   if (event != null) {
     event.description = req.body.message;
+    event.defectTypeId = defectTypeId;
+    event.defectSubtypeId = defectSubtypeId;
     event.save();
   } else {
-    res.send(Error('File not found'));
+    res.send(false);
   }
 
   Defect.sync();
+  res.send(true);
 });
+
 app.post('/changeMalfunction', async (req, res) => {
+  let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let malfunctionType = await MalfunctionType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let malfunctionSubtype = await MalfunctionSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let malfunctionTypeId = null
+  if (malfunctionType != null) {
+    malfunctionTypeId = malfunctionType.id
+  }
+
+  let malfunctionSubtypeId = null;
+  if (malfunctionSubtype != null) {
+    malfunctionSubtypeId = malfunctionSubtype.id;
+  }
+
   const event = await Malfunction.findOne({
     where: {
       id: req.body.technicalId,
@@ -1054,14 +1234,18 @@ app.post('/changeMalfunction', async (req, res) => {
       },
     ],
   });
+
   if (event != null) {
     event.description = req.body.message;
+    event.malfunctionTypeId = malfunctionTypeId;
+    event.malfunctionSubtypeId = malfunctionSubtypeId;
     event.save();
   } else {
-    res.send(Error('File not found'));
+    res.send(false);
   }
 
   Malfunction.sync();
+  res.send(true);
 });
 
 // USER
@@ -1073,8 +1257,6 @@ interface INewUserData {
   accessRights: number;
   subscription: boolean;
 }
-
-
 
 function checkUsername(username: string) {
   if (/^[a-z0-9_-]{3,15}$/.test(username)) {
@@ -1292,10 +1474,10 @@ app.post('/changeSubscription', async (req, res) => {
 });
 
 app.post("/getOperationalEvents", async (req, res) => {
-  
+
   console.log(req.body.plNumber);
   var matched_events = await OperationalEvent.findAll({
-    where: {plNumber: {[Op.like]: req.body.plNumber}},
+    where: { plNumber: { [Op.like]: req.body.plNumber } },
     limit: 5
   });
   console.log(matched_events.length);

@@ -118,7 +118,7 @@ import ReportingService from "../services/ReportingService";
 import LineChart from "../views/components/LineChart.vue";
 import PieChart from "../views/components/PieChart.vue";
 export default Vue.extend({
-  data: function() {
+  data: function () {
     return {
       reportTypes: {},
       selectedTypes: {
@@ -179,7 +179,7 @@ export default Vue.extend({
       }; */
     },
 
-    selectAll: function(section: string) {
+    selectAll: function (section: string) {
       const checks = document.querySelectorAll(
         "#" + section + ' input[type="checkbox"]'
       );

@@ -9,6 +9,7 @@ import {
 import DefectType from './defectType';
 import Technical from './technical';
 import User from './user';
+import DefectSubtype from './defectSubtype';
 
 @Table
 export default class Defect extends Model<Defect> {
@@ -34,6 +35,13 @@ export default class Defect extends Model<Defect> {
 
   @BelongsTo(() => DefectType)
   defectType!: DefectType;
+
+  @ForeignKey(() => DefectSubtype)
+  @Column
+  defectSubtypeId!: number;
+
+  @BelongsTo(() => DefectSubtype)
+  defectSubtype!: DefectSubtype;
 
   @Column
   description!: string;

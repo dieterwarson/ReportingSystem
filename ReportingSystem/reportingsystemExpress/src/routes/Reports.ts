@@ -15,6 +15,11 @@ import WorkplaceType from 'src/models/workplaceType';
 import OperationalType from 'src/models/operationalType';
 import Operational from 'src/models/operational';
 import Administrative from 'src/models/administrative';
+import Technical from 'src/models/technical';
+import WorkplaceSubtype from 'src/models/workplaceSubtype';
+import DefectSubtype from 'src/models/defectSubtype';
+import MalfunctionSubtype from 'src/models/malfunctionSubtype';
+import OperationalSubtype from 'src/models/operationalSubtype';
 
 // Init router
 const router = Router();
@@ -34,6 +39,24 @@ router.get('/all', async (req: Request, res: Response) => {
     attributes: ['id', 'date'],
   });
   res.send(reports);
+});
+
+
+/******************************************************************************
+ *                   Get All Reports - "GET /api/reports/one/:reportId"
+ ******************************************************************************/
+
+router.get('/one/:reportId', async (req: Request, res: Response) => {
+  const reportId = Number(req.param('reportId'));
+
+  const report = await Report.findOne({
+    where: {
+      id: reportId,
+    },
+    attributes: ['id', 'date'],
+  });
+
+  res.send(report);
 });
 
 /******************************************************************************
@@ -87,13 +110,13 @@ router.get('/monitored', async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                      Search Reports - "GET /api/reports/search"
+ *                      Search Reports - "GET /api/reports/search/:keyword"
  ******************************************************************************/
 
 router.get('/search/:keyword', async (req: Request, res: Response) => {
   const search: string = req.param('keyword');
   const searchString: string = '%' + search + '%';
-  let reportIds: number[] = [];
+  let reportIds: Number[] = [];
 
   const operationalEvents = await OperationalEvent.findAll({
     where: {
@@ -123,7 +146,9 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     });
     if (event != null) {
-      reportIds.push(event.reportId)
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(Number(event.reportId));
+      }
     }
   }
 
@@ -149,58 +174,121 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     });
     if (event != null) {
-      // reportIds.push(event.reportId);
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(Number(event.reportId));
+      }
     }
   }
 
+  const secretariatNotifications = await SecretariatNotification.findAll({
+    where: {
+      [Op.or]: {
+        description: {
+          [Op.like]: searchString,
+        },
+      }
+    }
+  })
+  for (let i in secretariatNotifications) {
+    const event = await Administrative.findOne({
+      where: {
+        id: secretariatNotifications[i].administrativeId
+      }
+    });
+    if (event != null) {
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(Number(event.reportId));
+      }
+    }
+  }
 
-  let allReports = await Report.findAll();
+  const defects = await Defect.findAll({
+    where: {
+      [Op.or]: {
+        description: {
+          [Op.like]: searchString,
+        },
+      }
+    }
+  })
+  for (let i in defects) {
+    const event = await Technical.findOne({
+      where: {
+        id: defects[i].technicalId
+      }
+    });
+    if (event != null) {
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(Number(event.reportId));
+      }
+    }
+  }
 
-  // let operational = await report?.$get('operational');
-  // let operationalEvents = await operational?.$get('operationalEvents');
-
-  // let technical = await report?.$get('technical');
-
-  // let defects = await Defect.findAll({
-  //   where: {
-  //     technicalId: technical?.id
-  //   },
-  //   include: [{ model: DefectType }]
-  // })
-
-  // let malfunctions = await Malfunction.findAll({
-  //   where: {
-  //     technicalId: technical?.id
-  //   },
-  //   include: [{ model: MalfunctionType }]
-  // })
-
-  // let administrative = await report?.$get('administrative');
-
-  // let workplaceEvents = await WorkplaceEvent.findAll({
-  //   where: {
-  //     administrativeId: administrative?.id
-  //   },
-  //   include: [{ model: WorkplaceType }]
-  // })
-
-  // let secretariatNotifications = await administrative?.$get('secretariatNotifications');
-
-  // let results = {
-  //   report: report,
-  //   operational: { operationalEvents },
-  //   administrative: { workplaceEvents, secretariatNotifications },
-  //   technical: { defects, malfunctions },
-  // };
+  const malfunctions = await Malfunction.findAll({
+    where: {
+      [Op.or]: {
+        description: {
+          [Op.like]: searchString,
+        },
+      }
+    }
+  })
+  for (let i in malfunctions) {
+    const event = await Technical.findOne({
+      where: {
+        id: malfunctions[i].technicalId
+      }
+    });
+    if (event != null) {
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(Number(event.reportId));
+      }
+    }
+  }
 
   res.send(reportIds);
-  return res.json({ allReports });
+});
+
+
+/******************************************************************************
+ *                      Search Reports - "GET /api/reports/pl/:pl"
+ ******************************************************************************/
+
+router.get('/pl/:pl', async (req: Request, res: Response) => {
+  const pl: string = req.param('pl');
+  const plString: string = '%' + pl + '%';
+  let reportIds: Number[] = [];
+
+  const operationalEvents = await OperationalEvent.findAll({
+    where: {
+      [Op.or]: {
+        plNumber: {
+          [Op.like]: plString,
+        },
+      }
+    }
+  })
+  for (let i in operationalEvents) {
+    const event = await Operational.findOne({
+      where: {
+        id: operationalEvents[i].operationalId
+      }
+    });
+    if (event != null) {
+      if (!reportIds.includes(event.reportId)) {
+        reportIds.push(Number(event.reportId));
+      }
+    }
+  }
+
+  res.send(reportIds);
 });
 
 /******************************************************************************
  *        Get the content of a report - "GET /api/reports/content/:reportId"
  ******************************************************************************/
 router.get('/content/:reportId', async (req: Request, res: Response) => {
+  var results;
   let reportId = req.param('reportId');
   let report = await Report.findOne({
     where: {
@@ -208,42 +296,70 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     },
   });
 
-  let technical = await report?.$get('technical');
-  let administrative = await report?.$get('administrative');
-  let operational = await report?.$get('operational');
-
-  let defects = await Defect.findAll({
+  let operational = await Operational.findOne({
     where: {
-      technicalId: technical?.id
-    },
-    include: [{ model: DefectType }]
-  })
-
-  let malfunctions = await Malfunction.findAll({
+      reportId: reportId
+    }
+  });
+  let administrative = await Administrative.findOne({
     where: {
-      technicalId: technical?.id
-    },
-    include: [{ model: MalfunctionType }]
-  })
-
-
-  let workplaceEvents = await WorkplaceEvent.findAll({
+      reportId: reportId
+    }
+  });
+  let technical = await Technical.findOne({
     where: {
-      administrativeId: administrative?.id
-    },
-    include: [{ model: WorkplaceType }]
-  })
+      reportId: reportId
+    }
+  });
 
-  let secretariatNotifications = await administrative?.$get('secretariatNotifications');
-  let operationalEvents = await operational?.$get('operationalEvents');
+  let operationalEvents: OperationalEvent[] = [];
+  let secretariatNotifications: SecretariatNotification[] = [];
+  let workplaceEvents: WorkplaceEvent[] = [];
+  let defects: Defect[] = [];
+  let malfunctions: Malfunction[] = [];
 
-  let results = {
+  if (operational != null) {
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        operationalId: operational.id
+      }
+    })
+  }
+  if (technical != null) {
+    defects = await Defect.findAll({
+      where: {
+        technicalId: technical.id
+      },
+      include: [{ model: DefectType }]
+    })
+
+    malfunctions = await Malfunction.findAll({
+      where: {
+        technicalId: technical.id
+      },
+      include: [{ model: MalfunctionType }]
+    })
+  }
+  if (administrative != null) {
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        administrativeId: administrative.id
+      },
+      include: [{ model: WorkplaceType }]
+    })
+
+    secretariatNotifications = await SecretariatNotification.findAll({
+      where: {
+        administrativeId: administrative.id
+      }
+    })
+  }
+  results = {
     report: report,
     operational: { operationalEvents },
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
-
   res.send(results);
 });
 
@@ -252,36 +368,53 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
  ******************************************************************************/
 router.get('/notifications/:reportId', async (req: Request, res: Response) => {
   let reportId = req.param('reportId');
-  let report = await Report.findOne({
+
+  let administrative = await Administrative.findOne({
     where: {
-      id: reportId,
-    },
+      reportId: reportId
+    }
+  });
+  let technical = await Technical.findOne({
+    where: {
+      reportId: reportId
+    }
   });
 
-  let technical = await report?.$get('technical');
-  let administrative = await report?.$get('administrative');
-  let operational = await report?.$get('operational');
+  let secretariatNotifications: SecretariatNotification[] = [];
+  let workplaceEvents: WorkplaceEvent[] = [];
+  let defects: Defect[] = [];
+  let malfunctions: Malfunction[] = [];
 
-  let defects = await technical?.$get('defects', {
-    where: {
-      monitoring: true,
-    },
-  });
-  let malfunctions = await technical?.$get('malfunctions', {
-    where: {
-      monitoring: true,
-    },
-  });
-  let workplaceEvents = await administrative?.$get('workplaceEvents', {
-    where: {
-      monitoring: true,
-    },
-  });
-  let secretariatNotifications = await administrative?.$get('secretariatNotifications', {
-    where: {
-      monitoring: true,
-    },
-  });
+  if (technical != null) {
+    defects = await Defect.findAll({
+      where: {
+        technicalId: technical.id,
+        monitoring: true
+      },
+    })
+
+    malfunctions = await Malfunction.findAll({
+      where: {
+        technicalId: technical.id,
+        monitoring: true
+      },
+    })
+  }
+  if (administrative != null) {
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        administrativeId: administrative.id,
+        monitoring: true
+      },
+    })
+
+    secretariatNotifications = await SecretariatNotification.findAll({
+      where: {
+        administrativeId: administrative.id,
+        monitoring: true
+      }
+    })
+  }
 
   let results = {
     administrative: { workplaceEvents, secretariatNotifications },
@@ -296,23 +429,30 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
  ******************************************************************************/
 router.get('/priority/:reportId', async (req: Request, res: Response) => {
   let reportId = req.param('reportId');
-  let report = await Report.findOne({
+
+  let operational = await Operational.findOne({
     where: {
-      id: reportId,
-    },
+      reportId: reportId
+    }
   });
 
-  let operational = await report?.$get('operational');
+  let operationalEvents: OperationalEvent[] = [];
 
-  let operationalEvents = await operational?.$get('operationalEvents', {
-    where: {
-      priority: true,
-    },
-  });
+  if (operational != null) {
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        operationalId: operational.id,
+        priority: true
+      },
+    })
+  }
 
   let results = {
     operational: { operationalEvents },
   };
+
+  console.log(operational);
+
 
   res.send(results);
 });
@@ -320,7 +460,7 @@ router.get('/priority/:reportId', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/types"
  ******************************************************************************/
-
+// normaal gezien ongebruikt
 router.get('/types', async (req: Request, res: Response) => {
   let operationalTypes = await OperationalType.findAll({
     attributes: ['typeName'],
@@ -348,30 +488,16 @@ router.get('/types', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/operationalTypes', async (req: Request, res: Response) => {
-  var reports: (
-    OperationalType[]
-  )[] = [];
-
-  var result;
-  result = await OperationalType.findAll({
-    attributes: ['typeName'],
+  let operationalTypes = await OperationalType.findAll({
+    attributes: ['id', 'typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult OperationalType');
-    console.log(result);
-    console.log('\n\n\n\nreports OperationalType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
+  let operationalSubtypes = await OperationalSubtype.findAll({
+    attributes: ['operationalTypeId', 'typeName'],
+  })
 
-  console.log('\n\n\n\nreports');
-  console.log(reports);
-
-  res.send(reports);
-  return res.json({ reports });
+  let results = { operationalTypes , operationalSubtypes};
+  res.send(results);
 });
 
 /******************************************************************************
@@ -379,30 +505,16 @@ router.get('/operationalTypes', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/workplaceTypes', async (req: Request, res: Response) => {
-  var reports: (
-    WorkplaceType[]
-  )[] = [];
-
-  var result;
-  result = await WorkplaceType.findAll({
-    attributes: ['typeName'],
+  let workplaceTypes = await WorkplaceType.findAll({
+    attributes: ['id', 'typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult WorkplaceType');
-    console.log(result);
-    console.log('\n\n\n\nreports WorkplaceType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
+  let workplaceSubtypes = await WorkplaceSubtype.findAll({
+    attributes: ['workplaceTypeId', 'typeName'],
+  })
 
-  console.log('\n\n\n\nreports');
-  console.log(reports);
-
-  res.send(reports);
-  return res.json({ reports });
+  let results = { workplaceTypes, workplaceSubtypes }
+  res.send(results);
 });
 
 /******************************************************************************
@@ -410,30 +522,16 @@ router.get('/workplaceTypes', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/defectTypes', async (req: Request, res: Response) => {
-  var reports: (
-    DefectType[]
-  )[] = [];
-
-  var result;
-  result = await DefectType.findAll({
-    attributes: ['typeName'],
+  let defectTypes = await DefectType.findAll({
+    attributes: ['id', 'typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult DefectType');
-    console.log(result);
-    console.log('\n\n\n\nreports DefectType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
+  let defectSubtypes = await DefectSubtype.findAll({
+    attributes: ['defectTypeId', 'typeName'],
+  })
 
-  console.log('\n\n\n\nreports');
-  console.log(reports);
-
-  res.send(reports);
-  return res.json({ reports });
+  let results = { defectTypes, defectSubtypes }
+  res.send(results);
 });
 
 /******************************************************************************
@@ -441,35 +539,21 @@ router.get('/defectTypes', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get('/malfunctionTypes', async (req: Request, res: Response) => {
-  var reports: (
-    MalfunctionType[]
-  )[] = [];
-
-  var result;
-  result = await MalfunctionType.findAll({
-    attributes: ['typeName'],
+  let malfunctionTypes = await MalfunctionType.findAll({
+    attributes: ['id', 'typeName'],
   });
-  if (result.length != 0) {
-    console.log('\n\n\n\nresult MalfunctionType');
-    console.log(result);
-    console.log('\n\n\n\nreports MalfunctionType');
 
-    if (!reports.includes(result)) {
-      reports.push(result);
-      console.log(reports);
-    }
-  }
+  let malfunctionSubtypes = await MalfunctionSubtype.findAll({
+    attributes: ['malfunctionTypeId', 'typeName'],
+  })
 
-  console.log('\n\n\n\nreports');
-  console.log(reports);
-
-  res.send(reports);
-  return res.json({ reports });
+  let results = { malfunctionTypes, malfunctionSubtypes }
+  res.send(results);
 });
 
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/operationalEvent"
+ *             Get event from Reports - "GET /api/reports/operationalEvent/:id"
  ******************************************************************************/
 
 router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
@@ -484,14 +568,13 @@ router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
 });
 
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/workplaceEvent"
+ *             Get event from Reports - "GET /api/reports/workplaceEvent/:id"
  ******************************************************************************/
 
 router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
@@ -506,13 +589,12 @@ router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
 });
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/secretariatNotification"
+ *             Get event from Reports - "GET /api/reports/secretariatNotification/:id"
  ******************************************************************************/
 
 router.get('/secretariatNotification/:id', async (req: Request, res: Response) => {
@@ -527,13 +609,12 @@ router.get('/secretariatNotification/:id', async (req: Request, res: Response) =
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
 });
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/defectEvent"
+ *             Get event from Reports - "GET /api/reports/defectEvent/:id"
  ******************************************************************************/
 
 router.get('/defectEvent/:id', async (req: Request, res: Response) => {
@@ -548,13 +629,12 @@ router.get('/defectEvent/:id', async (req: Request, res: Response) => {
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
 });
 
 /******************************************************************************
- *             Get event from Reports - "GET /api/reports/malfunctionEvent"
+ *             Get event from Reports - "GET /api/reports/malfunctionEvent/:id"
  ******************************************************************************/
 
 router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
@@ -569,9 +649,203 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
     console.log(result);
 
     res.send(result);
-    return res.json({ result });
   }
   return false;
+});
+
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/operationalEventTypes/:id"
+ ******************************************************************************/
+/**
+ * TODO
+ * operationalEvent heeft meerdere EventTypes
+ * er moet gekeken worden anar EventType
+ * en dan op die eventType moet er gekeken worden naar OperationalType
+ */
+
+router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => {
+  // const eventId = req.param('id');
+  // const event = await WorkplaceEvent.findOne({
+  //   where: {
+  //     id: eventId
+  //   }
+  // });
+  // if (event != null) {
+  //   let workplaceTypeId = event.workplaceTypeId;
+  //   let workplaceSubtypeId = event.workplaceSubtypeId;
+
+  //   let type;
+  //   let typeName = "";
+  //   if (workplaceTypeId != null) {
+  //     type = await WorkplaceType.findOne({
+  //       where: {
+  //         id: workplaceTypeId
+  //       }
+  //     })
+  //     if (type != null) {
+  //       typeName = type.typeName;
+  //     }
+  //   }
+
+  //   let subtype;
+  //   let subtypeName = "";
+  //   if (workplaceSubtypeId != null) {
+  //     subtype = await WorkplaceSubtype.findOne({
+  //       where: {
+  //         id: workplaceSubtypeId
+  //       }
+  //     });
+  //     if (subtype != null) {
+  //       subtypeName = subtype.typeName;
+  //     }
+  //   }
+
+  //   const result = { typeName, subtypeName };
+  //   res.send(result);
+  // }
+  res.send("");
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/workplaceEventTypes/:id"
+ ******************************************************************************/
+
+router.get('/workplaceEventTypes/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const event = await WorkplaceEvent.findOne({
+    where: {
+      id: eventId
+    }
+  });
+  if (event != null) {
+    let workplaceTypeId = event.workplaceTypeId;
+    let workplaceSubtypeId = event.workplaceSubtypeId;
+
+    let type;
+    let typeName = "";
+    if (workplaceTypeId != null) {
+      type = await WorkplaceType.findOne({
+        where: {
+          id: workplaceTypeId
+        }
+      })
+      if (type != null) {
+        typeName = type.typeName;
+      }
+    }
+
+    let subtype;
+    let subtypeName = "";
+    if (workplaceSubtypeId != null) {
+      subtype = await WorkplaceSubtype.findOne({
+        where: {
+          id: workplaceSubtypeId
+        }
+      });
+      if (subtype != null) {
+        subtypeName = subtype.typeName;
+      }
+    }
+
+    const result = { typeName, subtypeName };
+    res.send(result);
+  }
+  res.send("");
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/defectTypes/:id"
+ ******************************************************************************/
+
+router.get('/defectTypes/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const event = await Defect.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (event != null) {
+    let defectTypeId = event.defectTypeId;
+    let defectSubtypeId = event.defectSubtypeId;
+
+    let type;
+    let typeName = "";
+    if (defectTypeId != null) {
+      type = await DefectType.findOne({
+        where: {
+          id: defectTypeId
+        }
+      })
+      if (type != null) {
+        typeName = type.typeName;
+      }
+    }
+
+    let subtype;
+    let subtypeName = "";
+    if (defectSubtypeId != null) {
+      subtype = await DefectSubtype.findOne({
+        where: {
+          id: defectSubtypeId
+        }
+      });
+      if (subtype != null) {
+        subtypeName = subtype.typeName;
+      }
+    }
+
+    const result = { typeName, subtypeName };
+    res.send(result);
+  }
+  res.send("");
+});
+
+/******************************************************************************
+ *             Get event from Reports - "GET /api/reports/malfunctionTypes/:id"
+ ******************************************************************************/
+
+router.get('/malfunctionTypes/:id', async (req: Request, res: Response) => {
+  const eventId = req.param('id');
+  const event = await Malfunction.findOne({
+    where: {
+      id: eventId
+    },
+  });
+  if (event != null) {
+    let malfunctionTypeId = event.malfunctionTypeId;
+    let malfunctionSubtypeId = event.malfunctionSubtypeId;
+
+    let type;
+    let typeName = "";
+    if (malfunctionTypeId != null) {
+      type = await MalfunctionType.findOne({
+        where: {
+          id: malfunctionTypeId
+        }
+      })
+      if (type != null) {
+        typeName = type.typeName;
+      }
+    }
+
+    let subtype;
+    let subtypeName = "";
+    if (malfunctionSubtypeId != null) {
+      subtype = await MalfunctionSubtype.findOne({
+        where: {
+          id: malfunctionSubtypeId
+        }
+      });
+      if (subtype != null) {
+        subtypeName = subtype.typeName;
+      }
+    }
+
+    const result = { typeName, subtypeName };
+    res.send(result);
+  }
+  res.send("");
 });
 
 /******************************************************************************
