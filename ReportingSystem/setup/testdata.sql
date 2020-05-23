@@ -202,7 +202,7 @@ CREATE TABLE `EventTypes` (
 
 LOCK TABLES `EventTypes` WRITE;
 /*!40000 ALTER TABLE `EventTypes` DISABLE KEYS */;
-INSERT INTO `EventTypes` VALUES (1,4,5,3,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,1,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,7,6,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,8,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,7,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,8,3,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,2,4,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,3,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,9,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,10,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `EventTypes` VALUES (1,4,5,3,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,1,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,7,6,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,8,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,7,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,8,3,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,2,4,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,3,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,9,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,10,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `EventTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -357,9 +357,8 @@ CREATE TABLE `OperationalSubtypes` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `eventTypeId` (`eventTypeId`),
   KEY `operational_subtypes_operational_type_id` (`operationalTypeId`),
-  CONSTRAINT `OperationalSubtypes_ibfk_1` FOREIGN KEY (`operationalTypeId`) REFERENCES `OperationalTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `OperationalSubtypes_ibfk_1` FOREIGN KEY (`operationalTypeId`) REFERENCES `OperationalTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
  
@@ -386,7 +385,7 @@ CREATE TABLE `OperationalTypes` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `operational_types_event_type_id` (`eventTypeId`),
+  KEY `operational_types_type_name` (`typeName`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
  

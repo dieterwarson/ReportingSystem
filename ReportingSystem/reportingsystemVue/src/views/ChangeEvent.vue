@@ -3,7 +3,6 @@
 <div class="container pt-5 pb-5">
   <h1>Wijzig gebeurtenis</h1>
   {{typeSelected}}
-
   <form id="changeOperationalEvent">
     <!-- Operationeel -->
     <fieldset v-if="categorie == 'Operational'">
@@ -26,7 +25,7 @@
                 <div class="checkbox-container text-sm-left col-sm-4">
                   <div v-for="type in reportTypes.operationalTypes" :key="type.id">
                     <div class="typecontainer text-lg-left" id="operational">
-                      <input type="checkbox" :id="type.typeName" :value="type.typeName" v-model="operationalTypeSelected.selectedTypes" />
+                      <input type="checkbox" :id="type.typeName" :value="type.typeName" v-model="operationalTypeSelected.selectedTypes" @change="removeSubtypes(type.id)" />
                       <label>{{ type.typeName }}</label>
                     </div>
 
@@ -38,11 +37,9 @@
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
-                <span>Types: {{ operationalTypeSelected.selectedTypes }}</span>
-                <span>Subtypes: {{ operationalTypeSelected.selectedSubtypes }}</span>
+                <button @click.prevent="uncheckAllOperational" class="btn btn-danger extraMargin">Deselecteer keuze</button>
               </div>
             </form>
           </div>
@@ -291,9 +288,46 @@ import ReportingService from "../services/ReportingService";
 export default Vue.extend({
   data: function () {
     return {
+      test: 0,
       reportTypes: {
-        operationalTypes: {},
-        operationalSubtypes: {},
+        operationalTypes: [{
+            id: 4,
+            typeName: "Bevraging GSM operatoren"
+          },
+          {
+            id: 5,
+            typeName: "BIN-alarm"
+          },
+          {
+            id: 2,
+            typeName: "Grensoverschrijdende achtervolging"
+          },
+          {
+            id: 6,
+            typeName: "Signalering"
+          },
+          {
+            id: 1,
+            typeName: "Specifieke gebeurtenis"
+          },
+          {
+            id: 3,
+            typeName: "Zoeking met helikopter"
+          }
+        ],
+        operationalSubtypes: [{
+            operationalTypeId: 6,
+            typeName: "Persoon"
+          },
+          {
+            operationalTypeId: 6,
+            typeName: "Voertuig"
+          },
+          {
+            operationalTypeId: 6,
+            typeName: "Voorwerp"
+          }
+        ],
         workplaceTypes: {},
         workplaceSubtypes: {},
         defectTypes: {},
@@ -303,7 +337,7 @@ export default Vue.extend({
       },
       operationalTypeSelected: {
         selectedTypes: [] as string[],
-        selectedSubtypes: [] as string[],
+        selectedSubtypes: [] as string[]
       },
       typeSelected: {
         typeName: "",
@@ -437,27 +471,27 @@ export default Vue.extend({
 
   methods: {
     loadData: function () {
-      // this.loadReportContent();
+      this.loadReportContent();
       this.categorie = String(this.$route.query.categorie);
       this.subcategorie = String(this.$route.query.subcategorie);
       this.reportId = Number(this.$route.query.reportId);
       this.eventId = Number(this.$route.query.eventId);
 
-      ReportingService.getAllReports(
-        "/api/reports/content/" + String(this.reportId)
-      ).then(res => (this.reportContent = res));
+      // ReportingService.getAllReports(
+      //   "/api/reports/content/" + String(this.reportId)
+      // ).then(res => (this.reportContent = res));
 
-      if (this.subcategorie == "operationalEvents") {
-        this.loadOperationalEvent();
-      } else if (this.subcategorie == "workplaceEvents") {
-        this.loadWorkplaceEvent();
-      } else if (this.subcategorie == "secretariatNotifications") {
-        this.loadSecretariatNotification();
-      } else if (this.subcategorie == "defects") {
-        this.loadDefect();
-      } else if (this.subcategorie == "malfunctions") {
-        this.loadMalfunction();
-      }
+      // if (this.subcategorie == "operationalEvents") {
+      //   this.loadOperationalEvent();
+      // } else if (this.subcategorie == "workplaceEvents") {
+      //   this.loadWorkplaceEvent();
+      // } else if (this.subcategorie == "secretariatNotifications") {
+      //   this.loadSecretariatNotification();
+      // } else if (this.subcategorie == "defects") {
+      //   this.loadDefect();
+      // } else if (this.subcategorie == "malfunctions") {
+      //   this.loadMalfunction();
+      // }
     },
     selectAll: function (section: string) {
       const checks = document.querySelectorAll(
@@ -535,6 +569,21 @@ export default Vue.extend({
     },
 
     loadReportContent: function () {
+      // this.reportTypes = {
+      //   operationalTypes: [
+      //     { id: 4, typeName: "Bevraging GSM operatoren" },
+      //     { id: 5, typeName: "BIN-alarm" },
+      //     { id: 2, typeName: "Grensoverschrijdende achtervolging" },
+      //     { id: 6, typeName: "Signalering" },
+      //     { id: 1, typeName: "Specifieke gebeurtenis" },
+      //     { id: 3, typeName: "Zoeking met helikopter" }
+      //   ],
+      //   operationalSubtypes: [
+      //     { operationalTypeId: 6, typeName: "Persoon" },
+      //     { operationalTypeId: 6, typeName: "Voertuig" },
+      //     { operationalTypeId: 6, typeName: "Voorwerp" }
+      //   ]
+      // };
       this.reportContent = {
         report: {
           id: 1,
@@ -727,7 +776,7 @@ export default Vue.extend({
     async changeOperationalEvent() {
       await ReportingService.changeOperationalEvent({
         reportId: String(this.reportId),
-        operationalId: this.currentEvent.id,
+        operationalEventId: this.currentEvent.id,
         message: this.currentEvent.description,
         types: this.operationalTypeSelected.selectedTypes,
         subtypes: this.operationalTypeSelected.selectedSubtypes
@@ -779,6 +828,10 @@ export default Vue.extend({
     deselectSubtype: function () {
       this.typeSelected.subtypeName = "";
     },
+    uncheckAllOperational: function () {
+      this.operationalTypeSelected.selectedTypes = [];
+      this.operationalTypeSelected.selectedSubtypes = [];
+    },
 
     selectParent: function (parentId: number, parent: string) {
       let parentTypes: any;
@@ -799,21 +852,61 @@ export default Vue.extend({
       }
     },
 
+    /**
+     * If a subtype is selected, its parent type needs to be selected as well.
+     */
     selectOperationalParent: function (parentId: number) {
       const parentTypes: any = this.reportTypes.operationalTypes;
 
       for (let i = 0; i < parentTypes.length; i++) {
-        const element = parentTypes[i];
-        if (parentId == element.id) {
-          if (this.operationalTypeSelected.selectedTypes.includes(element.typeName)) {
-            // const index = this.operationalTypeSelected.selectedTypes.indexOf(element.typeName);
-            // if (index > -1) {
-            //   this.operationalTypeSelected.selectedTypes.splice(index, 1);
-            // }
-          } else {
-            this.operationalTypeSelected.selectedTypes.push(element.typeName);
+        const parentType = parentTypes[i];
+        if (parentType.id == parentId) {
+          if (!this.operationalTypeSelected.selectedTypes.includes(parentType.typeName)) {
+            this.operationalTypeSelected.selectedTypes.push(parentType.typeName);
           }
         }
+      }
+    },
+
+    /**
+     * If a type is deselected, its subtypes need to be deselected as well.
+     */
+    removeSubtypes: function (parentId: number) {
+      if (this.operationalTypeSelected.selectedSubtypes.length > 0) {
+        const allTypes = this.reportTypes.operationalTypes;
+        const allSubtypes = this.reportTypes.operationalSubtypes;
+
+        // over alle types loopen
+        for (let i = 0; i < allTypes.length; i++) {
+          const curType = allTypes[i];
+
+          // als parentType gevonden
+          if (curType.id == parentId) {
+            const parentType = curType;
+
+            // over alle subtypes loopen
+            for (let j = 0; j < allSubtypes.length; j++) {
+              const curSubtype = allSubtypes[j];
+
+              // als huidig subtype in selectedSubtypes voorkomt, dan verwijderen uit selectedSubtypes
+              if (this.operationalTypeSelected.selectedSubtypes.includes(curSubtype.typeName) && curSubtype.operationalTypeId == parentId) {
+                const index = this.operationalTypeSelected.selectedSubtypes.indexOf(curSubtype.typeName);
+
+                if (index > -1) {
+                  this.operationalTypeSelected.selectedSubtypes.splice(index, 1);
+                }
+              }
+            }
+
+            // na loop over subtypes parentType verwijderen uit selectedTypes
+            const index = this.operationalTypeSelected.selectedTypes.indexOf(parentType.typeName);
+
+            if (index > -1) {
+              this.operationalTypeSelected.selectedTypes.splice(index, 1);
+            }
+          }
+        }
+
       }
     }
   }
