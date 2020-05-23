@@ -103,12 +103,12 @@
         <div class="col-md-6">
           <!-- charts -->
           <PieChart v-if="loaded" :chartdata="PieData" />
-          <LineChart :chartdata="statisticsData" :options="options" />
+          <LineChart v-if="loaded" :chartdata="LineData" :options="options" />
         </div>
       </div>
     </div>
     <span>Types: {{ selectedTypes }}</span>
-    <span>Data: {{ PieData }}</span>
+    <span>Data: {{ LineData }}</span>
   </div>
 </template>
 
@@ -118,7 +118,7 @@ import ReportingService from "../services/ReportingService";
 import LineChart from "../views/components/LineChart.vue";
 import PieChart from "../views/components/PieChart.vue";
 export default Vue.extend({
-  data: function () {
+  data: function() {
     return {
       reportTypes: {},
       selectedTypes: {
@@ -129,16 +129,31 @@ export default Vue.extend({
       },
       statisticsData: {
         counts: [
-          { typeName: "", count: 0 },
-          
+          { typeName: "Arbeidsongeval", count: 5 },
+          { typeName: "Ziekte", count: 3 },
+          { typeName: "Schade aan voertuig", count: 4 },
+          { typeName: "Verwittiging (anderen)", count: 1 },
+          { typeName: "Verwittiging ASC", count: 1 },
+          { typeName: "Voorwerp", count: 3 },
         ],
         operationalEvents: [],
-        workplaceEvents: [],
-        defects: [],
-        malfunctions: [],
+        workplaceEvents: [
+          { t: "Mon Mar 16 2020", y: 1 },
+          { t: "Sun Mar 22 2020", y: 1 },
+          { t: "Mon Mar 23 2020", y: 1 },
+        ],
+        defects: [
+          { t: "Sat Mar 21 2020", y: 2 },
+          { t: "Tue Mar 17 2020", y: 2 },
+        ],
+        malfunctions: [
+          { t: "Mon Mar 16 2020", y: 1 },
+          { t: "Tue Mar 17 2020", y: 2 },
+        ],
       },
       loaded: false,
       PieData: {},
+      LineData: {},
     };
   },
 
@@ -153,7 +168,7 @@ export default Vue.extend({
 
   methods: {
     loadData: function() {
-      ReportingService.getAllReports("/api/statistics/types").then(
+           ReportingService.getAllReports("/api/statistics/types").then(
         (res) => (this.reportTypes = res)
       );
 
@@ -179,7 +194,7 @@ export default Vue.extend({
       }; */
     },
 
-    selectAll: function (section: string) {
+    selectAll: function(section: string) {
       const checks = document.querySelectorAll(
         "#" + section + ' input[type="checkbox"]'
       );
@@ -206,14 +221,55 @@ export default Vue.extend({
       this.PieData = { datasets: [{ data }], labels };
     },
 
+    getLineData: function() {
+      this.LineData = {
+        datasets: [
+          { label: "Operationeel",
+            data: 
+                this.statisticsData.operationalEvents              
+             },
+          { label: "Voorval tijdens dienst",
+            data: 
+                this.statisticsData.workplaceEvents
+             },
+          { label: "Logistiek",
+            data: 
+                this.statisticsData.defects
+             },
+          { label: "Technisch",
+            data:
+              this.statisticsData.malfunctions
+             },
+        ],
+      };
+
+      /*       {datasets: [
+          {
+            label: "Demo",
+            data: [
+              {
+                t: new Date("2015-3-15 13:3"),
+                y: 12,
+              },
+              {
+                t: new Date("2015-3-25 13:2"),
+                y: 21,
+              },
+              {
+                t: new Date("2015-4-25 14:12"),
+                y: 32,
+              },
+            ],
+          },
+        ]} */
+    },
+
     getStatistics: function() {
       ReportingService.getStatistics(this.selectedTypes).then(
         (res) => (this.statisticsData = res)
-      ); 
+      );
 
     },
-
-    // getLinedata: function() {},
 
   },
   watch: {
@@ -227,6 +283,7 @@ export default Vue.extend({
     },
     statisticsData: function() {
       this.getPieData();
+      this.getLineData();
       this.loaded = true;
     },
   },

@@ -84,10 +84,34 @@ interface Counts{
 
 interface StatisticsData {
   counts: Array<Counts>;
-  operationalEvents: Array<Array<OperationalEvent>>;
-  workplaceEvents: Array<Array<WorkplaceEvent>>;
-  defects: Array<Array<Defect>>;
-  malfunctions: Array<Array<Malfunction>>;
+  operationalEvents: Array<eventDate>;
+  workplaceEvents: Array<eventDate>;
+  defects: Array<eventDate>;
+  malfunctions: Array<eventDate>;
+}
+
+interface eventDate {
+  t: string;
+  y: number;
+}
+
+function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Malfunction[]){
+  let events: eventDate[] = [];
+
+  result.forEach((element: { date: { toDateString: () => string; }; }) => {
+    let dateFound = false;
+    for (let i = 0; i < events.length; i++) {
+      if(events[i].t == element.date.toDateString()){
+        dateFound = true;
+        events[i].y++;
+      }     
+    }
+    if(!dateFound){
+      events.push({t: element.date.toDateString(), y: 1});
+    }
+  });
+
+  return events;
 }
 
 
@@ -108,12 +132,17 @@ router.post('/getStatistics', async (req, res) => {
             [Op.like]: '' + type,
           },
         },
-      }]
+      }],
         
     });
 
+    // group events by date
+
+
+    let events = countDate(result);
+
     if (result.length != 0) {
-      reports.workplaceEvents.push(result);
+      reports.workplaceEvents = events;
       // Add the typeName and number of its occurrences to reports
       var count: Counts  = {typeName: type, count: result.length};
       reports.counts.push(count);
@@ -136,10 +165,11 @@ router.post('/getStatistics', async (req, res) => {
         }]
       }]
     });
-    console.log(result);
+
+    let events = countDate(result);
 
     if (result.length != 0) {
-      reports.operationalEvents.push(result);
+      reports.operationalEvents = events;
       // Add the typeName and number of its occurrences to reports
       var count: Counts  = {typeName: type, count: result.length};
       reports.counts.push(count);
@@ -162,8 +192,10 @@ router.post('/getStatistics', async (req, res) => {
         
     });
 
+    let events = countDate(result);
+
     if (result.length != 0) {
-      reports.defects.push(result);
+      reports.defects = events;
       // Add the typeName and number of its occurrences to reports
       var count: Counts  = {typeName: type, count: result.length};
       reports.counts.push(count);
@@ -186,13 +218,17 @@ router.post('/getStatistics', async (req, res) => {
         
     });
 
+    let events = countDate(result);
+
     if (result.length != 0) {
-      reports.malfunctions.push(result);
+      reports.malfunctions = events;
       // Add the typeName and number of its occurrences to reports
       var count: Counts  = {typeName: type, count: result.length};
       reports.counts.push(count);
     }
   }
+
+  console.log(reports);
 
   res.send(reports);
 });
