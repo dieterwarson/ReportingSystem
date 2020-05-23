@@ -6,6 +6,8 @@ import WorkplaceType from 'src/models/workplaceType';
 import DefectType from 'src/models/defectType';
 import MalfunctionType from 'src/models/malfunctionType';
 import WorkplaceEvent from 'src/models/workplaceEvent';
+import Defect from 'src/models/defect';
+import Malfunction from 'src/models/malfunction';
 
 // Init router
 const router = Router();
@@ -72,31 +74,121 @@ router.get('/types', async (req: Request, res: Response) => {
   res.send(results);
 });
 
+interface Counts{
+  typeName: string;
+  count: number;
+}
+
+
+interface StatisticsData {
+  counts: Array<Counts>;
+  operationalEvents: Array<Array<OperationalEvent>>;
+  workplaceEvents: Array<Array<WorkplaceEvent>>;
+  defects: Array<Array<Defect>>;
+  malfunctions: Array<Array<Malfunction>>;
+}
+
 
 router.post('/getStatistics', async (req, res) => {
-  var reports: (WorkplaceEvent[] | number[] | String[])[] = [];
+  let reports: StatisticsData = { counts: [], operationalEvents: [], workplaceEvents: [], defects: [], malfunctions: [] };
   const types = req.body;
-  for (let i in types) {
-    var type = types[i];
+  
+  for (let i in types.workplaceevent) {
+    var type = types.workplaceevent[i];
     var result = [];
     result = await WorkplaceEvent.findAll({
+      attributes: ['date'],
       include: [{
         model: WorkplaceType,
-        /*where: {
+        attributes: ['typeName'],
+        where: {
           typeName: {
             [Op.like]: '' + type,
           },
-        },*/
+        },
       }]
         
     });
 
-    console.log(result);
     if (result.length != 0) {
-      reports.push(result);
+      reports.workplaceEvents.push(result);
       // Add the typeName and number of its occurrences to reports
-      var count: number[] | String[] = [type + ':' + result.length];
-      reports.push(count);
+      var count: Counts  = {typeName: type, count: result.length};
+      reports.counts.push(count);
+    }
+  }
+  for (let i in types.operational) {
+    var type = types.operational[i];
+    var result = [];
+    result = await OperationalEvent.findAll({
+      include: [{
+        model: EventType,
+        required: true,
+        include: [{
+          model: OperationalType,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+      }]
+    });
+    console.log(result);
+
+    if (result.length != 0) {
+      reports.operationalEvents.push(result);
+      // Add the typeName and number of its occurrences to reports
+      var count: Counts  = {typeName: type, count: result.length};
+      reports.counts.push(count);
+    }
+  }
+  for (let i in types.defect) {
+    var type = types.defect[i];
+    var result = [];
+    result = await Defect.findAll({
+      attributes: ['date'],
+      include: [{
+        model: DefectType,
+        attributes: ['typeName'],
+        where: {
+          typeName: {
+            [Op.like]: '' + type,
+          },
+        },
+      }]
+        
+    });
+
+    if (result.length != 0) {
+      reports.defects.push(result);
+      // Add the typeName and number of its occurrences to reports
+      var count: Counts  = {typeName: type, count: result.length};
+      reports.counts.push(count);
+    }
+  }
+  for (let i in types.malfunction) {
+    var type = types.malfunction[i];
+    var result = [];
+    result = await Malfunction.findAll({
+      attributes: ['date'],
+      include: [{
+        model: MalfunctionType,
+        attributes: ['typeName'],
+        where: {
+          typeName: {
+            [Op.like]: '' + type,
+          },
+        },
+      }]
+        
+    });
+
+    if (result.length != 0) {
+      reports.malfunctions.push(result);
+      // Add the typeName and number of its occurrences to reports
+      var count: Counts  = {typeName: type, count: result.length};
+      reports.counts.push(count);
     }
   }
 
