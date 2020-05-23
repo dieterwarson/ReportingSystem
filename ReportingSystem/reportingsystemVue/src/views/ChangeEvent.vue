@@ -39,8 +39,6 @@
                     </div>
                   </div>
                 </div>
-                <span>Types: {{ operationalTypeSelected.selectedTypes }}</span>
-                <span>Subtypes: {{ operationalTypeSelected.selectedSubtypes }}</span>
                 <button @click.prevent="uncheckAllOperational" class="btn btn-danger extraMargin">Deselecteer keuze</button>
               </div>
             </form>
@@ -874,21 +872,6 @@ export default Vue.extend({
      * If a type is deselected, its subtypes need to be deselected as well.
      */
     removeSubtypes: function (parentId: number) {
-      this.test = 1;
-      /**
-       * ik heb de parentId
-       * ik ga over types loopen totdat ik bij de type kom die gelijk is aan de type van parentId
-       * parentType is dan huidige type met als id parentId
-       * parentType heeft alleen zijn eigen id en een typeName
-       * 
-       * nu ga ik over de selectedSubtypes loopen
-       * hier zijn enkel typeNames
-       * 
-       * over de volledige subtypes loopen
-       * als huidige subtype voorkomt in selectedSubtypes array, dan die subtype verwijderen uit selectedSubtypes
-       * na einde van loop zouden er geen subtypes meer geselecteerd mogen zijn van de huidige parent
-       * dan de parent zelf nog verwijderen uit de selectedTypes array
-       */
       if (this.operationalTypeSelected.selectedSubtypes.length > 0) {
         const allTypes = this.reportTypes.operationalTypes;
         const allSubtypes = this.reportTypes.operationalSubtypes;
