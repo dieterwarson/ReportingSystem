@@ -1009,6 +1009,7 @@ app.post('/changeOperationalEvent', async (req, res) => {
   console.log(req.body);
   const selectedTypes = req.body.types;
   const selectedSubtypes = req.body.subtypes;
+  let subtypesClone = selectedSubtypes.slice(0);
 
   const event = await OperationalEvent.findOne({
     where: {
@@ -1021,40 +1022,53 @@ app.post('/changeOperationalEvent', async (req, res) => {
     ],
   });
   if (event != null) {
-    let eventTypes = await EventType.findAll({
+    event.description = req.body.message;
+    event.save();
+
+    await EventType.destroy({
       where: {
         operationalEventId: event.id
       }
-    });
-    if (eventTypes != null) {
-      for (let i = 0; i < eventTypes.length; i++) {
-        const eventType = eventTypes[i];
+    })
 
-        let type = await OperationalType.findOrCreate({
+    for (let i = 0; i < selectedTypes.length; i++) {
+      const curType = selectedTypes[i];
+
+      let curEventType = new EventType({
+        operationalEventId: event.id,
+        operationalTypeId: null,
+        operationalSubtypeId: null,
+      });
+
+      for (let j = 0; j < subtypesClone.length; j++) {
+        const curSubtype = subtypesClone[j];
+
+        let curSubtypeObject = await OperationalSubtype.findOne({
           where: {
-            eventTypeId: eventType.id
+            typeName: curSubtype
           }
         });
-        let subtype = await OperationalSubtype.findOrCreate({
-          where: {
-            eventTypeId: eventType.id
-          }
-        });
+        if (curSubtypeObject != null) {
+          curEventType.operationalSubtypeId = curSubtypeObject.id;
+        }
       }
+
+      let curTypeObject = await OperationalType.findOne({
+        where: {
+          typeName: curType
+        }
+      });
+      if (curTypeObject != null) {
+        curEventType.operationalTypeId = curTypeObject.id;
+      }
+
+      curEventType.save();
     }
-
-
-    event.description = req.body.message;
-    event.save();
   } else {
     res.send(Error('File not found'));
   }
-
-
-
-
-  OperationalEvent.sync();
-  EventType.sync();
+  // OperationalEvent.sync();
+  // EventType.sync();
 });
 
 app.post('/changeWorkplaceEvent', async (req, res) => {

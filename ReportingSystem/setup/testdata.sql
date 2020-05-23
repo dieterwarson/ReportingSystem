@@ -125,7 +125,8 @@ CREATE TABLE `Defects` (
   KEY `defects_technical_id` (`technicalId`),
   CONSTRAINT `Defects_ibfk_1` FOREIGN KEY (`technicalId`) REFERENCES `Technicals` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `Defects_ibfk_2` FOREIGN KEY (`authorId`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `Defects_ibfk_3` FOREIGN KEY (`defectTypeId`) REFERENCES `DefectTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `Defects_ibfk_3` FOREIGN KEY (`defectTypeId`) REFERENCES `DefectTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `Defects_ibfk_4` FOREIGN KEY (`defectSubtypeId`) REFERENCES `DefectSubtypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -186,7 +187,9 @@ CREATE TABLE `EventTypes` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `event_types_operational_event_id` (`operationalEventId`),
-  CONSTRAINT `EventTypes_ibfk_1` FOREIGN KEY (`operationalEventId`) REFERENCES `OperationalEvents` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `EventTypes_ibfk_1` FOREIGN KEY (`operationalEventId`) REFERENCES `OperationalEvents` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `EventTypes_ibfk_2` FOREIGN KEY (`operationalTypeId`) REFERENCES `OperationalTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `EventTypes_ibfk_3` FOREIGN KEY (`operationalSubtypeId`) REFERENCES `OperationalSubtypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -196,7 +199,7 @@ CREATE TABLE `EventTypes` (
 
 LOCK TABLES `EventTypes` WRITE;
 /*!40000 ALTER TABLE `EventTypes` DISABLE KEYS */;
-INSERT INTO `EventTypes` VALUES (1,4,5,3'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,1,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,7,6,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,8,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,7,1,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,8,3,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,2,4,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,3,1,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,9,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,10,5,1'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `EventTypes` VALUES (1,4,5,3,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,1,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,7,6,null'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,8,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,7,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,8,3,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,2,4,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,3,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,9,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,10,5,1,'2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `EventTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -282,7 +285,8 @@ CREATE TABLE `Malfunctions` (
   KEY `malfunctions_author_id` (`authorId`),
   CONSTRAINT `Malfunctions_ibfk_1` FOREIGN KEY (`authorId`) REFERENCES `Users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
   CONSTRAINT `Malfunctions_ibfk_2` FOREIGN KEY (`technicalId`) REFERENCES `Technicals` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `Malfunctions_ibfk_3` FOREIGN KEY (`malfunctionTypeId`) REFERENCES `MalfunctionTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `Malfunctions_ibfk_3` FOREIGN KEY (`malfunctionTypeId`) REFERENCES `MalfunctionTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `Malfunctions_ibfk_4` FOREIGN KEY (`malfunctionSubtypeId`) REFERENCES `MalfunctionSubtypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -354,7 +358,6 @@ CREATE TABLE `OperationalSubtypes` (
   KEY `eventTypeId` (`eventTypeId`),
   KEY `operational_subtypes_operational_type_id` (`operationalTypeId`),
   CONSTRAINT `OperationalSubtypes_ibfk_1` FOREIGN KEY (`operationalTypeId`) REFERENCES `OperationalTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `OperationalSubtypes_ibfk_2` FOREIGN KEY (`eventTypeId`) REFERENCES `EventTypes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -382,7 +385,6 @@ CREATE TABLE `OperationalTypes` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `operational_types_event_type_id` (`eventTypeId`),
-  CONSTRAINT `OperationalTypes_ibfk_1` FOREIGN KEY (`eventTypeId`) REFERENCES `EventTypes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -572,7 +574,8 @@ CREATE TABLE `WorkplaceEvents` (
   KEY `workplace_events_author_id` (`authorId`),
   CONSTRAINT `WorkplaceEvents_ibfk_1` FOREIGN KEY (`authorId`) REFERENCES `Users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `WorkplaceEvents_ibfk_2` FOREIGN KEY (`administrativeId`) REFERENCES `Administratives` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `WorkplaceEvents_ibfk_3` FOREIGN KEY (`workplaceTypeId`) REFERENCES `WorkplaceTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
+  CONSTRAINT `WorkplaceEvents_ibfk_3` FOREIGN KEY (`workplaceTypeId`) REFERENCES `WorkplaceTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,  
+  CONSTRAINT `WorkplaceEvents_ibfk_4` FOREIGN KEY (`workplaceSubtypeId`) REFERENCES `WorkplaceSubtypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
