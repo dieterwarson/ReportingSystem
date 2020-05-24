@@ -1525,6 +1525,9 @@ app.post("/deleteUser", async (req, res) => {
 app.post("/checkAuthentication", async (req, res) => {
     jwt.verify(req.body.token, process.env.JWT_KEY, function(err: Error) {
       const decoded = jwt.decode(req.body.token);
+      if (decoded === null) {
+        return res.json({check: false, message: "Failed to authenticate token"});
+      }
       var matched_users_promise = User.findAll({
         where: {
           username: decoded.username,
