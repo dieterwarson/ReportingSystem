@@ -1,25 +1,26 @@
 <script>
 import { Doughnut } from "vue-chartjs";
-import 'chartjs-plugin-colorschemes';
+import "chartjs-plugin-colorschemes";
 
 export default {
   extends: Doughnut,
   props: {
     chartdata: {
       type: Object,
-      default: null
+      default: null,
     },
   },
 
-  data: function(){
-    return {options: {
+  data: function() {
+    return {
+      options: {
         plugins: {
-            colorschemes: {
-                scheme: 'tableau.Classic20'
-            }
-        }
-    }
-    }
+          colorschemes: {
+            scheme: "tableau.Classic20",
+          },
+        },
+      },
+    };
   },
 
   watch: {
@@ -31,9 +32,8 @@ export default {
     },
   },
 
-  mounted () {
+  mounted() {
     this.renderChart(this.chartdata, this.options);
-  }
-
-}
+  },
+};
 </script>

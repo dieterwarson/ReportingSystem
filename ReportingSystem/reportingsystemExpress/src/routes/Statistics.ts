@@ -84,10 +84,12 @@ interface Counts{
 
 interface StatisticsData {
   counts: Array<Counts>;
-  operationalEvents: Array<eventDate>;
-  workplaceEvents: Array<eventDate>;
-  defects: Array<eventDate>;
-  malfunctions: Array<eventDate>;
+  lineContent: Array<lineData>;
+}
+
+interface lineData{
+  label: String;
+  data: Array<eventDate>;
 }
 
 interface eventDate {
@@ -95,8 +97,7 @@ interface eventDate {
   y: number;
 }
 
-function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Malfunction[]){
-  let events: eventDate[] = [];
+function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Malfunction[], events: eventDate[]){
 
   result.forEach((element: { date: { toDateString: () => string; }; }) => {
     let dateFound = false;
@@ -116,13 +117,16 @@ function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Ma
 
 
 router.post('/getStatistics', async (req, res) => {
-  let reports: StatisticsData = { counts: [], operationalEvents: [], workplaceEvents: [], defects: [], malfunctions: [] };
+  let reports: StatisticsData = { counts: [], lineContent: [] };
   const types = req.body;
+
+  let events: eventDate[] = []
   
   for (let i in types.workplaceevent) {
     var type = types.workplaceevent[i];
     var result = [];
     result = await WorkplaceEvent.findAll({
+      order: ['date'],
       attributes: ['date'],
       include: [{
         model: WorkplaceType,
@@ -139,24 +143,29 @@ router.post('/getStatistics', async (req, res) => {
     // group events by date
 
 
-    let events = countDate(result);
+    events = countDate(result, events);
+    const dates: lineData = {label: type, data: events}
+    reports.lineContent.push(dates);
 
     if (result.length != 0) {
-      reports.workplaceEvents = events;
       // Add the typeName and number of its occurrences to reports
       var count: Counts  = {typeName: type, count: result.length};
       reports.counts.push(count);
     }
   }
+
+  events = [];
   for (let i in types.operational) {
     var type = types.operational[i];
     var result = [];
     result = await OperationalEvent.findAll({
+      order: ['date'],
       include: [{
         model: EventType,
         required: true,
         include: [{
           model: OperationalType,
+          required: true,
           where: {
             typeName: {
               [Op.like]: '' + type,
@@ -166,19 +175,25 @@ router.post('/getStatistics', async (req, res) => {
       }]
     });
 
-    let events = countDate(result);
+    events = countDate(result, events);
+    reports.lineContent.push({label: type, data: events});
+
+    // console.log(events);
 
     if (result.length != 0) {
-      reports.operationalEvents = events;
       // Add the typeName and number of its occurrences to reports
       var count: Counts  = {typeName: type, count: result.length};
       reports.counts.push(count);
     }
   }
+
+  events = [];
+
   for (let i in types.defect) {
     var type = types.defect[i];
     var result = [];
     result = await Defect.findAll({
+      order: ['date'],
       attributes: ['date'],
       include: [{
         model: DefectType,
@@ -192,19 +207,22 @@ router.post('/getStatistics', async (req, res) => {
         
     });
 
-    let events = countDate(result);
+    events = countDate(result, events);
+    reports.lineContent.push({label: type, data: events});
 
     if (result.length != 0) {
-      reports.defects = events;
       // Add the typeName and number of its occurrences to reports
       var count: Counts  = {typeName: type, count: result.length};
       reports.counts.push(count);
     }
   }
+
+  events = [];
   for (let i in types.malfunction) {
     var type = types.malfunction[i];
     var result = [];
     result = await Malfunction.findAll({
+      order: ['date'],
       attributes: ['date'],
       include: [{
         model: MalfunctionType,
@@ -218,17 +236,15 @@ router.post('/getStatistics', async (req, res) => {
         
     });
 
-    let events = countDate(result);
+    events = countDate(result, events);
+    reports.lineContent.push({label: type, data: events});
 
     if (result.length != 0) {
-      reports.malfunctions = events;
       // Add the typeName and number of its occurrences to reports
       var count: Counts  = {typeName: type, count: result.length};
       reports.counts.push(count);
     }
   }
-
-  console.log(reports);
 
   res.send(reports);
 });

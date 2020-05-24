@@ -136,20 +136,7 @@ export default Vue.extend({
           { typeName: "Verwittiging ASC", count: 1 },
           { typeName: "Voorwerp", count: 3 },
         ],
-        operationalEvents: [],
-        workplaceEvents: [
-          { t: "Mon Mar 16 2020", y: 1 },
-          { t: "Sun Mar 22 2020", y: 1 },
-          { t: "Mon Mar 23 2020", y: 1 },
-        ],
-        defects: [
-          { t: "Sat Mar 21 2020", y: 2 },
-          { t: "Tue Mar 17 2020", y: 2 },
-        ],
-        malfunctions: [
-          { t: "Mon Mar 16 2020", y: 1 },
-          { t: "Tue Mar 17 2020", y: 2 },
-        ],
+        lineContent: []
       },
       loaded: false,
       PieData: {},
@@ -168,7 +155,7 @@ export default Vue.extend({
 
   methods: {
     loadData: function() {
-           ReportingService.getAllReports("/api/statistics/types").then(
+      ReportingService.getAllReports("/api/statistics/types").then(
         (res) => (this.reportTypes = res)
       );
 
@@ -223,24 +210,7 @@ export default Vue.extend({
 
     getLineData: function() {
       this.LineData = {
-        datasets: [
-          { label: "Operationeel",
-            data: 
-                this.statisticsData.operationalEvents              
-             },
-          { label: "Voorval tijdens dienst",
-            data: 
-                this.statisticsData.workplaceEvents
-             },
-          { label: "Logistiek",
-            data: 
-                this.statisticsData.defects
-             },
-          { label: "Technisch",
-            data:
-              this.statisticsData.malfunctions
-             },
-        ],
+        datasets: this.statisticsData.lineContent
       };
 
       /*       {datasets: [
@@ -268,9 +238,7 @@ export default Vue.extend({
       ReportingService.getStatistics(this.selectedTypes).then(
         (res) => (this.statisticsData = res)
       );
-
     },
-
   },
   watch: {
     selectedTypes: {

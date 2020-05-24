@@ -18,11 +18,18 @@ export default {
             {
               type: "time",
               time: {
-                    displayFormats: {
-                        quarter: 'D/M'
-                    }
+                displayFormats: {
+                  quarter: "MMM D",
+                },
               },
               distribution: "linear",
+            },
+          ],
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+              },
             },
           ],
         },
