@@ -694,7 +694,9 @@ router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => 
           }
         });
         if (operationalType != null) {
-          selectedTypes.push(operationalType.typeName)
+          if (!selectedTypes.includes(operationalType.typeName)) {
+            selectedTypes.push(operationalType.typeName)
+          }
         }
 
         operationalSubtype = await OperationalSubtype.findOne({

@@ -1,9 +1,6 @@
 <template>
 <div class="container pt-5 pb-5">
   <h1>Wijzig gebeurtenis</h1>
-  <span>Types: {{ operationalTypeSelected.selectedTypes }}</span>
-  <span>Subtypes: {{ operationalTypeSelected.selectedSubtypes }}</span>
-  <p>{{test}}</p>
   <form id="changeOperationalEvent">
     <!-- Operational -->
     <fieldset v-if="categorie == 'Operational'">
@@ -300,7 +297,6 @@ import ReportingService from "../services/ReportingService";
 export default Vue.extend({
   data: function () {
     return {
-      test:"a",
       reportTypes: {
         operationalTypes: [{
           id: 0,
@@ -998,55 +994,52 @@ export default Vue.extend({
      * If a type is deselected, its subtypes need to be deselected as well.
      */
     removeSubtypes: function (parentId: number) {
+      if (this.operationalTypeSelected.selectedSubtypes.length > 0) {
+        const allTypes = this.reportTypes.operationalTypes;
+        const allSubtypes = this.reportTypes.operationalSubtypes;
+        // Loop over all types
+        for (let i = 0; i < allTypes.length; i++) {
+          const curType = allTypes[i];
 
-        if (this.operationalTypeSelected.selectedSubtypes.length > 0) {
-          const allTypes = this.reportTypes.operationalTypes;
-          const allSubtypes = this.reportTypes.operationalSubtypes;
-this.test = "in"
-          // Loop over all types
-          for (let i = 0; i < allTypes.length; i++) {
-            const curType = allTypes[i];
+          // If parentType found
+          if (curType.id == parentId) {
+            const parentType = curType;
 
-            // If parentType found
-            if (curType.id == parentId) {
-              const parentType = curType;
+            // Loop over all subtypes
+            for (let j = 0; j < allSubtypes.length; j++) {
+              const curSubtype = allSubtypes[j];
 
-              // Loop over all subtypes
-              for (let j = 0; j < allSubtypes.length; j++) {
-                const curSubtype = allSubtypes[j];
-
-                // If current subtype is inside selectedSubtypes, then delete current subtype from selectedSubtypes
-                if (
-                  this.operationalTypeSelected.selectedSubtypes.includes(
-                    curSubtype.typeName
-                  ) &&
-                  curSubtype.operationalTypeId == parentId
-                ) {
-                  const index = this.operationalTypeSelected.selectedSubtypes.indexOf(
-                    curSubtype.typeName
+              // If current subtype is inside selectedSubtypes, then delete current subtype from selectedSubtypes
+              if (
+                this.operationalTypeSelected.selectedSubtypes.includes(
+                  curSubtype.typeName
+                ) &&
+                curSubtype.operationalTypeId == parentId
+              ) {
+                const index = this.operationalTypeSelected.selectedSubtypes.indexOf(
+                  curSubtype.typeName
+                );
+                if (index > -1) {
+                  this.operationalTypeSelected.selectedSubtypes.splice(
+                    index,
+                    1
                   );
-this.test = "sub"
-                  if (index > -1) {
-                    this.operationalTypeSelected.selectedSubtypes.splice(
-                      index,
-                      1
-                    );
-                  }
-                  // After looping over all subtypes, delete its parentType drom selectedTypes
-                  const indexParent = this.operationalTypeSelected.selectedTypes.indexOf(
-                    parentType.typeName
-                  );
+                }
+                // After looping over all subtypes, delete its parentType drom selectedTypes
+                const indexParent = this.operationalTypeSelected.selectedTypes.indexOf(
+                  parentType.typeName
+                );
 
-                  if (index > -1) {
-                    this.operationalTypeSelected.selectedTypes.splice(indexParent, 1);
-                  }
+                if (indexParent > -1) {
+                  this.operationalTypeSelected.selectedTypes.splice(indexParent, 1);
                 }
               }
-
             }
+
           }
         }
       }
+    }
 
   }
 });
