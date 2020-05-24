@@ -31,16 +31,6 @@ export default Vue.extend({
     this.loadUsers();
   },
 
-    data () {
-        return {
-            users: [],
-        };
-    },
-    
-    mounted() {
-        this.loadUsers();
-    },
-
     methods: {
         loadUsers: function() {
             ReportingService.getAllUsers('/api/users/all').then(
@@ -54,9 +44,10 @@ export default Vue.extend({
             });
         },
         deleteUser: function(user: any) {
-            ReportingService.deleteUser({
-                id: user.id,
+          ReportingService.deleteUser({
+              id: user.id,
+          });
+        }
     }
-  }
-});
+})
 </script>

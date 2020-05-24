@@ -9,7 +9,27 @@
         </div>
         <div class="col my-1">
           <div class="input-group">
-            <input type="text" class="form-control" id="inlineFormInputGroupUsername" v-model="plNumber" placeholder="PL-nummer" />
+            <div class="autocomplete">
+                <input
+                autocomplete="off"
+                  v-model="plNumber"
+                  type="text"
+                  class="form-control"
+                  id="inlineFormInputGroupUsername"
+                  placeholder="PL-nummer"
+                  @keyup="getOptions(plNumber)"
+                  @click="toggleVisible"
+                />
+              <div class="popover" v-show="visible">
+                <div class="options">
+                  <ul>
+                    <li v-for="event in events" :key="event.id" v-on:click="getPlNumber(event.plNumber)">
+                        {{event.plNumber}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              </div>
           </div>
         </div>
 
@@ -82,7 +102,7 @@ import jwt from "jsonwebtoken";
 export default Vue.extend({
   data: function () {
     return {
-      plForm: "",
+      plNumber: "",
       keyword: "",
       visible: false,
       events: null,
@@ -111,7 +131,7 @@ export default Vue.extend({
     this.visible = !this.visible;
   },
   getPlNumber(plNumber : string) {
-    this.plForm = plNumber;
+    this.plNumber = plNumber;
     this.toggleVisible();
     this.getOptions(plNumber);
   },
@@ -175,5 +195,66 @@ export default Vue.extend({
 
 .form-control {
   border: 1px solid black;
+}
+
+.autocomplete {
+  width: 100%;
+  position: relative;
+}
+
+.inputPL {
+  width: 100%;
+  height: 40px;
+  border-radius: 3px;
+  border: 2px solid lightgray;
+  box-shadow: 0 0 10px #eceaea;
+  cursor: text;
+}
+.popover {
+  width: 100%;
+  min-height: 50px;
+  border: 2px solid lightgray;
+  position: absolute;
+  top: 46px;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 3px;
+  text-align: center;
+  max-width: 100%;
+}
+
+.popover input {
+  width: 100%;
+  margin-top: 5px;
+  height: 40px;
+  font-size: 16px;
+  border-radius: 3px;
+  border: 1px solid lightgray;
+  padding-left: 8px;
+}
+
+.options {
+  max-height: 150px;
+  overflow-y: scroll;
+  margin-top: 5px;
+}
+
+.options ul {
+  list-style: none;
+  text-align: left;
+  padding-left: 0;
+}
+
+.options ul li{
+border-bottom: 1px solid lightgray;
+padding: 10px;
+cursor: pointer;
+background: #f1f1f1;
+}
+
+.options ul li:hover{
+background: steelblue;
+color: black;
 }
 </style>

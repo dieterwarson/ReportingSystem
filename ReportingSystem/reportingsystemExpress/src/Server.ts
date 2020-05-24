@@ -1,13 +1,10 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { BAD_REQUEST } from 'http-status-codes';
 import 'express-async-errors';
-<<<<<<< HEAD
 import UserPermissions from './models/userPermissions';
-=======
 
 const { QueryTypes } = require('sequelize');
 
->>>>>>> a30bf25ff01ebd628abbb7bf1a3c1fcf92b32cbe
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import { Sequelize } from 'sequelize-typescript';
