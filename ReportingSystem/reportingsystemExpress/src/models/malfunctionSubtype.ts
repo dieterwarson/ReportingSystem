@@ -5,8 +5,10 @@ import {
   Index,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from 'sequelize-typescript';
 import MalfunctionType from './malfunctionType';
+import Malfunction from './malfunction';
 
 @Table
 export default class MalfunctionSubtype extends Model<MalfunctionSubtype> {
@@ -18,10 +20,13 @@ export default class MalfunctionSubtype extends Model<MalfunctionSubtype> {
 
   @BelongsTo(() => MalfunctionType)
   malfunctionType!: MalfunctionType;
-
+  
   @Column
   typeName!: string;
-
+  
   @Column
   description!: string;
+  
+  @HasMany(() => Malfunction)
+  malfunctions!: Malfunction[];
 }

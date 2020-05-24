@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import { BAD_REQUEST } from 'http-status-codes';
 import 'express-async-errors';
 
+const { QueryTypes } = require('sequelize');
+
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import { Sequelize } from 'sequelize-typescript';
@@ -34,7 +36,7 @@ import cronServer from './cron'
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-import {Op} from "sequelize";
+import { Op } from "sequelize";
 // var index = require('./routes/index');
 // var users = require('./routes/users');
 
@@ -80,7 +82,7 @@ const sequelize = new Sequelize({
   models: [__dirname + '/models'], // or [Player, Team],
 });
 
-sequelize.sync( );
+sequelize.sync();
 console.log('All models were synchronized successfully.');
 
 /************************************************************************************
@@ -114,6 +116,7 @@ const user1 = new User({
   accessRights: 0,
 });
 // user1.save();
+
 const user2 = new User({
   username: 'chass_beerts',
   password: 'test',
@@ -138,7 +141,7 @@ const report1 = new Report({
 });
 report1.save();
 
-/* const report2 = new Report({
+const report2 = new Report({
   date: new Date('2020/03/16 12:01:00'),
   temporary: false,
   nightShift: false,
@@ -146,53 +149,306 @@ report1.save();
 // report2.save();
 
 const report3 = new Report({
+  date: new Date('2020/03/17 00:01:00'),
+  temporary: false,
+  nightShift: true,
+});
+// report3.save();
+
+const report4 = new Report({
+  date: new Date('2020/03/17 12:01:00'),
+  temporary: false,
+  nightShift: false,
+});
+// report4.save();
+
+const report5 = new Report({
   date: new Date('2020/03/18 00:01:00'),
   temporary: false,
   nightShift: true,
 });
-// report3.save(); */
+// report5.save();
+
+const report6 = new Report({
+  date: new Date('2020/03/18 12:01:00'),
+  temporary: false,
+  nightShift: false,
+});
+// report6.save();
+
+const report7 = new Report({
+  date: new Date('2020/03/19 00:01:00'),
+  temporary: false,
+  nightShift: true,
+});
+// report7.save();
+
+const report8 = new Report({
+  date: new Date('2020/03/19 12:01:00'),
+  temporary: false,
+  nightShift: false,
+});
+// report8.save();
+
+const report9 = new Report({
+  date: new Date('2020/03/20 00:01:00'),
+  temporary: false,
+  nightShift: true,
+});
+// report9.save();
+
+const report10 = new Report({
+  date: new Date('2020/03/20 12:01:00'),
+  temporary: false,
+  nightShift: false,
+});
+// report10.save();
+
+const report11 = new Report({
+  date: new Date('2020/03/21 00:01:00'),
+  temporary: false,
+  nightShift: true,
+});
+// report11.save();
+
+const report12 = new Report({
+  date: new Date('2020/03/21 12:01:00'),
+  temporary: false,
+  nightShift: false,
+});
+// report12.save();
+
+const report13 = new Report({
+  date: new Date('2020/03/22 00:01:00'),
+  temporary: false,
+  nightShift: true,
+});
+// report13.save();
+
+const report14 = new Report({
+  date: new Date('2020/03/22 12:01:00'),
+  temporary: false,
+  nightShift: false,
+});
+// report14.save();
+
+const report15 = new Report({
+  date: new Date('2020/03/23 00:01:00'),
+  temporary: false,
+  nightShift: true,
+});
+// report15.save();
+
+const report16 = new Report({
+  date: new Date('2020/03/23 12:01:00'),
+  temporary: false,
+  nightShift: false,
+});
+// report16.save();
+
+const report17 = new Report({
+  date: new Date('2020/03/24 00:01:00'),
+  temporary: false,
+  nightShift: true,
+});
+// report17.save();
+
+const report18 = new Report({
+  date: new Date('2020/03/24 12:01:00'),
+  temporary: false,
+  nightShift: false,
+});
+// report18.save();
+
 
 const technical1 = new Technical({
   reportId: 1,
 });
 // technical1.save();
 
+const technical2 = new Technical({
+  reportId: 2,
+});
+// technical2.save();
+
+const technical3 = new Technical({
+  reportId: 3,
+});
+// technical3.save();
+
+const technical4 = new Technical({
+  reportId: 4,
+});
+// technical4.save();
+
+const technical5 = new Technical({
+  reportId: 11,
+});
+// technical5.save();
+
+const technical6 = new Technical({
+  reportId: 12,
+});
+// technical6.save();
+
+
 const administrative1 = new Administrative({
   reportId: 1,
 });
 // administrative1.save();
 
+const administrative2 = new Administrative({
+  reportId: 3,
+});
+// administrative2.save();
+
+const administrative3 = new Administrative({
+  reportId: 5,
+});
+// administrative3.save();
+
+const administrative4 = new Administrative({
+  reportId: 6,
+});
+// administrative4.save();
+
+const administrative5 = new Administrative({
+  reportId: 13,
+});
+// administrative5.save();
+
+const administrative6 = new Administrative({
+  reportId: 14,
+});
+// administrative6.save();
+
+const administrative7 = new Administrative({
+  reportId: 15,
+});
+// administrative7.save();
+
+const administrative8 = new Administrative({
+  reportId: 16,
+});
+// administrative8.save();
+
+
 const operational1 = new Operational({
-  reportId: 1,
+  reportId: 2,
 });
 // operational1.save();
+
+const operational2 = new Operational({
+  reportId: 4,
+});
+// operational2.save();
+
+const operational3 = new Operational({
+  reportId: 5,
+});
+// operational3.save();
+
+const operational4 = new Operational({
+  reportId: 7,
+});
+// operational4.save();
+
+const operational5 = new Operational({
+  reportId: 8,
+});
+// operational5.save();
+
+const operational6 = new Operational({
+  reportId: 9,
+});
+// operational6.save();
+
+const operational7 = new Operational({
+  reportId: 10,
+});
+// operational7.save();
+
+const operational8 = new Operational({
+  reportId: 16,
+});
+// operational8.save();
+
+const operational9 = new Operational({
+  reportId: 17,
+});
+// operational9.save();
+
+const operational10 = new Operational({
+  reportId: 18,
+});
+// operational10.save();
 
 
 const workplaceEvent1 = new WorkplaceEvent({
   authorId: 1,
   administrativeId: 1,
   workplaceTypeId: 1,
+  workplaceSubtypeId: 1,
   description: 'Jacob sleutelbeen gebroken',
   absentee: 'Jacob Franssen',
   substitute: 'James Brook',
   monitoring: true,
-  date: new Date('2020/12/11 9:10:23'),
-  shift: false,
+  date: new Date('2020/03/16 9:10:23'),
 });
 // workplaceEvent1.save();
 
 const workplaceEvent2 = new WorkplaceEvent({
-  authorId: 1,
-  administrativeId: 1,
-  workplaceTypeId: 1,
+  authorId: 2,
+  administrativeId: 4,
+  workplaceTypeId: 2,
+  workplaceSubtypeId: 1,
   description: 'Ziekte',
   absentee: 'Remans Luc',
   substitute: 'Jan Janssens',
-  monitoring: false,
-  date: new Date('2020/12/11 9:10:23'),
-  shift: false,
+  monitoring: true,
+  date: new Date('2020/03/18 13:03:14'),
 });
 // workplaceEvent2.save();
+
+const workplaceEvent3 = new WorkplaceEvent({
+  authorId: 1,
+  administrativeId: 5,
+  workplaceTypeId: 1,
+  workplaceSubtypeId: 1,
+  description: 'Hans verstuikte voet',
+  absentee: 'Hans Hendrickx',
+  substitute: 'Adam Franssen',
+  monitoring: true,
+  date: new Date('2020/03/22 7:59:34'),
+});
+// workplaceEvent3.save();
+
+const workplaceEvent4 = new WorkplaceEvent({
+  authorId: 2,
+  administrativeId: 6,
+  workplaceTypeId: 2,
+  workplaceSubtypeId: 1,
+  description: 'Ziekte',
+  absentee: 'James Brook',
+  substitute: 'Jacob Franssen',
+  monitoring: false,
+  date: new Date('2020/03/22 19:00:54'),
+});
+// workplaceEvent4.save();
+
+const workplaceEvent5 = new WorkplaceEvent({
+  authorId: 2,
+  administrativeId: 6,
+  workplaceTypeId: 2,
+  workplaceSubtypeId: 1,
+  description: 'Ziekte',
+  absentee: 'Jan Janssens',
+  substitute: 'Remans Luc',
+  monitoring: true,
+  date: new Date('2020/03/22 20:26:14'),
+});
+// workplaceEvent5.save();
+
 
 const workplaceType1 = new WorkplaceType({
   typeName: 'Arbeidsongeval',
@@ -202,30 +458,39 @@ const workplaceType1 = new WorkplaceType({
 const workplaceType2 = new WorkplaceType({
   typeName: 'Ziekte',
 });
-// workplaceType1.save();
+// workplaceType2.save();
+
 
 const secretariatNotification1 = new SecretariatNotification({
-  authorId: 1,
-  administrativeId: 1,
+  authorId: 2,
+  administrativeId: 6,
   description: 'Jan Janssens Inp ziek',
   monitoring: true,
-  date: new Date('2020/03/16 19:19:49'),
-  shift: true,
+  date: new Date('2020/03/22 20:30:46'),
 });
 //  secretariatNotification1.save();
 
 const secretariatNotification2 = new SecretariatNotification({
-  authorId: 1,
-  administrativeId: 1,
+  authorId: 2,
+  administrativeId: 4,
   description: 'Remans Luc Inp ziek',
   monitoring: true,
-  date: new Date('2020/03/16 19:21:46'),
-  shift: true,
+  date: new Date('2020/03/18 13:05:24'),
 });
 // secretariatNotification2.save();
 
+const secretariatNotification3 = new SecretariatNotification({
+  authorId: 2,
+  administrativeId: 6,
+  description: 'James Brook Inp ziek',
+  monitoring: false,
+  date: new Date('2020/03/22 19:06:54'),
+});
+// secretariatNotification3.save();
+
+
 const operationalEvent1 = new OperationalEvent({
-  authorId: 1,
+  authorId: 2,
   operationalId: 1,
   signaling: 'Verlies inschrijvingsbewijs CIM NR 545102920 / 1ABC123',
   plNumber: null,
@@ -237,8 +502,8 @@ const operationalEvent1 = new OperationalEvent({
 //  operationalEvent1.save();
 
 const operationalEvent2 = new OperationalEvent({
-  authorId: 1,
-  operationalId: 1,
+  authorId: 2,
+  operationalId: 2,
   signaling: null,
   plNumber: 'PL031770168',
   description: 'Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht',
@@ -249,8 +514,8 @@ const operationalEvent2 = new OperationalEvent({
 //  operationalEvent2.save();
 
 const operationalEvent3 = new OperationalEvent({
-  authorId: 1,
-  operationalId: 1,
+  authorId: 2,
+  operationalId: 4,
   signaling: null,
   plNumber: 'PL03170104',
   description: 'Verwittigen labo, verwittigen team Vandevoorde',
@@ -261,8 +526,8 @@ const operationalEvent3 = new OperationalEvent({
 //  operationalEvent3.save();
 
 const operationalEvent4 = new OperationalEvent({
-  authorId: 1,
-  operationalId: 1,
+  authorId: 2,
+  operationalId: 5,
   signaling: 'Seining Jan Jansens - PZ LAMA',
   plNumber: null,
   description: null,
@@ -273,8 +538,8 @@ const operationalEvent4 = new OperationalEvent({
 //  operationalEvent4.save();
 
 const operationalEvent5 = new OperationalEvent({
-  authorId: 1,
-  operationalId: 1,
+  authorId: 2,
+  operationalId: 5,
   signaling: 'Seining persoon - Jan Jansens - PZ LOON',
   plNumber: null,
   description: null,
@@ -285,8 +550,8 @@ const operationalEvent5 = new OperationalEvent({
 //  operationalEvent5.save();
 
 const operationalEvent6 = new OperationalEvent({
-  authorId: 1,
-  operationalId: 1,
+  authorId: 2,
+  operationalId: 6,
   signaling: 'Seining Jan Jansens - PZ Bihori',
   plNumber: 'PL03170202',
   description: `ONRUSTWEKKENDE VERDWIJNING MEERDERJARIGE
@@ -296,13 +561,13 @@ const operationalEvent6 = new OperationalEvent({
   priority: true,
   location: null,
   unit: 'BIHORI',
-  date: new Date('2020/03/16 00:18:57'),
+  date: new Date('2020/03/17 00:18:57'),
 });
 //  operationalEvent6.save();
 
 const operationalEvent7 = new OperationalEvent({
-  authorId: 1,
-  operationalId: 1,
+  authorId: 2,
+  operationalId: 8,
   signaling: null,
   plNumber: 'PL03170315',
   description: `Autodiefstal te Rummen straat van een Mercedes E300
@@ -311,49 +576,74 @@ const operationalEvent7 = new OperationalEvent({
   - Voertuig onderschept te Herk de Stad`,
   location: null,
   unit: 'LRH',
-  date: new Date('2020/03/16 01:21:25'),
+  date: new Date('2020/03/17 01:21:25'),
 });
 //  operationalEvent7.save();
 
- const operationalEvent8 = new OperationalEvent({
-  authorId: 1,
-  operationalId: 1,
+const operationalEvent8 = new OperationalEvent({
+  authorId: 2,
+  operationalId: 9,
   signaling: null,
   plNumber: 'PL03170322',
   description: `Inbraak in woning doch tussen melding en twee dagen ervoor. Geen BIN opgestart door onduidelijk tijdstip.`,
   location: null,
   unit: 'LRH',
-  date: new Date('2020/03/16 01:21:25'),
+  date: new Date('2020/03/17 01:21:25'),
 });
 //  operationalEvent8.save();
 
+const operationalEvent9 = new OperationalEvent({
+  authorId: 1,
+  operationalId: 8,
+  signaling: 'Seining Alfred Brouns - PZ LAMA',
+  plNumber: null,
+  description: null,
+  location: null,
+  unit: 'LAMA',
+  date: new Date('2020/03/23 13:21:25'),
+});
+//  operationalEvent9.save();
+
+const operationalEvent10 = new OperationalEvent({
+  authorId: 2,
+  operationalId: 9,
+  signaling: 'Seining Erica De Beeck - PZ LOON',
+  plNumber: null,
+  description: null,
+  location: null,
+  unit: 'LOON',
+  date: new Date('2020/03/24 02:21:25'),
+});
+//  operationalEvent10.save();
+
+
 const eventType1 = new EventType({
-  operationalEventId: 1,
+  operationalEventId: 4,
   operationalTypeId: 5,
   operationalSubtypeId: 3,
 });
 // eventType1.save();
 
 const eventType2 = new EventType({
-  operationalEventId: 4,
+  operationalEventId: 1,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
 // eventType2.save();
 
 const eventType3 = new EventType({
-  operationalEventId: 6,
+  operationalEventId: 7,
   operationalTypeId: 6,
+  operationalSubtypeId: null,
 });
 // eventType3.save();
 
 const eventType4 = new EventType({
-  operationalEventId: 5,
+  operationalEventId: 8,
   operationalTypeId: 5,
   operationalSubtypeId: 1,
 });
 // eventType4.save();
-
 
 const eventType5 = new EventType({
   operationalEventId: 6,
@@ -365,26 +655,44 @@ const eventType5 = new EventType({
 const eventType6 = new EventType({
   operationalEventId: 7,
   operationalTypeId: 1,
+  operationalSubtypeId: null,
 });
 // eventType6.save();
 
 const eventType7 = new EventType({
   operationalEventId: 8,
   operationalTypeId: 3,
+  operationalSubtypeId: null,
 });
 // eventType7.save();
 
 const eventType8 = new EventType({
   operationalEventId: 2,
   operationalTypeId: 4,
+  operationalSubtypeId: null,
 });
 // eventType8.save();
 
 const eventType9 = new EventType({
   operationalEventId: 3,
   operationalTypeId: 1,
+  operationalSubtypeId: null,
 });
 // eventType9.save();
+
+const eventType10 = new EventType({
+  operationalEventId: 9,
+  operationalTypeId: 5,
+  operationalSubtypeId: 1,
+});
+// eventType10.save();
+
+const eventType11 = new EventType({
+  operationalEventId: 10,
+  operationalTypeId: 5,
+  operationalSubtypeId: 1,
+});
+// eventType11.save();
 
 
 const operationalType1 = new OperationalType({
@@ -417,6 +725,7 @@ const operationalType6 = new OperationalType({
 });
 // operationalType6.save();
 
+
 const operationalSubtype1 = new OperationalSubtype({
   operationalTypeId: 5,
   typeName: 'Persoon',
@@ -435,15 +744,50 @@ const operationalSubtype3 = new OperationalSubtype({
 });
 // operationalSubtype3.save();
 
+
 const defect1 = new Defect({
-  technicalId: 1,
-  authorId: 1,
+  technicalId: 4,
+  authorId: 2,
   defectTypeId: 1,
+  defectSubtypeId: 1,
   description: 'Voertuig P320 achterlicht kapot',
   monitoring: true,
-  date: new Date('2020/04/15 13:03:57'),
+  date: new Date('2020/03/17 13:03:57'),
 });
 // defect1.save();
+
+const defect2 = new Defect({
+  technicalId: 5,
+  authorId: 1,
+  defectTypeId: 1,
+  defectSubtypeId: 1,
+  description: 'Voertuig P321 achterlicht kapot',
+  monitoring: false,
+  date: new Date('2020/03/21 06:14:23'),
+});
+// defect2.save();
+
+const defect3 = new Defect({
+  technicalId: 5,
+  authorId: 1,
+  defectTypeId: 1,
+  defectSubtypeId: 1,
+  description: 'Voertuig P256 voorlicht kapot',
+  monitoring: true,
+  date: new Date('2020/03/21 11:00:03'),
+});
+// defect3.save();
+
+const defect4 = new Defect({
+  technicalId: 6,
+  authorId: 2,
+  defectTypeId: 1,
+  defectSubtypeId: 1,
+  description: 'Voertuig P320 voorlicht kapot',
+  monitoring: true,
+  date: new Date('2020/03/21 15:33:47'),
+});
+// defect4.save();
 
 
 const defectType1 = new DefectType({
@@ -452,16 +796,74 @@ const defectType1 = new DefectType({
 // defectType1.save();
 
 
+const defectSubtype1 = new DefectSubtype({
+  defectTypeId: 1,
+  typeName: 'Voertuig',
+  description: 'Zichtbare schade'
+});
+// defectSubtype1.save();
+
+
 const malfunction1 = new Malfunction({
   technicalId: 1,
   authorId: 1,
   malfunctionTypeId: 1,
+  malfunctionSubtypeId: 1,
   description: 'lekkende kraan in kamer 304',
   monitoring: true,
-  date: new Date('2020/04/15 13:03:57'),
-  duration: 6,
+  date: new Date('2020/03/16 10:46:45'),
+  duration: '2:16'
 });
 // malfunction1.save();
+
+const malfunction2 = new Malfunction({
+  technicalId: 3,
+  authorId: 1,
+  malfunctionTypeId: 1,
+  malfunctionSubtypeId: 1,
+  description: 'krakende deur in kamer 104',
+  monitoring: true,
+  date: new Date('2020/03/17 03:03:57'),
+  duration: '5:07'
+});
+// malfunction2.save();
+
+const malfunction3 = new Malfunction({
+  technicalId: 4,
+  authorId: 2,
+  malfunctionTypeId: 1,
+  malfunctionSubtypeId: 1,
+  description: 'niet sluitend raam in kamer 302',
+  monitoring: true,
+  date: new Date('2020/03/17 04:23:57'),
+  duration: '1:56'
+});
+// malfunction3.save();
+
+const malfunction4 = new Malfunction({
+  technicalId: 5,
+  authorId: 1,
+  malfunctionTypeId: 2,
+  malfunctionSubtypeId: 1,
+  description: 'alarm kapot verdieping 2',
+  monitoring: true,
+  date: new Date('2020/03/21 01:15:34'),
+  duration: '0:29'
+});
+// malfunction4.save();
+
+const malfunction5 = new Malfunction({
+  technicalId: 6,
+  authorId: 2,
+  malfunctionTypeId: 3,
+  malfunctionSubtypeId: 1,
+  description: 'stroom uitgevallen hoofdgebouw',
+  monitoring: true,
+  date: new Date('2020/03/21 16:26:24'),
+  duration: '0:13'
+});
+// malfunction5.save();
+
 
 const malfunctionType1 = new MalfunctionType({
   typeName: 'Voorwerp',
@@ -477,6 +879,28 @@ const malfunctionType3 = new MalfunctionType({
   typeName: 'Verwittiging (anderen)',
 });
 // malfunctionType3.save();
+
+
+const malfunctionSubtype1 = new MalfunctionSubtype({
+  malfunctinoTypeId: 1,
+  typeName: 'Infrastructuur',
+  description: 'Iets kapot',
+});
+// malfunctionSubtype1.save();
+
+const malfunctionSubtype2 = new MalfunctionSubtype({
+  malfunctinoTypeId: 1,
+  typeName: 'Elektronica',
+  description: 'Storing',
+});
+// malfunctionSubtype2.save();
+
+const malfunctionSubtype3 = new MalfunctionSubtype({
+  malfunctinoTypeId: 1,
+  typeName: 'Elektriciteit',
+  description: 'Uitgevallen',
+});
+// malfunctionSubtype3.save();
 
 
 const dummyData1 = new DummyDatabase({
@@ -496,7 +920,7 @@ const dummyData2 = new DummyDatabase({
   actions: 'NAV zelfmoord',
 });
 //  dummyData2.save();
- sequelize.sync( );
+sequelize.sync();
 
 // DummyDatabase.sync();
 
@@ -504,7 +928,7 @@ const dummyData2 = new DummyDatabase({
  *                              AXIOS     NEEDS TO BE REPLACED LATER
  ***********************************************************************************/
 
- // REPORTS
+// REPORTS
 app.post('/getFile', async (req, res) => {
   const file = await DummyDatabase.findOne({
     where: {
@@ -552,7 +976,6 @@ app.post('/addWorkForceEvent', async (req, res) => {
     substitute: req.body.replacement,
     monitoring: true,
     date: Date.now(),
-    shift: true,
   })
     .then(function () {
       res.send({
@@ -592,7 +1015,271 @@ app.post('/addTechnicalEvent', async (req, res) => {
   Defect.sync();
 });
 
-// USER 
+app.post('/changeOperationalEvent', async (req, res) => {
+  const selectedTypes = req.body.types;
+  const selectedSubtypes = req.body.subtypes;
+
+  const event = await OperationalEvent.findOne({
+    where: {
+      id: req.body.operationalEventId,
+    },
+    include: [
+      {
+        model: Operational,
+      },
+    ],
+  });
+  if (event != null) {
+    event.description = req.body.message;
+    event.save();
+
+    await EventType.destroy({
+      where: {
+        operationalEventId: event.id
+      }
+    });
+
+    for (let i = 0; i < selectedTypes.length; i++) {
+      const curType = selectedTypes[i];
+      let curTypeId = null;
+      let curSubtypeId = null;
+
+      let curTypeObject = await OperationalType.findOne({
+        where: {
+          typeName: curType
+        }
+      });
+      let curEvent;
+      if (curTypeObject != null) {
+        let isMade = false;
+        curTypeId = curTypeObject.id;
+        if (selectedSubtypes.length == 0) {
+          curEvent = await EventType.create({
+            operationalEventId: event.id,
+            operationalTypeId: curTypeId,
+            operationalSubtypeId: null,
+          });
+          EventType.sync();
+        }
+        console.log(selectedTypes.length)
+        for (let j = 0; j < selectedSubtypes.length; j++) {
+          const curSubtype = selectedSubtypes[j];
+
+          let curSubtypeObject = await OperationalSubtype.findOne({
+            where: {
+              typeName: curSubtype
+            }
+          });
+          if (curSubtypeObject != null) {
+            curSubtypeId = curSubtypeObject.id;
+            if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
+              curEvent = await EventType.create({
+                operationalEventId: event.id,
+                operationalTypeId: curTypeId,
+                operationalSubtypeId: curSubtypeId,
+              });
+            } else {
+              if (!isMade) {
+                curEvent = await EventType.create({
+                  operationalEventId: event.id,
+                  operationalTypeId: curTypeId,
+                  operationalSubtypeId: null,
+                });
+                isMade = true;
+              }
+            }
+            EventType.sync();
+          }
+        }
+      }
+    }
+
+  } else {
+    res.send(false);
+  }
+
+  OperationalEvent.sync();
+  res.send(true);
+});
+
+app.post('/changeWorkplaceEvent', async (req, res) => {
+  let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let workplaceType = await WorkplaceType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceSubtype = await WorkplaceSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceTypeId = null;
+  if (workplaceType != null) {
+    workplaceTypeId = workplaceType.id;
+  }
+
+  let workplaceSubtypeId = null;
+  if (workplaceSubtype != null) {
+    workplaceSubtypeId = workplaceSubtype.id;
+  }
+
+  const event = await WorkplaceEvent.findOne({
+    where: {
+      id: req.body.administrativeId,
+    },
+    include: [
+      {
+        model: Administrative,
+      },
+    ],
+  });
+
+  if (event != null) {
+    event.description = req.body.message;
+    event.workplaceTypeId = workplaceTypeId;
+    event.workplaceSubtypeId = workplaceSubtypeId;
+    event.save();
+  } else {
+    res.send(false);
+  }
+
+  WorkplaceEvent.sync();
+  res.send(true);
+});
+
+app.post('/changeSecretariatNotification', async (req, res) => {
+  const event = await SecretariatNotification.findOne({
+    where: {
+      id: req.body.administrativeId,
+    },
+    include: [
+      {
+        model: Administrative,
+      },
+    ],
+  });
+  if (event != null) {
+    event.description = req.body.message;
+    event.save();
+  } else {
+    res.send(Error('File not found'));
+  }
+
+  SecretariatNotification.sync();
+});
+
+app.post('/changeDefect', async (req, res) => {
+  let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let defectType = await DefectType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectSubtype = await DefectSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectTypeId = null;
+  if (defectType != null) {
+    defectTypeId = defectType.id
+  }
+
+  let defectSubtypeId = null;
+  if (defectSubtype != null) {
+    defectSubtypeId = defectSubtype.id;
+  }
+
+  const event = await Defect.findOne({
+    where: {
+      id: req.body.technicalId,
+    },
+    include: [
+      {
+        model: Technical,
+      },
+    ],
+  });
+
+  if (event != null) {
+    event.description = req.body.message;
+    event.defectTypeId = defectTypeId;
+    event.defectSubtypeId = defectSubtypeId;
+    event.save();
+  } else {
+    res.send(false);
+  }
+
+  Defect.sync();
+  res.send(true);
+});
+
+app.post('/changeMalfunction', async (req, res) => {
+  let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let malfunctionType = await MalfunctionType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let malfunctionSubtype = await MalfunctionSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let malfunctionTypeId = null
+  if (malfunctionType != null) {
+    malfunctionTypeId = malfunctionType.id
+  }
+
+  let malfunctionSubtypeId = null;
+  if (malfunctionSubtype != null) {
+    malfunctionSubtypeId = malfunctionSubtype.id;
+  }
+
+  const event = await Malfunction.findOne({
+    where: {
+      id: req.body.technicalId,
+    },
+    include: [
+      {
+        model: Technical,
+      },
+    ],
+  });
+
+  if (event != null) {
+    event.description = req.body.message;
+    event.malfunctionTypeId = malfunctionTypeId;
+    event.malfunctionSubtypeId = malfunctionSubtypeId;
+    event.save();
+  } else {
+    res.send(false);
+  }
+
+  Malfunction.sync();
+  res.send(true);
+});
+
+// USER
 interface INewUserData {
   username: string;
   mail: string;
@@ -602,18 +1289,16 @@ interface INewUserData {
   subscription: boolean;
 }
 
-
-
 function checkUsername(username: string) {
-  if (/^[a-z0-9_-]{3,15}$/.test(username)){
+  if (/^[a-z0-9_-]{3,15}$/.test(username)) {
     return true;
   }
   return false;
 }
 
 function checkPassword(password: string, rptPassword: string) {
-  if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)){
-    if (password.localeCompare(rptPassword) == 0){
+  if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)) {
+    if (password.localeCompare(rptPassword) == 0) {
       return true;
     }
   }
@@ -621,7 +1306,7 @@ function checkPassword(password: string, rptPassword: string) {
 }
 
 function checkAccessRights(accessRights: number) {
-  if (accessRights >= 0 && accessRights < 3){
+  if (accessRights >= 0 && accessRights < 3) {
     return true;
   }
   return false;
@@ -629,14 +1314,14 @@ function checkAccessRights(accessRights: number) {
 
 
 
-function checkUserData(newUser: INewUserData){
+function checkUserData(newUser: INewUserData) {
   return checkUsername(newUser.username) && checkPassword(newUser.password, newUser.rptPassword) && checkAccessRights(newUser.accessRights);
 }
 
 
-app.post('/addUser',  async (req, res) => {
-  
-  const userData:INewUserData = {
+app.post('/addUser', async (req, res) => {
+
+  const userData: INewUserData = {
     username: req.body.username,
     password: req.body.password,
     rptPassword: req.body.rptPassword,
@@ -645,10 +1330,10 @@ app.post('/addUser',  async (req, res) => {
     subscription: req.body.subscription,
   };
   var matched_users_promise = User.findAll({
-    where : {username: userData.username},
+    where: { username: userData.username },
     attributes: ['id'],
   });
-  matched_users_promise.then(function(users) {
+  matched_users_promise.then(function (users) {
 
     if (users.length == 0) {
       const passwordHash = bcrypt.hashSync(userData.password, 10);
@@ -664,11 +1349,11 @@ app.post('/addUser',  async (req, res) => {
           message: "Gebruiker aangemaakt"
         });
       })
-      .catch(function( error)  {
-        res.json({
-          message: error
+        .catch(function (error) {
+          res.json({
+            message: error
+          })
         })
-      })
       User.sync();
     } else {
       res.status(409).json({
@@ -679,7 +1364,7 @@ app.post('/addUser',  async (req, res) => {
 });
 
 
-function checkChangePasswordData(newPasswordData: any){
+function checkChangePasswordData(newPasswordData: any) {
   return checkUsername(newPasswordData.username) && checkPassword(newPasswordData.password, newPasswordData.rptPassword);
 }
 
@@ -695,6 +1380,11 @@ app.post('/changePassword', async (req, res) => {
             message: "Wachtwoord gewijzigd"
           })
         })
+          .catch(function (err) {
+            res.json({
+              message: "Error" + err
+            })
+          })
         .catch(function (err) {
           res.json({
             message: "Error"  + err
@@ -732,10 +1422,10 @@ app.post('/changeAcces', async (req, res) => {
 
 app.post('/loginUser', async (req, res) => {
   var matched_users_promise = User.findAll({
-    where: {username: req.body.username}
+    where: { username: req.body.username }
   });
-  matched_users_promise.then(function(users){
-    if (users.length > 0 ) {
+  matched_users_promise.then(function (users) {
+    if (users.length > 0) {
       let user = users[0];
       let passwordHash = user.password;
       if (bcrypt.compareSync(req.body.password, passwordHash, 10)) {
@@ -781,15 +1471,15 @@ app.post('/addField', async (req, res) => {
 
 app.post('/changeSubscription', async (req, res) => {
   var matched_user = User.findAll({
-    where: {id: req.body.id}
+    where: { id: req.body.id }
   });
-  matched_user.then(function(users){
+  matched_user.then(function (users) {
     if (users.length > 0) {
       let user = users[0];
       user.subscription = req.body.subscription;
       user.save();
       res.json(
-        {message:"Subscription has changed"}
+        { message: "Subscription has changed" }
       )
     }
   })
@@ -798,7 +1488,7 @@ app.post('/changeSubscription', async (req, res) => {
 app.post("/getOperationalEvents", async (req, res) => {
   console.log(req.body.plNumber);
   var matched_events = await OperationalEvent.findAll({
-    where: {plNumber: {[Op.like]: req.body.plNumber}},
+    where: { plNumber: { [Op.like]: req.body.plNumber } },
     limit: 5
   });
   console.log(matched_events.length);

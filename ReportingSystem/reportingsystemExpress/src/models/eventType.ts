@@ -5,7 +5,6 @@ import {
   Index,
   ForeignKey,
   BelongsTo,
-  HasMany,
 } from 'sequelize-typescript';
 import OperationalEvent from './operationalEvent';
 import OperationalType from './operationalType';
@@ -22,9 +21,17 @@ export default class EventType extends Model<EventType> {
   @BelongsTo(() => OperationalEvent)
   operationalEvent!: OperationalEvent;
 
-  @HasMany(() => OperationalType)
-  operationalTypes!: OperationalType[];
+  @ForeignKey(() => OperationalType)
+  @Column
+  operationalTypeId!: number;
 
-  @HasMany(() => OperationalSubtype)
-  operationalSubtypes!: OperationalSubtype[];
+  @BelongsTo(() => OperationalType)
+  operationalType!: OperationalType;
+
+  @ForeignKey(() => OperationalSubtype)
+  @Column
+  operationalSubtypeId!: number;
+
+  @BelongsTo(() => OperationalSubtype)
+  operationalSubtype!: OperationalSubtype;
 }
