@@ -152,6 +152,24 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+  const operationalEventsDates = await OperationalEvent.findAll();
+  for (let i = 0; i < operationalEventsDates.length; i++) {
+    const curEvent = operationalEventsDates[i];
+    let dateString = curEvent.date.toDateString();
+
+    if (dateString.includes(search)) {
+      const event = await Operational.findOne({
+        where: {
+          id: curEvent.operationalId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
+      }
+    }
+  }
 
   const workplaceEvents = await WorkplaceEvent.findAll({
     where: {
@@ -180,6 +198,24 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+  const workplaceEventsDates = await WorkplaceEvent.findAll();
+  for (let i = 0; i < workplaceEventsDates.length; i++) {
+    const curEvent = workplaceEventsDates[i];
+    let dateString = curEvent.date.toDateString();
+
+    if (dateString.includes(search)) {
+      const event = await Administrative.findOne({
+        where: {
+          id: curEvent.administrativeId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
+      }
+    }
+  }
 
   const secretariatNotifications = await SecretariatNotification.findAll({
     where: {
@@ -199,6 +235,23 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     if (event != null) {
       if (!reportIds.includes(event.reportId)) {
         reportIds.push(Number(event.reportId));
+      }
+    }
+  }
+  const secretariatNotificationsDates = await SecretariatNotification.findAll();
+  for (let i = 0; i < secretariatNotificationsDates.length; i++) {
+    const curEvent = secretariatNotificationsDates[i];
+    let dateString = curEvent.date.toDateString();
+    if (dateString.includes(search)) {
+      const event = await Administrative.findOne({
+        where: {
+          id: curEvent.administrativeId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
       }
     }
   }
@@ -224,6 +277,23 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+  const defectsDates = await Defect.findAll();
+  for (let i = 0; i < defectsDates.length; i++) {
+    const curEvent = defectsDates[i];
+    let dateString = curEvent.date.toDateString();
+    if (dateString.includes(search)) {
+      const event = await Technical.findOne({
+        where: {
+          id: curEvent.technicalId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
+      }
+    }
+  }
 
   const malfunctions = await Malfunction.findAll({
     where: {
@@ -243,6 +313,23 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     if (event != null) {
       if (!reportIds.includes(event.reportId)) {
         reportIds.push(Number(event.reportId));
+      }
+    }
+  }
+  const malfunctionsDates = await Malfunction.findAll();
+  for (let i = 0; i < malfunctionsDates.length; i++) {
+    const curEvent = malfunctionsDates[i];
+    let dateString = curEvent.date.toDateString();
+    if (dateString.includes(search)) {
+      const event = await Technical.findOne({
+        where: {
+          id: curEvent.technicalId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
       }
     }
   }
@@ -658,13 +745,6 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/operationalEventTypes/:id"
  ******************************************************************************/
-/**
- * TODO
- * operationalEvent heeft meerdere EventTypes
- * er moet gekeken worden anar EventType
- * en dan op die eventType moet er gekeken worden naar OperationalType
- */
-
 router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
 
