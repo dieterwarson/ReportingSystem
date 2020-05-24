@@ -618,9 +618,9 @@ export default Vue.extend({
       ).then(res => (this.currentEvent = res));
 
       // TODO moet nog veradnert worden naar meerdere types eventType
-      // ReportingService.getEventType(
-      //   "/api/reports/operationalEventType/" + String(this.eventId)
-      // ).then(res => (this.typeSelected = res));
+      ReportingService.getEventType(
+        "/api/reports/operationalEventType/" + String(this.eventId)
+      ).then(res => (this.operationalTypeSelected = res));
 
       ReportingService.getAllReports("/api/reports/operationalTypes").then(
         res => (this.reportTypes = res)

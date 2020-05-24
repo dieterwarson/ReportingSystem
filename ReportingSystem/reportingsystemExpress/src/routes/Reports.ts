@@ -20,6 +20,7 @@ import WorkplaceSubtype from 'src/models/workplaceSubtype';
 import DefectSubtype from 'src/models/defectSubtype';
 import MalfunctionSubtype from 'src/models/malfunctionSubtype';
 import OperationalSubtype from 'src/models/operationalSubtype';
+import EventType from 'src/models/eventType';
 
 // Init router
 const router = Router();
@@ -496,7 +497,7 @@ router.get('/operationalTypes', async (req: Request, res: Response) => {
     attributes: ['operationalTypeId', 'typeName'],
   })
 
-  let results = { operationalTypes , operationalSubtypes};
+  let results = { operationalTypes, operationalSubtypes };
   res.send(results);
 });
 
@@ -665,45 +666,52 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
  */
 
 router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => {
-  // const eventId = req.param('id');
-  // const event = await WorkplaceEvent.findOne({
-  //   where: {
-  //     id: eventId
-  //   }
-  // });
-  // if (event != null) {
-  //   let workplaceTypeId = event.workplaceTypeId;
-  //   let workplaceSubtypeId = event.workplaceSubtypeId;
+  const eventId = req.param('id');
 
-  //   let type;
-  //   let typeName = "";
-  //   if (workplaceTypeId != null) {
-  //     type = await WorkplaceType.findOne({
-  //       where: {
-  //         id: workplaceTypeId
-  //       }
-  //     })
-  //     if (type != null) {
-  //       typeName = type.typeName;
-  //     }
-  //   }
+  let selectedTypes: string[] = [];
+  let selectedSubtypes: string[] = [];
+  let operationalType;
+  let operationalSubtype;
 
-  //   let subtype;
-  //   let subtypeName = "";
-  //   if (workplaceSubtypeId != null) {
-  //     subtype = await WorkplaceSubtype.findOne({
-  //       where: {
-  //         id: workplaceSubtypeId
-  //       }
-  //     });
-  //     if (subtype != null) {
-  //       subtypeName = subtype.typeName;
-  //     }
-  //   }
+  const event = await OperationalEvent.findOne({
+    where: {
+      id: eventId
+    }
+  });
+  if (event != null) {
+    let eventTypes = await EventType.findAll({
+      where: {
+        operationalEventId: event.id
+      }
+    });
+    if (eventTypes != null) {
+      for (let i = 0; i < eventTypes.length; i++) {
+        const eventType = eventTypes[i];
 
-  //   const result = { typeName, subtypeName };
-  //   res.send(result);
-  // }
+        operationalType = await OperationalType.findOne({
+          where: {
+            id: eventType.operationalTypeId
+          }
+        });
+        if (operationalType != null) {
+          selectedTypes.push(operationalType.typeName)
+        }
+
+        operationalSubtype = await OperationalSubtype.findOne({
+          where: {
+            id: eventType.operationalSubtypeId
+          }
+        });
+        if (operationalSubtype != null) {
+          selectedSubtypes.push(operationalSubtype.typeName)
+        }
+      }
+
+    }
+
+    const result = { event };
+    res.send(result);
+  }
   res.send("");
 });
 
