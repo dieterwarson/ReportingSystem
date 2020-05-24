@@ -5,8 +5,10 @@ import {
   Index,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from 'sequelize-typescript';
 import DefectType from './defectType';
+import Defect from './defect';
 
 @Table
 export default class DefectSubtype extends Model<DefectSubtype> {
@@ -24,4 +26,7 @@ export default class DefectSubtype extends Model<DefectSubtype> {
 
   @Column
   description!: string;
+
+  @HasMany(() => Defect)
+  malfunctions!: Defect[];
 }

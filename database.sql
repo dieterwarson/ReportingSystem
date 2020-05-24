@@ -1,9 +1,8 @@
---  Sample report database
-
-DROP DATABASE IF EXISTS reports;
-CREATE DATABASE IF NOT EXISTS reports;
-
-USE reports;
+-- MySQL dump 10.13  Distrib 5.7.30, for Linux (x86_64)
+--
+-- Host: localhost    Database: reports
+-- ------------------------------------------------------
+-- Server version	5.7.30-0ubuntu0.18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -202,7 +201,6 @@ CREATE TABLE `EventTypes` (
 
 LOCK TABLES `EventTypes` WRITE;
 /*!40000 ALTER TABLE `EventTypes` DISABLE KEYS */;
-INSERT INTO `EventTypes` VALUES (1,4,6,2,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,5,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,7,6,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,8,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,7,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,8,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,2,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,3,4,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,9,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,10,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `EventTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -343,63 +341,6 @@ INSERT INTO `OperationalEvents` VALUES (1,2,2,NULL,'PL03170104','Verwittigen lab
 UNLOCK TABLES;
 
 --
--- Table structure for table `OperationalSubtypes`
---
-
-DROP TABLE IF EXISTS `OperationalSubtypes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `OperationalSubtypes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `operationalTypeId` int(11) DEFAULT NULL,
-  `typeName` varchar(255) DEFAULT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `operational_subtypes_operational_type_id` (`operationalTypeId`),
-  CONSTRAINT `OperationalSubtypes_ibfk_1` FOREIGN KEY (`operationalTypeId`) REFERENCES `OperationalTypes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
- 
---
--- Dumping data for table `OperationalSubtypes`
---
- 
-LOCK TABLES `OperationalSubtypes` WRITE;
-/*!40000 ALTER TABLE `OperationalSubtypes` DISABLE KEYS */;
-INSERT INTO `OperationalSubtypes` VALUES (1,6,'Persoon',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,6,'Voertuig',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,6,'Voorwerp',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39');
-/*!40000 ALTER TABLE `OperationalSubtypes` ENABLE KEYS */;
-UNLOCK TABLES;
- 
---
--- Table structure for table `OperationalTypes`
---
- 
-DROP TABLE IF EXISTS `OperationalTypes`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `OperationalTypes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `typeName` varchar(255) DEFAULT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `operational_types_type_name` (`typeName`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
- 
---
--- Dumping data for table `OperationalTypes`
---
- 
-LOCK TABLES `OperationalTypes` WRITE;
-/*!40000 ALTER TABLE `OperationalTypes` DISABLE KEYS */;
-INSERT INTO `OperationalTypes` VALUES (1,'Specifieke gebeurtenis','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,'Grensoverschrijdende achtervolging','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,'Zoeking met helikopter','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,'Bevraging GSM operatoren','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,'BIN-alarm','2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,'Signalering','2020-05-17 12:45:39','2020-05-17 12:45:39');
-/*!40000 ALTER TABLE `OperationalTypes` ENABLE KEYS */;
-UNLOCK TABLES;
- 
---
 -- Table structure for table `Operationals`
 --
 
@@ -523,6 +464,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL,
@@ -530,12 +473,10 @@ CREATE TABLE `Users` (
   `accessRights` int(11) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `subscription` tinyint(1) DEFAULT NULL,
-  `loggedIn` TINYINT(1) DEFAULT 0,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `users_username` (`username`),
-  FOREIGN KEY (`accessRights`) REFERENCES `Permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `users_username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -545,36 +486,11 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'chass_beerts','test', 'test@gmail.com', 0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'jan_janssens','', 'test@gmail.com',1, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34');
+INSERT INTO `Users` VALUES (1,'chass_beerts','test',0,NULL,NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,'jan_janssens','',0,NULL,NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-DROP TABLE IF EXISTS `Permissions`;
-CREATE TABLE `Permissions`(
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `makeReports` tinyint(1) DEFAULT NULL,
-  `seeReports` tinyint(1) DEFAULT NULL,
-  `seeNotifications` tinyint(1) DEFAULT NULL,
-  `seePreviousShift` tinyint(1) DEFAULT NULL,
-  `seeStatistics` tinyint(1) DEFAULT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `permissions_name` (`name`)
-  )ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-  
-LOCK TABLES `Permissions` WRITE;
-/*!40000 ALTER TABLE `Permissions` DISABLE KEYS */;
-INSERT INTO `Permissions` VALUES (0,'admin',1 , 1, 1, 1, 1, '2020-05-14 14:31:34','2020-05-14 14:31:34'), (1, 'supervisor', 1, 1, 1, 1, 1, '2020-05-14 14:31:34','2020-05-14 14:31:34'), (2, 'secretariaat', 0, 0, 1, 1, 1, '2020-05-14 14:31:34','2020-05-14 14:31:34');
-/*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
-UNLOCK TABLES;
-
-  
-  --
+--
 -- Table structure for table `WorkplaceEvents`
 --
 
@@ -681,3 +597,5 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2020-05-23 12:30:27

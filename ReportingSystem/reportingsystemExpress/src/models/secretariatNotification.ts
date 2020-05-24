@@ -35,7 +35,4 @@ export default class SecretariatNotification extends Model<SecretariatNotificati
   
   @Column
   date!: Date;
-  
-  @Column
-  shift!: boolean;
 }

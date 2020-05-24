@@ -5,8 +5,10 @@ import {
   Index,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from 'sequelize-typescript';
 import WorkplaceType from './workplaceType';
+import WorkplaceEvent from './workplaceEvent';
 
 @Table
 export default class WorkplaceSubtype extends Model<WorkplaceSubtype> {
@@ -24,4 +26,7 @@ export default class WorkplaceSubtype extends Model<WorkplaceSubtype> {
 
   @Column
   description!: string;
+
+  @HasMany(() => WorkplaceEvent)
+  malfunctions!: WorkplaceEvent[];
 }
