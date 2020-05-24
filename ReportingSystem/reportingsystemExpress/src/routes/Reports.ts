@@ -709,7 +709,7 @@ router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => 
 
     }
 
-    const result = { event };
+    const result = { selectedTypes, selectedSubtypes };
     res.send(result);
   }
   res.send("");

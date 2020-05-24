@@ -617,9 +617,9 @@ export default Vue.extend({
         "/api/reports/operationalEvent/" + String(this.eventId)
       ).then(res => (this.currentEvent = res));
 
-      // TODO moet nog veradnert worden naar meerdere types eventType
+      // TODO BUG type wordt niet opgeslagen als er een type met subtype selected is
       ReportingService.getEventType(
-        "/api/reports/operationalEventType/" + String(this.eventId)
+        "/api/reports/operationalEventTypes/" + String(this.eventId)
       ).then(res => (this.operationalTypeSelected = res));
 
       ReportingService.getAllReports("/api/reports/operationalTypes").then(
