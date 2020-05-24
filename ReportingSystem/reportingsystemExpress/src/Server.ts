@@ -1031,19 +1031,29 @@ app.post('/changeOperationalEvent', async (req, res) => {
     for (let i = 0; i < selectedTypes.length; i++) {
       const curType = selectedTypes[i];
       let curTypeId = null;
-      let curSubtypeId = null;      
+      let curSubtypeId = null;
 
       let curTypeObject = await OperationalType.findOne({
         where: {
           typeName: curType
         }
       });
+      let curEvent;
       if (curTypeObject != null) {
+        let isMade = false;
         curTypeId = curTypeObject.id;
-      
+        if (selectedSubtypes.length == 0) {
+          curEvent = await EventType.create({
+            operationalEventId: event.id,
+            operationalTypeId: curTypeId,
+            operationalSubtypeId: null,
+          });
+          EventType.sync();
+        }
+        console.log(selectedTypes.length)
         for (let j = 0; j < selectedSubtypes.length; j++) {
           const curSubtype = selectedSubtypes[j];
-          
+
           let curSubtypeObject = await OperationalSubtype.findOne({
             where: {
               typeName: curSubtype
@@ -1052,39 +1062,26 @@ app.post('/changeOperationalEvent', async (req, res) => {
           if (curSubtypeObject != null) {
             curSubtypeId = curSubtypeObject.id;
             if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
-              await EventType.create({
+              curEvent = await EventType.create({
                 operationalEventId: event.id,
                 operationalTypeId: curTypeId,
                 operationalSubtypeId: curSubtypeId,
               });
-
+            } else {
+              if (!isMade) {
+                curEvent = await EventType.create({
+                  operationalEventId: event.id,
+                  operationalTypeId: curTypeId,
+                  operationalSubtypeId: null,
+                });
+                isMade = true;
+              }
             }
+            EventType.sync();
           }
-
-
         }
-        if (selectedSubtypes.length == 0) {
-          await EventType.create({
-            operationalEventId: event.id,
-            operationalTypeId: curTypeId,
-            operationalSubtypeId: null,
-          });
-
-        }
-
-
-        EventType.sync();
       }
     }
-
-    let test = await EventType.findAll({
-      where: {
-        operationalEventId: event.id
-      }
-    });
-    console.log("\ntest:");
-    console.log(test);
-    
 
   } else {
     res.send(false);
