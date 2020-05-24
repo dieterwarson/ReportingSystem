@@ -20,6 +20,7 @@ import WorkplaceSubtype from 'src/models/workplaceSubtype';
 import DefectSubtype from 'src/models/defectSubtype';
 import MalfunctionSubtype from 'src/models/malfunctionSubtype';
 import OperationalSubtype from 'src/models/operationalSubtype';
+import EventType from 'src/models/eventType';
 
 // Init router
 const router = Router();
@@ -151,6 +152,24 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+  const operationalEventsDates = await OperationalEvent.findAll();
+  for (let i = 0; i < operationalEventsDates.length; i++) {
+    const curEvent = operationalEventsDates[i];
+    let dateString = curEvent.date.toDateString();
+
+    if (dateString.includes(search)) {
+      const event = await Operational.findOne({
+        where: {
+          id: curEvent.operationalId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
+      }
+    }
+  }
 
   const workplaceEvents = await WorkplaceEvent.findAll({
     where: {
@@ -179,6 +198,24 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+  const workplaceEventsDates = await WorkplaceEvent.findAll();
+  for (let i = 0; i < workplaceEventsDates.length; i++) {
+    const curEvent = workplaceEventsDates[i];
+    let dateString = curEvent.date.toDateString();
+
+    if (dateString.includes(search)) {
+      const event = await Administrative.findOne({
+        where: {
+          id: curEvent.administrativeId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
+      }
+    }
+  }
 
   const secretariatNotifications = await SecretariatNotification.findAll({
     where: {
@@ -198,6 +235,23 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     if (event != null) {
       if (!reportIds.includes(event.reportId)) {
         reportIds.push(Number(event.reportId));
+      }
+    }
+  }
+  const secretariatNotificationsDates = await SecretariatNotification.findAll();
+  for (let i = 0; i < secretariatNotificationsDates.length; i++) {
+    const curEvent = secretariatNotificationsDates[i];
+    let dateString = curEvent.date.toDateString();
+    if (dateString.includes(search)) {
+      const event = await Administrative.findOne({
+        where: {
+          id: curEvent.administrativeId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
       }
     }
   }
@@ -223,6 +277,23 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+  const defectsDates = await Defect.findAll();
+  for (let i = 0; i < defectsDates.length; i++) {
+    const curEvent = defectsDates[i];
+    let dateString = curEvent.date.toDateString();
+    if (dateString.includes(search)) {
+      const event = await Technical.findOne({
+        where: {
+          id: curEvent.technicalId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
+      }
+    }
+  }
 
   const malfunctions = await Malfunction.findAll({
     where: {
@@ -242,6 +313,23 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     if (event != null) {
       if (!reportIds.includes(event.reportId)) {
         reportIds.push(Number(event.reportId));
+      }
+    }
+  }
+  const malfunctionsDates = await Malfunction.findAll();
+  for (let i = 0; i < malfunctionsDates.length; i++) {
+    const curEvent = malfunctionsDates[i];
+    let dateString = curEvent.date.toDateString();
+    if (dateString.includes(search)) {
+      const event = await Technical.findOne({
+        where: {
+          id: curEvent.technicalId
+        }
+      });
+      if (event != null) {
+        if (!reportIds.includes(event.reportId)) {
+          reportIds.push(Number(event.reportId));
+        }
       }
     }
   }
@@ -496,7 +584,7 @@ router.get('/operationalTypes', async (req: Request, res: Response) => {
     attributes: ['operationalTypeId', 'typeName'],
   })
 
-  let results = { operationalTypes , operationalSubtypes};
+  let results = { operationalTypes, operationalSubtypes };
   res.send(results);
 });
 
@@ -657,53 +745,55 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/operationalEventTypes/:id"
  ******************************************************************************/
-/**
- * TODO
- * operationalEvent heeft meerdere EventTypes
- * er moet gekeken worden anar EventType
- * en dan op die eventType moet er gekeken worden naar OperationalType
- */
-
 router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => {
-  // const eventId = req.param('id');
-  // const event = await WorkplaceEvent.findOne({
-  //   where: {
-  //     id: eventId
-  //   }
-  // });
-  // if (event != null) {
-  //   let workplaceTypeId = event.workplaceTypeId;
-  //   let workplaceSubtypeId = event.workplaceSubtypeId;
+  const eventId = req.param('id');
 
-  //   let type;
-  //   let typeName = "";
-  //   if (workplaceTypeId != null) {
-  //     type = await WorkplaceType.findOne({
-  //       where: {
-  //         id: workplaceTypeId
-  //       }
-  //     })
-  //     if (type != null) {
-  //       typeName = type.typeName;
-  //     }
-  //   }
+  let selectedTypes: string[] = [];
+  let selectedSubtypes: string[] = [];
+  let operationalType;
+  let operationalSubtype;
 
-  //   let subtype;
-  //   let subtypeName = "";
-  //   if (workplaceSubtypeId != null) {
-  //     subtype = await WorkplaceSubtype.findOne({
-  //       where: {
-  //         id: workplaceSubtypeId
-  //       }
-  //     });
-  //     if (subtype != null) {
-  //       subtypeName = subtype.typeName;
-  //     }
-  //   }
+  const event = await OperationalEvent.findOne({
+    where: {
+      id: eventId
+    }
+  });
+  if (event != null) {
+    let eventTypes = await EventType.findAll({
+      where: {
+        operationalEventId: event.id
+      }
+    });
+    if (eventTypes != null) {
+      for (let i = 0; i < eventTypes.length; i++) {
+        const eventType = eventTypes[i];
 
-  //   const result = { typeName, subtypeName };
-  //   res.send(result);
-  // }
+        operationalType = await OperationalType.findOne({
+          where: {
+            id: eventType.operationalTypeId
+          }
+        });
+        if (operationalType != null) {
+          if (!selectedTypes.includes(operationalType.typeName)) {
+            selectedTypes.push(operationalType.typeName)
+          }
+        }
+
+        operationalSubtype = await OperationalSubtype.findOne({
+          where: {
+            id: eventType.operationalSubtypeId
+          }
+        });
+        if (operationalSubtype != null) {
+          selectedSubtypes.push(operationalSubtype.typeName)
+        }
+      }
+
+    }
+
+    const result = { selectedTypes, selectedSubtypes };
+    res.send(result);
+  }
   res.send("");
 });
 
