@@ -111,52 +111,14 @@
     <div class="container mb-2">
         <div class="row">
             <div class="col-sm">
-                <button type="button" class="btn btn-primary btn-block" @click.prevent="getChangeRoles">Toegangsrechten gebruikersrollen wijzigen</button>
+                <router-link
+              to="/changePermissions"
+              tag="button"
+              class="btn btn-primary btn-block"
+              >toegangsrechten van gebruikersrollen wijzigen</router-link
+            >
             </div>
         </div>
-        <section v-if="option == 'changeRoles'">
-            <div class="input-group-vertical" mt-2>
-                <table class="table">
-                    <thead>
-                        <th scope="col">Mogelijkheden</th>
-                        <th scope="col">Supervisor</th>
-                        <th scope="col">Secretariaat</th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Toevoegen gebeurtenis</th>
-                            <td><input type="checkbox" id="checkbox"></td>
-                            <td><input type="checkbox" id="checkbox"></td>
-                        </tr>
-
-                        <tr>
-                            <th scope="row">Verslagen bekijken</th>
-                            <td><input type="checkbox" id="checkbox"></td>
-                            <td><input type="checkbox" id="checkbox"></td>
-                        </tr>
-
-                        <tr>
-                            <th scope="row">Meldingen bekijken</th>
-                            <td><input type="checkbox" id="checkbox"></td>
-                            <td><input type="checkbox" id="checkbox"></td>
-                        </tr>
-
-                        <tr>
-                            <th scope="row">Vorige shift bekijken</th>
-                            <td><input type="checkbox" id="checkbox"></td>
-                            <td><input type="checkbox" id="checkbox"></td>
-                        </tr>
-
-                        <tr>
-                            <th scope="row">Statistieken bekijken</th>
-                            <td><input type="checkbox" id="checkbox"></td>
-                            <td><input type="checkbox" id="checkbox"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <button type="button" class="btn btn-success btn-block" @click.prevent="changePermissions">Wijzigingen opslaan</button>
-        </section>
     </div>
 
     <div class="container mb-2">
@@ -257,13 +219,6 @@ export default Vue.extend({
                 this.option = 'addField'
             }
             this.emptyAllFields();
-        },
-        getChangeRoles: function() {
-            if (this.option == 'changeRoles') {
-                this.option = 'no_option'
-            } else if (this.option != 'changeRoles') {
-                this.option = 'changeRoles'
-            }
         },
         async doNewUser() {
             //CHECK IF PASSWORDS ARE THE SAME

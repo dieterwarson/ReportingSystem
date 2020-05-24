@@ -1,9 +1,10 @@
-import { Table, Column, Model, Index, HasMany } from 'sequelize-typescript';
+import { Table, Column, Model, Index, HasMany, ForeignKey } from 'sequelize-typescript';
 import Defect from './defect';
 import Malfunction from './malfunction';
 import WorkplaceEvent from './workplaceEvent';
 import SecretariatNotification from './secretariatNotification';
 import OperationalEvent from './operationalEvent';
+import UserPermissions from './userPermissions';
 
 @Table
 export default class User extends Model<User> {
@@ -15,6 +16,7 @@ export default class User extends Model<User> {
   @Column
   password!: string;
 
+  @ForeignKey(() => UserPermissions)
   @Column
   accessRights!: number;
 

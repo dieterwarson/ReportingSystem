@@ -84,7 +84,17 @@ export default {
   },
   getAccessRoleData() {
     return Api()
-    .get('/roles')
+    .get('api/permissions/all')
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
+  updateAccessRoleData(data: any) {
+    return Api()
+    .post('api/permissions/update', data)
     .then(res => {
       return res.data;
     })
@@ -163,6 +173,14 @@ export default {
     })
     .catch(error => {
       alert(error);
+    })
+  },
+  logoutUser(data: any) {
+    return Api()
+    .post('/logoutUser', data)
+    .then(res => {
+      window.location.href= "/login";
+      window.localStorage.setItem("token", "");
     })
   },
   checkAuthentication(){

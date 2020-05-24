@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
+import ReportingService from '@/services/ReportingService';
 
 Vue.use(VueRouter);
 
@@ -65,6 +66,15 @@ const routes = [
     path: '/userlist',
     name: 'Userlist',
     component: () => import(/*webChunckName: "Userlist" */ '../views/Userlist.vue'),
+  },
+  {
+    path: '/changepermissions',
+    name: 'ChangePermissions',
+    component: () => import(/*webChunckName: "Userlist" */ '../views/changePermissions.vue'),
+  },
+  {
+    path:'*',
+    redirect: '/'
   }
 ];
 
@@ -73,5 +83,15 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  const response = ReportingService.checkAuthentication();
+  response.then(res => {
+    if (to.path !== '/login' && !res) next({name: 'Login'});
+    else if (to.name === 'Login' && res) next({name: 'Home'})
+    else next();
+  });
+  
+})
 
 export default router;

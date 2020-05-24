@@ -1,10 +1,12 @@
 <template>
   <div class="home">
+    <div class="col-sm">
+            <button type="button" class="btn btn-primary btn-block" @click.prevent="logOut">Afmelden</button>
+          </div>          
     <div class="container my-4">
       <!-- Search form -->
       <form>
-        <!-- <div v-if="(tokenData.accessRights==0 || tokenData.accessRights == 1)" class="form-row align-items-center"> -->
-        <div class="form-row align-items-center">
+        <div v-if="tokenData.seeReports" class="form-row align-items-center">
 
           <div class="col my-1">
             <input
@@ -49,9 +51,8 @@
           </div>
         </div>
       </form>
-<!-- v-if="(tokenData.accessRights==0 || tokenData.accessRights == 1)"  moet in de router link-->
       <router-link
-        
+        v-if="tokenData.makeReports"
         to="/AddReport"
         tag="button"
         class="btn btn-primary btn-lg btn-block"
@@ -60,8 +61,7 @@
 
       <div class="container">
         <div class="row">
-          <!-- <div v-if="(tokenData.accessRights==0 || tokenData.accessRights == 1)" class="col-sm"> -->
-            <div class="col-sm">
+            <div class="col-sm" v-if="tokenData.seeReports">
             <router-link
               to="/Reports"
               tag="button"
@@ -70,7 +70,7 @@
             >
           </div>
 
-          <div class="col-sm">
+          <div class="col-sm" v-if="tokenData.seeNotifications">
             <router-link
               to="/Notifications"
               tag="button"
@@ -83,7 +83,7 @@
 
       <div class="container">
         <div class="row">
-          <div class="col-sm">
+          <div class="col-sm" v-if="tokenData.seePreviousShift">
             <router-link
               to="/reportView?reportId=1"
               tag="button"
@@ -92,8 +92,8 @@
             >
           </div>
 
-          <div class="col-sm">
-          <!-- v-if="(tokenData.accessRights==0 || tokenData.accessRights == 1)"  -->
+          <div class="col-sm" v-if="(tokenData.seeStatistics)" >
+          
           
             <router-link
               to="/Statistics"
@@ -105,7 +105,7 @@
           
         </div>
       </div>
-      <!-- <div  v-if="tokenData.accessRights==0" class="Container"> -->
+      <div  v-if="tokenData.admin" class="Container">
         <div class="Container">
         <div class="row">
           <div class="col-sm">
@@ -115,10 +115,11 @@
               class="btn btn-secondary btn-lg btn-block"
               >Administrator functies</router-link
             >
-          </div>          
+          </div>      
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -135,7 +136,17 @@ export default Vue.extend({
     return {
       plForm: "",
       visible: false,
-      events: null
+      events: null,
+      tokenData: {
+        accessRights: -1,
+        makeReports: false,
+        seeReports: false,
+        seePreviousShift: false,
+        seeStatistics: false,
+        seeNotifications: false,
+        admin: false,
+        username: null
+      }
     }
   },
   
@@ -154,31 +165,44 @@ export default Vue.extend({
     this.plForm = plNumber;
     this.toggleVisible();
     this.getOptions(plNumber);
+  },
+  logOut() {
+    window.location.href = "/login"
+    ReportingService.logoutUser({
+      username: this.tokenData.username,
+    });
   }
   
   },
   mounted() {
+    
     this.getOptions('');
-  },
-  // mounted() {
-  //   if (window.localStorage.getItem("token") === null || window.localStorage.getItem("token") === undefined  ) {
-  //    window.location.href = "/login";
-  //   } else {
-  //     const decoded= jwt.decode(window.localStorage.getItem("token")!);
-  //     // this.tokenData.username = jwt.decode(window.localStorage.getItem("token")!) !== null ? JSON.parse(jwt.decode(window.localStorage.getItem("token")!))!.username: null;
-  //   if (decoded === undefined){
-  //       window.location.href = "/login"
-  //     }
-  //   }
-  // },
-  // data() {
-  //   return {
-  //     tokenData: {
-  //       accessRights: 0,
-  //       username: null
-  //     }
-  //   }
-  // }
+    if (window.localStorage.getItem("token") === null || window.localStorage.getItem("token") === undefined  ) {
+     window.location.href = "/login";
+    } else {
+      const decodedToken: any= jwt.decode(window.localStorage.getItem("token")!);
+      if (decodedToken.rights < 0 || decodedToken.rights > 2) {
+          window.location.href = "/login";
+      }
+      this.tokenData.username = decodedToken.username;
+      this.tokenData.accessRights = decodedToken.rights;
+      if (this.tokenData.accessRights === 0) {
+        this.tokenData.admin = true;
+      } else {
+        this.tokenData.admin = false;
+      }
+
+        this.tokenData.seeReports = decodedToken.seeReports;
+        this.tokenData.seePreviousShift = decodedToken.seePreviousShift;
+        this.tokenData.seeNotifications = decodedToken.seeNotifications;
+        this.tokenData.seeStatistics = decodedToken.seeStatistics;
+        this.tokenData.makeReports = decodedToken.makeReports;
+
+    if (decodedToken === undefined){
+        window.location.href = "/login"
+      }
+    }
+  }
 });
 
 </script>

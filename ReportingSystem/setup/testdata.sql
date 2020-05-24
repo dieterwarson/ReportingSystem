@@ -514,8 +514,6 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `Users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL,
@@ -527,7 +525,8 @@ CREATE TABLE `Users` (
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `users_username` (`username`)
+  KEY `users_username` (`username`),
+  FOREIGN KEY (`accessRights`) REFERENCES `Permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -541,7 +540,32 @@ INSERT INTO `Users` VALUES (1,'chass_beerts','test', 'test@gmail.com', 0, 0, 0,'
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
+
+DROP TABLE IF EXISTS `Permissions`;
+CREATE TABLE `Permissions`(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `makeReports` tinyint(1) DEFAULT NULL,
+  `seeReports` tinyint(1) DEFAULT NULL,
+  `seeNotifications` tinyint(1) DEFAULT NULL,
+  `seePreviousShift` tinyint(1) DEFAULT NULL,
+  `seeStatistics` tinyint(1) DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `permissions_name` (`name`)
+  )ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+  
+LOCK TABLES `Permissions` WRITE;
+/*!40000 ALTER TABLE `Permissions` DISABLE KEYS */;
+INSERT INTO `Permissions` VALUES (0,'admin',1 , 1, 1, 1, 1, '2020-05-14 14:31:34','2020-05-14 14:31:34'), (1, 'supervisor', 1, 1, 1, 1, 1, '2020-05-14 14:31:34','2020-05-14 14:31:34'), (2, 'secretariaat', 0, 0, 1, 1, 1, '2020-05-14 14:31:34','2020-05-14 14:31:34');
+/*!40000 ALTER TABLE `Permissions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+  
+  --
 -- Table structure for table `WorkplaceEvents`
 --
 

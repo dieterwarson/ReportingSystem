@@ -1,6 +1,6 @@
 <template>
   <div class="LoginPage">
-    <h1>This is the login page</h1>
+    <h1>Aanmelden</h1>
     <form class="form-inline·d-flex·justify-content-center·md-form·form-sm·mt-0">
         <input  type="text" name="username" v-model="input.username" placeholder="Gebruikersnaam" class="form-control form-control-lg">
         <br>

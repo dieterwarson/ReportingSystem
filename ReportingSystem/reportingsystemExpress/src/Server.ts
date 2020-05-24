@@ -1,7 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { BAD_REQUEST } from 'http-status-codes';
 import 'express-async-errors';
-
+import UserPermissions from './models/userPermissions';
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
 import { Sequelize } from 'sequelize-typescript';
@@ -122,7 +122,7 @@ const user2 = new User({
 //  user2.save();
 
 const user = new User({
-  username: 'chassB',
+  username: 'test',
   password: '$2y$10$5lQ9MLhJ0Z1QviN9NM6kze79nmlqLOV54UEOfCBvvfrRYK69psKpO',
   accessRights: 0,
   email: 'chassbeerts@beerts.be',
@@ -732,7 +732,7 @@ app.post('/changeAcces', async (req, res) => {
 
 app.post('/loginUser', async (req, res) => {
   var matched_users_promise = User.findAll({
-    where: {username: req.body.username}
+    where: {username: req.body.username},
   });
   matched_users_promise.then(function(users){
     if (users.length > 0 ) {
@@ -744,22 +744,36 @@ app.post('/loginUser', async (req, res) => {
           {where: {username: req.body.username}}
         );
         User.sync();
-        const token = jwt.sign({
-          username: user.username,
-          id: user.id,
-          rights: user.accessRights
-        },
-        process.env.JWT_KEY,
-        {
-          expiresIn: '1h'
-        })
-
-        
-        res.json({
-          message: "Authenticatie geslaagd",
-          token: token,
-          redirect: "/"
+        var matched_perm_promise = UserPermissions.findAll({
+          where: {id: user.accessRights},
         });
+        matched_perm_promise.then(function(roles) {
+          if (roles.length > 0) {
+            let role = roles[0];
+            const token = jwt.sign({
+              username: user.username,
+              id: user.id,
+              rights: user.accessRights,
+              makeReports: role.makeReports,
+              seeNotifications: role.seeNotifications,
+              seePreviousShift: role.seePreviousShift,
+              seeStatistics: role.seeStatistics,
+              seeReports: role.seeReports,
+            },
+            process.env.JWT_KEY,
+            {
+              expiresIn: '1h'
+            })
+    
+            
+            res.json({
+              message: "Authenticatie geslaagd",
+              token: token,
+              redirect: "/"
+            });
+          }
+        })
+        
       } else {
         res.status(409).json({
           message: "password doesnt match",
@@ -937,7 +951,26 @@ app.post("/addTypes", async (req, res) => {
   } else {
     console.log("fout type")
   }
-})
+});
+
+app.post("/logoutUser", async (req, res) => {
+  User.update(
+    {loggedIn: false},
+    {where: {username: req.body.username}}
+  ).then(function() {
+    res.json({
+      message: "afgemeld"
+    })
+  })
+  .catch(function (err) {
+    res.json({
+      message: "Error"  + err
+    })
+  })
+});
+
+
+
 
 let cronInstance = new cronServer(1);
 
