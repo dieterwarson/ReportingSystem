@@ -1,6 +1,7 @@
 <template>
 <div class="home">
   <div class="container my-4">
+    <button type="submit" class="btn btn-primary btn-block" @click.prevent="logOut">Afmelden</button>
     <!-- Search form -->
     <form>
 <div v-if="tokenData.seeReports" class="form-row align-items-center">        
