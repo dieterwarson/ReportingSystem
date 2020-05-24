@@ -216,10 +216,12 @@ export default {
   },
   checkAuthentication(){
     return Api()
-  
     .post('/checkAuthentication', {token: window.localStorage.getItem('token')})
     .then(res => {
       return res.data.check;
+    });
+  },
+
   getSearchReports(url: string) {
     return Api()
       .get(url)
