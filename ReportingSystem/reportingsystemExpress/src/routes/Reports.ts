@@ -414,7 +414,6 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
       },
       include: [{
         model: EventType,
-        required: true,
         include: [
           OperationalType,
           OperationalSubtype,
@@ -458,6 +457,8 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
+
+  console.log(results);
 
   res.send(results);
 });
