@@ -3,7 +3,7 @@
     <h1>
       Verslag van
       {{
-      new Date(reportContent.report.date).toLocaleString("en-BE", {
+      new Date(reportContent.report.date).toLocaleString("nl-BE", {
       year: 'numeric',
       month: 'numeric',
       day: 'numeric',
@@ -27,7 +27,7 @@
                 <div class="col card h-100">
                   <div class="card-body">
                     <h3 class="card-title display-5">
-                      {{ new Date(event.date).toLocaleString("en-BE", {
+                      {{ new Date(event.date).toLocaleString("nl-BE", {
                       hour: '2-digit',
                       minute: '2-digit',
                       }) }}
@@ -88,7 +88,7 @@
                 <div class="col card h-100">
                   <div class="card-body">
                     <h3 class="card-title display-5">
-                      {{ new Date(event.date).toLocaleString("en-BE", {
+                      {{ new Date(event.date).toLocaleString("nl-BE", {
                       hour: '2-digit',
                       minute: '2-digit',
                       }) }}
@@ -122,7 +122,7 @@
                 <div class="col card h-100">
                   <div class="card-body">
                     <h3 class="card-title display-5">
-                      {{ new Date(event.date).toLocaleString("en-BE", {
+                      {{ new Date(event.date).toLocaleString("nl-BE", {
                       hour: '2-digit',
                       minute: '2-digit',
                       hour12: false,
@@ -157,7 +157,7 @@
                 <div class="col card h-100">
                   <div class="card-body">
                     <h3 class="card-title display-5">
-                      {{ new Date(event.date).toLocaleString("en-BE", {
+                      {{ new Date(event.date).toLocaleString("nl-BE", {
                       hour: '2-digit',
                       minute: '2-digit',
                       hour12: false,
@@ -189,7 +189,7 @@
                 <div class="col card h-100">
                   <div class="card-body">
                     <h5 class="card-title">Logistiek</h5>
-                    <p class="card-text">{{ new Date(event.date).toLocaleString("en-BE") }}</p>
+                    <p class="card-text">{{ new Date(event.date).toLocaleString("nl-BE") }}</p>
                     <p class="card-text">{{ event.description }}</p>
                     <!-- <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.defectType.typeName }}</span></h5> -->
                   </div>
@@ -200,7 +200,7 @@
                 <div class="col card h-100">
                   <div class="card-body">
                     <h5 class="card-title">Technisch</h5>
-                    <p class="card-text">{{ new Date(event.date).toLocaleString("en-BE") }}</p>
+                    <p class="card-text">{{ new Date(event.date).toLocaleString("nl-BE") }}</p>
                     <p class="card-text">{{ event.description }}</p>
                     <p class="card-text">{{ event.duration }}</p>
                     <!-- <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.malfunctionType.typeName }}</span></h5> -->
@@ -250,7 +250,7 @@
             </p>
             <div class="card-body">
               <h3 class="card-title display-5">
-                {{ new Date(event.date).toLocaleString("en-BE", {
+                {{ new Date(event.date).toLocaleString("nl-BE", {
                 hour: '2-digit',
                 minute: '2-digit',
                 }) }}
@@ -311,7 +311,7 @@
             <div class="card-body">
               <h5 class="card-title">Voorval tijdens de dienst</h5>
               <h5 class="card-text">
-                {{ new Date(event.date).toLocaleString("en-BE", {
+                {{ new Date(event.date).toLocaleString("nl-BE", {
                 hour: '2-digit',
                 minute: '2-digit',
                 }) }}
@@ -336,7 +336,7 @@
             <div class="card-body">
               <h5 class="card-title">Melding aan het secretariaat</h5>
               <h5 class="card-text">
-                {{ new Date(event.date).toLocaleString("en-BE", {
+                {{ new Date(event.date).toLocaleString("nl-BE", {
                 hour: '2-digit',
                 minute: '2-digit',
                 }) }}
@@ -368,7 +368,7 @@
             <div class="card-body">
               <h5 class="card-title">Logistiek</h5>
               <h5 class="card-text">
-                {{ new Date(event.date).toLocaleString("en-BE", {
+                {{ new Date(event.date).toLocaleString("nl-BE", {
                 hour: '2-digit',
                 minute: '2-digit',
                 }) }}
@@ -392,7 +392,7 @@
             <div class="card-body">
               <h5 class="card-title">Technisch</h5>
               <h5 class="card-text">
-                {{ new Date(event.date).toLocaleString("en-BE", {
+                {{ new Date(event.date).toLocaleString("nl-BE", {
                 hour: '2-digit',
                 minute: '2-digit',
                 }) }}
