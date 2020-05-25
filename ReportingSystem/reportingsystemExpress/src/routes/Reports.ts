@@ -409,6 +409,9 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   if (operational != null) {
     operationalEvents = await OperationalEvent.findAll({
       order: ['date'],
+      where: {
+        operationalId: operational.id
+      },
       include: [{
         model: EventType,
         required: true,
@@ -455,6 +458,8 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
+
+  console.log(operationalEvents)
   res.send(results);
 });
 
@@ -546,7 +551,6 @@ router.get('/priority/:reportId', async (req: Request, res: Response) => {
     operational: { operationalEvents },
   };
 
-  console.log(operational);
 
 
   res.send(results);
