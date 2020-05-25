@@ -500,10 +500,12 @@ export default Vue.extend({
   watch: {
     reportContent: function() {
       this.loadPriority();
+      this.setShift();
     },
     priorityContent: function() {
       this.loadNotifications();
-    }
+    },
+    
   },
 
   mounted() {
@@ -518,15 +520,19 @@ export default Vue.extend({
 
       // this.loadReportContent();
 
-      // if(this.reportContent.report != null){
-      //   if(this.reportContent.report.nightShift != null){
-      //     if(this.reportContent.report.nightShift)
-      //       this.shift = "Nachtshift ☾";
-      //     else
-      //       this.shift = "Dagshift 🌣";
-      //   }
-      // }
     },
+
+    setShift: function() {
+      if(this.reportContent.report != null){
+        if(this.reportContent.report.nightShift != null){
+          if(this.reportContent.report.nightShift)
+            this.shift = "Nachtshift ☾";
+          else
+            this.shift = "Dagshift 🌣";
+        }
+      }
+    },
+
     loadPriority: function(){
       ReportingService.getAllReports(
         "/api/reports/priority/" + String(this.$route.query.reportId)
@@ -834,7 +840,8 @@ export default Vue.extend({
         }
       });
     }
-  }
+  },
+
 });
 </script>
 

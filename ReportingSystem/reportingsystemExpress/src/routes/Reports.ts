@@ -459,7 +459,6 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     technical: { defects, malfunctions },
   };
 
-  console.log(operationalEvents)
   res.send(results);
 });
 
