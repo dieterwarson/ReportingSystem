@@ -146,6 +146,7 @@ router.post('/getStatistics', async (req, res) => {
     events = countDate(result, events);
     const dates: lineData = {label: type, data: events}
     reports.lineContent.push(dates);
+    events = [];
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
@@ -154,7 +155,6 @@ router.post('/getStatistics', async (req, res) => {
     }
   }
 
-  events = [];
   for (let i in types.operational) {
     var type = types.operational[i];
     var result = [];
@@ -177,6 +177,7 @@ router.post('/getStatistics', async (req, res) => {
 
     events = countDate(result, events);
     reports.lineContent.push({label: type, data: events});
+    events = [];
 
     // console.log(events);
 
@@ -186,8 +187,6 @@ router.post('/getStatistics', async (req, res) => {
       reports.counts.push(count);
     }
   }
-
-  events = [];
 
   for (let i in types.defect) {
     var type = types.defect[i];
@@ -209,6 +208,7 @@ router.post('/getStatistics', async (req, res) => {
 
     events = countDate(result, events);
     reports.lineContent.push({label: type, data: events});
+    events = [];
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
@@ -217,7 +217,6 @@ router.post('/getStatistics', async (req, res) => {
     }
   }
 
-  events = [];
   for (let i in types.malfunction) {
     var type = types.malfunction[i];
     var result = [];
@@ -238,6 +237,7 @@ router.post('/getStatistics', async (req, res) => {
 
     events = countDate(result, events);
     reports.lineContent.push({label: type, data: events});
+    events = [];
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
