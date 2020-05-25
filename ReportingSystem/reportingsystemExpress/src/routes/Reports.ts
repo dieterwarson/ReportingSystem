@@ -34,10 +34,11 @@ const router = Router();
 
 router.get('/all', async (req: Request, res: Response) => {
   const reports = await Report.findAll({
+    order: [['date', 'DESC']],
     where: {
       temporary: false,
     },
-    attributes: ['id', 'date'],
+    attributes: ['id', 'date', 'nightShift'],
   });
   res.send(reports);
 });

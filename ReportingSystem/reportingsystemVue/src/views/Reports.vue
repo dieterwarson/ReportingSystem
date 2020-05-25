@@ -16,6 +16,9 @@
             hour12: false
           })
         }}
+        <span
+        class="badge badge-primary ml-3"
+      >{{ getShift(value.nightShift) }}</span>
       </button>
     </div>
   </div>
@@ -90,7 +93,15 @@ export default Vue.extend({
           reportId: id
         }
       });
+    },
+
+    getShift: function(nightShift: boolean) {
+      if(nightShift)
+        return "Nachtshift ☾";
+      
+      return "Dagshift 🌣";
     }
+        
   }
 });
 </script>
