@@ -50,7 +50,7 @@
                       >{{ event.unit }}</span>
                     </h5>
                     
-                    <div v-if="!(Object.keys(event.eventTypes).length === 0)">
+                    <div v-if="(!event.eventTypes === null)">
                       <div v-for="type in event.eventTypes" :key="type.id">
                         <h5 class="card-text">
                             <div v-if="!(type.operationalType === null)">
@@ -272,7 +272,7 @@
                   title="Eenheid"
                 >{{ event.unit }}</span>
               </h5>
-              <div v-if="!(Object.keys(event.eventTypes).length === 0)">
+              <div v-if="!(event.eventTypes === null)">
                 <div v-for="type in event.eventTypes" :key="type.id">
                   <h5 class="card-text">
                       <div v-if="!(type.operationalType === null)">
