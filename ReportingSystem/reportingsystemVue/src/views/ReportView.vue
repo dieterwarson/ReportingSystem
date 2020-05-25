@@ -33,9 +33,11 @@
                       }) }}
                     </h3>
                     <p class="card-text">{{ event.signaling }}</p>
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text">{{ event.location }}</p>
                     <h5>
                       <span
-                        class="card-text badge badge-primary"
+                        class="card-text badge badge-primary mr-1"
                         data-toggle="tooltip"
                         data-placement="top"
                         title="PL-nummer"
@@ -47,9 +49,19 @@
                         title="Eenheid"
                       >{{ event.unit }}</span>
                     </h5>
-                    <p class="card-text">{{ event.description }}</p>
-                    <p class="card-text">{{ event.location }}</p>
-                    <h5></h5>
+                    
+                    <div v-if="!(Object.keys(event.eventTypes).length === 0)">
+                      <div v-for="type in event.eventTypes" :key="type.id">
+                        <h5 class="card-text">
+                            <div v-if="!(type.operationalType === null)">
+                              <span class="card-text badge badge-secondary mr-1">{{ type.operationalType.typeName }}</span>
+                              <span v-if="!(type.operationalSubtype === null)">
+                                <span class="card-text badge badge-secondary">{{ type.operationalSubtype.typeName }}</span>
+                            </span>
+                            </div>
+                        </h5>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -244,9 +256,11 @@
                 }) }}
               </h3>
               <p class="card-text">{{ event.signaling }}</p>
+              <p class="card-text">{{ event.description }}</p>
+              <p class="card-text">{{ event.location }}</p>
               <h5>
                 <span
-                  class="card-text badge badge-primary"
+                  class="card-text badge badge-primary mr-1"
                   data-toggle="tooltip"
                   data-placement="top"
                   title="PL-nummer"
@@ -258,8 +272,19 @@
                   title="Eenheid"
                 >{{ event.unit }}</span>
               </h5>
-              <p class="card-text">{{ event.description }}</p>
-              <p class="card-text">{{ event.location }}</p>
+              <div v-if="!(Object.keys(event.eventTypes).length === 0)">
+                <div v-for="type in event.eventTypes" :key="type.id">
+                  <h5 class="card-text">
+                      <div v-if="!(type.operationalType === null)">
+                        <span class="card-text badge badge-secondary mr-1">{{ type.operationalType.typeName }}</span>
+                        <span v-if="!(type.operationalSubtype === null)">
+                          <span class="card-text badge badge-secondary">{{ type.operationalSubtype.typeName }}</span>
+                      </span>
+                      </div>
+                  </h5>
+                </div>
+              </div>
+              
             </div>
           </div>
         </div>

@@ -408,11 +408,18 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
 
   if (operational != null) {
     operationalEvents = await OperationalEvent.findAll({
-      where: {
-        operationalId: operational.id
-      }
-    })
+      order: ['date'],
+      include: [{
+        model: EventType,
+        required: true,
+        include: [
+          OperationalType,
+          OperationalSubtype,
+        ]
+      }]
+    });
   }
+
   if (technical != null) {
     defects = await Defect.findAll({
       where: {
