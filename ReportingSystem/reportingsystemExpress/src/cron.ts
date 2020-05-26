@@ -1,4 +1,3 @@
-const cron = require("node-cron");
 const nodemailer = require("nodemailer")
 import pdfGenerator from './pdfgenerator'
 import Report from './models/report';
@@ -6,14 +5,16 @@ import User from './models/user';
 
 export default class cronServer{
 
+    shiftswitch: number;
+
     constructor(hour: number){
-        // cron.schedule("* "+ hour.toString+ " * * *", this.cronTask)
-        // this.cronTask();
+        this.shiftswitch = hour;
     }
 
     cronTask(){
         this.sendEmail();
-        // this.makeNewReport();
+        this.makeNewReport();
+        console.log("crontask");
     }
 
     sendEmail() {
@@ -35,7 +36,7 @@ export default class cronServer{
 
         var mailOptions = {
             from: '" Verslag Systeem " <dieter09@live.be>', // sender address (who sends)
-            to: 'dieter.warson@student.uhasselt.be, dieter09@live.be', // list of receivers (who receives)
+            to: this.getEmails(), // list of receivers (who receives)
             subject: 'test ', // Subject line
             text: 'Hello world ', // plaintext body
             attachments: [
@@ -45,29 +46,41 @@ export default class cronServer{
             ]
         };
 
-/*         transporter.sendMail(mailOptions, function(error:any, info:any){
+        transporter.sendMail(mailOptions, function(error:any, info:any){
             if(error){
                 return console.log(error);
             }
         
             console.log('Message sent: ' + info.response);
-        }); */
+        });
 
     }
 
     makeNewReport() {
-        const report1 = new Report({
-            date: new Date('2020/03/16 21:13:48'),
+        const currDate: Date = new Date();
+        let shift: boolean;
+        if(currDate.getHours() >= this.shiftswitch && currDate.getHours() < this.shiftswitch + 12){
+            shift = false;
+        }
+        else{
+            shift = true;
+        }
+        const report = new Report({
+            date: Date.now(),
+            nightShift: shift,
             temporary: false,
-            nightShift: true,
-          });
-          // report1.save();          
+        });
+        report.save();          
     }
 
     async getEmails() {
         let emails = await User.findAll({
-            attributes: ['username']
+            where: {
+                subscription: true,
+            },
+            attributes: ['email']
         })
+        console.log(emails);
 
         return emails;
     }

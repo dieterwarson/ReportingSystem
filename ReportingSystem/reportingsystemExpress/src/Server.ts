@@ -33,6 +33,7 @@ import EventType from './models/eventType';
 import OperationalType from './models/operationalType';
 import OperationalSubtype from './models/operationalSubtype';
 const checkAuth = require('middleware/check-auth');
+const cron = require("node-cron");
 import cronServer from './cron'
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -140,7 +141,7 @@ const report1 = new Report({
   temporary: false,
   nightShift: true,
 });
-report1.save();
+// report1.save();
 
 const report2 = new Report({
   date: new Date('2020/03/16 12:01:00'),
@@ -1664,9 +1665,16 @@ app.post("/logoutUser", async (req, res) => {
 });
 
 
+const shiftChange = new Date("December 17, 1995 12:00:00");
+console.log(shiftChange);
 
+let cronInstance = new cronServer(shiftChange.getHours());
+// makes a new report every 12 hours, the hour can be changed with shiftChange
+cron.schedule(shiftChange.getMinutes() + " */"+ shiftChange.getHours() + " * * *", function() {
+  cronInstance.cronTask();
+});
 
-let cronInstance = new cronServer(1);
+// cronInstance.cronTask();
 
 // Export express instance
 export default app;
