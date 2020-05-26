@@ -1,11 +1,11 @@
 <template>
-  <div id="app">
-    <img id="logo" src="./assets/FedPol.jpg">
-    <div id="nav">
-      <router-link to="/">Startscherm</router-link>
-    </div>
-    <router-view />
+<div id="app">
+  <img id="logo" src="./assets/FedPol.jpg">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
   </div>
+  <router-view />
+</div>
 </template>
 
 <style>

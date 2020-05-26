@@ -21,32 +21,32 @@ export default class OperationalEvent extends Model<OperationalEvent> {
 
   @BelongsTo(() => User)
   user!: User;
-    
+
   @ForeignKey(() => Operational)
   @Column
   operationalId!: number;
 
   @BelongsTo(() => Operational)
   operational!: Operational;
-  
+
   @Column
   signaling!: string;
-  
+
   @Column
   plNumber!: string;
-  
+
   @Column
   description!: string;
-  
+
   @Column
   priority!: boolean;
 
   @Column
   location!: string;
-  
+
   @Column
   unit!: string;
-  
+
   @Column
   date!: Date;
 

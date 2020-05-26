@@ -14,14 +14,14 @@ import DefectSubtype from './defectSubtype';
 @Table
 export default class Defect extends Model<Defect> {
   @Index
-    
+
   @ForeignKey(() => Technical)
   @Column
   technicalId!: number;
 
   @BelongsTo(() => Technical)
   technical!: Technical;
-  
+
   @ForeignKey(() => User)
   @Column
   authorId!: number;

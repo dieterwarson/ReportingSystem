@@ -9,7 +9,7 @@
       <section v-if="subcategorie == 'operationalEvents'">
         <h4 id="smalltitle">Operationele gebeurtenis</h4>
         <div class="row">
-          <!-- Checkboxes types -->
+          <!-- Checkboxes -->
           <div>
             <div v-if="(Object.keys(reportTypes).length === 0)">
               <p>Er zijn nog geen types</p>
@@ -22,6 +22,7 @@
                 </label>
                 <div class="checkbox-container text-sm-left col-sm-4">
                   <!-- Types -->
+                  <h5>Types:</h5>
                   <div v-for="type in reportTypes.operationalTypes" :key="type.id">
                     <div class="typecontainer text-lg-left" id="operational">
                       <input type="checkbox" :id="type.typeName" :value="type.typeName" v-model="operationalTypeSelected.selectedTypes" @change="removeSubtypes(type.id)" />
@@ -102,7 +103,7 @@
       <section v-if="subcategorie == 'workplaceEvents'">
         <h4 id="smalltitle">Werkplaatsgebeurtenis</h4>
         <div class="row">
-          <!-- Checkboxes types -->
+          <!-- Checkboxes -->
           <div>
             <div v-if="(Object.keys(reportTypes).length === 0)">
               <p>Er zijn nog geen types</p>
@@ -114,6 +115,7 @@
                 </label>
                 <div class="checkbox-container text-sm-left col-sm-4">
                   <!-- Types -->
+                  <h5>Types:</h5>
                   <div v-for="type in reportTypes.workplaceTypes" :key="type.id">
                     <div class="typecontainer text-lg-left" id="workplace">
                       <input type="radio" :id="type.typeName" :value="type.typeName" v-model="typeSelected.typeName" @change="deselectSubtype" />
@@ -134,6 +136,11 @@
                 <button @click.prevent="uncheckAll" class="btn btn-danger extraMargin">Deselecteer keuze</button>
               </div>
             </form>
+            <!-- Monitoring -->
+            <div>
+              <input type="checkbox" name="monitoring" id="workplaceEventMonitoring" v-model="currentEvent.monitoring">
+              <label>Melding</label>
+            </div>
           </div>
           <!-- Input fields -->
           <div class="text-sm-left col-lg">
@@ -165,6 +172,14 @@
       <section v-else-if="subcategorie == 'secretariatNotifications'">
         <h4 id="smalltitle">Secretariaatmeldingen</h4>
         <div class="row">
+          <!-- Checkboxes -->
+          <div>
+            <!-- Monitoring -->
+            <div>
+              <input type="checkbox" name="monitoring" id="workplaceEventMonitoring" v-model="currentEvent.monitoring">
+              <label>Melding</label>
+            </div>
+          </div>
           <!-- Input fields -->
           <div class="text-sm-left col-lg">
             <div class="input-group" style="height: 20%;">
@@ -192,7 +207,7 @@
       <section v-if="subcategorie == 'defects'">
         <h4 id="smalltitle">Defect</h4>
         <div class="row">
-          <!-- Checkboxes types -->
+          <!-- Checkboxes -->
           <div>
             <div v-if="(Object.keys(reportTypes).length === 0)">
               <p>Er zijn nog geen types</p>
@@ -204,6 +219,8 @@
                 </label>
                 <div class="checkbox-container text-sm-left col-sm-4">
                   <!-- Types -->
+                  <h5>Types:</h5>
+
                   <div v-for="type in reportTypes.defectTypes" :key="type.id">
                     <div class="typecontainer text-lg-left" id="defect">
                       <input type="radio" :id="type.typeName" :value="type.typeName" v-model="typeSelected.typeName" @change="deselectSubtype" />
@@ -224,6 +241,12 @@
                 <button @click.prevent="uncheckAll" class="btn btn-danger extraMargin">Deselecteer keuze</button>
               </div>
             </form>
+            <!-- Monitoring -->
+            <div>
+              <input type="checkbox" name="monitoring" id="workplaceEventMonitoring" v-model="currentEvent.monitoring">
+              <label>Melding</label>
+            </div>
+
           </div>
           <!-- Input fields -->
           <div class="text-sm-left col-lg">
@@ -241,7 +264,7 @@
       <section v-else-if="subcategorie == 'malfunctions'">
         <h4 id="smalltitle">Malfunctie</h4>
         <div class="row">
-          <!-- Checkboxes types -->
+          <!-- Checkboxes -->
           <div>
             <div v-if="(Object.keys(reportTypes).length === 0)">
               <p>Er zijn nog geen types</p>
@@ -253,6 +276,7 @@
                 </label>
                 <div class="checkbox-container text-sm-left col-sm-4">
                   <!-- Types -->
+                  <h5>Types:</h5>
                   <div v-for="type in reportTypes.malfunctionTypes" :key="type.id">
                     <div class="typecontainer text-lg-left" id="malfunction">
                       <input type="radio" :id="type.typeName" :value="type.typeName" v-model="typeSelected.typeName" @change="deselectSubtype" />
@@ -273,6 +297,12 @@
                 <button @click.prevent="uncheckAll" class="btn btn-danger extraMargin">Deselecteer keuze</button>
               </div>
             </form>
+            <!-- Monitoring -->
+            <div>
+              <input type="checkbox" name="monitoring" id="workplaceEventMonitoring" v-model="currentEvent.monitoring">
+              <label>Melding</label>
+            </div>
+
           </div>
           <!-- Input fields -->
           <div class="text-sm-left col-lg">
@@ -339,7 +369,7 @@ export default Vue.extend({
         unit: "",
         absentee: "",
         substitute: "",
-        monitoring: true,
+        monitoring: Boolean,
         createdAt: "",
         updatedAt: ""
       },
@@ -520,8 +550,6 @@ export default Vue.extend({
         "/api/reports/operationalEvent/" + String(this.eventId)
       ).then(res => (this.currentEvent = res));
 
-      // TODO BUG type wordt niet opgeslagen als er een type met subtype selected is
-      // BUG nadat er een subtype geseleceerd is, dan voegt die geen gwne types meer toe
       ReportingService.getEventType(
         "/api/reports/operationalEventTypes/" + String(this.eventId)
       ).then(res => (this.operationalTypeSelected = res));
@@ -833,7 +861,8 @@ export default Vue.extend({
         operationalEventId: this.currentEvent.id,
         message: this.currentEvent.description,
         types: this.operationalTypeSelected.selectedTypes,
-        subtypes: this.operationalTypeSelected.selectedSubtypes
+        subtypes: this.operationalTypeSelected.selectedSubtypes,
+        monitoring: this.currentEvent.monitoring
       });
       this.operationalEventSucceeded = true;
     },
@@ -847,7 +876,8 @@ export default Vue.extend({
         administrativeId: this.currentEvent.id,
         message: this.currentEvent.description,
         type: this.typeSelected.typeName,
-        subtype: this.typeSelected.subtypeName
+        subtype: this.typeSelected.subtypeName,
+        monitoring: this.currentEvent.monitoring
       });
       this.workplaceEventSucceeded = true;
     },
@@ -859,7 +889,8 @@ export default Vue.extend({
       await ReportingService.changeSecretariatNotification({
         reportId: String(this.reportId),
         administrativeId: this.currentEvent.id,
-        message: this.currentEvent.description
+        message: this.currentEvent.description,
+        monitoring: this.currentEvent.monitoring
       });
       this.secretariatNotificationSucceeded = true;
     },
@@ -873,7 +904,8 @@ export default Vue.extend({
         technicalId: this.currentEvent.id,
         message: this.currentEvent.description,
         type: this.typeSelected.typeName,
-        subtype: this.typeSelected.subtypeName
+        subtype: this.typeSelected.subtypeName,
+        monitoring: this.currentEvent.monitoring
       });
       this.defectSucceeded = true;
     },
@@ -887,7 +919,8 @@ export default Vue.extend({
         technicalId: this.currentEvent.id,
         message: this.currentEvent.description,
         type: this.typeSelected.typeName,
-        subtype: this.typeSelected.subtypeName
+        subtype: this.typeSelected.subtypeName,
+        monitoring: this.currentEvent.monitoring
       });
       this.malfunctionSucceeded = true;
     },

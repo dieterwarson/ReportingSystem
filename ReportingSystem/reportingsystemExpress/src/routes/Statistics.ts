@@ -72,11 +72,11 @@ router.get('/types', async (req: Request, res: Response) => {
     attributes: ['typeName'],
   });
 
-  let results = {operationalTypes, workplaceTypes, defectTypes, malfunctionTypes}
+  let results = { operationalTypes, workplaceTypes, defectTypes, malfunctionTypes }
   res.send(results);
 });
 
-interface Counts{
+interface Counts {
   typeName: string;
   count: number;
 }
@@ -87,7 +87,7 @@ interface StatisticsData {
   lineContent: Array<lineData>;
 }
 
-interface lineData{
+interface lineData {
   label: String;
   data: Array<eventDate>;
 }
@@ -97,18 +97,18 @@ interface eventDate {
   y: number;
 }
 
-function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Malfunction[], events: eventDate[]){
+function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Malfunction[], events: eventDate[]) {
 
   result.forEach((element: { date: { toDateString: () => string; }; }) => {
     let dateFound = false;
     for (let i = 0; i < events.length; i++) {
-      if(events[i].t == element.date.toDateString()){
+      if (events[i].t == element.date.toDateString()) {
         dateFound = true;
         events[i].y++;
-      }     
+      }
     }
-    if(!dateFound){
-      events.push({t: element.date.toDateString(), y: 1});
+    if (!dateFound) {
+      events.push({ t: element.date.toDateString(), y: 1 });
     }
   });
 
@@ -121,7 +121,7 @@ router.post('/getStatistics', async (req, res) => {
   const types = req.body;
 
   let events: eventDate[] = []
-  
+
   for (let i in types.workplaceevent) {
     var type = types.workplaceevent[i];
     var result = [];
@@ -137,20 +137,20 @@ router.post('/getStatistics', async (req, res) => {
           },
         },
       }],
-        
+
     });
 
     // group events by date
 
 
     events = countDate(result, events);
-    const dates: lineData = {label: type, data: events}
+    const dates: lineData = { label: type, data: events }
     reports.lineContent.push(dates);
     events = [];
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
-      var count: Counts  = {typeName: type, count: result.length};
+      var count: Counts = { typeName: type, count: result.length };
       reports.counts.push(count);
     }
   }
@@ -176,14 +176,14 @@ router.post('/getStatistics', async (req, res) => {
     });
 
     events = countDate(result, events);
-    reports.lineContent.push({label: type, data: events});
+    reports.lineContent.push({ label: type, data: events });
     events = [];
 
     // console.log(events);
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
-      var count: Counts  = {typeName: type, count: result.length};
+      var count: Counts = { typeName: type, count: result.length };
       reports.counts.push(count);
     }
   }
@@ -203,16 +203,16 @@ router.post('/getStatistics', async (req, res) => {
           },
         },
       }]
-        
+
     });
 
     events = countDate(result, events);
-    reports.lineContent.push({label: type, data: events});
+    reports.lineContent.push({ label: type, data: events });
     events = [];
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
-      var count: Counts  = {typeName: type, count: result.length};
+      var count: Counts = { typeName: type, count: result.length };
       reports.counts.push(count);
     }
   }
@@ -232,16 +232,16 @@ router.post('/getStatistics', async (req, res) => {
           },
         },
       }]
-        
+
     });
 
     events = countDate(result, events);
-    reports.lineContent.push({label: type, data: events});
+    reports.lineContent.push({ label: type, data: events });
     events = [];
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
-      var count: Counts  = {typeName: type, count: result.length};
+      var count: Counts = { typeName: type, count: result.length };
       reports.counts.push(count);
     }
   }

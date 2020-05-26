@@ -34,10 +34,11 @@ const router = Router();
 
 router.get('/all', async (req: Request, res: Response) => {
   const reports = await Report.findAll({
+    order: [['date', 'DESC']],
     where: {
       temporary: false,
     },
-    attributes: ['id', 'date'],
+    attributes: ['id', 'date', 'nightShift'],
   });
   res.send(reports);
 });
@@ -113,223 +114,341 @@ router.get('/monitored', async (req: Request, res: Response) => {
 /******************************************************************************
  *                      Search Reports - "GET /api/reports/search/:keyword"
  ******************************************************************************/
+interface reportData {
+  reportId: number;
+  description: string;
+  date: Date;
+  nightShift: Boolean;
+}
 
 router.get('/search/:keyword', async (req: Request, res: Response) => {
   const search: string = req.param('keyword');
   const searchString: string = '%' + search + '%';
-  let reportIds: Number[] = [];
 
-  const operationalEvents = await OperationalEvent.findAll({
+  let reportIds: reportData[] = [];
+
+  let operationalEvents = await OperationalEvent.findAll({
     where: {
-      [Op.or]: {
-        signaling: {
-          [Op.like]: searchString,
-        },
-        plNumber: {
-          [Op.like]: searchString,
-        },
-        description: {
-          [Op.like]: searchString,
-        },
-        location: {
-          [Op.like]: searchString,
-        },
-        unit: {
-          [Op.like]: searchString,
-        },
-      }
-    }
-  })
+      signaling: {
+        [Op.like]: searchString,
+      },
+    },
+  });
   for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
       where: {
-        id: operationalEvents[i].operationalId
-      }
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      if (!reportIds.includes(event.reportId)) {
-        reportIds.push(Number(event.reportId));
-      }
+      let report: reportData = { reportId: event.reportId, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
     }
   }
-  const operationalEventsDates = await OperationalEvent.findAll();
-  for (let i = 0; i < operationalEventsDates.length; i++) {
-    const curEvent = operationalEventsDates[i];
-    let dateString = curEvent.date.toDateString();
+
+  operationalEvents = await OperationalEvent.findAll({
+    where: {
+      plNumber: {
+        [Op.like]: searchString,
+      },
+    },
+  });
+  for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
+    const event = await Operational.findOne({
+      where: {
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
+    });
+    if (event != null) {
+      let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
+    }
+  }
+
+  operationalEvents = await OperationalEvent.findAll({
+    where: {
+      description: {
+        [Op.like]: searchString,
+      },
+    },
+  });
+  for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
+    const event = await Operational.findOne({
+      where: {
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
+    });
+    if (event != null) {
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
+    }
+  }
+
+  operationalEvents = await OperationalEvent.findAll({
+    where: {
+      location: {
+        [Op.like]: searchString,
+      },
+    },
+  });
+  for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
+    const event = await Operational.findOne({
+      where: {
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
+    });
+    if (event != null) {
+      let report: reportData = { reportId: event.reportId, description: curEvent.location, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
+    }
+  }
+
+  operationalEvents = await OperationalEvent.findAll({
+    where: {
+      unit: {
+        [Op.like]: searchString,
+      },
+    },
+  });
+  for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
+    const event = await Operational.findOne({
+      where: {
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
+    });
+    if (event != null) {
+      let report: reportData = { reportId: event.reportId, description: curEvent.unit, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
+    }
+  }
+
+  operationalEvents = await OperationalEvent.findAll();
+  for (let i = 0; i < operationalEvents.length; i++) {
+    const curEvent = operationalEvents[i];
+    let dateString = curEvent.date.toLocaleString();
 
     if (dateString.includes(search)) {
       const event = await Operational.findOne({
         where: {
           id: curEvent.operationalId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        if (!reportIds.includes(event.reportId)) {
-          reportIds.push(Number(event.reportId));
-        }
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
       }
     }
   }
 
-  const workplaceEvents = await WorkplaceEvent.findAll({
+  let workplaceEvents = await WorkplaceEvent.findAll({
     where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: searchString,
-        },
-        absentee: {
-          [Op.like]: searchString,
-        },
-        substitute: {
-          [Op.like]: searchString,
-        },
-      }
-    }
-  })
+      description: {
+        [Op.like]: searchString,
+      },
+    },
+  });
   for (let i in workplaceEvents) {
+    const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
       where: {
-        id: workplaceEvents[i].administrativeId
-      }
+        id: curEvent.administrativeId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      if (!reportIds.includes(event.reportId)) {
-        reportIds.push(Number(event.reportId));
-      }
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
     }
   }
-  const workplaceEventsDates = await WorkplaceEvent.findAll();
-  for (let i = 0; i < workplaceEventsDates.length; i++) {
-    const curEvent = workplaceEventsDates[i];
-    let dateString = curEvent.date.toDateString();
+
+  workplaceEvents = await WorkplaceEvent.findAll({
+    where: {
+      absentee: {
+        [Op.like]: searchString,
+      },
+    },
+  });
+  for (let i in workplaceEvents) {
+    const curEvent = workplaceEvents[i];
+    const event = await Administrative.findOne({
+      where: {
+        id: curEvent.administrativeId
+      },
+      include: [{ model: Report }]
+    });
+    if (event != null) {
+      let report: reportData = { reportId: event.reportId, description: curEvent.absentee, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
+    }
+  }
+
+  workplaceEvents = await WorkplaceEvent.findAll({
+    where: {
+      substitute: {
+        [Op.like]: searchString,
+      },
+    },
+  });
+  for (let i in workplaceEvents) {
+    const curEvent = workplaceEvents[i];
+    const event = await Administrative.findOne({
+      where: {
+        id: curEvent.administrativeId
+      },
+      include: [{ model: Report }]
+    });
+    if (event != null) {
+      let report: reportData = { reportId: event.reportId, description: curEvent.substitute, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
+    }
+  }
+
+  workplaceEvents = await WorkplaceEvent.findAll();
+  for (let i = 0; i < workplaceEvents.length; i++) {
+    const curEvent = workplaceEvents[i];
+    let dateString = curEvent.date.toLocaleString();
 
     if (dateString.includes(search)) {
       const event = await Administrative.findOne({
         where: {
           id: curEvent.administrativeId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        if (!reportIds.includes(event.reportId)) {
-          reportIds.push(Number(event.reportId));
-        }
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
       }
     }
   }
 
-  const secretariatNotifications = await SecretariatNotification.findAll({
+  let secretariatNotifications = await SecretariatNotification.findAll({
     where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: searchString,
-        },
-      }
-    }
-  })
+      description: {
+        [Op.like]: searchString,
+      },
+    },
+  });
   for (let i in secretariatNotifications) {
+    const curEvent = secretariatNotifications[i];
     const event = await Administrative.findOne({
       where: {
         id: secretariatNotifications[i].administrativeId
-      }
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      if (!reportIds.includes(event.reportId)) {
-        reportIds.push(Number(event.reportId));
-      }
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
     }
   }
-  const secretariatNotificationsDates = await SecretariatNotification.findAll();
-  for (let i = 0; i < secretariatNotificationsDates.length; i++) {
-    const curEvent = secretariatNotificationsDates[i];
-    let dateString = curEvent.date.toDateString();
+
+  secretariatNotifications = await SecretariatNotification.findAll();
+  for (let i = 0; i < secretariatNotifications.length; i++) {
+    const curEvent = secretariatNotifications[i];
+    let dateString = curEvent.date.toLocaleString();
+
     if (dateString.includes(search)) {
       const event = await Administrative.findOne({
         where: {
           id: curEvent.administrativeId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        if (!reportIds.includes(event.reportId)) {
-          reportIds.push(Number(event.reportId));
-        }
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
       }
     }
   }
 
-  const defects = await Defect.findAll({
+  let defects = await Defect.findAll({
     where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: searchString,
-        },
-      }
-    }
-  })
+      description: {
+        [Op.like]: searchString,
+      },
+    },
+  });
   for (let i in defects) {
+    const curEvent = defects[i];
     const event = await Technical.findOne({
       where: {
         id: defects[i].technicalId
-      }
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      if (!reportIds.includes(event.reportId)) {
-        reportIds.push(Number(event.reportId));
-      }
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
     }
   }
-  const defectsDates = await Defect.findAll();
-  for (let i = 0; i < defectsDates.length; i++) {
-    const curEvent = defectsDates[i];
-    let dateString = curEvent.date.toDateString();
+
+  defects = await Defect.findAll();
+  for (let i = 0; i < defects.length; i++) {
+    const curEvent = defects[i];
+    let dateString = curEvent.date.toLocaleString();
+
     if (dateString.includes(search)) {
       const event = await Technical.findOne({
         where: {
           id: curEvent.technicalId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        if (!reportIds.includes(event.reportId)) {
-          reportIds.push(Number(event.reportId));
-        }
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
       }
     }
   }
 
-  const malfunctions = await Malfunction.findAll({
+  let malfunctions = await Malfunction.findAll({
     where: {
-      [Op.or]: {
-        description: {
-          [Op.like]: searchString,
-        },
-      }
-    }
-  })
+      description: {
+        [Op.like]: searchString,
+      },
+    },
+  });
   for (let i in malfunctions) {
+    const curEvent = malfunctions[i];
     const event = await Technical.findOne({
       where: {
         id: malfunctions[i].technicalId
-      }
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      if (!reportIds.includes(event.reportId)) {
-        reportIds.push(Number(event.reportId));
-      }
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
     }
   }
-  const malfunctionsDates = await Malfunction.findAll();
-  for (let i = 0; i < malfunctionsDates.length; i++) {
-    const curEvent = malfunctionsDates[i];
-    let dateString = curEvent.date.toDateString();
+
+  malfunctions = await Malfunction.findAll();
+  for (let i = 0; i < malfunctions.length; i++) {
+    const curEvent = malfunctions[i];
+    let dateString = curEvent.date.toLocaleString();
+
     if (dateString.includes(search)) {
       const event = await Technical.findOne({
         where: {
           id: curEvent.technicalId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        if (!reportIds.includes(event.reportId)) {
-          reportIds.push(Number(event.reportId));
-        }
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
       }
     }
   }
@@ -337,6 +456,17 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
   res.send(reportIds);
 });
 
+function addReport(report: reportData, reportIds: reportData[]) {
+  let inside = false;
+  for (let i = 0; i < reportIds.length; i++) {
+    const curReport = reportIds[i];
+
+    if (curReport.reportId == report.reportId)
+      inside = true;
+  }
+  if (!inside)
+    reportIds.push(report);
+}
 
 /******************************************************************************
  *                      Search Reports - "GET /api/reports/pl/:pl"
@@ -345,27 +475,27 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
 router.get('/pl/:pl', async (req: Request, res: Response) => {
   const pl: string = req.param('pl');
   const plString: string = '%' + pl + '%';
-  let reportIds: Number[] = [];
+
+  let reportIds: reportData[] = [];
 
   const operationalEvents = await OperationalEvent.findAll({
     where: {
-      [Op.or]: {
-        plNumber: {
-          [Op.like]: plString,
-        },
-      }
-    }
-  })
+      plNumber: {
+        [Op.like]: plString,
+      },
+    },
+  });
   for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
       where: {
-        id: operationalEvents[i].operationalId
-      }
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      if (!reportIds.includes(event.reportId)) {
-        reportIds.push(Number(event.reportId));
-      }
+      let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
     }
   }
 
@@ -947,6 +1077,69 @@ router.get('/malfunctionTypes/:id', async (req: Request, res: Response) => {
     res.send(result);
   }
   res.send("");
+});
+
+
+/******************************************************************************
+ *      Remove notification from event - "POST /api/reports/removeNotification"
+ ******************************************************************************/
+router.post('/removeNotification', async (req, res) => {
+  const category = req.body.category;
+  const eventId = req.body.id;
+  if (category === "WorkplaceEvent") {
+    const event = await WorkplaceEvent.findOne({
+      where: {
+        id: eventId
+      }
+    });
+    if (event != null) {
+      event.monitoring = false;
+      await event.save();
+      res.send(true);
+    }
+  }
+  else if (category === "SecretariatNotification") {
+    const event = await SecretariatNotification.findOne({
+      where: {
+        id: eventId
+      }
+    });
+    console.log(event);
+    if (event !== null) {
+      console.log(event.monitoring);
+      event.monitoring = false;
+      await event.save();
+      console.log(event.monitoring);
+      res.send(true);
+    }
+  }
+  else if (category === "Defect") {
+    const event = await Defect.findOne({
+      where: {
+        id: eventId
+      }
+    });
+    if (event != null) {
+      event.monitoring = false;
+      await event.save();
+      res.send(true);
+    }
+
+  }
+  else if (category === "Malfunction") {
+    const event = await Malfunction.findOne({
+      where: {
+        id: eventId
+      }
+    });
+    if (event != null) {
+      event.monitoring = false;
+      await event.save();
+      res.send(true);
+    }
+  }
+
+
 });
 
 /******************************************************************************

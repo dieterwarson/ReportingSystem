@@ -14,7 +14,7 @@ import MalfunctionSubtype from './malfunctionSubtype';
 @Table
 export default class Malfunction extends Model<Malfunction> {
   @Index
-    
+
   @ForeignKey(() => User)
   @Column
   authorId!: number;
@@ -42,7 +42,7 @@ export default class Malfunction extends Model<Malfunction> {
 
   @BelongsTo(() => MalfunctionSubtype)
   malfunctionSubtype!: MalfunctionSubtype;
-  
+
   @Column
   description!: string;
 

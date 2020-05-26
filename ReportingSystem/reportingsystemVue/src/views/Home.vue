@@ -11,26 +11,17 @@
         <div class="col my-1">
           <div class="input-group">
             <div class="autocomplete">
-                <input
-                autocomplete="off"
-                  v-model="plNumber"
-                  type="text"
-                  class="form-control"
-                  id="inlineFormInputGroupUsername"
-                  placeholder="PL-nummer"
-                  @keyup="getOptions(plNumber)"
-                  @click="toggleVisible"
-                />
+              <input autocomplete="off" v-model="plNumber" type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="PL-nummer" @keyup="getOptions(plNumber)" @click="toggleVisible" />
               <div class="popover" v-show="visible">
                 <div class="options">
                   <ul>
                     <li v-for="event in events" :key="event.id" v-on:click="getPlNumber(event.plNumber)">
-                        {{event.plNumber}}
+                      {{event.plNumber}}
                     </li>
                   </ul>
                 </div>
               </div>
-              </div>
+            </div>
           </div>
         </div>
 
@@ -55,41 +46,25 @@
       </div>
     </div>
 
-      <div class="container">
-        <div class="row">
-          <div class="col-sm" v-if="tokenData.seePreviousShift">
-            <router-link
-              to="/reportView?reportId=1"
-              tag="button"
-              class="btn btn-secondary btn-lg btn-block"
-              >Overzicht vorige shift</router-link
-            >
-          </div>
-
-          <div class="col-sm" v-if="(tokenData.seeStatistics)" >
-          
-          
-            <router-link
-              to="/Statistics"
-              tag="button"
-              class="btn btn-secondary btn-lg btn-block"
-              >Statistieken</router-link
-            >
-          </div>
-          
+    <div class="container">
+      <div class="row">
+        <div class="col-sm" v-if="tokenData.seePreviousShift">
+          <router-link to="/reportView?reportId=1" tag="button" class="btn btn-secondary btn-lg btn-block">Overzicht vorige shift</router-link>
         </div>
+
+        <div class="col-sm" v-if="(tokenData.seeStatistics)">
+
+          <router-link to="/Statistics" tag="button" class="btn btn-secondary btn-lg btn-block">Statistieken</router-link>
+        </div>
+
       </div>
-      <div  v-if="tokenData.admin" class="Container">
-        <div class="Container">
+    </div>
+    <div v-if="tokenData.admin" class="Container">
+      <div class="Container">
         <div class="row">
           <div class="col-sm">
-            <router-link
-              to="/admin"
-              tag="button"
-              class="btn btn-secondary btn-lg btn-block"
-              >Administrator functies</router-link
-            >
-          </div>      
+            <router-link to="/admin" tag="button" class="btn btn-secondary btn-lg btn-block">Administrator functies</router-link>
+          </div>
         </div>
       </div>
       </div>
@@ -106,8 +81,8 @@ import jwt from "jsonwebtoken";
 export default Vue.extend({
   data: function () {
     return {
-      plNumber: "",
       keyword: "",
+      plNumber: "",
       visible: false,
       events: null,
       tokenData: {
@@ -122,54 +97,59 @@ export default Vue.extend({
       }
     }
   },
-  
+
   methods: {
-    async getOptions(plNumber: string) 
-    {
+    async getOptions(plNumber: string) {
       plNumber = plNumber.concat('%');
       const response = await ReportingService.autoCompleteOperationalEvent({
-        plNumber: plNumber});
-        this.events = response;
-  },
-  toggleVisible(){
-    this.visible = !this.visible;
-  },
-  getPlNumber(plNumber : string) {
-    this.plNumber = plNumber;
-    this.toggleVisible();
-    this.getOptions(plNumber);
-  },
-  logOut() {
-    window.location.href = "/login"
-    ReportingService.logoutUser({
-      username: this.tokenData.username,
-    });
-  },
-  
-    searchReports: function () {
-      this.$router.push({
-        path: "reports",
-        query: {
-          keyword: String(this.keyword),
-          plNumber: String(this.plNumber)
-        }
-      })
+        plNumber: plNumber
+      });
+      this.events = response;
     },
-    toggleUnvisible: function() {
+    toggleVisible() {
+      this.visible = !this.visible;
+    },
+    getPlNumber(plNumber: string) {
+      this.plNumber = plNumber;
+      this.toggleVisible();
+      this.getOptions(plNumber);
+    },
+    logOut() {
+      window.location.href = "/login"
+      ReportingService.logoutUser({
+        username: this.tokenData.username,
+      });
+    },
+
+    searchReports: function () {
+      if (this.keyword == "" && this.plNumber == "") {
+        this.$router.push({
+          path: "reports"
+        })
+      } else {
+        this.$router.push({
+          path: "reportssearch",
+          query: {
+            keyword: String(this.keyword),
+            plNumber: String(this.plNumber)
+          }
+        })
+    }
+    },
+      toggleUnvisible: function() {
       if (this.visible) {
         this.visible = !this.visible;
       }
     }
   },
   mounted() {
-    
     this.getOptions('');
-    if (window.localStorage.getItem("token") === null || window.localStorage.getItem("token") === undefined  ) {
-     window.location.href = "/login";
+    if (window.localStorage.getItem("token") === null || window.localStorage.getItem("token") === undefined) {
+      window.location.href = "/login";
     } else {
-      const decodedToken: any= jwt.decode(window.localStorage.getItem("token")!);
+      const decodedToken: any = jwt.decode(window.localStorage.getItem("token") !);
       if (decodedToken.rights < 0 || decodedToken.rights > 2) {
-          window.location.href = "/login";
+        window.location.href = "/login";
       }
       this.tokenData.username = decodedToken.username;
       this.tokenData.accessRights = decodedToken.rights;
@@ -179,13 +159,13 @@ export default Vue.extend({
         this.tokenData.admin = false;
       }
 
-        this.tokenData.seeReports = decodedToken.seeReports;
-        this.tokenData.seePreviousShift = decodedToken.seePreviousShift;
-        this.tokenData.seeNotifications = decodedToken.seeNotifications;
-        this.tokenData.seeStatistics = decodedToken.seeStatistics;
-        this.tokenData.makeReports = decodedToken.makeReports;
+      this.tokenData.seeReports = decodedToken.seeReports;
+      this.tokenData.seePreviousShift = decodedToken.seePreviousShift;
+      this.tokenData.seeNotifications = decodedToken.seeNotifications;
+      this.tokenData.seeStatistics = decodedToken.seeStatistics;
+      this.tokenData.makeReports = decodedToken.makeReports;
 
-    if (decodedToken === undefined){
+      if (decodedToken === undefined) {
         window.location.href = "/login"
       }
     }
@@ -220,6 +200,7 @@ export default Vue.extend({
   box-shadow: 0 0 10px #eceaea;
   cursor: text;
 }
+
 .popover {
   width: 100%;
   min-height: 50px;
@@ -256,15 +237,15 @@ export default Vue.extend({
   padding-left: 0;
 }
 
-.options ul li{
-border-bottom: 1px solid lightgray;
-padding: 10px;
-cursor: pointer;
-background: #f1f1f1;
+.options ul li {
+  border-bottom: 1px solid lightgray;
+  padding: 10px;
+  cursor: pointer;
+  background: #f1f1f1;
 }
 
-.options ul li:hover{
-background: steelblue;
-color: black;
+.options ul li:hover {
+  background: steelblue;
+  color: black;
 }
 </style>

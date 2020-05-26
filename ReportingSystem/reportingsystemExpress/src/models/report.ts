@@ -6,7 +6,7 @@ import Administrative from './administrative';
 @Table
 export default class Report extends Model<Report> {
   @Index
-    
+
   @Column
   date!: Date;
 
