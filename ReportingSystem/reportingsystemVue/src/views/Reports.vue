@@ -22,13 +22,18 @@
 <script lang="ts">
 import Vue from "vue";
 import ReportingService from "../services/ReportingService";
+import { TIMEOUT } from "dns";
 export default Vue.extend({
   data: function () {
     return {
       reports: [] as any[],
+      list: []
     };
   },
-
+  created() {
+    this.loadData();
+    setInterval(this.loadData, 5000);
+  },
   mounted() {
     this.loadData();
   },
@@ -55,7 +60,6 @@ export default Vue.extend({
 
       return "Dagshift 🌣";
     }
-
   }
 });
 </script>
