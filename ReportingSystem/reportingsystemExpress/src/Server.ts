@@ -943,83 +943,296 @@ app.post('/getFile', async (req, res) => {
   }
 });
 
-app.post('/addOperationalEvent', async (req, res) => {
-  OperationalEvent.create({
-    operationalId: 1,
-    authorId: 3,
-    operationalTypeId: 7,
-    monitoring: true,
-    signaling: null,
-    plNumber: req.body.plNumber,
-    description: req.body.message,
-    location: req.body.location,
-    unit: req.body.unit,
-    date: new Date('2020/03/16 01:21:25'),
-    //date: new Date(req.body.date),
-  })
-    .then(function () {
-      res.send({
-        bool: true,
-      });
+app.post('/addSecretaryNotification', async (req, res) => {
+  Administrative.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(function(entries){
+    SecretariatNotification.create({
+      authorId: req.body.id,
+      administrativeId: entries[0].id,
+      description: req.body.description,
+      monitoring: req.body.monitoring,
+      date: Date.now(),
+    }).then(function(not) {
+      SecretariatNotification.sync();
+      res.json({
+        bool: true
+      })
     })
-    .catch(function (error) {
-      console.log('ERR:' + error);
-      res.send(false);
-    });
-  OperationalEvent.sync();
+    .catch(function(err) {
+      res.json({
+        bool: false,
+        message: err
+      })
+    })
+  })
+})
+
+app.post('/addOperationalEvent', async (req, res) => {
+  const selectedTypes = req.body.types;
+  const selectedSubtypes = req.body.subtypes;
+  Operational.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(function(entries){
+
+    OperationalEvent.create({
+      plNumber: req.body.plNumber,
+      authorId: req.body.id,
+      location: req.body.location,
+      date: Date.now(),
+      description: req.body.message,
+      unit: req.body.unit,
+      operationalId: entries[0].id,
+      monitoring: req.body.monitoring,
+      priority: req.body.priority,
+    }).then(async function(event) {
+      OperationalEvent.sync();
+      for (let i = 0; i < selectedTypes.length; i++) {
+        const curType = selectedTypes[i];
+        let curTypeId = null;
+        let curSubtypeId = null;
+  
+        let curTypeObject = await OperationalType.findOne({
+          where: {
+            typeName: curType
+          }
+        });
+        let curEvent;
+        if (curTypeObject != null) {
+          let isMade = false;
+          curTypeId = curTypeObject.id;
+          if (selectedSubtypes.length == 0) {
+            curEvent = await EventType.create({
+              operationalEventId: event.id,
+              operationalTypeId: curTypeId,
+              operationalSubtypeId: null,
+            });
+            EventType.sync();
+          }
+          console.log(selectedTypes.length)
+          for (let j = 0; j < selectedSubtypes.length; j++) {
+            const curSubtype = selectedSubtypes[j];
+  
+            let curSubtypeObject = await OperationalSubtype.findOne({
+              where: {
+                typeName: curSubtype
+              }
+            });
+            if (curSubtypeObject != null) {
+              curSubtypeId = curSubtypeObject.id;
+              if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
+                curEvent = await EventType.create({
+                  operationalEventId: event.id,
+                  operationalTypeId: curTypeId,
+                  operationalSubtypeId: curSubtypeId,
+                });
+              } else {
+                if (!isMade) {
+                  curEvent = await EventType.create({
+                    operationalEventId: event.id,
+                    operationalTypeId: curTypeId,
+                    operationalSubtypeId: null,
+                  });
+                  isMade = true;
+                }
+              }
+              EventType.sync();
+            }
+          }
+        }
+      }
+      res.json({
+        bool: true,
+      })
+    }).catch(function(err) {
+      res.json({
+        bool: false,
+        message: 'OperationalEvent was not created '  + err
+      })
+    })
+  }).catch(function(err){
+    res.json({
+      bool: false,
+      message:"No operational row found  " + err
+    })
+  });
+  
 });
 
 app.post('/addWorkForceEvent', async (req, res) => {
-  WorkplaceEvent.create({
-    administrativeId: 1,
-    authorId: 1,
-    absentee: req.body.absentee,
-    substitute: req.body.replacement,
-    monitoring: true,
-    date: Date.now(),
-  })
-    .then(function () {
-      res.send({
-        bool: true,
-      });
-    })
-    .catch(function (error) {
-      console.log('ERR:' + error);
-      res.send({
-        bool: false,
-      });
-    });
+  
+  Administrative.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(async function(entries){
+    let type = req.body.type;
+  let subtype = req.body.subtype;
 
-  WorkplaceEvent.sync();
+  let workplaceType = await WorkplaceType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceSubtype = await WorkplaceSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceTypeId = null;
+  if (workplaceType != null) {
+    workplaceTypeId = workplaceType.id;
+  }
+
+  let workplaceSubtypeId = null;
+  if (workplaceSubtype != null) {
+    workplaceSubtypeId = workplaceSubtype.id;
+  }
+   WorkplaceEvent.create({
+     authorId: req.body.id,
+     administrativeId: entries[0].id,
+     workplaceTypeId: workplaceTypeId,
+     WorkplaceSubtypeId: workplaceSubtypeId,
+     description: req.body.message,
+     absentee: req.body.absentee,
+     substitute: req.body.substitute,
+     monitoring: req.body.monitoring,
+     date: Date.now(),
+   }).then(function(){
+    res.json({bool: true})
+   }).catch(function(){
+    res.json({bool: false, message: "Kon geen event aanmaken"})
+   });
+  }).catch(function(err) {
+      res.json({
+        bool: false,
+        message: err
+      })
+    })
 });
+app.post('/addMalfunction', async(req, res) => {
+  console.log(req.body);
+  Technical.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(async function(entries){
+    let type = req.body.type;
+    let subtype = req.body.subtype;
 
-app.post('/addTechnicalEvent', async (req, res) => {
-  Defect.create({
-    technicalId: 1,
-    authorId: 1,
-    defectTypeId: 1,
-    description: req.body.description,
-    monitoring: true,
-    date: Date.now(),
-  })
-    .then(function () {
-      res.send({
-        bool: true,
-      });
-    })
-    .catch(function (error) {
-      console.log('ERR: ' + error);
-      res.send({
-        bool: false,
-      });
+    let malfunctionType = await MalfunctionType.findOne({
+      where: {
+        typename: type
+      },
+      attributes: ['id', 'typeName'],
     });
-  Defect.sync();
+
+    let malfunctionSubtype = await MalfunctionSubtype.findOne({
+      where: {
+        typename: subtype
+      },
+      attributes: ['id', 'typeName'],
+    });
+
+    let malfunctionTypeId = null
+    if (malfunctionType != null) {
+      malfunctionTypeId = malfunctionType.id
+    }
+
+    let malfunctionSubtypeId = null;
+    if (malfunctionSubtype != null) {
+      malfunctionSubtypeId = malfunctionSubtype.id;
+    }
+    Malfunction.create({
+      technicalId: entries[0].id,
+      authorId: req.body.id,
+      malfunctionTypeId: malfunctionTypeId,
+      malfunctionSubtypeId: malfunctionSubtypeId,
+      description: req.body.description,
+      monitoring: req.body.monitoring,
+      date: Date.now(),
+      duration: req.body.duration,
+    }).then(function() {
+      Defect.sync();
+      res.json({
+        bool: true
+      })
+    }).catch(function(){
+      res.json({bool: false, message:'Couldnt make Defect'})
+    })
+
+  }).catch(function(err) {
+      res.json({
+        bool: false,
+        message: err
+      })
+    })
+})
+
+app.post('/addDefect', async (req, res) => {
+  console.log(req.body)
+  Technical.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(async function(entries){
+    let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let defectType = await DefectType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectSubtype = await DefectSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectTypeId = null;
+  if (defectType != null) {
+    defectTypeId = defectType.id
+  }
+
+  let defectSubtypeId = null;
+  if (defectSubtype != null) {
+    defectSubtypeId = defectSubtype.id;
+  }
+  Defect.create({
+    technicalId: entries[0].id,
+    authorId: req.body.id,
+    defectTypeId: defectTypeId,
+    defectSubtypeId: defectSubtypeId,
+    description: req.body.description,
+    monitoring: req.body.monitoring,
+    date: Date.now(),
+  }).then(function() {
+    Defect.sync();
+    res.json({
+      bool: true
+    })
+  }).catch(function(){
+    res.json({bool: false, message:'Couldnt make Defect'})
+  })
+
+  }).catch(function(err) {
+      res.json({
+        bool: false,
+        message: err
+      })
+    })
 });
 
 app.post('/changeOperationalEvent', async (req, res) => {
   const selectedTypes = req.body.types;
   const selectedSubtypes = req.body.subtypes;
-
   const event = await OperationalEvent.findOne({
     where: {
       id: req.body.operationalEventId,
