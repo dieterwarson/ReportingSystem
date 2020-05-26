@@ -40,7 +40,9 @@ export default Vue.extend({
         }
       ],
       keyword: "",
-      plNumber: ""
+      plNumber: "",
+      keywordIndex: 0,
+      keywordSplit: [] as string[]
     };
   },
 
@@ -65,7 +67,8 @@ export default Vue.extend({
       ) {
         this.loadPlReports();
       } else {
-        this.loadKeywordReports();
+        this.keywordSplit = this.keyword.split(/[\s,\-,_]+/);
+        this.loadKeywordReports(this.keyword);
       }
     },
     /**
@@ -79,14 +82,17 @@ export default Vue.extend({
     /**
      * Finds the reports which contain an event that contains the keyword partially.
      */
-    loadKeywordReports: function () {
+    loadKeywordReports: function (keyword: string) {
       ReportingService.getSearchReports(
-          "/api/reports/search/" + this.keyword
+          "/api/reports/search/" + keyword
         )
         .then(res => (this.reports = res))
-        .catch(() => {
+        .then(() => {
           if (this.reports.length == 0) {
-            console.log("NOt found")
+            for (this.keywordIndex; this.keywordIndex < this.keywordSplit.length; this.keywordIndex++) {
+              const word = this.keywordSplit[this.keywordIndex];
+              this.loadKeywordReports(word);
+            }
           }
         })
     },
