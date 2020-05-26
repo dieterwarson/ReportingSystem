@@ -31,7 +31,10 @@
                           {{ event.absentee }} vervangen door
                           {{ event.substitute }}
                         </p>
-                        <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.workplaceType.typeName }}</span></h5>
+                        <h5 class="card-text">
+                          <span class="card-text badge badge-danger mr-3">{{ event.workplaceType.typeName }}</span>
+                          <button class="btn btn-primary btn-sm" @click="removeClicked(event.id, 'WorkplaceEvent')">Melding verwijderen 🗑</button>
+                        </h5>
                       </div>
                     </div>
                   </div>
@@ -50,6 +53,9 @@
                           {{ new Date(event.date).toLocaleString("en-BE") }}
                         </p>
                         <p class="card-text">{{ event.description }}</p>
+                        <h5>
+                          <button class="btn btn-primary btn-sm" @click="removeClicked(event.id, 'SecretariatNotification')">Melding verwijderen 🗑</button>  
+                        </h5>
                       </div>
                     </div>
                   </div>
@@ -79,7 +85,10 @@
                           {{ new Date(event.date).toLocaleString("en-BE") }}
                         </p>
                         <p class="card-text">{{ event.description }}</p>
-                        <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.defectType.typeName }}</span></h5>
+                        <h5 class="card-text">
+                          <span class="card-text badge badge-danger mr-3">{{ event.defectType.typeName }}</span>
+                          <button class="btn btn-primary btn-sm" @click="removeClicked(event.id, 'Defect')">Melding verwijderen 🗑</button>  
+                        </h5>
                       </div>
                     </div>
                   </div>
@@ -98,7 +107,10 @@
                         </p>
                         <p class="card-text">{{ event.description }}</p>
                         <p class="card-text">{{ event.duration }}</p>
-                        <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.malfunctionType.typeName }}</span></h5>
+                        <h5 class="card-text">
+                          <span class="card-text badge badge-danger mr-3">{{ event.malfunctionType.typeName }}</span>
+                          <button class="btn btn-primary btn-sm" @click="removeClicked(event.id, 'Malfunction')">Melding verwijderen 🗑</button>  
+                        </h5>
                       </div>
                     </div>
                   </div>
@@ -150,6 +162,9 @@ export default Vue.extend({
     getTechnical: function() {
       if (this.step != "Technical") this.step = "Technical";
     },
+    removeClicked: function(id: number, category: string) {
+      ReportingService.removeNotification({id, category}).then(res => (this.loadData()));
+    }
   },
 });
 </script>
