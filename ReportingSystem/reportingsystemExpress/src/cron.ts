@@ -3,8 +3,6 @@ import pdfGenerator from './pdfgenerator'
 import Report from './models/report';
 import User from './models/user';
 
-export default class cronServer {
-
 export default class cronServer{
 
     shiftswitch: number;
