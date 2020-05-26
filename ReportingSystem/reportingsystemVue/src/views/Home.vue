@@ -4,9 +4,9 @@
     <button type="submit" class="btn btn-primary btn-block" @click.prevent="logOut">Afmelden</button>
     <!-- Search form -->
     <form>
-      <div v-if="tokenData.seeReports" class="form-row align-items-center">
-        <div class="col my-1">
-          <input type="text" class="form-control" id="inlineFormInputName" v-model="keyword" placeholder="Trefwoord" />
+<div v-if="tokenData.seeReports" class="form-row align-items-center">        
+  <div class="col my-1">
+          <input @click="toggleUnvisible" type="text" class="form-control" id="inlineFormInputName" v-model="keyword" placeholder="Trefwoord" />
         </div>
         <div class="col my-1">
           <div class="input-group">
@@ -26,10 +26,12 @@
         </div>
 
         <div class="col-auto my-1">
-          <button type="submit" class="btn btn-secondary btn-block" @click.prevent="searchReports">Zoek</button>
+          <button @click="toggleUnvisible" type="submit" class="btn btn-secondary btn-block" @click.prevent="searchReports">Zoek</button>
         </div>
       </div>
     </form>
+    <div class="container" >
+
     <router-link v-if="tokenData.makeReports" to="/AddReport" tag="button" class="btn btn-primary btn-lg btn-block">+ Nieuwe gebeurtenis</router-link>
 
     <div class="container">
@@ -64,6 +66,7 @@
             <router-link to="/admin" tag="button" class="btn btn-secondary btn-lg btn-block">Administrator functies</router-link>
           </div>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -131,6 +134,11 @@ export default Vue.extend({
             plNumber: String(this.plNumber)
           }
         })
+    }
+    },
+      toggleUnvisible: function() {
+      if (this.visible) {
+        this.visible = !this.visible;
       }
     }
   },
@@ -181,6 +189,7 @@ export default Vue.extend({
 .autocomplete {
   width: 100%;
   position: relative;
+  
 }
 
 .inputPL {

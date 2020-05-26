@@ -48,7 +48,10 @@ export default Vue.extend({
       keywordSplit: [] as string[]
     };
   },
-
+  created() {
+    this.loadData();
+    setInterval(this.loadData, 5000);
+  },
   mounted() {
     this.loadData();
   },

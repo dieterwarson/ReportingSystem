@@ -81,6 +81,16 @@ export default {
       alert(error);
     });
   },
+  addSecretaryNotification(data: any) {
+    return Api()
+    .post('/addSecretaryNotification', data)
+    .then(res => {
+      return res.data
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
   getAccessRoleData() {
     return Api()
     .get('api/permissions/all')
@@ -111,9 +121,19 @@ export default {
         alert(error);
       });
   },
-  addTechnicalEvent(data: any) {
+  addDefect(data: any) {
     return Api()
-      .post('/addTechnicalEvent', data)
+      .post('/addDefect', data)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  },
+  addMalfunction(data: any) {
+    return Api()
+      .post('/addMalfunction', data)
       .then((res) => {
         return res.data;
       })
