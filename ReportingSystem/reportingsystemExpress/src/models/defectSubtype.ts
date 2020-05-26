@@ -13,7 +13,7 @@ import Defect from './defect';
 @Table
 export default class DefectSubtype extends Model<DefectSubtype> {
   @Index
-    
+
   @ForeignKey(() => DefectType)
   @Column
   defectTypeId!: number;

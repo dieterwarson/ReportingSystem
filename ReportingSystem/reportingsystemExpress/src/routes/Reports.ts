@@ -456,7 +456,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
   res.send(reportIds);
 });
 
-function addReport(report: reportData, reportIds: reportData[]){
+function addReport(report: reportData, reportIds: reportData[]) {
   let inside = false;
   for (let i = 0; i < reportIds.length; i++) {
     const curReport = reportIds[i];
@@ -465,7 +465,7 @@ function addReport(report: reportData, reportIds: reportData[]){
       inside = true;
   }
   if (!inside)
-    reportIds.push(report);  
+    reportIds.push(report);
 }
 
 /******************************************************************************
@@ -1086,26 +1086,26 @@ router.get('/malfunctionTypes/:id', async (req: Request, res: Response) => {
 router.post('/removeNotification', async (req, res) => {
   const category = req.body.category;
   const eventId = req.body.id;
-  if(category === "WorkplaceEvent"){
+  if (category === "WorkplaceEvent") {
     const event = await WorkplaceEvent.findOne({
       where: {
         id: eventId
       }
     });
-    if(event != null){
+    if (event != null) {
       event.monitoring = false;
       await event.save();
       res.send(true);
     }
   }
-  else if(category === "SecretariatNotification"){
+  else if (category === "SecretariatNotification") {
     const event = await SecretariatNotification.findOne({
       where: {
         id: eventId
       }
     });
     console.log(event);
-    if(event !== null){
+    if (event !== null) {
       console.log(event.monitoring);
       event.monitoring = false;
       await event.save();
@@ -1113,26 +1113,26 @@ router.post('/removeNotification', async (req, res) => {
       res.send(true);
     }
   }
-  else if(category === "Defect"){
+  else if (category === "Defect") {
     const event = await Defect.findOne({
       where: {
         id: eventId
       }
     });
-    if(event != null){
+    if (event != null) {
       event.monitoring = false;
       await event.save();
       res.send(true);
     }
 
   }
-  else if(category === "Malfunction"){
+  else if (category === "Malfunction") {
     const event = await Malfunction.findOne({
       where: {
         id: eventId
       }
     });
-    if(event != null){
+    if (event != null) {
       event.monitoring = false;
       await event.save();
       res.send(true);

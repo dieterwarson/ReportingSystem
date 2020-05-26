@@ -14,7 +14,7 @@ import Malfuction from './malfunction';
 @Table
 export default class Technical extends Model<Technical> {
   @Index
-    
+
   @ForeignKey(() => Report)
   @Column
   reportId!: number;

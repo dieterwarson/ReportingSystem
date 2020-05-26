@@ -4,14 +4,14 @@ import pdfGenerator from './pdfgenerator'
 import Report from './models/report';
 import User from './models/user';
 
-export default class cronServer{
+export default class cronServer {
 
-    constructor(hour: number){
+    constructor(hour: number) {
         // cron.schedule("* "+ hour.toString+ " * * *", this.cronTask)
         // this.cronTask();
     }
 
-    cronTask(){
+    cronTask() {
         this.sendEmail();
         // this.makeNewReport();
     }
@@ -25,7 +25,7 @@ export default class cronServer{
             secureConnection: false, // TLS requires secureConnection to be false
             port: 587, // port for secure SMTP
             tls: {
-            ciphers:'SSLv3'
+                ciphers: 'SSLv3'
             },
             auth: {
                 user: '',
@@ -45,13 +45,13 @@ export default class cronServer{
             ]
         };
 
-/*         transporter.sendMail(mailOptions, function(error:any, info:any){
-            if(error){
-                return console.log(error);
-            }
-        
-            console.log('Message sent: ' + info.response);
-        }); */
+        /*         transporter.sendMail(mailOptions, function(error:any, info:any){
+                    if(error){
+                        return console.log(error);
+                    }
+                
+                    console.log('Message sent: ' + info.response);
+                }); */
 
     }
 
@@ -60,8 +60,8 @@ export default class cronServer{
             date: new Date('2020/03/16 21:13:48'),
             temporary: false,
             nightShift: true,
-          });
-          // report1.save();          
+        });
+        // report1.save();          
     }
 
     async getEmails() {
@@ -72,5 +72,5 @@ export default class cronServer{
         return emails;
     }
 
-    
+
 }

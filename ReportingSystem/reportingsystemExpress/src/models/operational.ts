@@ -13,7 +13,7 @@ import OperationalEvent from './operationalEvent';
 @Table
 export default class Operational extends Model<Operational> {
   @Index
-    
+
   @ForeignKey(() => Report)
   @Column
   reportId!: number;

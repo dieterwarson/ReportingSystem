@@ -9,7 +9,7 @@ import UserPermissions from './userPermissions';
 @Table
 export default class User extends Model<User> {
   @Index
-    
+
   @Column
   username!: string;
 

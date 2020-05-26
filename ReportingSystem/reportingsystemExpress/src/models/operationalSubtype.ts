@@ -20,7 +20,7 @@ export default class OperationalSubtype extends Model<OperationalSubtype> {
 
   @BelongsTo(() => OperationalType)
   operationalType!: OperationalType;
-    
+
   @Column
   typeName!: string;
 

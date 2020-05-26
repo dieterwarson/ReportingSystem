@@ -13,7 +13,7 @@ import OperationalSubtype from './operationalSubtype';
 @Table
 export default class EventType extends Model<EventType> {
   @Index
-  
+
   @ForeignKey(() => OperationalEvent)
   @Column
   operationalEventId!: number;
