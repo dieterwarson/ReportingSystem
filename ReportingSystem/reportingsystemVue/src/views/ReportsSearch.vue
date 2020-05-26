@@ -118,34 +118,6 @@ export default Vue.extend({
 
       return "Dagshift 🌣";
     },
-
-    /**
-     * @param {string} text List item title.
-     * @param {string} search User's search.
-     * @return {string} Empty if no match.
-     */
-    fuzzyMatch(text: string, search: string) {
-      // Remove spaces, lowercase the search so the search is case insensitive
-      search = search.replace(/\ /g, '').toLowerCase();
-      var tokens = text.split('')
-      var searchPosition = 0;
-
-      tokens.forEach(textChar => {
-        if (textChar.toLowerCase() == search[searchPosition]) {
-          searchPosition++; // Move to next letter
-          if (searchPosition >= search.length) {
-            return false;
-          }
-        }
-
-      });
-
-      if (searchPosition != search.length) {
-        return '';
-      }
-      return tokens.join(''); // Convert tokens to string and return.
-    }
-
   }
 });
 </script>
