@@ -140,7 +140,7 @@ const report1 = new Report({
   temporary: false,
   nightShift: true,
 });
-report1.save();
+// report1.save();
 
 const report2 = new Report({
   date: new Date('2020/03/16 12:01:00'),
