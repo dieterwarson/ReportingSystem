@@ -1144,6 +1144,7 @@ app.post('/changeWorkplaceEvent', async (req, res) => {
 
   if (event != null) {
     event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
     event.workplaceTypeId = workplaceTypeId;
     event.workplaceSubtypeId = workplaceSubtypeId;
     event.save();
@@ -1156,6 +1157,7 @@ app.post('/changeWorkplaceEvent', async (req, res) => {
 });
 
 app.post('/changeSecretariatNotification', async (req, res) => {
+
   const event = await SecretariatNotification.findOne({
     where: {
       id: req.body.administrativeId,
@@ -1168,6 +1170,7 @@ app.post('/changeSecretariatNotification', async (req, res) => {
   });
   if (event != null) {
     event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
     event.save();
   } else {
     res.send(Error('File not found'));
@@ -1217,6 +1220,7 @@ app.post('/changeDefect', async (req, res) => {
 
   if (event != null) {
     event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
     event.defectTypeId = defectTypeId;
     event.defectSubtypeId = defectSubtypeId;
     event.save();
@@ -1269,6 +1273,7 @@ app.post('/changeMalfunction', async (req, res) => {
 
   if (event != null) {
     event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
     event.malfunctionTypeId = malfunctionTypeId;
     event.malfunctionSubtypeId = malfunctionSubtypeId;
     event.save();

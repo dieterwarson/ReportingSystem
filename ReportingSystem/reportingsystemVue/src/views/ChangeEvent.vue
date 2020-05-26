@@ -1,9 +1,6 @@
 <template>
 <div class="container pt-5 pb-5">
   <h1>Wijzig gebeurtenis</h1>
-  <div>{{currentEvent}}</div>
-  <div>---event----------------monitoring--------</div>
-  <div>{{currentEvent.monitoring}}</div>
   <form id="changeOperationalEvent">
     <!-- Operational -->
     <fieldset v-if="categorie == 'Operational'">
@@ -142,7 +139,7 @@
             <!-- Monitoring -->
             <div>
               <input type="checkbox" name="monitoring" id="workplaceEventMonitoring" v-model="currentEvent.monitoring">
-              <label>Monitoring</label>
+              <label>Melding</label>
             </div>
           </div>
           <!-- Input fields -->
@@ -180,7 +177,7 @@
             <!-- Monitoring -->
             <div>
               <input type="checkbox" name="monitoring" id="workplaceEventMonitoring" v-model="currentEvent.monitoring">
-              <label>Monitoring</label>
+              <label>Melding</label>
             </div>
           </div>
           <!-- Input fields -->
@@ -247,7 +244,7 @@
             <!-- Monitoring -->
             <div>
               <input type="checkbox" name="monitoring" id="workplaceEventMonitoring" v-model="currentEvent.monitoring">
-              <label>Monitoring</label>
+              <label>Melding</label>
             </div>
 
           </div>
@@ -303,7 +300,7 @@
             <!-- Monitoring -->
             <div>
               <input type="checkbox" name="monitoring" id="workplaceEventMonitoring" v-model="currentEvent.monitoring">
-              <label>Monitoring</label>
+              <label>Melding</label>
             </div>
 
           </div>
@@ -864,7 +861,8 @@ export default Vue.extend({
         operationalEventId: this.currentEvent.id,
         message: this.currentEvent.description,
         types: this.operationalTypeSelected.selectedTypes,
-        subtypes: this.operationalTypeSelected.selectedSubtypes
+        subtypes: this.operationalTypeSelected.selectedSubtypes,
+        monitoring: this.currentEvent.monitoring
       });
       this.operationalEventSucceeded = true;
     },
@@ -878,7 +876,8 @@ export default Vue.extend({
         administrativeId: this.currentEvent.id,
         message: this.currentEvent.description,
         type: this.typeSelected.typeName,
-        subtype: this.typeSelected.subtypeName
+        subtype: this.typeSelected.subtypeName,
+        monitoring: this.currentEvent.monitoring
       });
       this.workplaceEventSucceeded = true;
     },
@@ -890,7 +889,8 @@ export default Vue.extend({
       await ReportingService.changeSecretariatNotification({
         reportId: String(this.reportId),
         administrativeId: this.currentEvent.id,
-        message: this.currentEvent.description
+        message: this.currentEvent.description,
+        monitoring: this.currentEvent.monitoring
       });
       this.secretariatNotificationSucceeded = true;
     },
@@ -904,7 +904,8 @@ export default Vue.extend({
         technicalId: this.currentEvent.id,
         message: this.currentEvent.description,
         type: this.typeSelected.typeName,
-        subtype: this.typeSelected.subtypeName
+        subtype: this.typeSelected.subtypeName,
+        monitoring: this.currentEvent.monitoring
       });
       this.defectSucceeded = true;
     },
@@ -918,7 +919,8 @@ export default Vue.extend({
         technicalId: this.currentEvent.id,
         message: this.currentEvent.description,
         type: this.typeSelected.typeName,
-        subtype: this.typeSelected.subtypeName
+        subtype: this.typeSelected.subtypeName,
+        monitoring: this.currentEvent.monitoring
       });
       this.malfunctionSucceeded = true;
     },
