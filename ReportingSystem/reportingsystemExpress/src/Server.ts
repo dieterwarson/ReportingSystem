@@ -1145,6 +1145,7 @@ app.post('/changeWorkplaceEvent', async (req, res) => {
 
   if (event != null) {
     event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
     event.workplaceTypeId = workplaceTypeId;
     event.workplaceSubtypeId = workplaceSubtypeId;
     event.save();
@@ -1157,6 +1158,7 @@ app.post('/changeWorkplaceEvent', async (req, res) => {
 });
 
 app.post('/changeSecretariatNotification', async (req, res) => {
+
   const event = await SecretariatNotification.findOne({
     where: {
       id: req.body.administrativeId,
@@ -1169,6 +1171,7 @@ app.post('/changeSecretariatNotification', async (req, res) => {
   });
   if (event != null) {
     event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
     event.save();
   } else {
     res.send(Error('File not found'));
@@ -1218,6 +1221,7 @@ app.post('/changeDefect', async (req, res) => {
 
   if (event != null) {
     event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
     event.defectTypeId = defectTypeId;
     event.defectSubtypeId = defectSubtypeId;
     event.save();
@@ -1270,6 +1274,7 @@ app.post('/changeMalfunction', async (req, res) => {
 
   if (event != null) {
     event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
     event.malfunctionTypeId = malfunctionTypeId;
     event.malfunctionSubtypeId = malfunctionSubtypeId;
     event.save();
@@ -1346,8 +1351,8 @@ app.post('/addUser', async (req, res) => {
         email: userData.mail,
         subscription: userData.subscription,
         loggedIn: false
-      }).then(function() {
-          res.json({
+      }).then(function () {
+        res.json({
           message: "Gebruiker aangemaakt"
         });
       })
@@ -1372,30 +1377,30 @@ function checkChangePasswordData(newPasswordData: any) {
 
 app.post('/changePassword', async (req, res) => {
   const userData = req.body;
-  if (userData.username, userData.Password, userData.rptPassword){
+  if (userData.username, userData.Password, userData.rptPassword) {
     const passwordHash = bcrypt.hashSync(userData.Password, 10);
-        User.update(
-          {password: passwordHash},
-          {where: {username: userData.username}}
-        ).then(function() {
-          res.json({
-            message: "Wachtwoord gewijzigd"
-          })
-        })
-          .catch(function (err) {
-            res.json({
-              message: "Error" + err
-            })
-          })
-        .catch(function (err) {
-          res.json({
-            message: "Error"  + err
-          })
-        })
-    }else {
-      res.status(401).json({
-        message: "Niet alle data werd correct ingevuld"
+    User.update(
+      { password: passwordHash },
+      { where: { username: userData.username } }
+    ).then(function () {
+      res.json({
+        message: "Wachtwoord gewijzigd"
       })
+    })
+      .catch(function (err) {
+        res.json({
+          message: "Error" + err
+        })
+      })
+      .catch(function (err) {
+        res.json({
+          message: "Error" + err
+        })
+      })
+  } else {
+    res.status(401).json({
+      message: "Niet alle data werd correct ingevuld"
+    })
   }
 });
 
@@ -1406,15 +1411,15 @@ function checkChangeAccessRights(newAccessRights: any) {
 app.post('/changeAcces', async (req, res) => {
   const data = req.body;
   if (data.username && data.newAcces) {
-      User.update(
-        {accessRights: req.body.newAcces},
-        {where: {username: data.username}}
-      );
-      User.sync();
-      res.json({
-        failed: false,
-        message: "Toegangsrechten gewijzigd"
-      })
+    User.update(
+      { accessRights: req.body.newAcces },
+      { where: { username: data.username } }
+    );
+    User.sync();
+    res.json({
+      failed: false,
+      message: "Toegangsrechten gewijzigd"
+    })
   } else {
     res.status(401).json({
       message: "Niet alle data werd correct ingevuld"
@@ -1424,7 +1429,7 @@ app.post('/changeAcces', async (req, res) => {
 
 app.post('/loginUser', async (req, res) => {
   var matched_users_promise = User.findAll({
-    where: {username: req.body.username},
+    where: { username: req.body.username },
   });
   matched_users_promise.then(function (users) {
     if (users.length > 0) {
@@ -1432,14 +1437,14 @@ app.post('/loginUser', async (req, res) => {
       let passwordHash = user.password;
       if (bcrypt.compareSync(req.body.password, passwordHash, 10)) {
         User.update(
-          {loggedIn: true},
-          {where: {username: req.body.username}}
+          { loggedIn: true },
+          { where: { username: req.body.username } }
         );
         User.sync();
         var matched_perm_promise = UserPermissions.findAll({
-          where: {id: user.accessRights},
+          where: { id: user.accessRights },
         });
-        matched_perm_promise.then(function(roles) {
+        matched_perm_promise.then(function (roles) {
           if (roles.length > 0) {
             let role = roles[0];
             const token = jwt.sign({
@@ -1452,12 +1457,12 @@ app.post('/loginUser', async (req, res) => {
               seeStatistics: role.seeStatistics,
               seeReports: role.seeReports,
             },
-            process.env.JWT_KEY,
-            {
-              expiresIn: '1h'
-            })
-    
-            
+              process.env.JWT_KEY,
+              {
+                expiresIn: '1h'
+              })
+
+
             res.json({
               message: "Authenticatie geslaagd",
               token: token,
@@ -1465,7 +1470,7 @@ app.post('/loginUser', async (req, res) => {
             });
           }
         })
-        
+
       } else {
         res.status(409).json({
           message: "password doesnt match",
@@ -1513,42 +1518,44 @@ app.post("/getOperationalEvents", async (req, res) => {
 
 app.post("/deleteUser", async (req, res) => {
   User.destroy(
-    {where: {
-      id: req.body.id,
-    }}
+    {
+      where: {
+        id: req.body.id,
+      }
+    }
   );
-  
+
   res.json({
     message: "User deleted"
   })
 })
 
 app.post("/checkAuthentication", async (req, res) => {
-    jwt.verify(req.body.token, process.env.JWT_KEY, function(err: Error) {
-      const decoded = jwt.decode(req.body.token);
-      if (decoded === null) {
-        return res.json({check: false, message: "Failed to authenticate token"});
+  jwt.verify(req.body.token, process.env.JWT_KEY, function (err: Error) {
+    const decoded = jwt.decode(req.body.token);
+    if (decoded === null) {
+      return res.json({ check: false, message: "Failed to authenticate token" });
+    }
+    var matched_users_promise = User.findAll({
+      where: {
+        username: decoded.username,
+        loggedIn: true
       }
-      var matched_users_promise = User.findAll({
-        where: {
-          username: decoded.username,
-          loggedIn: true
+    });
+    matched_users_promise.then(function (user) {
+      if (err) {
+        if (user[0]) {
+          user[0].update({
+            loggedIn: false
+          });
         }
-      });
-      matched_users_promise.then(function(user){
-        if (err) {
-          if (user[0]) {
-            user[0].update({
-              loggedIn : false
-            });
-          }
-          return res.json({check: false, message: "Failed to authenticate token"});
-        } else if (user.length <= 0) {
-          return res.json({check: false, message: "Failed to authenticate token"});
-        } else {
-          res.json({check: true, message: 'Authentication succesfull'})
-        }
-      })   
+        return res.json({ check: false, message: "Failed to authenticate token" });
+      } else if (user.length <= 0) {
+        return res.json({ check: false, message: "Failed to authenticate token" });
+      } else {
+        res.json({ check: true, message: 'Authentication succesfull' })
+      }
+    })
   })
 });
 
@@ -1577,7 +1584,7 @@ app.post("/addTypes", async (req, res) => {
         message: "Nieuw subtype aangemaakt"
       })
     }
-  // PERSONEEL TYPE TOEVOEGEN
+    // PERSONEEL TYPE TOEVOEGEN
   } else if (data.type == 1) {
     if (data.subtype == -1) {
       WorkplaceType.create({
@@ -1599,7 +1606,7 @@ app.post("/addTypes", async (req, res) => {
         message: "Nieuw subtype aangemaakt"
       })
     }
-  //LOGISTIEK TYPE TOEVOEGEN
+    //LOGISTIEK TYPE TOEVOEGEN
   } else if (data.type == 2) { //LOG
     if (data.subtype == -1) {
       DefectType.create({
@@ -1621,7 +1628,7 @@ app.post("/addTypes", async (req, res) => {
         message: "Nieuw subtype aangemaakt"
       })
     }
-  //TECHNISCH TYPE TOEVOEGEN
+    //TECHNISCH TYPE TOEVOEGEN
   } else if (data.type == 3) { //TECH
     if (data.subtype == -1) {
       MalfunctionType.create({
@@ -1650,18 +1657,18 @@ app.post("/addTypes", async (req, res) => {
 
 app.post("/logoutUser", async (req, res) => {
   User.update(
-    {loggedIn: false},
-    {where: {username: req.body.username}}
-  ).then(function() {
+    { loggedIn: false },
+    { where: { username: req.body.username } }
+  ).then(function () {
     res.json({
       message: "afgemeld"
     })
   })
-  .catch(function (err) {
-    res.json({
-      message: "Error"  + err
+    .catch(function (err) {
+      res.json({
+        message: "Error" + err
+      })
     })
-  })
 });
 
 

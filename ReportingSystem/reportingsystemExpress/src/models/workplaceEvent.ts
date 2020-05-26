@@ -14,28 +14,28 @@ import WorkplaceSubtype from './workplaceSubtype';
 @Table
 export default class WorkplaceEvent extends Model<WorkplaceEvent> {
   @Index
-  
+
   @ForeignKey(() => User)
   @Column
   authorId!: number;
-  
+
   @BelongsTo(() => User)
   user!: User;
-  
+
   @ForeignKey(() => Administrative)
   @Column
   administrativeId!: number;
-  
+
   @BelongsTo(() => Administrative)
   administrative!: Administrative;
-  
+
   @ForeignKey(() => WorkplaceType)
   @Column
   workplaceTypeId!: number;
-  
+
   @BelongsTo(() => WorkplaceType)
   workplaceType!: WorkplaceType;
-    
+
   @ForeignKey(() => WorkplaceSubtype)
   @Column
   workplaceSubtypeId!: number;

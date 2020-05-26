@@ -40,7 +40,7 @@ CREATE TABLE `Administratives` (
 
 LOCK TABLES `Administratives` WRITE;
 /*!40000 ALTER TABLE `Administratives` DISABLE KEYS */;
-INSERT INTO `Administratives` VALUES (1,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,3,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,13,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,5,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,14,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,15,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,16,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `Administratives` VALUES (1,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,3,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,13,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,5,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,6,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,14,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(7,15,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(8,16,'2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `Administratives` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -70,7 +70,7 @@ CREATE TABLE `DefectSubtypes` (
 
 LOCK TABLES `DefectSubtypes` WRITE;
 /*!40000 ALTER TABLE `DefectSubtypes` DISABLE KEYS */;
-INSERT INTO `DefectSubtypes` VALUES (1,1,'Voertuig','Zichtbare schade','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `DefectSubtypes` VALUES (1,1,'Voertuig','Zichtbare schade','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `DefectSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,7 +97,7 @@ CREATE TABLE `DefectTypes` (
 
 LOCK TABLES `DefectTypes` WRITE;
 /*!40000 ALTER TABLE `DefectTypes` DISABLE KEYS */;
-INSERT INTO `DefectTypes` VALUES (1,'Schade aan voertuig','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `DefectTypes` VALUES (1,'Schade aan voertuig','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `DefectTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +137,7 @@ CREATE TABLE `Defects` (
 
 LOCK TABLES `Defects` WRITE;
 /*!40000 ALTER TABLE `Defects` DISABLE KEYS */;
-INSERT INTO `Defects` VALUES (1,4,2,1,1,'Voertuig P320 achterlicht kapot',1,'2020-03-21 13:03:57','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,1,1,1,'Voertuig P321 achterlicht kapot',0,'2020-03-17 06:14:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,2,1,1,1,'Voertuig P256 voorlicht kapot',1,'2020-03-17 11:00:03','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,6,1,1,1,'Voertuig P320 voorlicht kapot',1,'2020-03-21 05:33:47','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `Defects` VALUES (1,4,2,1,1,'Voertuig P320 achterlicht kapot',1,'2020-03-21 12:03:57','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,2,1,1,1,'Voertuig P321 achterlicht kapot',0,'2020-03-17 05:14:23','2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,2,1,1,1,'Voertuig P256 voorlicht kapot',1,'2020-03-17 10:00:03','2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,6,1,1,1,'Voertuig P320 voorlicht kapot',1,'2020-03-21 04:33:47','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `Defects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,7 +168,7 @@ CREATE TABLE `DummyDatabases` (
 
 LOCK TABLES `DummyDatabases` WRITE;
 /*!40000 ALTER TABLE `DummyDatabases` DISABLE KEYS */;
-INSERT INTO `DummyDatabases` VALUES (1,'PL12536432','CARMA','Markt 37, 3740 Bilzen','2020-04-13 12:40:32','NAV zelfmoord te Overpelt','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,'PL12536433','CARMA','Universiteitslaan 32, Diepenbeek','2020-04-13 12:40:32','NAV zelfmoord','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `DummyDatabases` VALUES (1,'PL12536432','CARMA','Markt 37, 3740 Bilzen','2020-04-13 11:40:32','NAV zelfmoord te Overpelt','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,'PL12536433','CARMA','Universiteitslaan 32, Diepenbeek','2020-04-13 11:40:32','NAV zelfmoord','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `DummyDatabases` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,7 +202,7 @@ CREATE TABLE `EventTypes` (
 
 LOCK TABLES `EventTypes` WRITE;
 /*!40000 ALTER TABLE `EventTypes` DISABLE KEYS */;
-INSERT INTO `EventTypes` VALUES (1,4,6,2,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,5,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,7,6,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,8,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,6,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,7,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,8,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,2,1,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,3,4,null,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,9,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,10,6,1,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `EventTypes` VALUES (1,4,6,2,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,5,1,null,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,7,6,null,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,8,6,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,6,6,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,7,6,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(7,8,1,null,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(8,2,1,null,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(9,3,4,null,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(10,9,6,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(11,10,6,1,'2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `EventTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +232,7 @@ CREATE TABLE `MalfunctionSubtypes` (
 
 LOCK TABLES `MalfunctionSubtypes` WRITE;
 /*!40000 ALTER TABLE `MalfunctionSubtypes` DISABLE KEYS */;
-INSERT INTO `MalfunctionSubtypes` VALUES (1,1,'Infrastructuur','Iets kapot','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,'Elektronica','Storing','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,3,'Elektriciteit','Uitgevallen','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `MalfunctionSubtypes` VALUES (1,1,'Infrastructuur','Iets kapot','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,2,'Elektronica','Storing','2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,3,'Elektriciteit','Uitgevallen','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `MalfunctionSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -259,7 +259,7 @@ CREATE TABLE `MalfunctionTypes` (
 
 LOCK TABLES `MalfunctionTypes` WRITE;
 /*!40000 ALTER TABLE `MalfunctionTypes` DISABLE KEYS */;
-INSERT INTO `MalfunctionTypes` VALUES (1,'Voorwerp','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,'Verwittiging ASC','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,'Verwittiging (anderen)','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `MalfunctionTypes` VALUES (1,'Voorwerp','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,'Verwittiging ASC','2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,'Verwittiging (anderen)','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `MalfunctionTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -300,7 +300,7 @@ CREATE TABLE `Malfunctions` (
 
 LOCK TABLES `Malfunctions` WRITE;
 /*!40000 ALTER TABLE `Malfunctions` DISABLE KEYS */;
-INSERT INTO `Malfunctions` VALUES (1,1,1,1,1,'lekkende kraan in kamer 304',1,'2020-03-16 10:46:45','2:16','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,1,2,1,1,'krakende deur in kamer 104',1,'2020-03-17 03:03:57','5:07','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,1,2,1,1,'niet sluitend raam in kamer 302',1,'2020-03-17 04:23:57','1:56','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,1,6,2,2,'alarm kapot verdieping 2',1,'2020-03-21 01:15:34','0:29','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,2,4,3,3,'stroom uitgevallen hoofdgebouw',1,'2020-03-21 16:26:24','0:13','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `Malfunctions` VALUES (1,1,1,1,1,'lekkende kraan in kamer 304',1,'2020-03-16 09:46:45','2:16','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,1,2,1,1,'krakende deur in kamer 104',1,'2020-03-17 02:03:57','5:07','2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,1,2,1,1,'niet sluitend raam in kamer 302',1,'2020-03-17 03:23:57','1:56','2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,1,6,2,2,'alarm kapot verdieping 2',1,'2020-03-21 00:15:34','0:29','2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,2,4,3,3,'stroom uitgevallen hoofdgebouw',1,'2020-03-21 15:26:24','0:13','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `Malfunctions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -338,7 +338,7 @@ CREATE TABLE `OperationalEvents` (
 
 LOCK TABLES `OperationalEvents` WRITE;
 /*!40000 ALTER TABLE `OperationalEvents` DISABLE KEYS */;
-INSERT INTO `OperationalEvents` VALUES (1,2,2,NULL,'PL03170104','Verwittigen labo, verwittigen team Vandevoorde',NULL,NULL,'HANO','2020-03-16 22:05:18','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,2,'Verlies inschrijvingsbewijs CIM NR 545102920 / 1ABC123',NULL,NULL,NULL,NULL,'KEMPLA','2020-03-16 18:13:48','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,2,2,NULL,'PL031770168','Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht',NULL,NULL,'CARMA','2020-03-16 21:34:37','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,1,11,NULL,'PL03170315','Autodiefstal te Rummen straat van een Mercedes E300\n  - Melding binnen 101 Limburg\n  - ANPR Hit te Nieuwerkerken richting Herk de Stad\n  - Voertuig onderschept te Herk de Stad',NULL,NULL,'LRH','2020-03-17 01:21:25','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,1,11,'Seining Jan Jansens - PZ Bihori','PL03170202','ONRUSTWEKKENDE VERDWIJNING MEERDERJARIGE\n  86 J dame vertrok te voet vanuit haar woning omstreeks 1600 u en keerde niet weer.\n  \n  Zoeking met Heli leverde niets op - einde 0015 u',1,NULL,'BIHORI','2020-03-17 00:18:57','2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,2,2,'Seining Jan Jansens - PZ LAMA',NULL,NULL,NULL,NULL,'LAMA','2020-03-16 23:34:33','2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,2,2,'Seining persoon - Jan Jansens - PZ LOON',NULL,NULL,NULL,NULL,'LOON','2020-03-16 23:57:10','2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,1,11,NULL,'PL03170322','Inbraak in woning doch tussen melding en twee dagen ervoor. Geen BIN opgestart door onduidelijk tijdstip.',NULL,NULL,'LRH','2020-03-17 01:21:25','2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,2,8,'Seining Alfred Brouns - PZ LAMA',NULL,NULL,NULL,NULL,'LAMA','2020-03-23 13:21:25','2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,1,9,'Seining Erica De Beeck - PZ LOON',NULL,NULL,NULL,NULL,'LOON','2020-03-24 02:21:25','2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,2,1,NULL,'PL03145104','Verwittigen labo, verwittigen team Remans',NULL,NULL,'HANO','2020-03-17 22:05:18','2020-05-17 12:45:39','2020-05-17 12:45:39'),(12,1,5,'Verlies inschrijvingsbewijs CIM NR 545102316 / 1ABC123',NULL,NULL,NULL,NULL,'KEMPLA','2020-03-18 11:13:48','2020-05-17 12:45:39','2020-05-17 12:45:39'),(13,1,7,NULL,'PL031745668','Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht',NULL,NULL,'CARMA','2020-03-19 02:34:37','2020-05-17 12:45:39','2020-05-17 12:45:39'),(14,2,3,NULL,'PL01452315','Autodiefstal te Kerkstraat van een Mercedes E300',NULL,NULL,'LRH','2020-03-19 21:21:25','2020-05-17 12:45:39','2020-05-17 12:45:39'),(15,1,4,'Seining Jan Jansens - PZ Bihori','PL03170202','ONRUSTWEKKENDE VERDWIJNING MEERDERJARIGE',1,NULL,'BIHORI','2020-03-20 00:18:57','2020-05-17 12:45:39','2020-05-17 12:45:39'),(16,2,6,'Seining Jan Jansens - PZ LAMA',NULL,NULL,NULL,NULL,'LAMA','2020-03-10 23:34:33','2020-05-17 12:45:39','2020-05-17 12:45:39'),(17,1,10,'Seining persoon - Jan Jansens - PZ LOON',NULL,NULL,NULL,NULL,'LOON','2020-03-24 23:57:10','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `OperationalEvents` VALUES (1,2,2,NULL,'PL03170104','Verwittigen labo, verwittigen team Vandevoorde',NULL,NULL,'HANO','2020-03-16 21:05:18','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,2,2,'Verlies inschrijvingsbewijs CIM NR 545102920 / 1ABC123',NULL,NULL,NULL,NULL,'KEMPLA','2020-03-16 17:13:48','2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,2,2,NULL,'PL031770168','Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht',NULL,NULL,'CARMA','2020-03-16 20:34:37','2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,1,11,NULL,'PL03170315','Autodiefstal te Rummen straat van een Mercedes E300\n  - Melding binnen 101 Limburg\n  - ANPR Hit te Nieuwerkerken richting Herk de Stad\n  - Voertuig onderschept te Herk de Stad',NULL,NULL,'LRH','2020-03-17 00:21:25','2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,1,11,'Seining Jan Jansens - PZ Bihori','PL03170202','ONRUSTWEKKENDE VERDWIJNING MEERDERJARIGE\n  86 J dame vertrok te voet vanuit haar woning omstreeks 1600 u en keerde niet weer.\n  \n  Zoeking met Heli leverde niets op - einde 0015 u',1,NULL,'BIHORI','2020-03-17 23:18:57','2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,2,2,'Seining Jan Jansens - PZ LAMA',NULL,NULL,NULL,NULL,'LAMA','2020-03-16 22:34:33','2020-05-17 11:45:39','2020-05-17 11:45:39'),(7,2,2,'Seining persoon - Jan Jansens - PZ LOON',NULL,NULL,NULL,NULL,'LOON','2020-03-16 22:57:10','2020-05-17 11:45:39','2020-05-17 11:45:39'),(8,1,11,NULL,'PL03170322','Inbraak in woning doch tussen melding en twee dagen ervoor. Geen BIN opgestart door onduidelijk tijdstip.',NULL,NULL,'LRH','2020-03-17 00:21:25','2020-05-17 11:45:39','2020-05-17 11:45:39'),(9,2,8,'Seining Alfred Brouns - PZ LAMA',NULL,NULL,NULL,NULL,'LAMA','2020-03-23 12:21:25','2020-05-17 11:45:39','2020-05-17 11:45:39'),(10,1,9,'Seining Erica De Beeck - PZ LOON',NULL,NULL,NULL,NULL,'LOON','2020-03-24 01:21:25','2020-05-17 11:45:39','2020-05-17 11:45:39'),(11,2,1,NULL,'PL03145104','Verwittigen labo, verwittigen team Remans',NULL,NULL,'HANO','2020-03-17 21:05:18','2020-05-17 11:45:39','2020-05-17 11:45:39'),(12,1,5,'Verlies inschrijvingsbewijs CIM NR 545102316 / 1ABC123',NULL,NULL,NULL,NULL,'KEMPLA','2020-03-18 10:13:48','2020-05-17 11:45:39','2020-05-17 11:45:39'),(13,1,7,NULL,'PL031745668','Lokalisatie gsmnr via provider, Nav onrustwekkende verdwijning meerderjarige : zelfmoordbericht',NULL,NULL,'CARMA','2020-03-19 01:34:37','2020-05-17 11:45:39','2020-05-17 11:45:39'),(14,2,3,NULL,'PL01452315','Autodiefstal te Kerkstraat van een Mercedes E300',NULL,NULL,'LRH','2020-03-19 20:21:25','2020-05-17 11:45:39','2020-05-17 11:45:39'),(15,1,4,'Seining Jan Jansens - PZ Bihori','PL03170202','ONRUSTWEKKENDE VERDWIJNING MEERDERJARIGE',1,NULL,'BIHORI','2020-03-20 23:18:57','2020-05-17 11:45:39','2020-05-17 11:45:39'),(16,2,6,'Seining Jan Jansens - PZ LAMA',NULL,NULL,NULL,NULL,'LAMA','2020-03-10 22:34:33','2020-05-17 11:45:39','2020-05-17 11:45:39'),(17,1,10,'Seining persoon - Jan Jansens - PZ LOON',NULL,NULL,NULL,NULL,'LOON','2020-03-24 22:57:10','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `OperationalEvents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -368,7 +368,7 @@ CREATE TABLE `OperationalSubtypes` (
  
 LOCK TABLES `OperationalSubtypes` WRITE;
 /*!40000 ALTER TABLE `OperationalSubtypes` DISABLE KEYS */;
-INSERT INTO `OperationalSubtypes` VALUES (1,6,'Persoon',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,6,'Voertuig',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,6,'Voorwerp',NULL,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `OperationalSubtypes` VALUES (1,6,'Persoon',NULL,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,6,'Voertuig',NULL,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,6,'Voorwerp',NULL,'2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `OperationalSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
  
@@ -395,7 +395,7 @@ CREATE TABLE `OperationalTypes` (
  
 LOCK TABLES `OperationalTypes` WRITE;
 /*!40000 ALTER TABLE `OperationalTypes` DISABLE KEYS */;
-INSERT INTO `OperationalTypes` VALUES (1,'Specifieke gebeurtenis','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,'Grensoverschrijdende achtervolging','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,'Zoeking met helikopter','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,'Bevraging GSM operatoren','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,'BIN-alarm','2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,'Signalering','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `OperationalTypes` VALUES (1,'Specifieke gebeurtenis','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,'Grensoverschrijdende achtervolging','2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,'Zoeking met helikopter','2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,'Bevraging GSM operatoren','2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,'BIN-alarm','2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,'Signalering','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `OperationalTypes` ENABLE KEYS */;
 UNLOCK TABLES;
  
@@ -423,7 +423,7 @@ CREATE TABLE `Operationals` (
 
 LOCK TABLES `Operationals` WRITE;
 /*!40000 ALTER TABLE `Operationals` DISABLE KEYS */;
-INSERT INTO `Operationals` VALUES (1,4,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,8,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,9,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,5,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,10,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,7,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,16,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,17,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,18,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,3,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `Operationals` VALUES (1,4,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,2,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,8,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,9,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,5,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,10,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(7,7,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(8,16,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(9,17,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(10,18,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(11,3,'2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `Operationals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -452,7 +452,7 @@ CREATE TABLE `Reports` (
 
 LOCK TABLES `Reports` WRITE;
 /*!40000 ALTER TABLE `Reports` DISABLE KEYS */;
-INSERT INTO `Reports` VALUES (1,'2020-03-16 00:01:00',0,0,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,'2020-03-16 12:01:00',0,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,'2020-03-17 00:01:00',0,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,'2020-03-17 12:01:00',0,0,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,'2020-03-18 00:01:00',0,0,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,'2020-03-18 12:01:00',0,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,'2020-03-19 00:01:00',0,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,'2020-03-19 12:01:00',0,0,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(9,'2020-03-20 00:01:00',0,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(10,'2020-03-20 12:01:00',0,0,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(11,'2020-03-21 00:01:00',0,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(12,'2020-03-21 12:01:00',0,0,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(13,'2020-03-22 00:01:00',0,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(14,'2020-03-22 12:01:00',0,0,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(15,'2020-03-23 00:01:00',0,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(16,'2020-03-23 12:01:00',0,0,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(17,'2020-03-24 00:01:00',0,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(18,'2020-03-24 12:01:00',0,0,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `Reports` VALUES (1,'2020-03-16 23:01:00',0,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,'2020-03-16 11:01:00',0,0,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,'2020-03-17 23:01:00',0,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,'2020-03-17 11:01:00',0,0,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,'2020-03-18 23:01:00',0,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,'2020-03-18 11:01:00',0,0,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(7,'2020-03-19 23:01:00',0,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(8,'2020-03-19 11:01:00',0,0,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(9,'2020-03-20 23:01:00',0,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(10,'2020-03-20 11:01:00',0,0,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(11,'2020-03-21 23:01:00',0,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(12,'2020-03-21 11:01:00',0,0,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(13,'2020-03-22 23:01:00',0,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(14,'2020-03-22 11:01:00',0,0,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(15,'2020-03-23 23:01:00',0,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(16,'2020-03-23 11:01:00',0,0,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(17,'2020-03-24 23:01:00',0,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(18,'2020-03-24 11:01:00',0,0,'2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `Reports` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -486,7 +486,7 @@ CREATE TABLE `SecretariatNotifications` (
 
 LOCK TABLES `SecretariatNotifications` WRITE;
 /*!40000 ALTER TABLE `SecretariatNotifications` DISABLE KEYS */;
-INSERT INTO `SecretariatNotifications` VALUES (1,2,6,'Jan Janssens Inp ziek',1,'2020-03-22 20:30:46','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,6,'James Brook Inp ziek',0,'2020-03-22 19:06:54','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,2,5,'Remans Luc Inp ziek',1,'2020-03-18 13:05:24','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,2,8,'Remans Luc Inp ziek',1,'2020-03-23 13:15:24','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,1,2,'Jacob Franssen Inp ziek',1,'2020-03-17 09:10:24','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `SecretariatNotifications` VALUES (1,2,6,'Jan Janssens Inp ziek',1,'2020-03-22 19:30:46','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,2,6,'James Brook Inp ziek',0,'2020-03-22 18:06:54','2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,2,5,'Remans Luc Inp ziek',1,'2020-03-18 12:05:24','2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,2,8,'Remans Luc Inp ziek',1,'2020-03-23 12:15:24','2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,1,2,'Jacob Franssen Inp ziek',1,'2020-03-17 08:10:24','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `SecretariatNotifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -514,7 +514,7 @@ CREATE TABLE `Technicals` (
 
 LOCK TABLES `Technicals` WRITE;
 /*!40000 ALTER TABLE `Technicals` DISABLE KEYS */;
-INSERT INTO `Technicals` VALUES (1,1,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,3,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,2,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,12,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,4,'2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,11,'2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `Technicals` VALUES (1,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,3,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,2,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,12,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,4,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,11,'2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `Technicals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -612,7 +612,7 @@ CREATE TABLE `WorkplaceEvents` (
 
 LOCK TABLES `WorkplaceEvents` WRITE;
 /*!40000 ALTER TABLE `WorkplaceEvents` DISABLE KEYS */;
-INSERT INTO `WorkplaceEvents` VALUES (1,1,1,1,1,'Jacob sleutelbeen gebroken','Jacob Franssen','James Brook',1,'2020-03-16 09:10:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,2,5,2,0,'Ziekte','Remans Luc','Jan Janssens',1,'2020-03-18 13:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(3,1,3,1,1,'Hans verstuikte voet','Hans Hendrickx','Adam Franssen',1,'2020-03-22 07:59:34','2020-05-17 12:45:39','2020-05-17 12:45:39'),(4,2,6,2,0,'Ziekte','James Brook','Jacob Franssen',0,'2020-03-22 19:00:54','2020-05-17 12:45:39','2020-05-17 12:45:39'),(5,2,6,2,0,'Ziekte','Jan Janssens','Remans Luc',1,'2020-03-22 20:26:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(6,1,7,1,1,'Jan arm gebroken','Jan Janssens','James Brook',1,'2020-03-23 09:10:23','2020-05-17 12:45:39','2020-05-17 12:45:39'),(7,2,8,2,0,'Ziekte','Remans Luc','Jacob Franssen',1,'2020-03-23 13:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39'),(8,1,2,2,0,'Ziekte','Jacob Franssen','Jan Janssens',1,'2020-03-17 09:03:14','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `WorkplaceEvents` VALUES (1,1,1,1,1,'Jacob sleutelbeen gebroken','Jacob Franssen','James Brook',1,'2020-03-16 08:10:23','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,2,5,2,0,'Ziekte','Remans Luc','Jan Janssens',1,'2020-03-18 12:03:14','2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,1,3,1,1,'Hans verstuikte voet','Hans Hendrickx','Adam Franssen',1,'2020-03-22 06:59:34','2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,2,6,2,0,'Ziekte','James Brook','Jacob Franssen',0,'2020-03-22 18:00:54','2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,2,6,2,0,'Ziekte','Jan Janssens','Remans Luc',1,'2020-03-22 19:26:14','2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,1,7,1,1,'Jan arm gebroken','Jan Janssens','James Brook',1,'2020-03-23 08:10:23','2020-05-17 11:45:39','2020-05-17 11:45:39'),(7,2,8,2,0,'Ziekte','Remans Luc','Jacob Franssen',1,'2020-03-23 12:03:14','2020-05-17 11:45:39','2020-05-17 11:45:39'),(8,1,2,2,0,'Ziekte','Jacob Franssen','Jan Janssens',1,'2020-03-17 08:03:14','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `WorkplaceEvents` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -642,7 +642,7 @@ CREATE TABLE `WorkplaceSubtypes` (
 
 LOCK TABLES `WorkplaceSubtypes` WRITE;
 /*!40000 ALTER TABLE `WorkplaceSubtypes` DISABLE KEYS */;
-INSERT INTO `WorkplaceSubtypes` VALUES (1,1,'Ziek','Ziek','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `WorkplaceSubtypes` VALUES (1,1,'Ziek','Ziek','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `WorkplaceSubtypes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -669,7 +669,7 @@ CREATE TABLE `WorkplaceTypes` (
 
 LOCK TABLES `WorkplaceTypes` WRITE;
 /*!40000 ALTER TABLE `WorkplaceTypes` DISABLE KEYS */;
-INSERT INTO `WorkplaceTypes` VALUES (1,'Ziekte','2020-05-17 12:45:39','2020-05-17 12:45:39'),(2,'Arbeidsongeval','2020-05-17 12:45:39','2020-05-17 12:45:39');
+INSERT INTO `WorkplaceTypes` VALUES (1,'Ziekte','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,'Arbeidsongeval','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `WorkplaceTypes` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

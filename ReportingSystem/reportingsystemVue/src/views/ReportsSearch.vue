@@ -1,6 +1,6 @@
 <template>
-<div v-if="reports">
-  <h1>Verslagen</h1>
+<div v-if="reports.length != 0">
+  <h1>Gevonden verslagen</h1>
   <h5 class="container my-2 card-title" v-for="value in reports" :key="value.reportId">
     <button class="btn btn-secondary btn-lg btn-block" v-on:click="reportClick(String(value.reportId))">
       {{
@@ -17,6 +17,9 @@
       <h5 class="card-text"> Zoekresultaat: {{value.description}}</h5>
     </button>
   </h5>
+</div>
+<div v-else>
+  <h1>Geen verslagen gevonden.</h1>
 </div>
 </template>
 
@@ -40,7 +43,9 @@ export default Vue.extend({
         }
       ],
       keyword: "",
-      plNumber: ""
+      plNumber: "",
+      keywordIndex: 0,
+      keywordSplit: [] as string[]
     };
   },
 
@@ -65,7 +70,8 @@ export default Vue.extend({
       ) {
         this.loadPlReports();
       } else {
-        this.loadKeywordReports();
+        this.keywordSplit = this.keyword.split(/[\s,\-,_]+/);
+        this.loadKeywordReports(this.keyword);
       }
     },
     /**
@@ -79,14 +85,17 @@ export default Vue.extend({
     /**
      * Finds the reports which contain an event that contains the keyword partially.
      */
-    loadKeywordReports: function () {
+    loadKeywordReports: function (keyword: string) {
       ReportingService.getSearchReports(
-          "/api/reports/search/" + this.keyword
+          "/api/reports/search/" + keyword
         )
         .then(res => (this.reports = res))
-        .catch(() => {
+        .then(() => {
           if (this.reports.length == 0) {
-            console.log("NOt found")
+            for (this.keywordIndex; this.keywordIndex < this.keywordSplit.length; this.keywordIndex++) {
+              const word = this.keywordSplit[this.keywordIndex];
+              this.loadKeywordReports(word);
+            }
           }
         })
     },
@@ -108,8 +117,7 @@ export default Vue.extend({
         return "Nachtshift ☾";
 
       return "Dagshift 🌣";
-    }
-
+    },
   }
 });
 </script>

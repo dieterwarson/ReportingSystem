@@ -3,7 +3,7 @@
 <div class="container pt-5 pb-5">
   <h1>Voeg gebeurtenis toe</h1>
   <form id="addReport">
-    
+
     <div class="btn-group d-flex" role="group" aria-label="Justified button group">
       <button id="operationalButton" type="button" class="btn btn-info" @click.prevent="getOperational">Operationeel</button>
       <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>

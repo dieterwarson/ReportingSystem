@@ -1,115 +1,75 @@
 <template>
-  <div class="statistics">
-    <h1>Statistieken</h1>
+<div class="statistics">
+  <h1>Statistieken</h1>
 
-    <div class="container mt-5">
-      <div class="row">
-        <div v-if="this.reportTypes === {}">
-          <p>Er zijn nog geen types</p>
-        </div>
-        <form v-else id="typeSelector" class="col-md-6">
-          <div class="text-sm-left">
-            <input
-              type="checkbox"
-              id="operationalParent"
-              v-on:change="selectAll('operational')"
-            />
-            <label><h5>Operationeel</h5></label>
-            <div class="checkbox-container text-sm-left col-sm-7">
-              <div
-                v-for="value in this.reportTypes.operationalTypes"
-                :key="value.id"
-              >
-                <div class="typecontainer text-lg-left" id="operational">
-                  <input
-                    type="checkbox"
-                    :id="value.typeName"
-                    :value="value.typeName"
-                    v-model="selectedTypes.operational"
-                  />
-                  <label>{{ value.typeName }}</label>
-                </div>
-              </div>
-            </div>
-            <input
-              type="checkbox"
-              id="workplaceParent"
-              v-on:change="selectAll('workplace')"
-            />
-            <label><h5>Voorval tijdens de dienst</h5></label>
-            <div class="checkbox-container text-sm-left col-sm-7">
-              <div
-                v-for="value in this.reportTypes.workplaceTypes"
-                :key="value.id"
-              >
-                <div class="typecontainer text-lg-left" id="workplace">
-                  <input
-                    type="checkbox"
-                    :id="value.typeName"
-                    :value="value.typeName"
-                    v-model="selectedTypes.workplaceevent"
-                  />
-                  <label>{{ value.typeName }}</label>
-                </div>
-              </div>
-            </div>
-            <input
-              type="checkbox"
-              id="defectParent"
-              v-on:change="selectAll('defect')"
-            />
-            <label><h5>Logistiek</h5></label>
-            <div class="checkbox-container text-sm-left col-sm-7">
-              <div
-                v-for="value in this.reportTypes.defectTypes"
-                :key="value.id"
-              >
-                <div class="typecontainer text-lg-left" id="defect">
-                  <input
-                    type="checkbox"
-                    :id="value.typeName"
-                    :value="value.typeName"
-                    v-model="selectedTypes.defect"
-                  />
-                  <label>{{ value.typeName }}</label>
-                </div>
-              </div>
-            </div>
-            <input
-              type="checkbox"
-              id="malfunctionParent"
-              v-on:change="selectAll('malfunction')"
-            />
-            <label><h5>Technisch</h5></label>
-            <div class="checkbox-container text-sm-left col-sm-7">
-              <div
-                v-for="value in this.reportTypes.malfunctionTypes"
-                :key="value.id"
-              >
-                <div class="typecontainer text-lg-left" id="malfunction">
-                  <input
-                    type="checkbox"
-                    :id="value.typeName"
-                    :value="value.typeName"
-                    v-model="selectedTypes.malfunction"
-                  />
-                  <label>{{ value.typeName }}</label>
-                </div>
+  <div class="container mt-5">
+    <div class="row">
+      <div v-if="this.reportTypes === {}">
+        <p>Er zijn nog geen types</p>
+      </div>
+      <form v-else id="typeSelector" class="col-md-6">
+        <div class="text-sm-left">
+          <input type="checkbox" id="operationalParent" v-on:change="selectAll('operational')" />
+          <label>
+            <h5>Operationeel</h5>
+          </label>
+          <div class="checkbox-container text-sm-left col-sm-7">
+            <div v-for="value in this.reportTypes.operationalTypes" :key="value.id">
+              <div class="typecontainer text-lg-left" id="operational">
+                <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes.operational" />
+                <label>{{ value.typeName }}</label>
               </div>
             </div>
           </div>
-        </form>
-
-        <div class="col-md-6">
-          <!-- charts -->
-          <PieChart v-if="loaded" :chartdata="PieData" />
-          <LineChart v-if="loaded" :chartdata="LineData" :options="options" />
+          <input type="checkbox" id="workplaceParent" v-on:change="selectAll('workplace')" />
+          <label>
+            <h5>Voorval tijdens de dienst</h5>
+          </label>
+          <div class="checkbox-container text-sm-left col-sm-7">
+            <div v-for="value in this.reportTypes.workplaceTypes" :key="value.id">
+              <div class="typecontainer text-lg-left" id="workplace">
+                <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes.workplaceevent" />
+                <label>{{ value.typeName }}</label>
+              </div>
+            </div>
+          </div>
+          <input type="checkbox" id="defectParent" v-on:change="selectAll('defect')" />
+          <label>
+            <h5>Logistiek</h5>
+          </label>
+          <div class="checkbox-container text-sm-left col-sm-7">
+            <div v-for="value in this.reportTypes.defectTypes" :key="value.id">
+              <div class="typecontainer text-lg-left" id="defect">
+                <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes.defect" />
+                <label>{{ value.typeName }}</label>
+              </div>
+            </div>
+          </div>
+          <input type="checkbox" id="malfunctionParent" v-on:change="selectAll('malfunction')" />
+          <label>
+            <h5>Technisch</h5>
+          </label>
+          <div class="checkbox-container text-sm-left col-sm-7">
+            <div v-for="value in this.reportTypes.malfunctionTypes" :key="value.id">
+              <div class="typecontainer text-lg-left" id="malfunction">
+                <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes.malfunction" />
+                <label>{{ value.typeName }}</label>
+              </div>
+            </div>
+          </div>
         </div>
+      </form>
+
+      <div class="col-md-6">
+        <!-- charts -->
+        <PieChart v-if="loaded" :chartdata="PieData" />
+        <LineChart v-if="loaded" :chartdata="LineData" :options="options" />
       </div>
     </div>
-    <span>Types: {{ selectedTypes }}</span>
-    <span>Data: {{ LineData }}</span>
   </div>
+  <span>Types: {{ selectedTypes }}</span>
+  <span>Data: {{ LineData }}</span>
+</div>
 </template>
 
 <script lang="ts">
@@ -118,7 +78,7 @@ import ReportingService from "../services/ReportingService";
 import LineChart from "../views/components/LineChart.vue";
 import PieChart from "../views/components/PieChart.vue";
 export default Vue.extend({
-  data: function() {
+  data: function () {
     return {
       reportTypes: {},
       selectedTypes: {
@@ -128,13 +88,30 @@ export default Vue.extend({
         malfunction: [],
       },
       statisticsData: {
-        counts: [
-          { typeName: "Arbeidsongeval", count: 5 },
-          { typeName: "Ziekte", count: 3 },
-          { typeName: "Schade aan voertuig", count: 4 },
-          { typeName: "Verwittiging (anderen)", count: 1 },
-          { typeName: "Verwittiging ASC", count: 1 },
-          { typeName: "Voorwerp", count: 3 },
+        counts: [{
+            typeName: "Arbeidsongeval",
+            count: 5
+          },
+          {
+            typeName: "Ziekte",
+            count: 3
+          },
+          {
+            typeName: "Schade aan voertuig",
+            count: 4
+          },
+          {
+            typeName: "Verwittiging (anderen)",
+            count: 1
+          },
+          {
+            typeName: "Verwittiging ASC",
+            count: 1
+          },
+          {
+            typeName: "Voorwerp",
+            count: 3
+          },
         ],
         lineContent: []
       },
@@ -154,7 +131,7 @@ export default Vue.extend({
   },
 
   methods: {
-    loadData: function() {
+    loadData: function () {
       ReportingService.getAllReports("/api/statistics/types").then(
         (res) => (this.reportTypes = res)
       );
@@ -181,7 +158,7 @@ export default Vue.extend({
       }; */
     },
 
-    selectAll: function(section: string) {
+    selectAll: function (section: string) {
       const checks = document.querySelectorAll(
         "#" + section + ' input[type="checkbox"]'
       );
@@ -197,7 +174,7 @@ export default Vue.extend({
       }
     },
 
-    getPieData: function() {
+    getPieData: function () {
       const count = this.statisticsData.counts;
       const labels: string[] = [];
       const data: number[] = [];
@@ -205,10 +182,15 @@ export default Vue.extend({
         labels.push(count[i].typeName);
         data.push(count[i].count);
       }
-      this.PieData = { datasets: [{ data }], labels };
+      this.PieData = {
+        datasets: [{
+          data
+        }],
+        labels
+      };
     },
 
-    getLineData: function() {
+    getLineData: function () {
       this.LineData = {
         datasets: this.statisticsData.lineContent
       };
@@ -234,7 +216,7 @@ export default Vue.extend({
         ]} */
     },
 
-    getStatistics: function() {
+    getStatistics: function () {
       ReportingService.getStatistics(this.selectedTypes).then(
         (res) => (this.statisticsData = res)
       );
@@ -249,7 +231,7 @@ export default Vue.extend({
       },
       deep: true,
     },
-    statisticsData: function() {
+    statisticsData: function () {
       this.getPieData();
       this.getLineData();
       this.loaded = true;

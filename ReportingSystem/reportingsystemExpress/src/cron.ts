@@ -3,6 +3,8 @@ import pdfGenerator from './pdfgenerator'
 import Report from './models/report';
 import User from './models/user';
 
+export default class cronServer {
+
 export default class cronServer{
 
     shiftswitch: number;
@@ -11,7 +13,7 @@ export default class cronServer{
         this.shiftswitch = hour;
     }
 
-    cronTask(){
+    cronTask() {
         this.sendEmail();
         this.makeNewReport();
         console.log("crontask");
@@ -26,7 +28,7 @@ export default class cronServer{
             secureConnection: false, // TLS requires secureConnection to be false
             port: 587, // port for secure SMTP
             tls: {
-            ciphers:'SSLv3'
+                ciphers: 'SSLv3'
             },
             auth: {
                 user: '',
@@ -85,5 +87,5 @@ export default class cronServer{
         return emails;
     }
 
-    
+
 }

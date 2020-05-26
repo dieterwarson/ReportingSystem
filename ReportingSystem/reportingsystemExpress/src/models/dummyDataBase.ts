@@ -3,7 +3,7 @@ import { Table, Column, Model, Index } from 'sequelize-typescript';
 @Table
 export default class DummyDatabase extends Model<DummyDatabase> {
   @Index
-  
+
   @Column
   plNumber!: string;
 

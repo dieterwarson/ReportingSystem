@@ -114,22 +114,20 @@ router.get('/monitored', async (req: Request, res: Response) => {
 /******************************************************************************
  *                      Search Reports - "GET /api/reports/search/:keyword"
  ******************************************************************************/
+interface reportData {
+  reportId: number;
+  description: string;
+  date: Date;
+  nightShift: Boolean;
+}
 
 router.get('/search/:keyword', async (req: Request, res: Response) => {
   const search: string = req.param('keyword');
   const searchString: string = '%' + search + '%';
 
-  interface reportData {
-    reportId: number;
-    description: string;
-    date: Date;
-    nightShift: Boolean;
-  }
-
   let reportIds: reportData[] = [];
 
-  let operationalEvents;
-  operationalEvents = await OperationalEvent.findAll({
+  let operationalEvents = await OperationalEvent.findAll({
     where: {
       signaling: {
         [Op.like]: searchString,
@@ -146,16 +144,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
@@ -176,16 +165,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
@@ -206,18 +186,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-        console.log("\n\n\n");
-
-        console.log(curReport);
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
@@ -238,16 +207,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.location, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
@@ -268,22 +228,13 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.unit, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
-  const operationalEventsDates = await OperationalEvent.findAll();
-  for (let i = 0; i < operationalEventsDates.length; i++) {
-    const curEvent = operationalEventsDates[i];
+  operationalEvents = await OperationalEvent.findAll();
+  for (let i = 0; i < operationalEvents.length; i++) {
+    const curEvent = operationalEvents[i];
     let dateString = curEvent.date.toLocaleString();
 
     if (dateString.includes(search)) {
@@ -295,22 +246,12 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       });
       if (event != null) {
         let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
-
-        let inside = false;
-        for (let i = 0; i < reportIds.length; i++) {
-          const curReport = reportIds[i];
-
-          if (curReport.reportId == report.reportId)
-            inside = true;
-        }
-        if (!inside)
-          reportIds.push(report);
+        addReport(report, reportIds);
       }
     }
   }
 
-  let workplaceEvents;
-  workplaceEvents = await WorkplaceEvent.findAll({
+  let workplaceEvents = await WorkplaceEvent.findAll({
     where: {
       description: {
         [Op.like]: searchString,
@@ -327,16 +268,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
@@ -357,16 +289,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.absentee, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
@@ -387,22 +310,13 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.substitute, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
-  const workplaceEventsDates = await WorkplaceEvent.findAll();
-  for (let i = 0; i < workplaceEventsDates.length; i++) {
-    const curEvent = workplaceEventsDates[i];
+  workplaceEvents = await WorkplaceEvent.findAll();
+  for (let i = 0; i < workplaceEvents.length; i++) {
+    const curEvent = workplaceEvents[i];
     let dateString = curEvent.date.toLocaleString();
 
     if (dateString.includes(search)) {
@@ -414,22 +328,12 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       });
       if (event != null) {
         let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
-
-        let inside = false;
-        for (let i = 0; i < reportIds.length; i++) {
-          const curReport = reportIds[i];
-
-          if (curReport.reportId == report.reportId)
-            inside = true;
-        }
-        if (!inside)
-          reportIds.push(report);
+        addReport(report, reportIds);
       }
     }
   }
 
-  let secretariatNotifications;
-  secretariatNotifications = await SecretariatNotification.findAll({
+  let secretariatNotifications = await SecretariatNotification.findAll({
     where: {
       description: {
         [Op.like]: searchString,
@@ -446,22 +350,13 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
-  const secretariatNotificationsDates = await SecretariatNotification.findAll();
-  for (let i = 0; i < secretariatNotificationsDates.length; i++) {
-    const curEvent = secretariatNotificationsDates[i];
+  secretariatNotifications = await SecretariatNotification.findAll();
+  for (let i = 0; i < secretariatNotifications.length; i++) {
+    const curEvent = secretariatNotifications[i];
     let dateString = curEvent.date.toLocaleString();
 
     if (dateString.includes(search)) {
@@ -473,22 +368,12 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       });
       if (event != null) {
         let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
-
-        let inside = false;
-        for (let i = 0; i < reportIds.length; i++) {
-          const curReport = reportIds[i];
-
-          if (curReport.reportId == report.reportId)
-            inside = true;
-        }
-        if (!inside)
-          reportIds.push(report);
+        addReport(report, reportIds);
       }
     }
   }
 
-  let defects;
-  defects = await Defect.findAll({
+  let defects = await Defect.findAll({
     where: {
       description: {
         [Op.like]: searchString,
@@ -505,22 +390,13 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
-  const defectsDates = await Defect.findAll();
-  for (let i = 0; i < defectsDates.length; i++) {
-    const curEvent = defectsDates[i];
+  defects = await Defect.findAll();
+  for (let i = 0; i < defects.length; i++) {
+    const curEvent = defects[i];
     let dateString = curEvent.date.toLocaleString();
 
     if (dateString.includes(search)) {
@@ -532,22 +408,12 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       });
       if (event != null) {
         let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
-
-        let inside = false;
-        for (let i = 0; i < reportIds.length; i++) {
-          const curReport = reportIds[i];
-
-          if (curReport.reportId == report.reportId)
-            inside = true;
-        }
-        if (!inside)
-          reportIds.push(report);
+        addReport(report, reportIds);
       }
     }
   }
 
-  let malfunctions;
-  malfunctions = await Malfunction.findAll({
+  let malfunctions = await Malfunction.findAll({
     where: {
       description: {
         [Op.like]: searchString,
@@ -564,22 +430,13 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
-  const malfunctionsDates = await Malfunction.findAll();
-  for (let i = 0; i < malfunctionsDates.length; i++) {
-    const curEvent = malfunctionsDates[i];
+  malfunctions = await Malfunction.findAll();
+  for (let i = 0; i < malfunctions.length; i++) {
+    const curEvent = malfunctions[i];
     let dateString = curEvent.date.toLocaleString();
 
     if (dateString.includes(search)) {
@@ -591,16 +448,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       });
       if (event != null) {
         let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
-
-        let inside = false;
-        for (let i = 0; i < reportIds.length; i++) {
-          const curReport = reportIds[i];
-
-          if (curReport.reportId == report.reportId)
-            inside = true;
-        }
-        if (!inside)
-          reportIds.push(report);
+        addReport(report, reportIds);
       }
     }
   }
@@ -608,6 +456,17 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
   res.send(reportIds);
 });
 
+function addReport(report: reportData, reportIds: reportData[]) {
+  let inside = false;
+  for (let i = 0; i < reportIds.length; i++) {
+    const curReport = reportIds[i];
+
+    if (curReport.reportId == report.reportId)
+      inside = true;
+  }
+  if (!inside)
+    reportIds.push(report);
+}
 
 /******************************************************************************
  *                      Search Reports - "GET /api/reports/pl/:pl"
@@ -616,13 +475,6 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
 router.get('/pl/:pl', async (req: Request, res: Response) => {
   const pl: string = req.param('pl');
   const plString: string = '%' + pl + '%';
-
-  interface reportData {
-    reportId: number;
-    description: string;
-    date: Date;
-    nightShift: boolean;
-  }
 
   let reportIds: reportData[] = [];
 
@@ -643,16 +495,7 @@ router.get('/pl/:pl', async (req: Request, res: Response) => {
     });
     if (event != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
-
-      let inside = false;
-      for (let i = 0; i < reportIds.length; i++) {
-        const curReport = reportIds[i];
-
-        if (curReport.reportId == report.reportId)
-          inside = true;
-      }
-      if (!inside)
-        reportIds.push(report);
+      addReport(report, reportIds);
     }
   }
 
@@ -1243,26 +1086,26 @@ router.get('/malfunctionTypes/:id', async (req: Request, res: Response) => {
 router.post('/removeNotification', async (req, res) => {
   const category = req.body.category;
   const eventId = req.body.id;
-  if(category === "WorkplaceEvent"){
+  if (category === "WorkplaceEvent") {
     const event = await WorkplaceEvent.findOne({
       where: {
         id: eventId
       }
     });
-    if(event != null){
+    if (event != null) {
       event.monitoring = false;
       await event.save();
       res.send(true);
     }
   }
-  else if(category === "SecretariatNotification"){
+  else if (category === "SecretariatNotification") {
     const event = await SecretariatNotification.findOne({
       where: {
         id: eventId
       }
     });
     console.log(event);
-    if(event !== null){
+    if (event !== null) {
       console.log(event.monitoring);
       event.monitoring = false;
       await event.save();
@@ -1270,26 +1113,26 @@ router.post('/removeNotification', async (req, res) => {
       res.send(true);
     }
   }
-  else if(category === "Defect"){
+  else if (category === "Defect") {
     const event = await Defect.findOne({
       where: {
         id: eventId
       }
     });
-    if(event != null){
+    if (event != null) {
       event.monitoring = false;
       await event.save();
       res.send(true);
     }
 
   }
-  else if(category === "Malfunction"){
+  else if (category === "Malfunction") {
     const event = await Malfunction.findOne({
       where: {
         id: eventId
       }
     });
-    if(event != null){
+    if (event != null) {
       event.monitoring = false;
       await event.save();
       res.send(true);
