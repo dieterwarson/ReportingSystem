@@ -123,6 +123,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     reportId: number;
     description: string;
     date: Date;
+    nightShift: Boolean;
   }
 
   let reportIds: reportData[] = [];
@@ -136,13 +137,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
       where: {
-        id: operationalEvents[i].operationalId
-      }
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: operationalEvents[i].signaling, date: operationalEvents[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -164,13 +167,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
       where: {
-        id: operationalEvents[i].operationalId
-      }
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: operationalEvents[i].plNumber, date: operationalEvents[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -192,18 +197,22 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
       where: {
-        id: operationalEvents[i].operationalId
-      }
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: operationalEvents[i].description, date: operationalEvents[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
         const curReport = reportIds[i];
+        console.log("\n\n\n");
 
+        console.log(curReport);
         if (curReport.reportId == report.reportId)
           inside = true;
       }
@@ -220,13 +229,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
       where: {
-        id: operationalEvents[i].operationalId
-      }
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: operationalEvents[i].location, date: operationalEvents[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.location, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -248,13 +259,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
       where: {
-        id: operationalEvents[i].operationalId
-      }
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: operationalEvents[i].unit, date: operationalEvents[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.unit, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -277,10 +290,11 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       const event = await Operational.findOne({
         where: {
           id: curEvent.operationalId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date };
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
 
         let inside = false;
         for (let i = 0; i < reportIds.length; i++) {
@@ -304,13 +318,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in workplaceEvents) {
+    const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
       where: {
-        id: workplaceEvents[i].administrativeId
-      }
+        id: curEvent.administrativeId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: workplaceEvents[i].description, date: workplaceEvents[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -332,13 +348,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in workplaceEvents) {
+    const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
       where: {
-        id: workplaceEvents[i].administrativeId
-      }
+        id: curEvent.administrativeId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: workplaceEvents[i].absentee, date: workplaceEvents[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.absentee, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -360,13 +378,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in workplaceEvents) {
+    const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
       where: {
-        id: workplaceEvents[i].administrativeId
-      }
+        id: curEvent.administrativeId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: workplaceEvents[i].substitute, date: workplaceEvents[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.substitute, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -389,10 +409,11 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       const event = await Administrative.findOne({
         where: {
           id: curEvent.administrativeId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date };
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
 
         let inside = false;
         for (let i = 0; i < reportIds.length; i++) {
@@ -416,13 +437,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in secretariatNotifications) {
+    const curEvent = secretariatNotifications[i];
     const event = await Administrative.findOne({
       where: {
         id: secretariatNotifications[i].administrativeId
-      }
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: secretariatNotifications[i].description, date: secretariatNotifications[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -445,10 +468,11 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       const event = await Administrative.findOne({
         where: {
           id: curEvent.administrativeId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date };
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
 
         let inside = false;
         for (let i = 0; i < reportIds.length; i++) {
@@ -472,13 +496,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in defects) {
+    const curEvent = defects[i];
     const event = await Technical.findOne({
       where: {
         id: defects[i].technicalId
-      }
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: defects[i].description, date: defects[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -501,10 +527,11 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       const event = await Technical.findOne({
         where: {
           id: curEvent.technicalId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date };
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
 
         let inside = false;
         for (let i = 0; i < reportIds.length; i++) {
@@ -528,13 +555,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
     },
   });
   for (let i in malfunctions) {
+    const curEvent = malfunctions[i];
     const event = await Technical.findOne({
       where: {
         id: malfunctions[i].technicalId
-      }
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: malfunctions[i].description, date: malfunctions[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {
@@ -557,10 +586,11 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       const event = await Technical.findOne({
         where: {
           id: curEvent.technicalId
-        }
+        },
+        include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date };
+        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
 
         let inside = false;
         for (let i = 0; i < reportIds.length; i++) {
@@ -591,6 +621,7 @@ router.get('/pl/:pl', async (req: Request, res: Response) => {
     reportId: number;
     description: string;
     date: Date;
+    nightShift: boolean;
   }
 
   let reportIds: reportData[] = [];
@@ -603,13 +634,15 @@ router.get('/pl/:pl', async (req: Request, res: Response) => {
     },
   });
   for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
       where: {
-        id: operationalEvents[i].operationalId
-      }
+        id: curEvent.operationalId
+      },
+      include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: operationalEvents[i].plNumber, date: operationalEvents[i].date };
+      let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
 
       let inside = false;
       for (let i = 0; i < reportIds.length; i++) {

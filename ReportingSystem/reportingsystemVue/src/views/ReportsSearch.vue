@@ -13,6 +13,7 @@
           hour12: false
         })
       }}
+      <span class="badge badge-primary ml-3">{{ getShift(value.nightShift) }}</span>
       <h5 class="card-text"> Zoekresultaat: {{value.description}}</h5>
     </button>
   </h5>
@@ -33,6 +34,9 @@ export default Vue.extend({
         },
         {
           date: Date
+        },
+        {
+          nightShift: Boolean
         }
       ],
       keyword: "",
@@ -77,8 +81,14 @@ export default Vue.extend({
      */
     loadKeywordReports: function () {
       ReportingService.getSearchReports(
-        "/api/reports/search/" + this.keyword
-      ).then(res => (this.reports = res));
+          "/api/reports/search/" + this.keyword
+        )
+        .then(res => (this.reports = res))
+        .catch(() => {
+          if (this.reports.length == 0) {
+            console.log("NOt found")
+          }
+        })
     },
 
     /**
@@ -91,7 +101,15 @@ export default Vue.extend({
           reportId: id
         }
       });
+    },
+
+    getShift: function (nightShift: boolean) {
+      if (nightShift)
+        return "Nachtshift ☾";
+
+      return "Dagshift 🌣";
     }
+
   }
 });
 </script>
