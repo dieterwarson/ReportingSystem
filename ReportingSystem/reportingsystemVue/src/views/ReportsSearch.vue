@@ -1,6 +1,6 @@
 <template>
-<div v-if="reports">
-  <h1>Verslagen</h1>
+<div v-if="reports.length != 0">
+  <h1>Gevonden verslagen</h1>
   <h5 class="container my-2 card-title" v-for="value in reports" :key="value.reportId">
     <button class="btn btn-secondary btn-lg btn-block" v-on:click="reportClick(String(value.reportId))">
       {{
@@ -17,6 +17,9 @@
       <h5 class="card-text"> Zoekresultaat: {{value.description}}</h5>
     </button>
   </h5>
+</div>
+<div v-else>
+  <h1>Geen verslagen gevonden.</h1>
 </div>
 </template>
 
@@ -114,6 +117,33 @@ export default Vue.extend({
         return "Nachtshift ☾";
 
       return "Dagshift 🌣";
+    },
+
+    /**
+     * @param {string} text List item title.
+     * @param {string} search User's search.
+     * @return {string} Empty if no match.
+     */
+    fuzzyMatch(text: string, search: string) {
+      // Remove spaces, lowercase the search so the search is case insensitive
+      search = search.replace(/\ /g, '').toLowerCase();
+      var tokens = text.split('')
+      var searchPosition = 0;
+
+      tokens.forEach(textChar => {
+        if (textChar.toLowerCase() == search[searchPosition]) {
+          searchPosition++; // Move to next letter
+          if (searchPosition >= search.length) {
+            return false;
+          }
+        }
+
+      });
+
+      if (searchPosition != search.length) {
+        return '';
+      }
+      return tokens.join(''); // Convert tokens to string and return.
     }
 
   }
