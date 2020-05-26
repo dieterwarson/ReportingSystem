@@ -280,4 +280,11 @@ export default {
       alert(error);
     })
   },
+  removeNotification(data: any) {
+    return Api()
+    .post("api/reports/removeNotification", data)
+    .then(res => {
+      return res.data;
+    })
+  }
 };

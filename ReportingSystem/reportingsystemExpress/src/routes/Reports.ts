@@ -1203,6 +1203,69 @@ router.get('/malfunctionTypes/:id', async (req: Request, res: Response) => {
   res.send("");
 });
 
+
+/******************************************************************************
+ *      Remove notification from event - "POST /api/reports/removeNotification"
+ ******************************************************************************/
+router.post('/removeNotification', async (req, res) => {
+  const category = req.body.category;
+  const eventId = req.body.id;
+  if(category === "WorkplaceEvent"){
+    const event = await WorkplaceEvent.findOne({
+      where: {
+        id: eventId
+      }
+    });
+    if(event != null){
+      event.monitoring = false;
+      await event.save();
+      res.send(true);
+    }
+  }
+  else if(category === "SecretariatNotification"){
+    const event = await SecretariatNotification.findOne({
+      where: {
+        id: eventId
+      }
+    });
+    console.log(event);
+    if(event !== null){
+      console.log(event.monitoring);
+      event.monitoring = false;
+      await event.save();
+      console.log(event.monitoring);
+      res.send(true);
+    }
+  }
+  else if(category === "Defect"){
+    const event = await Defect.findOne({
+      where: {
+        id: eventId
+      }
+    });
+    if(event != null){
+      event.monitoring = false;
+      await event.save();
+      res.send(true);
+    }
+
+  }
+  else if(category === "Malfunction"){
+    const event = await Malfunction.findOne({
+      where: {
+        id: eventId
+      }
+    });
+    if(event != null){
+      event.monitoring = false;
+      await event.save();
+      res.send(true);
+    }
+  }
+
+
+});
+
 /******************************************************************************
  *                                     Export
  ******************************************************************************/
