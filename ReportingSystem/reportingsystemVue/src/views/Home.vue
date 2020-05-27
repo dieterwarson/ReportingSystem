@@ -49,7 +49,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm" v-if="tokenData.seePreviousShift">
-          <router-link to="/reportView?reportId=1" tag="button" class="btn btn-secondary btn-lg btn-block">Overzicht vorige shift</router-link>
+          <button @click="goToLastReport()" tag="button" class="btn btn-secondary btn-lg btn-block">Overzicht vorige shift</button>
         </div>
 
         <div class="col-sm" v-if="(tokenData.seeStatistics)">
@@ -94,7 +94,8 @@ export default Vue.extend({
         seeNotifications: false,
         admin: false,
         username: null
-      }
+      },
+      lastShift: {id: 1},
     }
   },
 
@@ -140,9 +141,20 @@ export default Vue.extend({
       if (this.visible) {
         this.visible = !this.visible;
       }
-    }
+    },
+    
+    goToLastReport: function() {
+      this.$router.push("/reportView?reportId="+ this.lastShift.id);
+    },
+
+    loadShiftId: async function () {
+      await ReportingService.getAllReports("/api/reports/lastShift").then(
+        res => (this.lastShift = res)
+      );
+    },
   },
   mounted() {
+    this.loadShiftId();
     this.getOptions('');
     if (window.localStorage.getItem("token") === null || window.localStorage.getItem("token") === undefined) {
       window.location.href = "/login";

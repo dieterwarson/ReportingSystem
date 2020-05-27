@@ -27,12 +27,13 @@ export default Vue.extend({
   data: function () {
     return {
       reports: [] as any[],
-      list: []
+      list: [],
+      interval: 0
     };
   },
   created() {
     this.loadData();
-    setInterval(this.loadData, 5000);
+    this.interval = window.setInterval(this.loadData, 5000);
   },
   mounted() {
     this.loadData();
@@ -59,6 +60,10 @@ export default Vue.extend({
         return "Nachtshift ☾";
 
       return "Dagshift 🌣";
+    },
+
+    beforeDestroy: function() {
+      window.clearInterval(this.interval);
     }
   }
 });

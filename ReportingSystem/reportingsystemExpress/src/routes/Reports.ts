@@ -30,7 +30,6 @@ const router = Router();
  ******************************************************************************/
 
 // only get the reports that are finished
-// joins report with user to get the Author's username
 
 router.get('/all', async (req: Request, res: Response) => {
   const reports = await Report.findAll({
@@ -42,6 +41,24 @@ router.get('/all', async (req: Request, res: Response) => {
   });
   res.send(reports);
 });
+
+
+/******************************************************************************
+ *          Get the report from the last shift - "GET /api/reports/lastShift"
+ ******************************************************************************/
+
+router.get('/lastShift', async (req: Request, res: Response) => {
+  const reports = await Report.findOne({
+    order: [['date', 'DESC']],
+    offset: 1,
+    where: {
+      temporary: false,
+    },
+    attributes: ['id'],
+  });
+  res.send(reports);
+});
+
 
 
 /******************************************************************************
