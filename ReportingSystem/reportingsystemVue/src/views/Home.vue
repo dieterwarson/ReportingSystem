@@ -4,13 +4,15 @@
     <button type="submit" class="btn btn-primary btn-block" @click.prevent="logOut">Afmelden</button>
     <!-- Search form -->
     <form>
-<div v-if="tokenData.seeReports" class="form-row align-items-center">        
-  <div class="col my-1">
+      <div v-if="tokenData.seeReports" class="form-row align-items-center">
+        <div class="col my-1">
+          <!-- Keyword input -->
           <input @click="toggleUnvisible" type="text" class="form-control" id="inlineFormInputName" v-model="keyword" placeholder="Trefwoord" />
         </div>
         <div class="col my-1">
           <div class="input-group">
             <div class="autocomplete">
+              <!-- Pl number input -->
               <input autocomplete="off" v-model="plNumber" type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="PL-nummer" @keyup="getOptions(plNumber)" @click="toggleVisible" />
               <div class="popover" v-show="visible">
                 <div class="options">
@@ -26,47 +28,48 @@
         </div>
 
         <div class="col-auto my-1">
+          <!--  Search button -->
           <button @click="toggleUnvisible" type="submit" class="btn btn-secondary btn-block" @click.prevent="searchReports">Zoek</button>
         </div>
       </div>
     </form>
-    <div class="container" >
-
-    <router-link v-if="tokenData.makeReports" to="/AddReport" tag="button" class="btn btn-primary btn-lg btn-block">+ Nieuwe gebeurtenis</router-link>
-
     <div class="container">
-      <div class="row">
-        <div class="col-sm" v-if="tokenData.seeReports">
-          <router-link to="/Reports" tag="button" class="btn btn-secondary btn-lg btn-block">Verslagen</router-link>
-        </div>
 
-        <div class="col-sm" v-if="tokenData.seeNotifications">
-          <router-link to="/Notifications" tag="button" class="btn btn-secondary btn-lg btn-block">Meldingen</router-link>
-        </div>
-      </div>
-    </div>
+      <router-link v-if="tokenData.makeReports" to="/AddReport" tag="button" class="btn btn-primary btn-lg btn-block">+ Nieuwe gebeurtenis</router-link>
 
-    <div class="container">
-      <div class="row">
-        <div class="col-sm" v-if="tokenData.seePreviousShift">
-          <button @click="goToLastReport()" tag="button" class="btn btn-secondary btn-lg btn-block">Overzicht vorige shift</button>
-        </div>
-
-        <div class="col-sm" v-if="(tokenData.seeStatistics)">
-
-          <router-link to="/Statistics" tag="button" class="btn btn-secondary btn-lg btn-block">Statistieken</router-link>
-        </div>
-
-      </div>
-    </div>
-    <div v-if="tokenData.admin" class="Container">
-      <div class="Container">
+      <div class="container">
         <div class="row">
-          <div class="col-sm">
-            <router-link to="/admin" tag="button" class="btn btn-secondary btn-lg btn-block">Administrator functies</router-link>
+          <div class="col-sm" v-if="tokenData.seeReports">
+            <router-link to="/Reports" tag="button" class="btn btn-secondary btn-lg btn-block">Verslagen</router-link>
+          </div>
+
+          <div class="col-sm" v-if="tokenData.seeNotifications">
+            <router-link to="/Notifications" tag="button" class="btn btn-secondary btn-lg btn-block">Meldingen</router-link>
           </div>
         </div>
       </div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-sm" v-if="tokenData.seePreviousShift">
+            <button @click="goToLastReport()" tag="button" class="btn btn-secondary btn-lg btn-block">Overzicht vorige shift</button>
+          </div>
+
+          <div class="col-sm" v-if="(tokenData.seeStatistics)">
+
+            <router-link to="/Statistics" tag="button" class="btn btn-secondary btn-lg btn-block">Statistieken</router-link>
+          </div>
+
+        </div>
+      </div>
+      <div v-if="tokenData.admin" class="Container">
+        <div class="Container">
+          <div class="row">
+            <div class="col-sm">
+              <router-link to="/admin" tag="button" class="btn btn-secondary btn-lg btn-block">Administrator functies</router-link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -95,7 +98,9 @@ export default Vue.extend({
         admin: false,
         username: null
       },
-      lastShift: {id: 1},
+      lastShift: {
+        id: 1
+      },
     }
   },
 
@@ -135,16 +140,16 @@ export default Vue.extend({
             plNumber: String(this.plNumber)
           }
         })
-    }
+      }
     },
-      toggleUnvisible: function() {
+    toggleUnvisible: function () {
       if (this.visible) {
         this.visible = !this.visible;
       }
     },
-    
-    goToLastReport: function() {
-      this.$router.push("/reportView?reportId="+ this.lastShift.id);
+
+    goToLastReport: function () {
+      this.$router.push("/reportView?reportId=" + this.lastShift.id);
     },
 
     loadShiftId: async function () {
@@ -194,14 +199,22 @@ export default Vue.extend({
   margin-top: 5rem;
 }
 
+.btn-block {
+  width: -webkit-fill-available;
+}
+
 .form-control {
   border: 1px solid black;
+}
+
+.form-row {
+  padding-left: 10px;
 }
 
 .autocomplete {
   width: 100%;
   position: relative;
-  
+
 }
 
 .inputPL {
