@@ -99,7 +99,6 @@ router.get('/one/:reportId', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 // only get the reports that are finished and arer being monitored
-// joins report with user to get the Author's username
 
 router.get('/monitored', async (req: Request, res: Response) => {
   var reports: (
@@ -590,14 +589,14 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
       where: {
         technicalId: technical.id
       },
-      include: [{ model: DefectType }]
+      include: [DefectType, DefectSubtype ]
     })
 
     malfunctions = await Malfunction.findAll({
       where: {
         technicalId: technical.id
       },
-      include: [{ model: MalfunctionType }]
+      include: [ MalfunctionType, MalfunctionSubtype ]
     })
   }
   if (administrative != null) {
@@ -605,7 +604,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
       where: {
         administrativeId: administrative.id
       },
-      include: [{ model: WorkplaceType }]
+      include: [ WorkplaceType, WorkplaceSubtype]
     })
 
     secretariatNotifications = await SecretariatNotification.findAll({
@@ -620,6 +619,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
+  console.log(results);
 
   res.send(results);
 });

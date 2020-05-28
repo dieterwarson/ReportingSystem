@@ -111,44 +111,6 @@
             </div>
             <div v-else class="row row-cols-1">
               <div
-                v-for="event in notificationContent.administrative.replacements"
-                :key="event.id"
-              >
-                <div class="col card h-100">
-                  <div class="card-body">
-                    <h3 class="card-title display-5">
-                      {{
-                        new Date(event.date).toLocaleString("nl-BE", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })
-                      }}
-                    </h3>
-                    <p class="card-text">{{ event.signaling }}</p>
-                    <h5>
-                      <span
-                        class="card-text badge badge-primary"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="PL-nummer"
-                        >{{ event.plNumber }}</span
-                      >
-                      <span
-                        class="card-text badge badge-danger"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Eenheid"
-                        >{{ event.unit }}</span
-                      >
-                    </h5>
-                    <p class="card-text">{{ event.description }}</p>
-                    <p class="card-text">{{ event.location }}</p>
-                    <h5></h5>
-                  </div>
-                </div>
-              </div>
-
-              <div
                 v-for="event in notificationContent.administrative
                   .workplaceEvents"
                 :key="event.id"
@@ -165,25 +127,30 @@
                       }}
                     </h3>
                     <p class="card-text">{{ event.signaling }}</p>
-                    <h5>
-                      <span
-                        class="card-text badge badge-primary"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="PL-nummer"
-                        >{{ event.plNumber }}</span
-                      >
-                      <span
-                        class="card-text badge badge-danger"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Eenheid"
-                        >{{ event.unit }}</span
-                      >
+                    <h5 class="card-text">
+                      {{
+                        new Date(event.date).toLocaleString("nl-BE", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      }}
                     </h5>
                     <p class="card-text">{{ event.description }}</p>
-                    <p class="card-text">{{ event.location }}</p>
-                    <!-- <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.workplaceType.typeName }}</span></h5> -->
+                    <p class="card-text">
+                      {{ event.absentee }} vervangen door {{ event.substitute }}
+                    </p>
+                    <div v-if="!(event.workplaceType == null)">
+                      <h5 class="card-text">
+                        <span class="card-text badge badge-secondary mr-1">{{
+                          event.workplaceType.typeName
+                        }}</span>
+                        <span v-if="!(event.workplaceSubtype == null)">
+                          <span class="card-text badge badge-secondary">{{
+                            event.workplaceSubtype.typeName
+                          }}</span>
+                        </span>
+                      </h5>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -195,7 +162,7 @@
               >
                 <div class="col card h-100">
                   <div class="card-body">
-                    <h3 class="card-title display-5">
+                    <h5 class="card-title display-5">
                       {{
                         new Date(event.date).toLocaleString("nl-BE", {
                           hour: "2-digit",
@@ -203,7 +170,7 @@
                           hour12: false,
                         })
                       }}
-                    </h3>
+                    </h5>
                     <p class="card-text">{{ event.signaling }}</p>
                     <h5>
                       <span
@@ -239,7 +206,18 @@
                       {{ new Date(event.date).toLocaleString("nl-BE") }}
                     </p>
                     <p class="card-text">{{ event.description }}</p>
-                    <!-- <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.defectType.typeName }}</span></h5> -->
+                    <div v-if="!(event.defectType == null)">
+                      <h5 class="card-text">
+                        <span class="card-text badge badge-secondary mr-1">{{
+                          event.defectType.typeName
+                        }}</span>
+                        <span v-if="!(event.defectSubtype == null)">
+                          <span class="card-text badge badge-secondary">{{
+                            event.defectSubtype.typeName
+                          }}</span>
+                        </span>
+                      </h5>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -256,7 +234,18 @@
                     </p>
                     <p class="card-text">{{ event.description }}</p>
                     <p class="card-text">{{ event.duration }}</p>
-                    <!-- <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.malfunctionType.typeName }}</span></h5> -->
+                    <div v-if="!(event.malfunctionType == null)">
+                      <h5 class="card-text">
+                        <span class="card-text badge badge-secondary mr-1">{{
+                          event.malfunctionType.typeName
+                        }}</span>
+                        <span v-if="!(event.malfunctionSubtype == null)">
+                          <span class="card-text badge badge-secondary">{{
+                            event.malfunctionSubtype.typeName
+                          }}</span>
+                        </span>
+                      </h5>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -367,7 +356,18 @@
                 <p class="card-text">
                   {{ event.absentee }} vervangen door {{ event.substitute }}
                 </p>
-                <!-- <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.workplaceType.typeName }}</span></h5> -->
+                <div v-if="!(event.workplaceType == null)">
+                  <h5 class="card-text">
+                    <span class="card-text badge badge-secondary mr-1">{{
+                      event.workplaceType.typeName
+                    }}</span>
+                    <span v-if="!(event.workplaceSubtype == null)">
+                      <span class="card-text badge badge-secondary">{{
+                        event.workplaceSubtype.typeName
+                      }}</span>
+                    </span>
+                  </h5>
+                </div>
               </div>
             </div>
           </div>
@@ -423,7 +423,18 @@
                   }}
                 </h5>
                 <p class="card-text">{{ event.description }}</p>
-                <!-- <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.defectType.typeName }}</span></h5> -->
+                <div v-if="!(event.defectType == null)">
+                  <h5 class="card-text">
+                    <span class="card-text badge badge-secondary mr-1">{{
+                      event.defectType.typeName
+                    }}</span>
+                    <span v-if="!(event.defectSubtype == null)">
+                      <span class="card-text badge badge-secondary">{{
+                        event.defectSubtype.typeName
+                      }}</span>
+                    </span>
+                  </h5>
+                </div>
               </div>
             </div>
           </div>
@@ -445,7 +456,18 @@
                 </h5>
                 <p class="card-text">{{ event.description }}</p>
                 <p class="card-text">{{ event.duration }}</p>
-                <!-- <h5 class="card-text"><span class="card-text badge badge-danger">{{ event.malfunctionType.typeName }}</span></h5> -->
+                <div v-if="!(event.malfunctionType == null)">
+                  <h5 class="card-text">
+                    <span class="card-text badge badge-secondary mr-1">{{
+                      event.malfunctionType.typeName
+                    }}</span>
+                    <span v-if="!(event.malfunctionSubtype == null)">
+                      <span class="card-text badge badge-secondary">{{
+                        event.malfunctionSubtype.typeName
+                      }}</span>
+                    </span>
+                  </h5>
+                </div>
               </div>
             </div>
           </div>
