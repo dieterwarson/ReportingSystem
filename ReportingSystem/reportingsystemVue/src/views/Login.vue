@@ -1,14 +1,14 @@
 <template>
-<div class="LoginPage">
+<div class="LoginPage container">
   <h1>Aanmelden</h1>
   <form class="form-inline·d-flex·justify-content-center·md-form·form-sm·mt-0">
-    <input type="text" name="username" v-model="input.username" placeholder="Gebruikersnaam" class="form-control form-control-lg">
+    <input id="username" type="text" name="username" v-model="input.username" placeholder="Gebruikersnaam" class="form-control form-control-lg">
     <br>
-    <input type="password" name="password" v-model="input.password" placeholder="Wachtwoord" class="form-control form-control-lg">
+    <input id="password" type="password" name="password" v-model="input.password" placeholder="Wachtwoord" class="form-control form-control-lg">
     <br>
     <small v-if="output.failed" name="response">Verkeerde gebruikersnaam of wachtwoord</small>
     <br>
-    <button class="btn btn-lg btn-primary" type="button" v-on:click="login()">Aanmelden</button>
+    <button id="login" class="btn btn-lg btn-primary" type="button" v-on:click="login()">Aanmelden</button>
   </form>
 </div>
 </template>

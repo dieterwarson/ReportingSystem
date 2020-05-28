@@ -1889,13 +1889,14 @@ app.post("/logoutUser", async (req, res) => {
 
 
 const shiftChange = new Date("December 17, 1995 12:00:00");
-console.log(shiftChange);
 
 let cronInstance = new cronServer(shiftChange.getHours());
 // makes a new report every 12 hours, the hour can be changed with shiftChange
 cron.schedule(shiftChange.getMinutes() + " */"+ shiftChange.getHours() + " * * *", function() {
   cronInstance.cronTask();
 });
+
+cronInstance.cronTask();
 
 // cronInstance.cronTask();
 

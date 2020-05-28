@@ -84,6 +84,11 @@ const routes = [
     component: () => import(/*webChunckName: "Userlist" */ '../views/changePermissions.vue'),
   },
   {
+    path: '/printReportView',
+    name: 'PrintReportView',
+    component: () => import(/*webChunckName: "Userlist" */ '../views/PrintReportView.vue'),
+  },
+  {
     path:'*',
     redirect: '/'
   }

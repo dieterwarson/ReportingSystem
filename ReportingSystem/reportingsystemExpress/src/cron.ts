@@ -16,7 +16,7 @@ export default class cronServer{
 
     cronTask() {
         this.sendEmail();
-        this.makeNewReport();
+        // this.makeNewReport();
         console.log("crontask");
     }
 
@@ -49,13 +49,13 @@ export default class cronServer{
             ]
         };
 
-        transporter.sendMail(mailOptions, function(error:any, info:any){
+       /*  transporter.sendMail(mailOptions, function(error:any, info:any){
             if(error){
                 return console.log(error);
             }
         
             console.log('Message sent: ' + info.response);
-        });
+        }); */
 
     }
 
