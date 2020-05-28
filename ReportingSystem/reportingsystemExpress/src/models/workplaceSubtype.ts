@@ -28,5 +28,5 @@ export default class WorkplaceSubtype extends Model<WorkplaceSubtype> {
   description!: string;
 
   @HasMany(() => WorkplaceEvent)
-  malfunctions!: WorkplaceEvent[];
+  workplaceEvents!: WorkplaceEvent[];
 }
