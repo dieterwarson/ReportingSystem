@@ -15,19 +15,19 @@ import DefectSubtype from './defectSubtype';
 export default class Defect extends Model<Defect> {
   @Index
 
+  @ForeignKey(() => User)
+  @Column
+  authorId!: number;
+  
+  @BelongsTo(() => User)
+  user!: User;
+  
   @ForeignKey(() => Technical)
   @Column
   technicalId!: number;
 
   @BelongsTo(() => Technical)
   technical!: Technical;
-
-  @ForeignKey(() => User)
-  @Column
-  authorId!: number;
-
-  @BelongsTo(() => User)
-  user!: User;
 
   @ForeignKey(() => DefectType)
   @Column

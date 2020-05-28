@@ -121,12 +121,17 @@ const user2 = new User({
 });
 //  user2.save();
 
-const report1 = new Report({
-  date: new Date('2020/03/16 00:01:00'),
-  temporary: false,
-  nightShift: true,
-});
-// report1.save();
+
+
+/* for (let i = 0; i < 10000; i++) {
+  const report1 = new Report({
+    date: new Date('2020/03/16 23:01:00'),
+    temporary: false,
+    nightShift: true,
+  });
+  report1.save();  
+} */
+
 
 const report2 = new Report({
   date: new Date('2020/03/16 12:01:00'),
@@ -915,7 +920,6 @@ sequelize.sync();
  *                              AXIOS     NEEDS TO BE REPLACED LATER
  ***********************************************************************************/
 const shiftChange = new Date("December 17, 1995 12:00:00");
-console.log(shiftChange);
 
 let cronInstance = new cronServer(shiftChange.getHours());
 // makes a new report every 12 hours, the hour can be changed with shiftChange

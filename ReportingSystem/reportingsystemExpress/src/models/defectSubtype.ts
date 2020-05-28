@@ -28,5 +28,5 @@ export default class DefectSubtype extends Model<DefectSubtype> {
   description!: string;
 
   @HasMany(() => Defect)
-  malfunctions!: Defect[];
+  defects!: Defect[];
 }

@@ -238,7 +238,6 @@ export default Vue.extend({
         malfunctionDuration: "",
         malfunctionMonitoring: false,
 
-
         technicalMessage: "",
         technicalProblems: null,
         technicalDescription: null,
@@ -248,7 +247,7 @@ export default Vue.extend({
       tokenData: {
         authorId: 0
       },
-     reportTypes: {
+      reportTypes: {
         operationalTypes: [],
         operationalSubtypes: [],
         workplaceTypes: {},
@@ -268,22 +267,22 @@ export default Vue.extend({
       },
       malfunctionTypeSelected: {
         typeName: "",
-        subTypeName:""
+        subTypeName: ""
       },
       defectTypeSelected: {
         typeName: "Schade aan voertuig",
-        subTypeName:""
+        subTypeName: ""
       }
     }
   },
   mounted() {
     this.loadData();
-    if (window.localStorage.getItem("token") === null || window.localStorage.getItem("token") === undefined  ) {
-     window.location.href = "/login";
+    if (window.localStorage.getItem("token") === null || window.localStorage.getItem("token") === undefined) {
+      window.location.href = "/login";
     } else {
-      const decodedToken: any= jwt.decode(window.localStorage.getItem("token")!);
+      const decodedToken: any = jwt.decode(window.localStorage.getItem("token") !);
       if (decodedToken.rights < 0 || decodedToken.rights > 1) {
-          window.location.href = "/login";
+        window.location.href = "/login";
       }
       if (decodedToken === undefined){
         window.location.href = "/login"
@@ -339,25 +338,25 @@ export default Vue.extend({
         this.form.technicalSucceeded = false;
       }
     },
-    
-    deselectMalfunction: function() {
-      if (this.malfunctionTypeSelected.typeName !=='') {
+
+    deselectMalfunction: function () {
+      if (this.malfunctionTypeSelected.typeName !== '') {
         this.defect = true;
-        this.malfunctionTypeSelected.typeName ='';
-        this.malfunctionTypeSelected.subTypeName ='';
+        this.malfunctionTypeSelected.typeName = '';
+        this.malfunctionTypeSelected.subTypeName = '';
 
       }
     },
-    deselectDefect : function() {
+    deselectDefect: function () {
       if (this.defectTypeSelected.typeName !== '') {
         this.defect = false;
         this.defectTypeSelected.typeName = '';
         this.defectTypeSelected.subTypeName = '';
       }
     },
-    switchWorkForceOption: function() {
+    switchWorkForceOption: function () {
       if (this.secretary)
-      this.secretary = !this.secretary;
+        this.secretary = !this.secretary;
     },
     getWorkforce: function () {
       if (this.step != "Workforce") {
@@ -388,9 +387,9 @@ export default Vue.extend({
       }
     },
     changeToSecretary: function () {
-      if (!this.secretary){
+      if (!this.secretary) {
         this.typeSelected.typeName = "",
-        this.typeSelected.subtypeName = ""
+          this.typeSelected.subtypeName = ""
       }
     },
     async getFile() {
@@ -471,7 +470,7 @@ export default Vue.extend({
         date: this.form.operationalDate,
         message: this.form.operationalMessage,
         unit: this.form.unit,
-        id:this.tokenData.authorId,
+        id: this.tokenData.authorId,
         types: this.operationalTypeSelected.selectedTypes,
         subtypes: this.operationalTypeSelected.selectedSubtypes,
         priority: this.form.operationalPrio
@@ -486,10 +485,10 @@ export default Vue.extend({
 
       }
     },
-    loadData: function() {
+    loadData: function () {
       ReportingService.getAllReports("/api/reports/operationalTypes").then(
         res => (this.reportTypes.operationalTypes = res.operationalTypes,
-                this.reportTypes.operationalSubtypes = res.operationalSubtypes)
+          this.reportTypes.operationalSubtypes = res.operationalSubtypes)
       );
       ReportingService.getAllReports("/api/reports/workplaceTypes").then(
         res => (this.reportTypes.workplaceTypes = res.workplaceTypes, this.reportTypes.workplaceSubtypes)
@@ -530,7 +529,6 @@ export default Vue.extend({
      * If not every box is selected, then select all boxes.
      * If all boxes are selected, then deselect all boxes.
      */
-    
 
     /**
      * When a checkbox of a subtype is clicked, select its parent type also.
@@ -556,7 +554,7 @@ export default Vue.extend({
           } else if (parent == "Malfunction") {
             this.malfunctionTypeSelected.typeName = element.typeName;
           }
-          
+
         }
       }
     },
@@ -586,7 +584,7 @@ export default Vue.extend({
     /**
      * If a type is deselected, its subtypes need to be deselected as well.
      */
-    
+
   }
 });
 </script>

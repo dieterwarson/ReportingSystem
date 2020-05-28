@@ -13,5 +13,5 @@ export default class WorkplaceType extends Model<WorkplaceType> {
   workplaceEvents!: WorkplaceEvent[];
 
   @HasMany(() => WorkplaceSubtype)
-  sorkplaceSubtypes!: WorkplaceSubtype[];
+  workplaceSubtypes!: WorkplaceSubtype[];
 }

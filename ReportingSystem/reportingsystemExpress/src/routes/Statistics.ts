@@ -15,42 +15,6 @@ import EventType from 'src/models/eventType';
 const router = Router();
 
 /******************************************************************************
- *             Get statistics data from Reports - "GET /api/statistics/typecount"
- ******************************************************************************/
-
-router.get('/typecount', async (req: Request, res: Response) => {
-  var reports: (OperationalType[] | number[] | String[])[] = [];
-  // Contains the different types, has to be filled dynamically or at least new types should be added dynamically
-  const types: String[] = [
-    'Helikopter ingezet',
-    'Grensoverschrijdende achtervolging',
-  ];
-
-  // Loop over all types
-  for (let i in types) {
-    var type = types[i];
-
-    var result;
-    result = await OperationalType.findAll({
-      where: {
-        typeName: {
-          [Op.like]: '' + type,
-        },
-      },
-    });
-    if (result.length != 0) {
-      reports.push(result);
-      // Add the typeName and number of its occurrences to reports
-      var count: number[] | String[] = [type + ':' + result.length];
-      reports.push(count);
-    }
-  }
-
-  res.send(reports);
-  return res.json({ reports });
-});
-
-/******************************************************************************
  *             Get types from Events - "GET /api/statistics/types"
  ******************************************************************************/
 
@@ -115,12 +79,19 @@ function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Ma
   return events;
 }
 
-
+/******************************************************************************
+ *             Get Statistics - "POST /api/statistics/getStatistics"
+ ******************************************************************************/
 router.post('/getStatistics', async (req, res) => {
   let reports: StatisticsData = { counts: [], lineContent: [] };
-  const types = req.body;
+  const types = req.body.selectedTypes;
+  let date = {start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z"}
+  if(!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
+    date = req.body.selectedDate;
 
   let events: eventDate[] = []
+
+  console.log(date);
 
   for (let i in types.workplaceevent) {
     var type = types.workplaceevent[i];
@@ -128,6 +99,14 @@ router.post('/getStatistics', async (req, res) => {
     result = await WorkplaceEvent.findAll({
       order: ['date'],
       attributes: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
       include: [{
         model: WorkplaceType,
         attributes: ['typeName'],
@@ -160,6 +139,14 @@ router.post('/getStatistics', async (req, res) => {
     var result = [];
     result = await OperationalEvent.findAll({
       order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
       include: [{
         model: EventType,
         required: true,
@@ -194,6 +181,14 @@ router.post('/getStatistics', async (req, res) => {
     result = await Defect.findAll({
       order: ['date'],
       attributes: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
       include: [{
         model: DefectType,
         attributes: ['typeName'],
@@ -223,6 +218,14 @@ router.post('/getStatistics', async (req, res) => {
     result = await Malfunction.findAll({
       order: ['date'],
       attributes: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
       include: [{
         model: MalfunctionType,
         attributes: ['typeName'],

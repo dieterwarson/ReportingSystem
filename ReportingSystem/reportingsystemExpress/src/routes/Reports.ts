@@ -30,10 +30,12 @@ const router = Router();
  ******************************************************************************/
 
 // only get the reports that are finished
-// joins report with user to get the Author's username
 
-router.get('/all', async (req: Request, res: Response) => {
+router.post('/all', async (req: Request, res: Response) => {
+  const offset = req.body.offset;
   const reports = await Report.findAll({
+    offset: offset,
+    limit: 10,
     order: [['date', 'DESC']],
     where: {
       temporary: false,
@@ -42,6 +44,37 @@ router.get('/all', async (req: Request, res: Response) => {
   });
   res.send(reports);
 });
+
+/******************************************************************************
+ *                   Count All Reports - "GET /api/reports/count"
+ ******************************************************************************/
+
+router.get('/count', async (req: Request, res: Response) => {
+  const count = await Report.count({
+    where: {
+      temporary: false,
+    },
+  });
+  res.send({count: count});
+});
+
+
+/******************************************************************************
+ *          Get the report from the last shift - "GET /api/reports/lastShift"
+ ******************************************************************************/
+
+router.get('/lastShift', async (req: Request, res: Response) => {
+  const reports = await Report.findOne({
+    order: [['date', 'DESC']],
+    offset: 1,
+    where: {
+      temporary: false,
+    },
+    attributes: ['id'],
+  });
+  res.send(reports);
+});
+
 
 
 /******************************************************************************
@@ -66,7 +99,6 @@ router.get('/one/:reportId', async (req: Request, res: Response) => {
  ******************************************************************************/
 
 // only get the reports that are finished and arer being monitored
-// joins report with user to get the Author's username
 
 router.get('/monitored', async (req: Request, res: Response) => {
   var reports: (
@@ -557,14 +589,14 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
       where: {
         technicalId: technical.id
       },
-      include: [{ model: DefectType }]
+      include: [DefectType, DefectSubtype ]
     })
 
     malfunctions = await Malfunction.findAll({
       where: {
         technicalId: technical.id
       },
-      include: [{ model: MalfunctionType }]
+      include: [ MalfunctionType, MalfunctionSubtype ]
     })
   }
   if (administrative != null) {
@@ -572,7 +604,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
       where: {
         administrativeId: administrative.id
       },
-      include: [{ model: WorkplaceType }]
+      include: [ WorkplaceType, WorkplaceSubtype]
     })
 
     secretariatNotifications = await SecretariatNotification.findAll({
@@ -588,7 +620,10 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     technical: { defects, malfunctions },
   };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 31b301acaf48e8f4ea589a624476408295bfc2e9
   res.send(results);
 });
 

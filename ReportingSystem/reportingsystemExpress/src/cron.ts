@@ -2,6 +2,9 @@ const nodemailer = require("nodemailer")
 import pdfGenerator from './pdfgenerator'
 import Report from './models/report';
 import User from './models/user';
+import Technical from './models/technical';
+import Administrative from './models/administrative';
+import Operational from './models/operational';
 
 export default class cronServer{
 
@@ -46,13 +49,13 @@ export default class cronServer{
             ]
         };
 
-        transporter.sendMail(mailOptions, function(error:any, info:any){
+       /*  transporter.sendMail(mailOptions, function(error:any, info:any){
             if(error){
                 return console.log(error);
             }
         
             console.log('Message sent: ' + info.response);
-        });
+        }); */
 
     }
 
@@ -71,6 +74,18 @@ export default class cronServer{
             temporary: false,
         });
         report.save();          
+        const technical = new Technical({
+            reportId: report.id,
+          });
+        technical.save();
+        const administrative = new Administrative({
+            reportId: report.id,
+          });
+        administrative.save();
+        const operational = new Operational({
+            reportId: report.id,
+          });
+        operational.save();
     }
 
     async getEmails() {
