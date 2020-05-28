@@ -42,8 +42,9 @@ function checkUsername(username: string) {
 }
 
 function checkPassword(password: string, rptPassword: string) {
+  console.log(password, rptPassword);
   if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)) {
-    if (password.localeCompare(rptPassword) == 0) {
+    if (password.localeCompare(rptPassword) === 0) {
       return true;
     }
   }
@@ -119,8 +120,10 @@ router.post('/changePassword', async (req, res) => {
       message: "Wachtwoord wijzigen mislukt"
     })
   }
-  if (userData.username, userData.Password, userData.rptPassword) {
-    const passwordHash = bcrypt.hashSync(userData.Password, 10);
+  if (userData.username, userData.password, userData.rptPassword) {
+    console.log("hier")
+    const passwordHash = bcrypt.hashSync(userData.password, 10);
+    console.log("daar")
     User.update(
       { password: passwordHash },
       { where: { username: userData.username } }

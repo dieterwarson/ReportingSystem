@@ -6,7 +6,7 @@
       <div v-if="tokenData.accessRights == 0"> (Administrator)</div>
       <div v-else-if="tokenData.accessRights == 1" >(Supervisor)</div>
       <div v-else-if="tokenData.accessRights == 2" >(Secretariaat)</div>
-      <button  type="submit" class="btn btn-primary float-right" @click.prevent="logOut">Afmelden</button>
+      <button  type="submit" class="btn btn-primary logout" @click.prevent="logOut">Afmelden</button>
     </div>
     
     
