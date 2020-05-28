@@ -620,10 +620,6 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     technical: { defects, malfunctions },
   };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 31b301acaf48e8f4ea589a624476408295bfc2e9
   res.send(results);
 });
 
