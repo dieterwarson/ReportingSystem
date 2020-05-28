@@ -1,7 +1,15 @@
 <template>
 <div class="home">
   <div class="container my-4">
-    <button type="submit" class="btn btn-primary btn-block" @click.prevent="logOut">Afmelden</button>
+    <div class="row float-right">
+      <div>Aangemeld als {{tokenData.username}} </div>
+      <div v-if="tokenData.accessRights == 0"> (Administrator)</div>
+      <div v-else-if="tokenData.accessRights == 1" >(Supervisor)</div>
+      <div v-else-if="tokenData.accessRights == 2" >(Secretariaat)</div>
+      
+    </div>
+    <button type="submit" class="btn btn-primary btn-block pull-right" @click.prevent="logOut">Afmelden</button>
+    
     <!-- Search form -->
     <form>
 <div v-if="tokenData.seeReports" class="form-row align-items-center">        

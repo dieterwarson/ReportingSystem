@@ -304,6 +304,8 @@ INSERT INTO `Malfunctions` VALUES (1,1,1,1,1,'lekkende kraan in kamer 304',1,'20
 /*!40000 ALTER TABLE `Malfunctions` ENABLE KEYS */;
 UNLOCK TABLES;
 
+
+
 --
 -- Table structure for table `OperationalEvents`
 --
@@ -527,8 +529,8 @@ CREATE TABLE `Users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+    `email` varchar(255) DEFAULT NULL,
   `accessRights` int(11) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
   `subscription` tinyint(1) DEFAULT NULL,
   `loggedIn` TINYINT(1) DEFAULT 0,
   `createdAt` datetime NOT NULL,
@@ -545,7 +547,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'chass_beerts','test', 'test@gmail.com', 0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'jan_janssens','', 'test@gmail.com',1, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34');
+INSERT INTO `Users` VALUES (1,'chass_beerts','test', 'test@gmail.com', 0, 1, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'jan_janssens','', 'test@gmail.com',1, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(3, 'test', '$2y$10$nANkNP.Z8ZYTDbYDc58WcOsJvQ1LtaOHHkM/v2CRR22QwZsqmu0Pi', 'test@tester.com',0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 

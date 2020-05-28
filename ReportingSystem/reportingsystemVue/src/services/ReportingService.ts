@@ -3,7 +3,7 @@ import Api from '@/services/api';
 export default {
   getFile(data: any) {
     return Api()
-      .post('/getFile', data)
+      .post('api/reports/getFile', data)
       .then((res) => {
         return res.data;
       })
@@ -13,7 +13,7 @@ export default {
   },
   addUser(data: any) {
     return Api()
-      .post('/addUser', data)
+      .post('api/users/addUser', data)
       .then((res) => {
         return res;
       })
@@ -23,7 +23,7 @@ export default {
   },
   changePassword(data: any) {
     return Api()
-      .post('/changePassword', data)
+      .post('api/users/changePassword', data)
       .then((res) => {
         return res;
       })
@@ -33,17 +33,7 @@ export default {
   },
   changeAcces(data: any) {
     return Api()
-      .post('/changeAcces', data)
-      .then((res) => {
-        return res;
-      })
-      .catch((error) => {
-        alert(error);
-      });
-  },
-  addField(data: any) {
-    return Api()
-      .post('/addField', data)
+      .post('api/users/changeAcces', data)
       .then((res) => {
         return res;
       })
@@ -63,7 +53,7 @@ export default {
   },
   addOperationalEvent(data: any) {
     return Api()
-      .post('/addOperationalEvent', data)
+      .post('api/reports/addOperationalEvent', data)
       .then((res) => {
         return res.data;
       })
@@ -83,7 +73,7 @@ export default {
   },
   addSecretaryNotification(data: any) {
     return Api()
-    .post('/addSecretaryNotification', data)
+    .post('api/reports/addSecretaryNotification', data)
     .then(res => {
       return res.data
     })
@@ -113,7 +103,7 @@ export default {
   },
   addWorkForceEvent(data: any) {
     return Api()
-      .post('/addWorkForceEvent', data)
+      .post('api/reports/addWorkPlaceEvent', data)
       .then((res) => {
         return res.data;
       })
@@ -123,7 +113,7 @@ export default {
   },
   addDefect(data: any) {
     return Api()
-      .post('/addDefect', data)
+      .post('api/reports/addDefect', data)
       .then((res) => {
         return res.data;
       })
@@ -133,7 +123,7 @@ export default {
   },
   addMalfunction(data: any) {
     return Api()
-      .post('/addMalfunction', data)
+      .post('api/reports/addMalfunction', data)
       .then((res) => {
         return res.data;
       })
@@ -143,7 +133,7 @@ export default {
   },
   changeOperationalEvent(data: any) {
     return Api()
-      .post('/changeOperationalEvent', data)
+      .post('api/reports/changeOperationalEvent', data)
       .then((res) => {
         return res.data;
       })
@@ -153,7 +143,7 @@ export default {
   },
   changeWorkplaceEvent(data: any) {
     return Api()
-      .post('/changeWorkplaceEvent', data)
+      .post('api/reports/changeWorkplaceEvent', data)
       .then((res) => {
         return res.data;
       })
@@ -163,7 +153,7 @@ export default {
   },
   changeSecretariatNotification(data: any) {
     return Api()
-      .post('/changeSecretariatNotification', data)
+      .post('/api/reports/changeSecretariatNotification', data)
       .then((res) => {
         return res.data;
       })
@@ -173,7 +163,7 @@ export default {
   },
   changeDefect(data: any) {
     return Api()
-      .post('/changeDefect', data)
+      .post('api/reports/changeDefect', data)
       .then((res) => {
         return res.data;
       })
@@ -183,7 +173,7 @@ export default {
   },
   changeMalfunction(data: any) {
     return Api()
-      .post('/changeMalfunction', data)
+      .post('api/reports/changeMalfunction', data)
       .then((res) => {
         return res.data;
       })
@@ -193,7 +183,7 @@ export default {
   },
   loginUser(data: any) {
     return Api()
-      .post('/loginUser', data)
+      .post('api/users/loginUser', data)
       .then(res => {
         window.localStorage.setItem("token",res.data.token);
         window.location.href = res.data.redirect;
@@ -206,7 +196,7 @@ export default {
   
   changeSubscription(data: any) {
     return Api()
-    .post("/changeSubscription", data)
+    .post("api/users/changeSubscription", data)
     .then(res => {
       return res.data;
     })
@@ -216,7 +206,7 @@ export default {
   },
   autoCompleteOperationalEvent(data: any) {
     return Api()
-    .post("/getOperationalEvents", data)
+    .post("api/reports/getOperationalEvents", data)
     .then(res => {
       return res.data;
     })
@@ -226,7 +216,7 @@ export default {
   },
   deleteUser(data: any) {
     return Api()
-    .post("/deleteUser", data)
+    .post("api/users/deleteUser", data)
     .then(res => {
       window.location.href = "/userlist";
     })
@@ -236,7 +226,7 @@ export default {
   },
   addTypes(data: any) {
     return Api()
-    .post("/addTypes", data)
+    .post("api/reports/addTypes", data)
     .then(res => {
       return res.data;
     })
@@ -246,7 +236,7 @@ export default {
   },
   logoutUser(data: any) {
     return Api()
-    .post('/logoutUser', data)
+    .post('api/users/logoutUser', data)
     .then(res => {
       window.location.href= "/login";
       window.localStorage.setItem("token", "");
@@ -254,7 +244,7 @@ export default {
   },
   checkAuthentication(){
     return Api()
-    .post('/checkAuthentication', {token: window.localStorage.getItem('token')})
+    .post('api/users/checkAuthentication', {token: window.localStorage.getItem('token')})
     .then(res => {
       return res.data.check;
     });
@@ -305,6 +295,26 @@ export default {
     .post("api/reports/removeNotification", data)
     .then(res => {
       return res.data;
+    })
+  },
+  autosaveOperational(data: any) {
+    return Api()
+    .post("api/reports/autoSaveOperational", data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
+  getAutosavedOperational(data: any) {
+    return Api()
+    .post('api/reports/getAutoSavedFile', data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
     })
   }
 };

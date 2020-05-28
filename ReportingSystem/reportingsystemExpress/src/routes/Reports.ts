@@ -7,7 +7,6 @@ import { Op } from 'sequelize';
 import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import WorkplaceEvent from 'src/models/workplaceEvent';
-// const checkAuth = require('middleware/check-auth');
 
 import DefectType from 'src/models/defectType'
 import MalfunctionType from 'src/models/malfunctionType';
@@ -21,6 +20,7 @@ import DefectSubtype from 'src/models/defectSubtype';
 import MalfunctionSubtype from 'src/models/malfunctionSubtype';
 import OperationalSubtype from 'src/models/operationalSubtype';
 import EventType from 'src/models/eventType';
+import DummyDatabase from 'src/models/dummyDataBase';
 
 // Init router
 const router = Router();
@@ -588,7 +588,6 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     technical: { defects, malfunctions },
   };
 
-  console.log(results);
 
   res.send(results);
 });
@@ -793,9 +792,6 @@ router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult operationalEvent');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -814,9 +810,6 @@ router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult WorkplaceEvent');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -834,9 +827,6 @@ router.get('/secretariatNotification/:id', async (req: Request, res: Response) =
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult SecretariatNotification');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -854,9 +844,6 @@ router.get('/defectEvent/:id', async (req: Request, res: Response) => {
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult Defect');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -874,9 +861,6 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult Malfunction');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -934,8 +918,9 @@ router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => 
 
     const result = { selectedTypes, selectedSubtypes };
     res.send(result);
+  } else {
+    res.send("");
   }
-  res.send("");
 });
 
 /******************************************************************************
@@ -1104,12 +1089,9 @@ router.post('/removeNotification', async (req, res) => {
         id: eventId
       }
     });
-    console.log(event);
     if (event !== null) {
-      console.log(event.monitoring);
       event.monitoring = false;
       await event.save();
-      console.log(event.monitoring);
       res.send(true);
     }
   }
@@ -1142,7 +1124,964 @@ router.post('/removeNotification', async (req, res) => {
 
 });
 
+
 /******************************************************************************
+ *      POST Autosave Operational event - "POST /api/reports/autoSaveOperational"
+ ******************************************************************************/
+router.post('/autoSaveOperational', async (req, res) => {
+  await OperationalEvent.findAll({
+    where:{
+      authorId: req.body.id,
+    }
+  }).then(async function(entries) {
+    await entries[0].update({
+      signaling: req.body.signaling,
+      plNumber: req.body.plNumber,
+      description: req.body.description,
+      priority: req.body.priority,
+      location: req.body.location,
+      unit: req.body.unit,
+      date: Date.now(),
+    }).then(async function(event){
+      const selectedTypes = req.body.types;
+      const selectedSubtypes = req.body.subtypes;
+      for (let i = 0; i < selectedTypes.length; i++) {
+        const curType = selectedTypes[i];
+        let curTypeId = null;
+        let curSubtypeId = null;
+  
+        let curTypeObject = await OperationalType.findOne({
+          where: {
+            typeName: curType
+          }
+        });
+        let curEvent;
+        if (curTypeObject != null) {
+          let isMade = false;
+          curTypeId = curTypeObject.id;
+          if (selectedSubtypes.length == 0) {
+            curEvent = await EventType.create({
+              operationalEventId: event.id,
+              operationalTypeId: curTypeId,
+              operationalSubtypeId: null,
+            });
+            EventType.sync();
+          }
+          for (let j = 0; j < selectedSubtypes.length; j++) {
+            const curSubtype = selectedSubtypes[j];
+  
+            let curSubtypeObject = await OperationalSubtype.findOne({
+              where: {
+                typeName: curSubtype
+              }
+            });
+            if (curSubtypeObject != null) {
+              curSubtypeId = curSubtypeObject.id;
+              if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
+                curEvent = await EventType.create({
+                  operationalEventId: event.id,
+                  operationalTypeId: curTypeId,
+                  operationalSubtypeId: curSubtypeId,
+                });
+              } else {
+                if (!isMade) {
+                  curEvent = await EventType.create({
+                    operationalEventId: event.id,
+                    operationalTypeId: curTypeId,
+                    operationalSubtypeId: null,
+                  });
+                  isMade = true;
+                }
+              }
+              EventType.sync();
+            }
+          }
+        }
+      }
+      res.json({
+        bool: true,
+      })
+    }).catch(function(err){
+      res.json({
+        bool: false,
+        message: err
+      })
+    })
+    }).catch(async function(err) {
+      await OperationalEvent.create({
+        authorId: req.body.id,
+        signaling: req.body.signaling,
+        plNumber: req.body.plNumber,
+        description: req.body.description,
+        priority: req.body.priority,
+        location: req.body.location,
+        unit: req.body.unit,
+        date: Date.now(),
+      }).then(async function(event){
+        const selectedTypes = req.body.types;
+        const selectedSubtypes = req.body.subtypes;
+        for (let i = 0; i < selectedTypes.length; i++) {
+          const curType = selectedTypes[i];
+          let curTypeId = null;
+          let curSubtypeId = null;
+    
+          let curTypeObject = await OperationalType.findOne({
+            where: {
+              typeName: curType
+            }
+          });
+          let curEvent;
+          if (curTypeObject != null) {
+            let isMade = false;
+            curTypeId = curTypeObject.id;
+            if (selectedSubtypes.length == 0) {
+              curEvent = await EventType.create({
+                operationalEventId: event.id,
+                operationalTypeId: curTypeId,
+                operationalSubtypeId: null,
+              });
+              EventType.sync();
+            }
+            for (let j = 0; j < selectedSubtypes.length; j++) {
+              const curSubtype = selectedSubtypes[j];
+    
+              let curSubtypeObject = await OperationalSubtype.findOne({
+                where: {
+                  typeName: curSubtype
+                }
+              });
+              if (curSubtypeObject != null) {
+                curSubtypeId = curSubtypeObject.id;
+                if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
+                  curEvent = await EventType.create({
+                    operationalEventId: event.id,
+                    operationalTypeId: curTypeId,
+                    operationalSubtypeId: curSubtypeId,
+                  });
+                } else {
+                  if (!isMade) {
+                    curEvent = await EventType.create({
+                      operationalEventId: event.id,
+                      operationalTypeId: curTypeId,
+                      operationalSubtypeId: null,
+                    });
+                    isMade = true;
+                  }
+                }
+                EventType.sync();
+              }
+            }
+          }
+        }
+        res.json({
+          bool: true
+        })
+      })
+      
+  })
+})
+
+/******************************************************************************
+ *      GET Autosaved Operational event - "POST /api/reports/autoSaveOperational"
+ ******************************************************************************/
+router.post('/getAutoSavedFile', async (req, res) => {
+  await OperationalEvent.findAll({
+    where: {
+      authorId: req.body.id,
+      operationalId :null
+    }
+  }).then(function(entries) {
+    res.json({
+      bool: true,
+      entry: entries[0],
+    });
+  }).catch(function() {
+    res.json({
+      bool: false,
+    })
+  })
+})
+
+
+/******************************************************************************
+ *      POST data from file in dummydatabase - "POST /api/reports/getFile"
+ ******************************************************************************/
+router.post('/getFile', async (req, res) => {
+  const file = await DummyDatabase.findOne({
+    where: {
+      plNumber: req.body.plNumber,
+    },
+  });
+  if (file !== null) {
+    res.send(file);
+  } else {
+    res.send(Error('File not found'));
+  }
+});
+
+
+/******************************************************************************
+ *      POST Add secretary notification - "POST /api/reports/addSecretaryNotification"
+ ******************************************************************************/
+router.post('/addSecretaryNotification', async (req, res) => {
+  Administrative.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(function(entries){
+    SecretariatNotification.create({
+      authorId: req.body.id,
+      administrativeId: entries[0].id,
+      description: req.body.description,
+      monitoring: req.body.monitoring,
+      date: Date.now(),
+    }).then(function(not) {
+      SecretariatNotification.sync();
+      res.json({
+        bool: true
+      })
+    })
+    .catch(function(err) {
+      res.json({
+        bool: false,
+        message: err
+      })
+    })
+  })
+})
+
+/******************************************************************************
+ *      POST Add Operational Event - "POST /api/reports/addOperationalEvent"
+ ******************************************************************************/
+router.post('/addOperationalEvent', async (req, res) => {
+  const selectedTypes = req.body.types;
+  const selectedSubtypes = req.body.subtypes;
+
+
+  Operational.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(function(entries){
+
+    OperationalEvent.findAll({
+      where: {
+        authorId: req.body.id
+      },
+      limit: 1,
+      order: [ ['updatedAt', 'DESC']]
+    }).then(async function(events) {
+      const event = events[0];
+      event.update({
+        signaling: req.body.signaling,
+        plNumber: req.body.plNumber,
+        description: req.body.description,
+        priority: req.body.priority,
+        location: req.body.location,
+        unit: req.body.unit,
+        operationalId: entries[0].id
+      })
+      OperationalEvent.sync();
+      for (let i = 0; i < selectedTypes.length; i++) {
+        const curType = selectedTypes[i];
+        let curTypeId = null;
+        let curSubtypeId = null;
+  
+        let curTypeObject = await OperationalType.findOne({
+          where: {
+            typeName: curType
+          }
+        });
+        let curEvent;
+        if (curTypeObject != null) {
+          let isMade = false;
+          curTypeId = curTypeObject.id;
+          if (selectedSubtypes.length == 0) {
+            curEvent = await EventType.create({
+              operationalEventId: event.id,
+              operationalTypeId: curTypeId,
+              operationalSubtypeId: null,
+            });
+            EventType.sync();
+          }
+          for (let j = 0; j < selectedSubtypes.length; j++) {
+            const curSubtype = selectedSubtypes[j];
+  
+            let curSubtypeObject = await OperationalSubtype.findOne({
+              where: {
+                typeName: curSubtype
+              }
+            });
+            if (curSubtypeObject != null) {
+              curSubtypeId = curSubtypeObject.id;
+              if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
+                curEvent = await EventType.create({
+                  operationalEventId: event.id,
+                  operationalTypeId: curTypeId,
+                  operationalSubtypeId: curSubtypeId,
+                });
+              } else {
+                if (!isMade) {
+                  curEvent = await EventType.create({
+                    operationalEventId: event.id,
+                    operationalTypeId: curTypeId,
+                    operationalSubtypeId: null,
+                  });
+                  isMade = true;
+                }
+              }
+              EventType.sync();
+            }
+          }
+        }
+      }
+      res.json({
+        bool: true,
+        report: entries[0].reportId
+      })
+    }).catch(function(err) {
+      res.json({
+        bool: false,
+        message: 'OperationalEvent was not created '  + err
+      })
+    })
+  }).catch(function(err){
+    res.json({
+      bool: false,
+      message:"No operational row found  " + err
+    })
+  });
+  
+});
+
+
+/******************************************************************************
+ *      POST Add WorkPlaceEvent - "POST /api/reports/addWorkPlaceEvent"
+ ******************************************************************************/
+router.post('/addWorkPlaceEvent', async (req, res) => {
+  
+  Administrative.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(async function(entries){
+    let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let workplaceType = await WorkplaceType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceSubtype = await WorkplaceSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceTypeId = null;
+  if (workplaceType != null) {
+    workplaceTypeId = workplaceType.id;
+  }
+
+  let workplaceSubtypeId = null;
+  if (workplaceSubtype != null) {
+    workplaceSubtypeId = workplaceSubtype.id;
+  }
+   WorkplaceEvent.create({
+     authorId: req.body.id,
+     administrativeId: entries[0].id,
+     workplaceTypeId: workplaceTypeId,
+     WorkplaceSubtypeId: workplaceSubtypeId,
+     description: req.body.message,
+     absentee: req.body.absentee,
+     substitute: req.body.substitute,
+     monitoring: req.body.monitoring,
+     date: Date.now(),
+   }).then(function(){
+    res.json({bool: true})
+   }).catch(function(){
+    res.json({bool: false, message: "Kon geen event aanmaken"})
+   });
+  }).catch(function(err) {
+      res.json({
+        bool: false,
+        message: err
+      })
+    })
+});
+
+/******************************************************************************
+ *      POST Add Malfunction - "POST /api/reports/addMalfunction"
+ ******************************************************************************/
+router.post('/addMalfunction', async(req, res) => {
+  Technical.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(async function(entries){
+    let type = req.body.type;
+    let subtype = req.body.subtype;
+
+    let malfunctionType = await MalfunctionType.findOne({
+      where: {
+        typename: type
+      },
+      attributes: ['id', 'typeName'],
+    });
+
+    let malfunctionSubtype = await MalfunctionSubtype.findOne({
+      where: {
+        typename: subtype
+      },
+      attributes: ['id', 'typeName'],
+    });
+
+    let malfunctionTypeId = null
+    if (malfunctionType != null) {
+      malfunctionTypeId = malfunctionType.id
+    }
+
+    let malfunctionSubtypeId = null;
+    if (malfunctionSubtype != null) {
+      malfunctionSubtypeId = malfunctionSubtype.id;
+    }
+    Malfunction.create({
+      technicalId: entries[0].id,
+      authorId: req.body.id,
+      malfunctionTypeId: malfunctionTypeId,
+      malfunctionSubtypeId: malfunctionSubtypeId,
+      description: req.body.description,
+      monitoring: req.body.monitoring,
+      date: Date.now(),
+      duration: req.body.duration,
+    }).then(function() {
+      Defect.sync();
+      res.json({
+        bool: true
+      })
+    }).catch(function(){
+      res.json({bool: false, message:'Couldnt make Defect'})
+    })
+
+  }).catch(function(err) {
+      res.json({
+        bool: false,
+        message: err
+      })
+    })
+})
+
+
+/******************************************************************************
+ *      POST Add Defect - "POST /api/reports/addDefect"
+ ******************************************************************************/
+router.post('/addDefect', async (req, res) => {
+  Technical.findAll({
+    limit: 1,
+    order: [ ['reportId', 'DESC']]
+  }).then(async function(entries){
+    let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let defectType = await DefectType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectSubtype = await DefectSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectTypeId = null;
+  if (defectType != null) {
+    defectTypeId = defectType.id
+  }
+
+  let defectSubtypeId = null;
+  if (defectSubtype != null) {
+    defectSubtypeId = defectSubtype.id;
+  }
+  Defect.create({
+    technicalId: entries[0].id,
+    authorId: req.body.id,
+    defectTypeId: defectTypeId,
+    defectSubtypeId: defectSubtypeId,
+    description: req.body.description,
+    monitoring: req.body.monitoring,
+    date: Date.now(),
+  }).then(function() {
+    Defect.sync();
+    res.json({
+      bool: true
+    })
+  }).catch(function(){
+    res.json({bool: false, message:'Couldnt make Defect'})
+  })
+
+  }).catch(function(err) {
+      res.json({
+        bool: false,
+        message: err
+      })
+    })
+});
+
+/******************************************************************************
+ *      POST Change Operational Event - "POST /api/reports/changeOperationalEvent"
+ ******************************************************************************/
+router.post('/changeOperationalEvent', async (req, res) => {
+  const selectedTypes = req.body.types;
+  const selectedSubtypes = req.body.subtypes;
+  const event = await OperationalEvent.findOne({
+    where: {
+      id: req.body.operationalEventId,
+    },
+    include: [
+      {
+        model: Operational,
+      },
+    ],
+  });
+  if (event != null) {
+    event.description = req.body.message;
+    event.save();
+
+    await EventType.destroy({
+      where: {
+        operationalEventId: event.id
+      }
+    });
+
+    for (let i = 0; i < selectedTypes.length; i++) {
+      const curType = selectedTypes[i];
+      let curTypeId = null;
+      let curSubtypeId = null;
+
+      let curTypeObject = await OperationalType.findOne({
+        where: {
+          typeName: curType
+        }
+      });
+      let curEvent;
+      if (curTypeObject != null) {
+        let isMade = false;
+        curTypeId = curTypeObject.id;
+        if (selectedSubtypes.length == 0) {
+          curEvent = await EventType.create({
+            operationalEventId: event.id,
+            operationalTypeId: curTypeId,
+            operationalSubtypeId: null,
+          });
+          EventType.sync();
+        }
+        for (let j = 0; j < selectedSubtypes.length; j++) {
+          const curSubtype = selectedSubtypes[j];
+
+          let curSubtypeObject = await OperationalSubtype.findOne({
+            where: {
+              typeName: curSubtype
+            }
+          });
+          if (curSubtypeObject != null) {
+            curSubtypeId = curSubtypeObject.id;
+            if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
+              curEvent = await EventType.create({
+                operationalEventId: event.id,
+                operationalTypeId: curTypeId,
+                operationalSubtypeId: curSubtypeId,
+              });
+            } else {
+              if (!isMade) {
+                curEvent = await EventType.create({
+                  operationalEventId: event.id,
+                  operationalTypeId: curTypeId,
+                  operationalSubtypeId: null,
+                });
+                isMade = true;
+              }
+            }
+            EventType.sync();
+          }
+        }
+      }
+    }
+
+  } else {
+    res.send(false);
+  }
+
+  OperationalEvent.sync();
+  res.send(true);
+});
+
+ /******************************************************************************
+ *      POST Change Workplace Event - "POST /api/reports/changeWorkplaceEvent"
+ ******************************************************************************/
+
+router.post('/changeWorkplaceEvent', async (req, res) => {
+  let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let workplaceType = await WorkplaceType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceSubtype = await WorkplaceSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let workplaceTypeId = null;
+  if (workplaceType != null) {
+    workplaceTypeId = workplaceType.id;
+  }
+
+  let workplaceSubtypeId = null;
+  if (workplaceSubtype != null) {
+    workplaceSubtypeId = workplaceSubtype.id;
+  }
+
+  const event = await WorkplaceEvent.findOne({
+    where: {
+      id: req.body.administrativeId,
+    },
+    include: [
+      {
+        model: Administrative,
+      },
+    ],
+  });
+
+  if (event != null) {
+    event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
+    event.workplaceTypeId = workplaceTypeId;
+    event.workplaceSubtypeId = workplaceSubtypeId;
+    event.save();
+  } else {
+    res.send(false);
+  }
+
+  WorkplaceEvent.sync();
+  res.send(true);
+});
+
+/******************************************************************************
+ *      POST Change Secretariat Notification - "POST /api/reports/changeSecretariatNotification"
+ ******************************************************************************/
+router.post('/changeSecretariatNotification', async (req, res) => {
+
+  const event = await SecretariatNotification.findOne({
+    where: {
+      id: req.body.administrativeId,
+    },
+    include: [
+      {
+        model: Administrative,
+      },
+    ],
+  });
+  if (event != null) {
+    event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
+    event.save();
+  } else {
+    res.send(Error('File not found'));
+  }
+
+  SecretariatNotification.sync();
+});
+
+/******************************************************************************
+ *      POST Change Defect - "POST /api/reports/changeDefect"
+ ******************************************************************************/
+router.post('/changeDefect', async (req, res) => {
+  let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let defectType = await DefectType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectSubtype = await DefectSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let defectTypeId = null;
+  if (defectType != null) {
+    defectTypeId = defectType.id
+  }
+
+  let defectSubtypeId = null;
+  if (defectSubtype != null) {
+    defectSubtypeId = defectSubtype.id;
+  }
+
+  const event = await Defect.findOne({
+    where: {
+      id: req.body.technicalId,
+    },
+    include: [
+      {
+        model: Technical,
+      },
+    ],
+  });
+
+  if (event != null) {
+    event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
+    event.defectTypeId = defectTypeId;
+    event.defectSubtypeId = defectSubtypeId;
+    event.save();
+  } else {
+    res.send(false);
+  }
+
+  Defect.sync();
+  res.send(true);
+});
+
+
+ /******************************************************************************
+ *      POST Change Malfunction - "POST /api/reports/changeMalfunction"
+ ******************************************************************************/
+router.post('/changeMalfunction', async (req, res) => {
+  let type = req.body.type;
+  let subtype = req.body.subtype;
+
+  let malfunctionType = await MalfunctionType.findOne({
+    where: {
+      typename: type
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let malfunctionSubtype = await MalfunctionSubtype.findOne({
+    where: {
+      typename: subtype
+    },
+    attributes: ['id', 'typeName'],
+  });
+
+  let malfunctionTypeId = null
+  if (malfunctionType != null) {
+    malfunctionTypeId = malfunctionType.id
+  }
+
+  let malfunctionSubtypeId = null;
+  if (malfunctionSubtype != null) {
+    malfunctionSubtypeId = malfunctionSubtype.id;
+  }
+
+  const event = await Malfunction.findOne({
+    where: {
+      id: req.body.technicalId,
+    },
+    include: [
+      {
+        model: Technical,
+      },
+    ],
+  });
+  if (event != null) {
+    event.description = req.body.message;
+    event.monitoring = req.body.monitoring;
+    event.malfunctionTypeId = malfunctionTypeId;
+    event.malfunctionSubtypeId = malfunctionSubtypeId;
+    event.save();
+  } else {
+    res.send(false);
+  }
+
+  Malfunction.sync();
+  res.send(true);
+});
+
+ /******************************************************************************
+ *      GET Get Operational Events - "POST /api/reports/getOperationalEvents"
+ ******************************************************************************/
+router.post("/getOperationalEvents", async (req, res) => {
+  var matched_events = await OperationalEvent.findAll({
+    where: { plNumber: { [Op.like]: req.body.plNumber } },
+    limit: 5
+  });
+  res.json(matched_events);
+});
+
+/******************************************************************************
+ *      POST Add Types - "POST /api/reports/addTypes"
+ ******************************************************************************/
+router.post("/addTypes", async (req, res) => {
+  const data = req.body;
+  //OPERTATIONEEL TYPE TOEVOEGEN
+  console.log(data.operationaltype, data.workplacetype, data.defectTypes, data.malfunctionTypes)
+  if (data.type == 0) {
+    if ( data.operationaltype == -1) {
+      OperationalType.create({
+        typeName: data.field,
+      }).then(function(){
+        OperationalType.sync();
+        res.json({
+          check: true,
+          message: "Nieuw type aangemaakt"
+        })
+      }).catch(function(err : Error) {
+        res.json({
+          check:false,
+          message: "Type niet aangemaakt" + err
+        })
+      });
+      
+    } else {
+      OperationalSubtype.create({
+        typeName: data.field,
+        operationalTypeId: data.operationaltype
+      }).then(function(){
+        OperationalSubtype.sync();
+        res.json({
+          check: true,
+          message: "Nieuw subtype aangemaakt"
+        })
+      }).catch(function(err : Error){
+        res.json({
+          check:false,
+          message: "Subtype niet aangemaakt" + err
+        })
+      });
+      
+    }
+    // PERSONEEL TYPE TOEVOEGEN
+  } else if (data.type == 1) {
+    if (data.workplacetype == -1) {
+      WorkplaceType.create({
+        typeName: data.field,
+      }).then(function(){
+        WorkplaceType.sync();
+        res.json({
+          check: true,
+          message: "Nieuw type aangemaakt"
+        })
+      }).catch(function(err : Error) {
+        res.json({
+          check:false,
+          message: "Type niet aangemaakt" + err
+        })
+      });
+     
+    } else {
+      WorkplaceSubtype.create({
+        typeName: data.field,
+        workplaceTypeId: data.workplacetype
+      }).then(function(){
+        WorkplaceSubtype.sync();
+        res.json({
+          check: true,
+          message: "Nieuw subtype aangemaakt"
+        });
+      }).catch(function(err : Error) {
+        res.json({
+          check:false,
+          message: "Subype niet aangemaakt" + err
+        })
+      });
+      
+    
+  }
+    //LOGISTIEK TYPE TOEVOEGEN
+  } else if (data.type == 2) { //LOG
+    if (data.defectTypes ==  -1) {
+      DefectType.create({
+        typeName: data.field,
+      }).then(function(){
+        DefectType.sync();
+        res.json({
+          check: true,
+          message: "Nieuw type aangemaakt"
+        })
+      }).catch(function(err : Error){
+        res.json({
+          check:false,
+          message: "Type niet aangemaakt" + err
+        })
+      });
+      
+    } else {
+      DefectSubtype.create({
+        typeName: data.field,
+        defectTypeId: data.defectTypes
+      }).then(function(){
+        DefectSubtype.sync();
+        res.json({
+          check: true,
+          message: "Nieuw subtype aangemaakt"
+        })
+      }).catch(function(err : Error){
+        res.json({
+          check:false,
+          message: "Subype niet aangemaakt" + err
+        })
+      });
+      
+    }
+    //TECHNISCH TYPE TOEVOEGEN
+  } else if (data.type == 3) { //TECH
+    if (data.malfunctionTypes == -1) {
+      MalfunctionType.create({
+        typeName: data.field,
+      }).then(function(){
+        MalfunctionType.sync();
+        res.json({
+          check: true,
+          message: "Nieuw type aangemaakt"
+        })
+      }).catch(function(err : Error){
+        res.json({
+          check:false,
+          message: "Type niet aangemaakt" + err
+        })
+      });
+      
+    } else {
+      MalfunctionSubtype.create({
+        typeName: data.field,
+        operationalTypeId: data.malfunctionTypes
+      }).then(function(){
+        MalfunctionSubtype.sync();
+        res.json({
+          check: true,
+          message: "Nieuw subtype aangemaakt"
+        })
+      }).catch(function(err: Error){
+        res.json({
+          check:false,
+          message: "Subtype niet aangemaakt" + err
+        })
+      });
+      
+    }
+  } else {
+    res.json({bool: false, message:"Veld toevoegen mislukt"})
+  }
+});
+
+ /******************************************************************************
  *                                     Export
  ******************************************************************************/
 

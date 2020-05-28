@@ -10,7 +10,7 @@
     <section v-if="option == 'newUser'">
       <div class="input-group-vertical mt-2">
         <input name="username" v-model="newUserData.username" type="text" placeholder="Gebruikersnaam" class="form-control form-control-lg">
-        <input name="email" v-model="newUserData.email" type="email" placeholder="email" class="form-control form-control-lg">
+        <input name="email" v-model="newUserData.email" type="email" placeholder="E-mail" class="form-control form-control-lg">
         <input name="password" v-model="newUserData.password" type="password" placeholder="Wachtwoord" class="form-control form-control-lg">
         <input name="passwordCheck" v-model="newUserData.rptPassword" type="password" placeholder="Herhaal wachtwoord" class="form-control form-control-lg">
         <select class="form-control form-control-lg" id="accessRights" v-model="newUserData.accessRights">
@@ -20,10 +20,8 @@
         </select>
         <br>
         <label><input name="Subscription" v-model="newUserData.subscription" type="checkbox">Toevoegen aan maillijst</label>
-        <small v-if="newUserData.passwordComp">De wachtwoorden komen niet overeen!</small>
-        <small v-if="newUserData.passwordCheck">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
-        <small v-if="changePassword.completed">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
-        <small v-if="changeAccesRights.completed">De nieuwe gebruiker is toegevoegd!</small>
+        <small v-if="newUserData.failed">Het wachtwoord wijzigen is niet gelukt!</small>
+        <small v-if="newUserData.completed">De nieuwe gebruiker is toegevoegd!</small>
         <button type="button" class="btn btn-success btn-block" @click.prevent="doNewUser">Voeg gebruiker toe</button>
       </div>
     </section>
@@ -44,6 +42,8 @@
         </select>
         <br>
         <small v-if="changeAccesRights.completed">De toegangsrechten zijn gewijzigd!</small>
+        <small v-if="changeAccesRights.failed">De toegangsrechten zijn niet gewijzigd!</small>
+
         <button type="button" class="btn btn-success btn-block" @click.prevent="doChangeAccess">Verander toegangsrechten</button>
       </div>
     </section>
@@ -62,6 +62,8 @@
         <small v-if="changePassword.passwordComp">De wachtwoorden komen niet overeen!</small>
         <small v-if="changePassword.passwordCheck">Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter en een cijfer bevatten!</small>
         <small v-if="changePassword.completed">Het wachtwoord is gewijzigd</small>
+        <small v-if="changePassword.failed">Het wachtwoord is niet gewijzigd!</small>
+
         <button type="button" class="btn btn-success btn-block" @click.prevent="doChangePassword">Verander wachtwoord</button>
       </div>
     </section>
@@ -83,21 +85,21 @@
 
         <label>Optioneel:</label>
 
-        <select v-if="addField.category == 0" class="form-control form-control-lg" id="addField" v-model="addField.type">
+        <select v-if="addField.category == 0" class="form-control form-control-lg" id="addField" v-model="addField.operationaltype">
           <option value="-1">Subtype (Optioneel)</option>
-          <option v-for="value in this.addField.reportTypes.operationalTypes" :key="value" :value="value.id"> {{value.typeName }}</option>
+          <option v-for="value in this.addField.reportTypes.operationalTypes" :key="value.id" :value="value.id"> {{value.typeName }}</option>
         </select>
-        <select v-else-if="addField.category == 1" class="form-control form-control-lg" id="addField" v-model="addField.type">
+        <select v-else-if="addField.category == 1" class="form-control form-control-lg" id="addField" v-model="addField.workplacetype">
           <option value="-1">Subtype (Optioneel)</option>
-          <option v-for="value in this.addField.reportTypes.workplaceTypes" :key='value' :value="value.id"> {{value.typeName }}</option>
+          <option v-for="value in this.addField.reportTypes.workplaceTypes" :key='value.id' :value="value.id"> {{value.typeName }}</option>
         </select>
-        <select v-else-if="addField.category == 2" class="form-control form-control-lg" id="addField" v-model="addField.type">
+        <select v-else-if="addField.category == 2" class="form-control form-control-lg" id="addField" v-model="addField.defecttype">
           <option value="-1">Subtype (Optioneel)</option>
-          <option v-for="value in this.addField.reportTypes.defectTypes" :key="value" :value="value.id"> {{value.typeName }}</option>
+          <option v-for="value in this.addField.reportTypes.defectTypes" :key="value.id" :value="value.id"> {{value.typeName }}</option>
         </select>
-        <select v-else-if="addField.category == 3" class="form-control form-control-lg" id="addField" v-model="addField.type">
+        <select v-else-if="addField.category == 3" class="form-control form-control-lg" id="addField" v-model="addField.malfunctiontype">
           <option value="-1">Subtype (Optioneel)</option>
-          <option v-for="value in this.addField.reportTypes.malfunctionTypes" :key="value" :value="value.id"> {{value.typeName }}</option>
+          <option v-for="value in this.addField.reportTypes.malfunctionTypes" :key="value.id" :value="value.id"> {{value.typeName }}</option>
         </select>
       </div>
       <input name="addField" v-model="addField.newField" type="text" placeholder="Nieuw veld" class="form-control form-control-lg">
@@ -110,7 +112,7 @@
   <div class="container mb-2">
     <div class="row">
       <div class="col-sm">
-        <router-link to="/changePermissions" tag="button" class="btn btn-primary btn-block">toegangsrechten van gebruikersrollen wijzigen</router-link>
+        <router-link to="/changePermissions" tag="button" class="btn btn-primary btn-block">Gebruikersrollen wijzigen</router-link>
       </div>
     </div>
   </div>
@@ -144,14 +146,17 @@ export default Vue.extend({
         accessRights: 0,
         subscription: false,
         passwordCheck: false,
+        usernameCheck: false,
         passwordComp: false,
-        completed: false
+        completed: false,
+        failed: false
       },
       changeAccesRights: {
         username: "",
         rights: "",
         newRights: 0,
-        completed: false
+        completed: false,
+        failed: false,
       },
       changePassword: {
         username: "",
@@ -159,12 +164,16 @@ export default Vue.extend({
         rptPassword: "",
         passwordCheck: false,
         passwordComp: false,
-        completed: false
+        completed: false,
+        failed: false,
       },
       addField: {
         newField: "",
         category: 0,
-        type: -1,
+        operationaltype: -1,
+        workplacetype: -1,
+        malfunctiontype: -1,
+        defecttype: -1,
         reportTypes: {},
         completed: false
       },
@@ -209,8 +218,9 @@ export default Vue.extend({
     },
     async doNewUser() {
       //CHECK IF PASSWORDS ARE THE SAME
+      this.newUserData.usernameCheck = this.checkUsername(this.newUserData.username);
       this.newUserData.passwordComp = this.checkPasswords(this.newUserData.password, this.newUserData.rptPassword);
-      if (!this.newUserData.passwordComp /*&& !this.newUserData.passwordCheck*/ ) {
+      if (this.newUserData.passwordComp && this.newUserData.usernameCheck) {
         const response = await ReportingService.addUser({
           username: this.newUserData.username,
           password: this.newUserData.password,
@@ -219,55 +229,71 @@ export default Vue.extend({
           mail: this.newUserData.email,
           subscription: this.newUserData.subscription
         });
+        this.newUserData.completed = true;
+       
+      } else {
+        this.newUserData.failed = true;
       }
-      this.newUserData.username = ""
       this.newUserData.password = "";
       this.newUserData.rptPassword = "";
+      this.newUserData.username = ""
       this.newUserData.email = "";
       this.newUserData.accessRights = 0;
       this.newUserData.subscription = false;
-      this.newUserData.completed = true;
     },
     async doChangePassword() {
       //CHECK IF PASSWORDS ARE THE SAME
       this.changePassword.passwordComp = this.checkPasswords(this.changePassword.newPassword, this.changePassword.rptPassword);
-      if (!this.changePassword.passwordComp /*&& !this.changePassword.passwordCheck*/ ) {
+      if (this.changePassword.passwordComp) {
         const response = await ReportingService.changePassword({
           username: this.changePassword.username,
           Password: this.changePassword.newPassword,
           rptPassword: this.changePassword.rptPassword
         });
+        this.changePassword.completed = true;
+      } else {
+        this.changePassword.failed = true;
       }
       this.changePassword.newPassword = "";
       this.changePassword.rptPassword = "";
-      this.changePassword.completed = true;
+      
     },
     async doChangeAccess() {
-      const response = await ReportingService.changeAcces({
+      if (this.checkAccessRights(this.changeAccesRights.newRights)) {
+        const response = await ReportingService.changeAcces({
         username: this.changeAccesRights.username,
         newAcces: this.changeAccesRights.newRights
       });
       this.changeAccesRights.username = "";
       this.changeAccesRights.newRights = 0;
       this.changeAccesRights.completed = true;
+
+      } else {
+        this.changeAccesRights.failed = true;
+      }
+      
     },
     async doAddField() {
       const response = await ReportingService.addTypes({
         type: this.addField.category,
-        subtype: this.addField.type,
+        operationaltype: this.addField.operationaltype,
+        workplacetype: this.addField.workplacetype,
+        defectTypes: this.addField.defecttype,
+        malfunctionTypes: this.addField.malfunctiontype,
         field: this.addField.newField,
       });
       this.addField.newField = "";
       this.addField.category = 0,
-        this.addField.type = -1,
+        this.addField.operationaltype = -1,
+        this.addField.workplacetype = -1,
+        this.addField.defecttype = -1,
+        this.addField.malfunctiontype = -1,
+
         this.addField.completed = true;
 
     },
-    changePermissions() {
-      alert(JSON.stringify(ReportingService.getAccessRoleData()));
-    },
     checkUsername: function (username: string) {
-      if (/^[a-z0-9_-]{3,15}$/.test(username)) {
+      if (/^[a-z0-9_-]{5,15}$/.test(username)) {
         return true;
       } else {
         return false;
@@ -317,7 +343,10 @@ export default Vue.extend({
 
       this.addField.newField = "";
       this.addField.category = 0,
-        this.addField.type = -1,
+        this.addField.operationaltype = -1,
+        this.addField.workplacetype = -1,
+        this.addField.defecttype = -1,
+        this.addField.malfunctiontype = -1,
         this.addField.completed = false;
 
     },
