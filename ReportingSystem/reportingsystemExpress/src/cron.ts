@@ -16,7 +16,7 @@ export default class cronServer{
 
     cronTask() {
         this.sendEmail();
-        // this.makeNewReport();
+        this.makeNewReport();
         console.log("crontask");
     }
 

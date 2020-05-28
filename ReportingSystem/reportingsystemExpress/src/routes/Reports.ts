@@ -55,7 +55,6 @@ router.get('/count', async (req: Request, res: Response) => {
       temporary: false,
     },
   });
-  console.log(count);
   res.send({count: count});
 });
 
@@ -622,8 +621,6 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     technical: { defects, malfunctions },
   };
 
-  console.log(results);
-
   res.send(results);
 });
 
@@ -827,9 +824,6 @@ router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult operationalEvent');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -848,9 +842,6 @@ router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult WorkplaceEvent');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -868,9 +859,6 @@ router.get('/secretariatNotification/:id', async (req: Request, res: Response) =
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult SecretariatNotification');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -888,9 +876,6 @@ router.get('/defectEvent/:id', async (req: Request, res: Response) => {
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult Defect');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -908,9 +893,6 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
     },
   });
   if (result != null) {
-    console.log('\n\n\n\nresult Malfunction');
-    console.log(result);
-
     res.send(result);
   }
   return false;
@@ -1138,12 +1120,11 @@ router.post('/removeNotification', async (req, res) => {
         id: eventId
       }
     });
-    console.log(event);
+
     if (event !== null) {
-      console.log(event.monitoring);
       event.monitoring = false;
       await event.save();
-      console.log(event.monitoring);
+      
       res.send(true);
     }
   }

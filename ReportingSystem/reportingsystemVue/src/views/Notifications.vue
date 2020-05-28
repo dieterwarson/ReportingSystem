@@ -197,6 +197,7 @@ import ReportingService from "../services/ReportingService";
 export default Vue.extend({
   data: function() {
     return {
+      interval: 0,
       step: "Operational",
       monitored: {
         administrative: {
@@ -223,6 +224,7 @@ export default Vue.extend({
 
   mounted() {
     this.loadData();
+    this.interval = window.setInterval(this.loadData, 5000);
   },
 
   methods: {
@@ -259,5 +261,8 @@ export default Vue.extend({
       }).then((res) => this.loadData());
     },
   },
+  beforeDestroy: function() {
+      window.clearInterval(this.interval);
+  }
 });
 </script>

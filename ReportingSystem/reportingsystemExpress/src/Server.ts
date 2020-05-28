@@ -1896,8 +1896,6 @@ cron.schedule(shiftChange.getMinutes() + " */"+ shiftChange.getHours() + " * * *
   cronInstance.cronTask();
 });
 
-cronInstance.cronTask();
-
 // cronInstance.cronTask();
 
 // Export express instance

@@ -90,9 +90,10 @@ export default Vue.extend({
       return "Dagshift 🌣";
     },
 
-    beforeDestroy: function() {
+    
+  },
+  beforeDestroy: function() {
       window.clearInterval(this.interval);
-    }
   },
   watch: {
     currentPage: {
