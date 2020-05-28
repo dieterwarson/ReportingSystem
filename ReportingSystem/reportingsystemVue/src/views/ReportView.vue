@@ -591,7 +591,7 @@ export default Vue.extend({
 
   mounted() {
     this.loadData();
-    // this.interval = window.setInterval(this.loadData, 5000);
+    this.interval = window.setInterval(this.loadData, 5000);
   },
 
   methods: {
