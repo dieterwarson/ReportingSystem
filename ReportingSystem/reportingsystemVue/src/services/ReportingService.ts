@@ -61,6 +61,16 @@ export default {
         alert(error);
       });
   },
+  getPaginationReports(offset: number) {
+    return Api()
+      .post("api/reports/all", {offset: offset})
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  },
   addOperationalEvent(data: any) {
     return Api()
       .post('/addOperationalEvent', data)

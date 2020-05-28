@@ -31,8 +31,11 @@ const router = Router();
 
 // only get the reports that are finished
 
-router.get('/all', async (req: Request, res: Response) => {
+router.post('/all', async (req: Request, res: Response) => {
+  const offset = req.body.offset;
   const reports = await Report.findAll({
+    offset: offset,
+    limit: 10,
     order: [['date', 'DESC']],
     where: {
       temporary: false,
@@ -40,6 +43,20 @@ router.get('/all', async (req: Request, res: Response) => {
     attributes: ['id', 'date', 'nightShift'],
   });
   res.send(reports);
+});
+
+/******************************************************************************
+ *                   Count All Reports - "GET /api/reports/count"
+ ******************************************************************************/
+
+router.get('/count', async (req: Request, res: Response) => {
+  const count = await Report.count({
+    where: {
+      temporary: false,
+    },
+  });
+  console.log(count);
+  res.send({count: count});
 });
 
 

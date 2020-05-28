@@ -136,12 +136,15 @@ const user = new User({
 })
 user.save();
 
-const report1 = new Report({
-  date: new Date('2020/03/16 00:01:00'),
-  temporary: false,
-  nightShift: true,
-});
-// report1.save();
+/* for (let i = 0; i < 10000; i++) {
+  const report1 = new Report({
+    date: new Date('2020/03/16 23:01:00'),
+    temporary: false,
+    nightShift: true,
+  });
+  report1.save();  
+} */
+
 
 const report2 = new Report({
   date: new Date('2020/03/16 12:01:00'),
