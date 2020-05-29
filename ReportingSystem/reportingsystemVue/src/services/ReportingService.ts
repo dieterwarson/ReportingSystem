@@ -61,6 +61,16 @@ export default {
         alert(error);
       });
   },
+  getFilteredEvents(data: any, id: number) {
+    return Api()
+      .post("api/reports/getTypeEvents/" + id, data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
+  },
   getReportCount(dateRange: any){
     return Api()
     .post("api/reports/count", dateRange)

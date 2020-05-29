@@ -17,7 +17,6 @@ router.get('/all', async (req: Request, res: Response) => {
   const users = await User.findAll({
     attributes: ['id', 'username', 'email', 'accessRights', 'subscription'],
   });
-  console.log(users);
   res.send(users);
 });
 
@@ -35,14 +34,13 @@ interface INewUserData {
 }
 
 function checkUsername(username: string) {
-  if (/^[a-z0-9_-]{3,15}$/.test(username)) {
+  if (/^[a-zA-Z0-9_-]{3,15}$/.test(username)) {
     return true;
   }
   return false;
 }
 
 function checkPassword(password: string, rptPassword: string) {
-  console.log(password, rptPassword);
   if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password)) {
     if (password.localeCompare(rptPassword) === 0) {
       return true;
@@ -121,9 +119,7 @@ router.post('/changePassword', async (req, res) => {
     })
   }
   if (userData.username, userData.password, userData.rptPassword) {
-    console.log("hier")
     const passwordHash = bcrypt.hashSync(userData.password, 10);
-    console.log("daar")
     User.update(
       { password: passwordHash },
       { where: { username: userData.username } }
@@ -237,7 +233,6 @@ router.post('/loginUser', async (req, res) => {
     if (users.length > 0) {
       let user = users[0];
       let passwordHash = user.password;
-      console.log(passwordHash);
       if (bcrypt.compareSync(req.body.password, passwordHash, 10)) {
         User.update(
           { loggedIn: true },

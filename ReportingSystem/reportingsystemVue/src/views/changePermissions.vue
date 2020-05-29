@@ -1,4 +1,10 @@
 <template>
+<div class="changePermissions">
+<div id="nav">
+    <router-link to="/">Startscherm</router-link>
+    <b>/</b>
+    <router-link to="/admin">Administrator</router-link>
+  </div>
 <div class="container pt-5 pb-5">
   <h1>Rechten van gebruikersrollen wijzigen</h1>
   <div class="input-group-vertical" mt-2>
@@ -25,6 +31,7 @@
     </table>
   </div>
   <button type="button" class="btn btn-success btn-block" @click.prevent="updatePermissions">Wijzigingen opslaan</button>
+</div>
 </div>
 </template>
 

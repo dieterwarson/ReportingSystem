@@ -1,4 +1,8 @@
 <template>
+<div class="admin">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
 <div class="container pt-5 pb-5">
   <h1>Admin functies</h1>
   <div class="container mb-2">
@@ -20,9 +24,10 @@
         </select>
         <br>
         <label><input name="Subscription" v-model="newUserData.subscription" type="checkbox">Toevoegen aan maillijst</label>
+        
+        <button type="button" class="btn btn-success btn-block" @click.prevent="doNewUser">Voeg gebruiker toe</button>
         <small v-if="newUserData.failed">De gebruiker toevoegen is niet gelukt!</small>
         <small v-if="newUserData.completed">De nieuwe gebruiker is toegevoegd!</small>
-        <button type="button" class="btn btn-success btn-block" @click.prevent="doNewUser">Voeg gebruiker toe</button>
       </div>
     </section>
   </div>
@@ -122,6 +127,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 </template>
 
@@ -280,13 +286,14 @@ export default Vue.extend({
       
     },
     async doAddField() {
-      const response = await ReportingService.addTypes({
-        type: this.addField.category,
-        operationaltype: this.addField.operationaltype,
-        workplacetype: this.addField.workplacetype,
-        defectTypes: this.addField.defecttype,
-        malfunctionTypes: this.addField.malfunctiontype,
-        field: this.addField.newField,
+      if (this.checkUsername(this.addField.newField)){
+        const response = await ReportingService.addTypes({
+          type: this.addField.category,
+          operationaltype: this.addField.operationaltype,
+          workplacetype: this.addField.workplacetype,
+          defectTypes: this.addField.defecttype,
+          malfunctionTypes: this.addField.malfunctiontype,
+          field: this.addField.newField,
       });
       this.addField.newField = "";
       this.addField.category = 0,
@@ -294,12 +301,11 @@ export default Vue.extend({
         this.addField.workplacetype = -1,
         this.addField.defecttype = -1,
         this.addField.malfunctiontype = -1,
-
         this.addField.completed = true;
-
-    },
+      }
+   },
     checkUsername: function (username: string) {
-      if (/^[a-zA-Z0-9_-]{5,15}$/.test(username)) {
+      if (/^[a-zA-Z0-9_-]{3,15}$/.test(username)) {
         return true;
       } else {
         return false;

@@ -1,5 +1,11 @@
 <template>
+<div class="reports">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
+
 <div v-if="reports" class="container">
+  
   <h1>Verslagen</h1>
   <div class="row">
     <form class="col-md-4">
@@ -34,6 +40,7 @@
     </div>
   </div>
   <vPagination :classes="bootstrapPaginationClasses" v-model="currentPage" :page-count="pages"></vPagination>
+</div>
 </div>
 </template>
 

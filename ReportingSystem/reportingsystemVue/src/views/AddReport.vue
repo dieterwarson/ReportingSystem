@@ -1,6 +1,11 @@
 <template> 
+<div class="addReport">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
 <!-- script has to be implemented again to achieve the seperate forms -->
 <div class="container pt-5 pb-5">
+  
   <h1>Voeg gebeurtenis toe</h1>
   <form id="addReport" class="formcontainer">
 
@@ -41,27 +46,27 @@
             </form>
       <div class="text-sm-left col-lg">
         <div class="input-group" >
-          <input name="plNumber" @keyup="autoSave" v-model="form.plNumber" type="text" placeholder="PL-nummer" class="form-control form-control-lg" />
+          <input name="plNumber" v-model="form.plNumber" type="text" placeholder="PL-nummer" class="form-control form-control-lg" />
         </div>
         <div class="input-group" >
           <button class="btn btn-block btn-success" type="button" @click.prevent="getFile">Zoek fiche</button>
         </div>
         <div class="input-group" >
-          <input name="location" @keyup="autoSave" v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg" />
+          <input name="location" @change="autoSave" v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg" />
         </div>
         <div class="input-group">
-          <input name="date" @keyup="autoSave" v-model="form.operationalDate" type="text" placeholder="Datum" class="form-control form-control-lg" />
+          <input name="date" @change="autoSave" v-model="form.operationalDate" type="text" placeholder="Datum" class="form-control form-control-lg" />
         </div>
         <div class="input-group">
-          <input name="unit" @keyup="autoSave" v-model="form.unit" type="text" placeholder="Unit" class="form-control form-control-lg" />
+          <input name="unit" @change="autoSave" v-model="form.unit" type="text" placeholder="Unit" class="form-control form-control-lg" />
         </div>
         <div class="input-group" >
-          <input @keyup="autoSave" v-model="form.operationalMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
+          <input @change="autoSave" v-model="form.operationalMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
         </div>
         <label><input type="checkbox" v-model="form.operationalPrio" >Prioriteit</label>
 
       <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addOperationalEvent">Opslaan</button>
-      <small v-if="form.operationalFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
+      <small v-if="form.operationalFailed">Het verslag kon niet toegevoegd worden</small>
       <small v-if="form.operationalSucceeded">Het verslag is toegevoegd</small>
       </div>
       </div>
@@ -191,6 +196,7 @@
     </section>
   </form>
 </div>
+</div>
 </template>
 
 <script lang="ts">
@@ -216,19 +222,14 @@ export default Vue.extend({
         operationalPrio: false,
         unit: "",
         //WORKFORCE OBJECTS
-        absent: "",
         replacement: "",
         workforceMessage: "",
         secretNotification: "",
         secretMonitoring: false,
         workplaceEvent: null,
         workPlaceMonitoring: false,
-        workforceDate: null,
         absentee: "",
         substitute: null,
-        employee: null,
-        workplaceEventType: null,
-        workForceFailed: false,
         workForceSucceeded: false,
         //TECHNICAL OBJECTS
         defectDescription: "",
@@ -238,9 +239,6 @@ export default Vue.extend({
         malfunctionDuration: "",
         malfunctionMonitoring: false,
 
-        technicalMessage: "",
-        technicalProblems: null,
-        technicalDescription: null,
         technicalFailed: false,
         technicalSucceeded: false
       },
@@ -292,7 +290,7 @@ export default Vue.extend({
     this.getAutoSave();
   },
   methods: {
-    autoSave: function() {
+    async autoSave() {
       ReportingService.autosaveOperational({
         plNumber: this.form.plNumber,
         location: this.form.location,
@@ -318,10 +316,10 @@ export default Vue.extend({
         this.form.operationalMessage = response.entry.description;
         this.form.unit = response.entry.unit;
         this.form.operationalPrio = response.entry.priority;
-         ReportingService.getEventType(
-        "/api/reports/operationalEventTypes/" + String(response.entry.id)
-      ).then(res => (this.operationalTypeSelected.selectedTypes = res.selectedTypes,
-                      this.operationalTypeSelected.selectedSubtypes = res.selectedSubtypes));
+      //    ReportingService.getEventType(
+      //   "/api/reports/operationalEventTypes/" + String(response.entry.id)
+      // ).then(res => (this.operationalTypeSelected.selectedTypes = res.selectedTypes,
+      //                 this.operationalTypeSelected.selectedSubtypes = res.selectedSubtypes));
       }
     },
     getOperational: function () {
@@ -464,7 +462,8 @@ export default Vue.extend({
       }
     },
     async addOperationalEvent() {
-      const response = await ReportingService.addOperationalEvent({
+      if(this.form.plNumber !== ''){
+        const response = await ReportingService.addOperationalEvent({
         plNumber: this.form.plNumber,
         location: this.form.location,
         date: this.form.operationalDate,
@@ -481,9 +480,18 @@ export default Vue.extend({
         this.form.location = "";
         this.form.operationalDate = "";
         this.form.operationalMessage = "";
+        this.form.unit = "";
         this.form.operationalSucceeded = true;
-
+      } else {
+        this.form.operationalFailed = true;
+        this.form.plNumber = "";
+        this.form.location = "";
+        this.form.operationalDate = "";
+        this.form.operationalMessage = "";
+        this.form.unit = "";
       }
+      }
+      
     },
     loadData: function () {
       ReportingService.getAllReports("/api/reports/operationalTypes").then(

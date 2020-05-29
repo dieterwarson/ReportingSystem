@@ -1,9 +1,9 @@
+import { Op } from 'sequelize';
 import { Request, Response, Router } from 'express';
 import OperationalEvent from 'src/models/operationalEvent';
 import SecretariatNotification from '../models/secretariatNotification';
 import Report from '../models/report';
 
-import { Op } from 'sequelize';
 import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import WorkplaceEvent from 'src/models/workplaceEvent';
@@ -76,7 +76,7 @@ router.post('/count', async (req: Request, res: Response) => {
       }
     },
   });
-  res.send({count: count});
+  res.send({ count: count });
 });
 
 
@@ -588,8 +588,8 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   });
 
   let operationalEvents: OperationalEvent[] = [];
-  let secretariatNotifications: SecretariatNotification[] = [];
   let workplaceEvents: WorkplaceEvent[] = [];
+  let secretariatNotifications: SecretariatNotification[] = [];
   let defects: Defect[] = [];
   let malfunctions: Malfunction[] = [];
 
@@ -609,38 +609,37 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     });
   }
 
+  if (administrative != null) {
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        administrativeId: administrative.id
+      },
+      include: [WorkplaceType, WorkplaceSubtype]
+    })
+
+    secretariatNotifications = await SecretariatNotification.findAll({
+      where: {
+        administrativeId: administrative.id
+      }
+    })
+  }
+
   if (technical != null) {
     defects = await Defect.findAll({
-      order: [['date', 'DESC']],
       where: {
         technicalId: technical.id
       },
-      include: [DefectType, DefectSubtype ]
+      include: [DefectType, DefectSubtype]
     })
 
     malfunctions = await Malfunction.findAll({
       where: {
         technicalId: technical.id
       },
-      include: [ MalfunctionType, MalfunctionSubtype ]
+      include: [MalfunctionType, MalfunctionSubtype]
     })
   }
-  if (administrative != null) {
-    workplaceEvents = await WorkplaceEvent.findAll({
-      order: [['date', 'DESC']],
-      where: {
-        administrativeId: administrative.id
-      },
-      include: [ WorkplaceType, WorkplaceSubtype]
-    })
 
-    secretariatNotifications = await SecretariatNotification.findAll({
-      order: [['date', 'DESC']],
-      where: {
-        administrativeId: administrative.id
-      }
-    })
-  }
   results = {
     report: report,
     operational: { operationalEvents },
@@ -1183,8 +1182,171 @@ router.post('/removeNotification', async (req, res) => {
       res.send(true);
     }
   }
+});
 
 
+/******************************************************************************
+ *             Get Statistics - "POST /api/reports/getTypeEvents/:reportId"
+ ******************************************************************************/
+router.post('/getTypeEvents/:reportId', async (req, res) => {
+  const types = req.body.selectedTypes;
+console.log(types);
+
+  var results;
+  let reportId = req.param('reportId');
+  let report = await Report.findOne({
+    where: {
+      id: reportId,
+    },
+  });
+
+  let operational = await Operational.findOne({
+    where: {
+      reportId: reportId
+    }
+  });
+  let administrative = await Administrative.findOne({
+    where: {
+      reportId: reportId
+    }
+  });
+  let technical = await Technical.findOne({
+    where: {
+      reportId: reportId
+    }
+  });
+
+  let operationalEvents: OperationalEvent[] = [];
+  let workplaceEvents: WorkplaceEvent[] = [];
+  let secretariatNotifications: SecretariatNotification[] = [];
+  let defects: Defect[] = [];
+  let malfunctions: Malfunction[] = [];
+
+  if (operational != null) {
+    for (let i in types.operational) {
+      var type = types.operational[i];
+      var result = [];
+      result = await OperationalEvent.findAll({
+        where: {
+          operationalId: operational.id
+        },
+        include: [{
+          model: EventType,
+          required: true,
+          include: [{
+            model: OperationalType,
+            required: true,
+            where: {
+              typeName: {
+                [Op.like]: '' + type,
+              },
+            },
+          }]
+        }]
+      });
+
+      if (result.length != 0) {
+        result.forEach(event => {
+          operationalEvents.push(event);
+        });
+      }
+    }
+  }
+
+  if (administrative != null) {
+    for (let i in types.workplaceevent) {
+      var type = types.workplaceevent[i];
+      var result = [];
+      result = await WorkplaceEvent.findAll({
+        where: {
+          administrativeId: administrative.id
+        },
+        include: [{
+          model: WorkplaceType,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }],
+      });
+
+      if (result.length != 0) {
+        result.forEach(event => {
+          workplaceEvents.push(event);
+        });
+      }
+    }
+
+    if (types.includes("secretariatNotifications")) {
+      secretariatNotifications = await SecretariatNotification.findAll({
+        where: {
+          administrativeId: administrative.id
+        }
+      })
+    }
+  }
+
+  if (technical != null) {
+    for (let i in types.defect) {
+      var type = types.defect[i];
+      var result = [];
+      result = await Defect.findAll({
+        where: {
+          technicalId: technical.id
+        },
+        include: [{
+          model: DefectType,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+
+      });
+
+      if (result.length != 0) {
+        result.forEach(event => {
+          defects.push(event);
+        });
+      }
+    }
+
+    for (let i in types.malfunction) {
+      var type = types.malfunction[i];
+      var result = [];
+      result = await Malfunction.findAll({
+        where: {
+          technicalId: technical.id
+        },
+        include: [{
+          model: MalfunctionType,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+
+      });
+
+      if (result.length != 0) {
+        result.forEach(event => {
+          malfunctions.push(event);
+        });
+      }
+    }
+  }
+
+  results = {
+    report: report,
+    operational: { operationalEvents },
+    administrative: { workplaceEvents, secretariatNotifications },
+    technical: { defects, malfunctions },
+  };
+
+  res.send(results);
 });
 
 
@@ -1195,6 +1357,9 @@ router.post('/autoSaveOperational', async (req, res) => {
   await OperationalEvent.findAll({
     where:{
       authorId: req.body.id,
+      operationalId: {
+        [Op.eq]: null
+      }
     }
   }).then(async function(entries) {
     await entries[0].update({
@@ -1205,70 +1370,6 @@ router.post('/autoSaveOperational', async (req, res) => {
       location: req.body.location,
       unit: req.body.unit,
       date: Date.now(),
-    }).then(async function(event){
-      const selectedTypes = req.body.types;
-      const selectedSubtypes = req.body.subtypes;
-      for (let i = 0; i < selectedTypes.length; i++) {
-        const curType = selectedTypes[i];
-        let curTypeId = null;
-        let curSubtypeId = null;
-  
-        let curTypeObject = await OperationalType.findOne({
-          where: {
-            typeName: curType
-          }
-        });
-        let curEvent;
-        if (curTypeObject != null) {
-          let isMade = false;
-          curTypeId = curTypeObject.id;
-          if (selectedSubtypes.length == 0) {
-            curEvent = await EventType.create({
-              operationalEventId: event.id,
-              operationalTypeId: curTypeId,
-              operationalSubtypeId: null,
-            });
-            EventType.sync();
-          }
-          for (let j = 0; j < selectedSubtypes.length; j++) {
-            const curSubtype = selectedSubtypes[j];
-  
-            let curSubtypeObject = await OperationalSubtype.findOne({
-              where: {
-                typeName: curSubtype
-              }
-            });
-            if (curSubtypeObject != null) {
-              curSubtypeId = curSubtypeObject.id;
-              if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
-                curEvent = await EventType.create({
-                  operationalEventId: event.id,
-                  operationalTypeId: curTypeId,
-                  operationalSubtypeId: curSubtypeId,
-                });
-              } else {
-                if (!isMade) {
-                  curEvent = await EventType.create({
-                    operationalEventId: event.id,
-                    operationalTypeId: curTypeId,
-                    operationalSubtypeId: null,
-                  });
-                  isMade = true;
-                }
-              }
-              EventType.sync();
-            }
-          }
-        }
-      }
-      res.json({
-        bool: true,
-      })
-    }).catch(function(err){
-      res.json({
-        bool: false,
-        message: err
-      })
     })
     }).catch(async function(err) {
       await OperationalEvent.create({
@@ -1281,66 +1382,10 @@ router.post('/autoSaveOperational', async (req, res) => {
         unit: req.body.unit,
         date: Date.now(),
       }).then(async function(event){
-        const selectedTypes = req.body.types;
-        const selectedSubtypes = req.body.subtypes;
-        for (let i = 0; i < selectedTypes.length; i++) {
-          const curType = selectedTypes[i];
-          let curTypeId = null;
-          let curSubtypeId = null;
-    
-          let curTypeObject = await OperationalType.findOne({
-            where: {
-              typeName: curType
-            }
-          });
-          let curEvent;
-          if (curTypeObject != null) {
-            let isMade = false;
-            curTypeId = curTypeObject.id;
-            if (selectedSubtypes.length == 0) {
-              curEvent = await EventType.create({
-                operationalEventId: event.id,
-                operationalTypeId: curTypeId,
-                operationalSubtypeId: null,
-              });
-              EventType.sync();
-            }
-            for (let j = 0; j < selectedSubtypes.length; j++) {
-              const curSubtype = selectedSubtypes[j];
-    
-              let curSubtypeObject = await OperationalSubtype.findOne({
-                where: {
-                  typeName: curSubtype
-                }
-              });
-              if (curSubtypeObject != null) {
-                curSubtypeId = curSubtypeObject.id;
-                if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
-                  curEvent = await EventType.create({
-                    operationalEventId: event.id,
-                    operationalTypeId: curTypeId,
-                    operationalSubtypeId: curSubtypeId,
-                  });
-                } else {
-                  if (!isMade) {
-                    curEvent = await EventType.create({
-                      operationalEventId: event.id,
-                      operationalTypeId: curTypeId,
-                      operationalSubtypeId: null,
-                    });
-                    isMade = true;
-                  }
-                }
-                EventType.sync();
-              }
-            }
-          }
-        }
         res.json({
           bool: true
         })
       })
-      
   })
 })
 
@@ -1351,7 +1396,9 @@ router.post('/getAutoSavedFile', async (req, res) => {
   await OperationalEvent.findAll({
     where: {
       authorId: req.body.id,
-      operationalId :null
+      operationalId: {
+        [Op.eq]: null
+      }
     }
   }).then(function(entries) {
     res.json({
@@ -1418,29 +1465,34 @@ router.post('/addSecretaryNotification', async (req, res) => {
 router.post('/addOperationalEvent', async (req, res) => {
   const selectedTypes = req.body.types;
   const selectedSubtypes = req.body.subtypes;
-
-
   Operational.findAll({
     limit: 1,
     order: [ ['reportId', 'DESC']]
   }).then(function(entries){
 
-    OperationalEvent.findAll({
-      where: {
-        authorId: req.body.id
-      },
-      limit: 1,
-      order: [ ['updatedAt', 'DESC']]
-    }).then(async function(events) {
-      const event = events[0];
-      event.update({
-        signaling: req.body.signaling,
-        plNumber: req.body.plNumber,
-        description: req.body.description,
-        priority: req.body.priority,
-        location: req.body.location,
-        unit: req.body.unit,
-        operationalId: entries[0].id
+    OperationalEvent.create({
+      plNumber: req.body.plNumber,
+      authorId: req.body.id,
+      location: req.body.location,
+      date: Date.now(),
+      description: req.body.message,
+      unit: req.body.unit,
+      operationalId: entries[0].id,
+      monitoring: req.body.monitoring,
+      priority: req.body.priority,
+    }).then(async function(event) {
+      OperationalEvent.findAll({
+        where:{
+          authorId: req.body.id,
+          operationalId: {
+            [Op.eq]: null
+          }
+        }
+      }).then(function(entries){
+        if (entries.length > 0){
+          entries[0].destroy({});
+
+        }
       })
       OperationalEvent.sync();
       for (let i = 0; i < selectedTypes.length; i++) {
@@ -1498,7 +1550,6 @@ router.post('/addOperationalEvent', async (req, res) => {
       }
       res.json({
         bool: true,
-        report: entries[0].reportId
       })
     }).catch(function(err) {
       res.json({
@@ -1994,7 +2045,6 @@ router.post("/getOperationalEvents", async (req, res) => {
 router.post("/addTypes", async (req, res) => {
   const data = req.body;
   //OPERTATIONEEL TYPE TOEVOEGEN
-  console.log(data.operationaltype, data.workplacetype, data.defectTypes, data.malfunctionTypes)
   if (data.type == 0) {
     if ( data.operationaltype == -1) {
       OperationalType.create({
