@@ -1,9 +1,9 @@
+import { Op } from 'sequelize';
 import { Request, Response, Router } from 'express';
 import OperationalEvent from 'src/models/operationalEvent';
 import SecretariatNotification from '../models/secretariatNotification';
 import Report from '../models/report';
 
-import { Op } from 'sequelize';
 import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import WorkplaceEvent from 'src/models/workplaceEvent';
@@ -1173,70 +1173,6 @@ router.post('/autoSaveOperational', async (req, res) => {
       location: req.body.location,
       unit: req.body.unit,
       date: Date.now(),
-    }).then(async function(event){
-      const selectedTypes = req.body.types;
-      const selectedSubtypes = req.body.subtypes;
-      for (let i = 0; i < selectedTypes.length; i++) {
-        const curType = selectedTypes[i];
-        let curTypeId = null;
-        let curSubtypeId = null;
-  
-        let curTypeObject = await OperationalType.findOne({
-          where: {
-            typeName: curType
-          }
-        });
-        let curEvent;
-        if (curTypeObject != null) {
-          let isMade = false;
-          curTypeId = curTypeObject.id;
-          if (selectedSubtypes.length == 0) {
-            curEvent = await EventType.create({
-              operationalEventId: event.id,
-              operationalTypeId: curTypeId,
-              operationalSubtypeId: null,
-            });
-            EventType.sync();
-          }
-          for (let j = 0; j < selectedSubtypes.length; j++) {
-            const curSubtype = selectedSubtypes[j];
-  
-            let curSubtypeObject = await OperationalSubtype.findOne({
-              where: {
-                typeName: curSubtype
-              }
-            });
-            if (curSubtypeObject != null) {
-              curSubtypeId = curSubtypeObject.id;
-              if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
-                curEvent = await EventType.create({
-                  operationalEventId: event.id,
-                  operationalTypeId: curTypeId,
-                  operationalSubtypeId: curSubtypeId,
-                });
-              } else {
-                if (!isMade) {
-                  curEvent = await EventType.create({
-                    operationalEventId: event.id,
-                    operationalTypeId: curTypeId,
-                    operationalSubtypeId: null,
-                  });
-                  isMade = true;
-                }
-              }
-              EventType.sync();
-            }
-          }
-        }
-      }
-      res.json({
-        bool: true,
-      })
-    }).catch(function(err){
-      res.json({
-        bool: false,
-        message: err
-      })
     })
     }).catch(async function(err) {
       await OperationalEvent.create({
@@ -1249,66 +1185,10 @@ router.post('/autoSaveOperational', async (req, res) => {
         unit: req.body.unit,
         date: Date.now(),
       }).then(async function(event){
-        const selectedTypes = req.body.types;
-        const selectedSubtypes = req.body.subtypes;
-        for (let i = 0; i < selectedTypes.length; i++) {
-          const curType = selectedTypes[i];
-          let curTypeId = null;
-          let curSubtypeId = null;
-    
-          let curTypeObject = await OperationalType.findOne({
-            where: {
-              typeName: curType
-            }
-          });
-          let curEvent;
-          if (curTypeObject != null) {
-            let isMade = false;
-            curTypeId = curTypeObject.id;
-            if (selectedSubtypes.length == 0) {
-              curEvent = await EventType.create({
-                operationalEventId: event.id,
-                operationalTypeId: curTypeId,
-                operationalSubtypeId: null,
-              });
-              EventType.sync();
-            }
-            for (let j = 0; j < selectedSubtypes.length; j++) {
-              const curSubtype = selectedSubtypes[j];
-    
-              let curSubtypeObject = await OperationalSubtype.findOne({
-                where: {
-                  typeName: curSubtype
-                }
-              });
-              if (curSubtypeObject != null) {
-                curSubtypeId = curSubtypeObject.id;
-                if (curSubtypeObject.operationalTypeId == curTypeObject.id) {
-                  curEvent = await EventType.create({
-                    operationalEventId: event.id,
-                    operationalTypeId: curTypeId,
-                    operationalSubtypeId: curSubtypeId,
-                  });
-                } else {
-                  if (!isMade) {
-                    curEvent = await EventType.create({
-                      operationalEventId: event.id,
-                      operationalTypeId: curTypeId,
-                      operationalSubtypeId: null,
-                    });
-                    isMade = true;
-                  }
-                }
-                EventType.sync();
-              }
-            }
-          }
-        }
         res.json({
           bool: true
         })
       })
-      
   })
 })
 
@@ -1386,29 +1266,34 @@ router.post('/addSecretaryNotification', async (req, res) => {
 router.post('/addOperationalEvent', async (req, res) => {
   const selectedTypes = req.body.types;
   const selectedSubtypes = req.body.subtypes;
-
-
   Operational.findAll({
     limit: 1,
     order: [ ['reportId', 'DESC']]
   }).then(function(entries){
 
-    OperationalEvent.findAll({
-      where: {
-        authorId: req.body.id
-      },
-      limit: 1,
-      order: [ ['updatedAt', 'DESC']]
-    }).then(async function(events) {
-      const event = events[0];
-      event.update({
-        signaling: req.body.signaling,
-        plNumber: req.body.plNumber,
-        description: req.body.description,
-        priority: req.body.priority,
-        location: req.body.location,
-        unit: req.body.unit,
-        operationalId: entries[0].id
+    OperationalEvent.create({
+      plNumber: req.body.plNumber,
+      authorId: req.body.id,
+      location: req.body.location,
+      date: Date.now(),
+      description: req.body.message,
+      unit: req.body.unit,
+      operationalId: entries[0].id,
+      monitoring: req.body.monitoring,
+      priority: req.body.priority,
+    }).then(async function(event) {
+      OperationalEvent.findAll({
+        where:{
+          authorId: req.body.id,
+          operationalId: {
+            [Op.eq]: null
+          }
+        }
+      }).then(function(entries){
+        if (entries.length > 0){
+          entries[0].destroy({});
+
+        }
       })
       OperationalEvent.sync();
       for (let i = 0; i < selectedTypes.length; i++) {
@@ -1433,6 +1318,7 @@ router.post('/addOperationalEvent', async (req, res) => {
             });
             EventType.sync();
           }
+          console.log(selectedTypes.length)
           for (let j = 0; j < selectedSubtypes.length; j++) {
             const curSubtype = selectedSubtypes[j];
   
@@ -1466,7 +1352,6 @@ router.post('/addOperationalEvent', async (req, res) => {
       }
       res.json({
         bool: true,
-        report: entries[0].reportId
       })
     }).catch(function(err) {
       res.json({
