@@ -188,7 +188,7 @@
         
         <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addMalfunction">Opslaan</button>
       
-      <small v-if="form.technicalFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
+      <small v-if="form.technicalFailed">Het verslag is niet toegevoegd</small>
       <small v-if="form.technicalSucceeded">Het verslag is toegevoegd</small>
       </div>
       </div>
@@ -279,9 +279,6 @@ export default Vue.extend({
       window.location.href = "/login";
     } else {
       const decodedToken: any = jwt.decode(window.localStorage.getItem("token") !);
-      if (decodedToken.rights < 0 || decodedToken.rights > 1) {
-        window.location.href = "/login";
-      }
       if (decodedToken === undefined){
         window.location.href = "/login"
       }
@@ -401,7 +398,8 @@ export default Vue.extend({
       this.form.unit = response.unit;
     },
     async addDefect() {
-      const response = await ReportingService.addDefect({
+      if (this.form.defectDescription !== ''){
+        const response = await ReportingService.addDefect({
         id: this.tokenData.authorId,
         description: this.form.defectDescription,
         monitoring: this.form.defectMonitoring,
@@ -413,9 +411,12 @@ export default Vue.extend({
         this.form.defectDescription = "";
         this.form.defectMonitoring = false;
       }
+      }
+      
     },
     async addMalfunction() {
-      const response = await ReportingService.addMalfunction({
+      if (this.form.malfunctionDescription !== ''){
+         const response = await ReportingService.addMalfunction({
         id: this.tokenData.authorId,
         description: this.form.malfunctionDescription,
         monitoring: this.form.malfunctionMonitoring,
@@ -430,9 +431,12 @@ export default Vue.extend({
         this.form.malfunctionDuration = "";
         this.form.malfunctionMonitoring = false;
       }
+      }
+     
     },
     async addSecretaryNotification() {
-      const response = await ReportingService.addSecretaryNotification({
+      if (this.form.secretNotification !== '') {
+        const response = await ReportingService.addSecretaryNotification({
         id: this.tokenData.authorId,
         description: this.form.secretNotification,
         monitoring: this.form.secretMonitoring,
@@ -442,10 +446,13 @@ export default Vue.extend({
         this.form.secretMonitoring = false;
         this.form.workForceSucceeded = true;
       }
+      }
+      
 
     },
     async addWorkForceEvent() {
-      const response = await ReportingService.addWorkForceEvent({
+      if (this.form.absentee !== '') {
+        const response = await ReportingService.addWorkForceEvent({
         absentee: this.form.absentee,
         substitute: this.form.replacement,
         message: this.form.workforceMessage,
@@ -460,6 +467,8 @@ export default Vue.extend({
         this.form.replacement = "";
         this.form.workforceMessage = "";
       }
+      }
+     
     },
     async addOperationalEvent() {
       if(this.form.plNumber !== ''){
@@ -490,6 +499,8 @@ export default Vue.extend({
         this.form.operationalMessage = "";
         this.form.unit = "";
       }
+      }else {
+        this.form.operationalFailed = true;
       }
       
     },

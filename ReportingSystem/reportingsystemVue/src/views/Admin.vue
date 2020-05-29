@@ -152,7 +152,7 @@ export default Vue.extend({
         usernameCheck: false,
         passwordComp: false,
         completed: false,
-        failed: false
+        failed: false,
       },
       changeAccesRights: {
         username: "",
@@ -222,10 +222,9 @@ export default Vue.extend({
       //CHECK IF PASSWORDS ARE THE SAME
       this.newUserData.failed = false;
       this.newUserData.completed = false;
-
       this.newUserData.usernameCheck = this.checkUsername(this.newUserData.username);
       this.newUserData.passwordComp = this.checkPasswords(this.newUserData.password, this.newUserData.rptPassword);
-      if (this.newUserData.passwordComp && this.newUserData.usernameCheck) {
+      if (this.newUserData.passwordComp && this.newUserData.usernameCheck && /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(this.newUserData.email)) {
         const response = await ReportingService.addUser({
           username: this.newUserData.username,
           password: this.newUserData.password,

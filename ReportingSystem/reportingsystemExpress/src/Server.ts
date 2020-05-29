@@ -35,6 +35,7 @@ const cron = require("node-cron");
 import cronServer from './cron'
 const cors = require('cors');
 import { Op } from "sequelize";
+const fs = require('fs')
 
 
 // Init express
@@ -48,6 +49,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 
+app.use(morgan('tiny', {
+  stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+}))
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === 'development') {

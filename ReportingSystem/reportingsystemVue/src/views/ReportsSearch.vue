@@ -94,6 +94,17 @@ export default Vue.extend({
      * Finds the reports which contain an event that contains the keyword partially.
      */
     loadKeywordReports: function (keyword: string) {
+      keyword = keyword.replace("/","");
+      keyword = keyword.replace(".","");
+      keyword = keyword.replace("?","");
+      keyword = keyword.replace("!","");
+      keyword = keyword.replace("_","");
+      keyword = keyword.replace(" ","");
+      keyword = keyword.replace("-"," ");
+
+      if (keyword === '') {
+        keyword = "invalid_character"
+      }
       ReportingService.getSearchReports(
           "/api/reports/search/" + keyword
         )
