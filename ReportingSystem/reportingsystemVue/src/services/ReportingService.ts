@@ -51,15 +51,25 @@ export default {
         alert(error);
       });
   },
-  getPaginationReports(offset: number) {
+  getPaginationReports(offset: number, dateRange: any) {
     return Api()
-      .post("api/reports/all", {offset: offset})
+      .post("api/reports/all", {offset: offset, dateRange: dateRange})
       .then((res) => {
         return res.data;
       })
       .catch((error) => {
         alert(error);
       });
+  },
+  getReportCount(dateRange: any){
+    return Api()
+    .post("api/reports/count", dateRange)
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      alert(error);
+    });
   },
   addOperationalEvent(data: any) {
     return Api()

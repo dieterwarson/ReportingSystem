@@ -31,7 +31,12 @@ const router = Router();
 
 // only get the reports that are finished
 
+
+
 router.post('/all', async (req: Request, res: Response) => {
+  let date = {start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z"}
+  if(!(req.body.dateRange.start == '' && req.body.dateRange.end == ''))
+    date = req.body.dateRange;
   const offset = req.body.offset;
   const reports = await Report.findAll({
     offset: offset,
@@ -39,6 +44,12 @@ router.post('/all', async (req: Request, res: Response) => {
     order: [['date', 'DESC']],
     where: {
       temporary: false,
+      date: {
+        [Op.and]: {
+          [Op.lt]: date.end,
+          [Op.gt]: date.start,
+        }
+      }
     },
     attributes: ['id', 'date', 'nightShift'],
   });
@@ -49,10 +60,20 @@ router.post('/all', async (req: Request, res: Response) => {
  *                   Count All Reports - "GET /api/reports/count"
  ******************************************************************************/
 
-router.get('/count', async (req: Request, res: Response) => {
+router.post('/count', async (req: Request, res: Response) => {
+  console.log(req.body);
+  let date = {start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z"}
+  if(!(req.body.start == '' && req.body.end == ''))
+    date = {start: req.body.start, end: req.body.end};
   const count = await Report.count({
     where: {
       temporary: false,
+      date: {
+        [Op.and]: {
+          [Op.lt]: date.end,
+          [Op.gt]: date.start,
+        }
+      }
     },
   });
   res.send({count: count});
