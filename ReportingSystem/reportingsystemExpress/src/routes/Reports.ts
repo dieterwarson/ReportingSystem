@@ -108,6 +108,7 @@ router.get('/monitored', async (req: Request, res: Response) => {
   )[] = [];
 
   let defects = await Defect.findAll({
+    order: [['date', 'DESC']],
     where: {
       monitoring: 1,
     },
@@ -115,6 +116,7 @@ router.get('/monitored', async (req: Request, res: Response) => {
   });
 
   let malfunctions = await Malfunction.findAll({
+    order: [['date', 'DESC']],
     where: {
       monitoring: 1,
     },
@@ -123,6 +125,7 @@ router.get('/monitored', async (req: Request, res: Response) => {
 
 
   let workplaceEvents = await WorkplaceEvent.findAll({
+    order: [['date', 'DESC']],
     where: {
       monitoring: 1,
     },
@@ -130,14 +133,15 @@ router.get('/monitored', async (req: Request, res: Response) => {
   });
 
   let secretariatNotifications = await SecretariatNotification.findAll({
+    order: [['date', 'DESC']],
     where: {
       monitoring: 1,
     },
   });
 
   let results = {
-    administrative: { workplaceEvents, secretariatNotifications },
-    technical: { defects, malfunctions },
+    administrative: { count: workplaceEvents.length + secretariatNotifications.length, workplaceEvents, secretariatNotifications },
+    technical: { count: defects, defects, malfunctions },
   };
 
   res.send(results);
@@ -570,7 +574,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
 
   if (operational != null) {
     operationalEvents = await OperationalEvent.findAll({
-      order: ['date'],
+      order: [['date', 'DESC']],
       where: {
         operationalId: operational.id
       },
@@ -586,6 +590,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
 
   if (technical != null) {
     defects = await Defect.findAll({
+      order: [['date', 'DESC']],
       where: {
         technicalId: technical.id
       },
@@ -601,6 +606,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   }
   if (administrative != null) {
     workplaceEvents = await WorkplaceEvent.findAll({
+      order: [['date', 'DESC']],
       where: {
         administrativeId: administrative.id
       },
@@ -608,6 +614,7 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     })
 
     secretariatNotifications = await SecretariatNotification.findAll({
+      order: [['date', 'DESC']],
       where: {
         administrativeId: administrative.id
       }
@@ -647,6 +654,7 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
 
   if (technical != null) {
     defects = await Defect.findAll({
+      order: [['date', 'DESC']],
       where: {
         technicalId: technical.id,
         monitoring: true
@@ -654,6 +662,7 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
     })
 
     malfunctions = await Malfunction.findAll({
+      order: [['date', 'DESC']],
       where: {
         technicalId: technical.id,
         monitoring: true
@@ -662,6 +671,7 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
   }
   if (administrative != null) {
     workplaceEvents = await WorkplaceEvent.findAll({
+      order: [['date', 'DESC']],
       where: {
         administrativeId: administrative.id,
         monitoring: true
@@ -669,6 +679,7 @@ router.get('/notifications/:reportId', async (req: Request, res: Response) => {
     })
 
     secretariatNotifications = await SecretariatNotification.findAll({
+      order: [['date', 'DESC']],
       where: {
         administrativeId: administrative.id,
         monitoring: true

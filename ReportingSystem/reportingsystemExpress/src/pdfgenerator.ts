@@ -24,9 +24,8 @@ export default class pdfGenerator {
             },
             attributes: ['id'],
           });
-        await page.goto('http://localhost:3000/printReportView?reportId=' + report?.id, { waitUntil: 'networkidle2' });
-        // reportView?reportId=1
-        await page.pdf({ path: 'page.pdf', format: 'A4', printBackground: true });
+        await page.goto('http://localhost:3000/printReportView?reportId='  + report?.id, { waitUntil: 'networkidle2' });
+        await page.pdf({ path: 'verslag.pdf', format: 'A4', printBackground: true });
 
         await browser.close();
     }
