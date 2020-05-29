@@ -1174,6 +1174,9 @@ router.post('/autoSaveOperational', async (req, res) => {
   await OperationalEvent.findAll({
     where:{
       authorId: req.body.id,
+      operationalId: {
+        [Op.eq]: null
+      }
     }
   }).then(async function(entries) {
     await entries[0].update({
@@ -1210,7 +1213,9 @@ router.post('/getAutoSavedFile', async (req, res) => {
   await OperationalEvent.findAll({
     where: {
       authorId: req.body.id,
-      operationalId :null
+      operationalId: {
+        [Op.eq]: null
+      }
     }
   }).then(function(entries) {
     res.json({

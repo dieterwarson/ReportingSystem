@@ -52,16 +52,16 @@
           <button class="btn btn-block btn-success" type="button" @click.prevent="getFile">Zoek fiche</button>
         </div>
         <div class="input-group" >
-          <input name="location" @blur="autoSave" v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg" />
+          <input name="location" @change="autoSave" v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg" />
         </div>
         <div class="input-group">
-          <input name="date" @blur="autoSave" v-model="form.operationalDate" type="text" placeholder="Datum" class="form-control form-control-lg" />
+          <input name="date" @change="autoSave" v-model="form.operationalDate" type="text" placeholder="Datum" class="form-control form-control-lg" />
         </div>
         <div class="input-group">
-          <input name="unit" @blur="autoSave" v-model="form.unit" type="text" placeholder="Unit" class="form-control form-control-lg" />
+          <input name="unit" @change="autoSave" v-model="form.unit" type="text" placeholder="Unit" class="form-control form-control-lg" />
         </div>
         <div class="input-group" >
-          <input @blur="autoSave" v-model="form.operationalMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
+          <input @change="autoSave" v-model="form.operationalMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
         </div>
         <label><input type="checkbox" v-model="form.operationalPrio" >Prioriteit</label>
 
@@ -462,7 +462,8 @@ export default Vue.extend({
       }
     },
     async addOperationalEvent() {
-      const response = await ReportingService.addOperationalEvent({
+      if(this.form.plNumber !== ''){
+        const response = await ReportingService.addOperationalEvent({
         plNumber: this.form.plNumber,
         location: this.form.location,
         date: this.form.operationalDate,
@@ -489,6 +490,8 @@ export default Vue.extend({
         this.form.operationalMessage = "";
         this.form.unit = "";
       }
+      }
+      
     },
     loadData: function () {
       ReportingService.getAllReports("/api/reports/operationalTypes").then(
