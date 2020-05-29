@@ -1,4 +1,8 @@
 <template>
+<div class="search">
+<div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
 <div v-if="reports.length != 0">
   <h1>Gevonden verslagen</h1>
   <h5 class="container my-2 card-title" v-for="value in reports" :key="value.reportId">
@@ -20,6 +24,7 @@
 </div>
 <div v-else>
   <h1>Geen verslagen gevonden.</h1>
+</div>
 </div>
 </template>
 

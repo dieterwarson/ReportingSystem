@@ -1,4 +1,10 @@
 <template>
+<div class="reportview">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+        <b>/</b>
+    <router-link to="/reports">Verslagen</router-link>
+  </div>
   <div
     class="container pt-5 pb-5"
     v-if="!(Object.keys(reportContent).length === 0)"
@@ -528,6 +534,7 @@
   <div v-else>
     <h2>Dit verslag bestaat niet</h2>
   </div>
+</div>
 </template>
 
 <script lang="ts">

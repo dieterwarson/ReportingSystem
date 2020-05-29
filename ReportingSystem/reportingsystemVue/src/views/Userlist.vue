@@ -1,4 +1,11 @@
 <template>
+<div class="userlist">
+<div id="nav">
+    <router-link to="/">Startscherm</router-link>
+        <b>/</b>
+
+    <router-link to="/admin">Administrator</router-link>
+  </div>
 <div v-if="users">
   <h1>Gebruikers</h1>
   <div class="row d-flex justify-content-center">
@@ -13,6 +20,7 @@
         <!-- <button type="button" class="btn btn-danger btn-block" @click="deleteUser(user)">Gebruiker verwijderen</button> -->
     </div>
   </div>
+</div>
 </div>
 </div>
 </template>

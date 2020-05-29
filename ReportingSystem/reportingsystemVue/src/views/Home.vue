@@ -1,5 +1,9 @@
 <template>
 <div class="home">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
+  <router-view />
   <div class="container my-4">
     <div class="row ">
       <div>Aangemeld als {{tokenData.username}} </div>

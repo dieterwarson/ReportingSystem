@@ -1,4 +1,9 @@
 <template>
+<div class="notifications">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
+
   <div class="container pt-5 pb-5">
     <h1>
       Meldingen
@@ -191,6 +196,7 @@
       </div>
     </section>
   </div>
+</div>
 </template>
 
 <script lang="ts">

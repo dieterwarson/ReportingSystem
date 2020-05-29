@@ -1,5 +1,11 @@
 <template>
+<div class="reports">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
+
 <div v-if="reports" class="container">
+  
   <h1>Verslagen</h1>
   <div class="container my-2" v-for="value in reports" :key="value.id">
     <button class="btn btn-secondary btn-lg btn-block" v-on:click="reportClick(String(value.id))">
@@ -17,6 +23,7 @@
     </button>
   </div>
   <vPagination :classes="bootstrapPaginationClasses" v-model="currentPage" :page-count="pages"></vPagination>
+</div>
 </div>
 </template>
 

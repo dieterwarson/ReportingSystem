@@ -1,4 +1,8 @@
 <template>
+<div class="admin">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
 <div class="container pt-5 pb-5">
   <h1>Admin functies</h1>
   <div class="container mb-2">
@@ -123,6 +127,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 </template>
 
