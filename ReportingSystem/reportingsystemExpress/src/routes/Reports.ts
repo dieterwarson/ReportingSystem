@@ -1329,7 +1329,6 @@ router.post('/addOperationalEvent', async (req, res) => {
             });
             EventType.sync();
           }
-          console.log(selectedTypes.length)
           for (let j = 0; j < selectedSubtypes.length; j++) {
             const curSubtype = selectedSubtypes[j];
   
@@ -1858,7 +1857,6 @@ router.post("/getOperationalEvents", async (req, res) => {
 router.post("/addTypes", async (req, res) => {
   const data = req.body;
   //OPERTATIONEEL TYPE TOEVOEGEN
-  console.log(data.operationaltype, data.workplacetype, data.defectTypes, data.malfunctionTypes)
   if (data.type == 0) {
     if ( data.operationaltype == -1) {
       OperationalType.create({
