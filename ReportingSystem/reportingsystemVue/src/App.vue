@@ -1,9 +1,9 @@
 <template>
 <div id="app">
   <img id="logo" src="./assets/FedPol.jpg">
-  <div id="nav">
+  <!-- <div id="nav">
     <router-link to="/">Startscherm</router-link>
-  </div>
+  </div> -->
   <router-view />
 </div>
 </template>

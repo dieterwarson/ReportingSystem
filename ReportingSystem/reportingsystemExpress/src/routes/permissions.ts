@@ -15,7 +15,6 @@ router.get('/all', async (req: Request, res: Response) => {
   });
 
 
-  console.log(JSON.stringify(userRoles));
   res.send(userRoles);
 });
 

@@ -1,5 +1,8 @@
 <template>
   <div class="statistics">
+    <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
     <h1>Statistieken</h1>
     <div class="container mt-5">
       <div class="row">

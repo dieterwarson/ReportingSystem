@@ -36,26 +36,25 @@ export default class cronServer{
                 pass: '',
             }
         })
-
         var mailOptions = {
-            from: '" Verslag Systeem " <dieter09@live.be>', // sender address (who sends)
+            from: '" Verslag Systeem " <VerslagSysteem@police.belgium.eu>', // sender address (who sends)
             to: this.getEmails(), // list of receivers (who receives)
-            subject: 'test ', // Subject line
-            text: 'Hello world ', // plaintext body
+            subject: 'Verslag van ' + new Date().getDate() + "/" + (new Date().getMonth() + 1), // Subject line
+            text: 'Beste, \n \n In bijlage het verslag van de vorige shift ', // plaintext body
             attachments: [
                 {
-                    path: './page.pdf'
+                    path: './verslag.pdf'
                 }
             ]
         };
 
-       /*  transporter.sendMail(mailOptions, function(error:any, info:any){
+       transporter.sendMail(mailOptions, function(error:any, info:any){
             if(error){
                 return console.log(error);
             }
         
             console.log('Message sent: ' + info.response);
-        }); */
+        });
 
     }
 

@@ -1,13 +1,22 @@
 <template>
-<div class="container pt-5 pb-5" v-if="!(Object.keys(reportContent).length === 0)">
-  <h1>
-    Verslag van
-    {{
-      new Date(reportContent.report.date).toLocaleString("nl-BE", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-      })
+<div class="reportview">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+        <b>/</b>
+    <router-link to="/reports">Verslagen</router-link>
+  </div>
+  <div
+    class="container pt-5 pb-5"
+    v-if="!(Object.keys(reportContent).length === 0)"
+  >
+    <h1>
+      Verslag van
+      {{
+        new Date(reportContent.report.date).toLocaleString("nl-BE", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        })
       }}
     <span class="badge badge-primary">{{ shift }}</span>
   </h1>
@@ -490,11 +499,11 @@
           </div>
         </div>
       </div>
-    </div>
-  </section>
-</div>
-<div v-else>
-  <h2>Dit verslag bestaat niet</h2>
+    </section>
+  </div>
+  <div v-else>
+    <h2>Dit verslag bestaat niet</h2>
+  </div>
 </div>
 </template>
 

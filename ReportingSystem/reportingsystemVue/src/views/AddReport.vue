@@ -1,201 +1,202 @@
-<template>
- <!-- script has to be implemented again to achieve the seperate forms -->
- <div class="container pt-5 pb-5">
-   <h1>Voeg gebeurtenis toe</h1>
-   <form id="addReport">
+<template> 
+<div class="addReport">
+  <div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
+<!-- script has to be implemented again to achieve the seperate forms -->
+<div class="container pt-5 pb-5">
+  
+  <h1>Voeg gebeurtenis toe</h1>
+  <form id="addReport" class="formcontainer">
 
-     <div class="btn-group d-flex" role="group" aria-label="Justified button group">
-       <button id="operationalButton" type="button" class="btn btn-info" @click.prevent="getOperational">Operationeel</button>
-       <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
-       <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
-     </div>
+    <div class="btn-group d-flex" role="group" aria-label="Justified button group">
+      <button id="operationalButton" type="button" class="btn btn-info" @click.prevent="getOperational">Operationeel</button>
+      <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
+      <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
+    </div>
 
-     <section v-if="step == 'Operational'">
-       <h3>Operationeel</h3>
-       <div v-if="(Object.keys(reportTypes).length === 0)">
-         <p>Er zijn nog geen types</p>
-       </div>
-       <form v-else id="typeSelector">
-         <div class="text-sm-left">
-           <div class="checkbox-container text-sm-left col-sm-4">
-             <!-- Types -->
-             <div v-for="type in reportTypes.operationalTypes" :key="type.id">
-               <div class="typecontainer text-lg-left" id="operational">
-                 <input type="checkbox" :id="type.typeName" :value="type.typeName" v-model="operationalTypeSelected.selectedTypes" />
-                 <label>{{ type.typeName }}</label>
-               </div>
-               <!-- Subtypes -->
-               <div v-for="subtype in reportTypes.operationalSubtypes" :key="subtype.id">
-                 <div v-if="subtype.operationalTypeId == type.id">
-                   <div class="subtypecontainer text-lg-left" id="operational">
-                     <input type="checkbox" :id="type.typeName" :value="subtype.typeName" v-model="operationalTypeSelected.selectedSubtypes" @change="selectOperationalParent(subtype.operationalTypeId)" />
-                     <label>{{ subtype.typeName }}</label>
-                   </div>
-                 </div>
-               </div>
-             </div>
-           </div>
-           <!-- Deselect all button -->
-           <button @click.prevent="uncheckAllOperational(false)" class="btn btn-danger extraMargin">Deselecteer alles</button>
-         </div>
-       </form>
-       <div class="input-group" style="height: 20%;">
-         <input name="plNumber" v-model="form.plNumber" type="text" placeholder="PL-nummer" class="form-control form-control-lg" />
-       </div>
-       <div class="input-group" style="height: 20%;">
-         <button class="btn btn-block btn-success" type="button" @click.prevent="getFile">Zoek fiche</button>
-       </div>
-       <div class="input-group" style="height: 20%;">
-         <input name="location" v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg" />
-         <input name="date" v-model="form.operationalDate" type="text" placeholder="Datum" class="form-control form-control-lg" />
-         <input name="unit" v-model="form.unit" type="text" placeholder="Unit" class="form-control form-control-lg" />
-       </div>
-       <div class="input-group" style="height: 39%;">
-         <input v-model="form.operationalMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
-       </div>
-       <label><input type="checkbox" v-model="form.operationalMonitoring">Opvolging nodig</label>
-       <label><input type="checkbox" v-model="form.operationalPrio">Prioriteit</label>
+    <section v-if="step == 'Operational'">
+      <div class="row">
+      <div v-if="(Object.keys(reportTypes).length === 0)">
+              <p>Er zijn nog geen types</p>
+            </div>
+            <form v-else id="typeSelector">
+              <div class="text-sm-left">
+                <div class="checkbox-container text-sm-left col-sm-4">
+                  <!-- Types -->
+                  <div v-for="type in reportTypes.operationalTypes" :key="type.id">
+                    <div class="typecontainer text-lg-left" id="operational">
+                      <label>{{ type.typeName }}                       <input type="checkbox" :id="type.typeName" :value="type.typeName" v-model="operationalTypeSelected.selectedTypes"  />
+</label>
+                    </div>
+                    <!-- Subtypes -->
+                    <div v-for="subtype in reportTypes.operationalSubtypes" :key="subtype.id">
+                      <div v-if="subtype.operationalTypeId == type.id">
+                        <div class="subtypecontainer text-lg-left" id="operational">
+                          <label>{{ subtype.typeName }}                           <input type="checkbox" :id="type.typeName" :value="subtype.typeName" v-model="operationalTypeSelected.selectedSubtypes" @change="selectOperationalParent(subtype.operationalTypeId)" />
+</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Deselect all button -->
+                <button @click.prevent="uncheckAllOperational(false)" class="btn btn-danger extraMargin">Deselecteer alles</button>
+              </div>
+            </form>
+      <div class="text-sm-left col-lg">
+        <div class="input-group" >
+          <input name="plNumber" v-model="form.plNumber" type="text" placeholder="PL-nummer" class="form-control form-control-lg" />
+        </div>
+        <div class="input-group" >
+          <button class="btn btn-block btn-success" type="button" @click.prevent="getFile">Zoek fiche</button>
+        </div>
+        <div class="input-group" >
+          <input name="location" @blur="autoSave" v-model="form.location" type="text" placeholder="Adres" class="form-control form-control-lg" />
+        </div>
+        <div class="input-group">
+          <input name="date" @blur="autoSave" v-model="form.operationalDate" type="text" placeholder="Datum" class="form-control form-control-lg" />
+        </div>
+        <div class="input-group">
+          <input name="unit" @blur="autoSave" v-model="form.unit" type="text" placeholder="Unit" class="form-control form-control-lg" />
+        </div>
+        <div class="input-group" >
+          <input @blur="autoSave" v-model="form.operationalMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
+        </div>
+        <label><input type="checkbox" v-model="form.operationalPrio" >Prioriteit</label>
 
-       <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addOperationalEvent">Opslaan</button>
-       <small v-if="form.operationalFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
-       <small v-if="form.operationalSucceeded">Het verslag is toegevoegd</small>
-     </section>
-     <section v-if="step == 'Workforce'">
-       <h3>Personeel</h3>
-       <div class="input-group">
-         <label>
-           <h5>Voorval tijdens de dienst</h5>
-         </label>
-         <div class="checkbox-container text-sm-left col-sm-4">
-           <!-- Types -->
-           <div v-for="type in reportTypes.workplaceTypes" :key="type.id">
-             <div class="typecontainer text-lg-left" id="workplace">
-               <input type="radio" :id="type.typeName" :value="type.typeName" v-model="typeSelected.typeName" @change="deselectSubtype(); switchWorkForceOption()" />
-               <label>{{ type.typeName }}</label>
-             </div>
-             <!-- Subtypess -->
-             <div v-for="subtype in reportTypes.workplaceSubtypes" :key="subtype.id">
-               <div v-if="subtype.workplaceTypeId == type.id">
-                 <div class="subtypecontainer text-lg-left" id="workplace">
-                   <input type="radio" :id="type.typeName" :value="subtype.typeName" v-model="typeSelected.subtypeName" @change="selectParent(subtype.workplaceTypeId, 'Workplace'); switchWorkForceOption()" />
-                   <label>{{ subtype.typeName }}</label>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
-         <div class="input-group">
-           <label><input @click='changeToSecretary();' type="checkbox" v-model="secretary">Melding aan secretariaat</label>
-           <div class="input-group" v-if="!secretary">
-             <div class="input-group">
-               <input name="Name absentee" v-model="form.absentee" type="text" placeholder="Naam afwezige" class="form-control form-control-lg" />
-               <input name="Naam" v-model="form.replacement" type="text" placeholder="Naam vervanger" class="form-control form-control-lg" />
-             </div>
+      <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addOperationalEvent">Opslaan</button>
+      <small v-if="form.operationalFailed">Het verslag kon niet toegevoegd worden</small>
+      <small v-if="form.operationalSucceeded">Het verslag is toegevoegd</small>
+      </div>
+      </div>
+    </section>
+  </form>
+  <form id="workForce">
+    <section v-if="step == 'Workforce'">
+      <div class="row">
+      <div class="input-group text-sm-left col-sm">
+         
+            <div class="checkbox-container text-sm-left">
+                  <!-- Types -->
+                  <label><input @click='changeToSecretary();' type="checkbox" v-model="secretary">Melding aan secretariaat</label>
+                  <h5 id="smalltitle">Werkplaatsgebeurtenis</h5>
+                  <div v-for="type in reportTypes.workplaceTypes" :key="type.id">
+                    <div class="typecontainer text-lg-left" id="workplace">
+                      <label>{{ type.typeName }} <input type="radio" :id="type.typeName" :value="type.typeName" v-model="typeSelected.typeName" @change="deselectSubtype(); switchWorkForceOption()" />
+</label>
+                    </div>
+                    <!-- Subtypess -->
+                    <div v-for="subtype in reportTypes.workplaceSubtypes" :key="subtype.id">
+                      <div v-if="subtype.workplaceTypeId == type.id">
+                        <div class="subtypecontainer text-lg-left" id="workplace">
+                          <label>{{ subtype.typeName }}                           <input type="radio" :id="type.typeName" :value="subtype.typeName" v-model="typeSelected.subtypeName" @change="selectParent(subtype.workplaceTypeId, 'Workplace'); switchWorkForceOption()" /></label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                </div>
+    <div class="input-group text-sm-left col-lg" v-if="!secretary">
+        <div class="input-group">
+          <input name="Name absentee" v-model="form.absentee" type="text" placeholder="Naam afwezige" class="form-control form-control-lg" />
+          <input name="Naam" v-model="form.replacement" type="text" placeholder="Naam vervanger" class="form-control form-control-lg" />
+        </div>
+      <input name="Message" v-model="form.workforceMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
+      <div class="input-group">
+        <label><input type="checkbox" v-model="form.workPlaceMonitoring">Opvolging</label>
+      </div>
+      <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addWorkForceEvent">Opslaan</button>
+      <small v-if="form.workForceSucceeded">Het verslag is toegevoegd</small>
+    </div>
+    <div class="input-group text-sm-left col-lg" v-else>
+      <div class="input-group">
+        <input name="Message" v-model="form.secretNotification" type="text" placeholder="Informatie voor het secretariaat" class="form-control form-control-lg" />
+      </div>
+      <div class="input-group">
+        <label><input type="checkbox" v-model="form.secretMonitoring" >Opvolging</label>
+      </div>
+      <div class="input-group">
+        <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addSecretaryNotification">Opslaan</button>
+      </div>
+        <small v-if="form.workForceSucceeded">Het verslag is toegevoegd</small>
+    </div>  
+    </div>
+          
 
-             <input name="Message" v-model="form.workforceMessage" type="text" placeholder="Extra info" class="form-control form-control-lg" />
-             <label><input type="checkbox" v-model="form.workPlaceMonitoring">Opvolging</label>
-             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addWorkForceEvent">Opslaan</button>
-           </div>
-           <div class="input-group" v-else>
-             <input name="Message" v-model="form.secretNotification" type="text" placeholder="Informatie voor het secretariaat" class="form-control form-control-lg" />
-             <br /><br /><label><input type="checkbox" v-model="form.secretMonitoring">Opvolging nodig</label><br /><br />
-             <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addSecretaryNotification">Opslaan</button>
+      </div>
+    </section>
+  </form>
+  <form id="technical">
+    <section v-if="step == 'Technical'">
+      
+      <div class="row">
+        <div class="input-group text-sm-left col-sm">
+            <div class="checkbox-container text-sm-left">
+                  <!-- Types -->
+                  <label><h5>Logistiek</h5></label>
+                  <div v-for="type in reportTypes.defectTypes" :key="type.id">
+                    <div class="typecontainer text-lg-left" id="defect">
+                      
+                      <label>{{ type.typeName }} <input @click="deselectMalfunction" type="radio" :id="type.typeName" :value="type.typeName" v-model="defectTypeSelected.typeName" @change="deselectSubtype" /></label>
+                    </div>
+                    <!-- Subtypes -->
+                    <div v-for="subtype in reportTypes.defectSubtypes" :key="subtype.id">
+                      <div v-if="subtype.defectTypeId == type.id">
+                        <div class="subtypecontainer text-lg-left" id="defect">
+                          
+                          <label>{{ subtype.typeName }} <input @click="deselectMalfunction" type="radio" :id="type.typeName" :value="subtype.typeName" v-model="defectTypeSelected.subTypeName" @change="selectParent(subtype.defectTypeId, 'Defect')" /></label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                          
+                  <!-- Types -->
+                  <label><h5>Technisch</h5></label>
+                  <div v-for="type in reportTypes.malfunctionTypes" :key="type.id">
+                    <div @click="deselectDefect" class="typecontainer text-lg-left" id="malfunction">
+                      
+                      <label>{{ type.typeName }} <input type="radio" :id="type.typeName" :value="type.typeName" v-model="malfunctionTypeSelected.typeName" @change="deselectSubtype" /></label>
+                    </div>
+                    <!-- Subtypes -->
+                    <div v-for="subtype in reportTypes.malfunctionSubtypes" :key="subtype.id">
+                      <div v-if="subtype.malfunctionTypeId == type.id">
+                        <div class="subtypecontainer text-lg-left" id="malfunction">
+                          
+                          <label>{{ subtype.typeName }} <input @click="deselectDefect" type="radio" :id="type.typeName" :value="subtype.typeName" v-model="malfunctionTypeSelected.subTypeName" @change="selectParent(subtype.malfunctionTypeId, 'Malfunction')" /></label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+          <div class="container text-sm-left col-lg" v-if="defect">
+            <div class="input-group  ">
+                <input name="Message" v-model="form.defectDescription" type="text" placeholder="Info over defect" class="form-control form-control-lg" />
+            </div>
+              <label><input type="checkbox" v-model="form.defectMonitoring">Opvolging</label>
 
-           </div>
-           <small v-if="form.workForceFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
-           <small v-if="form.WorkForceSucceeded">Het verslag is toegevoegd</small>
-         </div>
-       </div>
-     </section>
+              <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addDefect">Opslaan</button>
+              <small v-if="form.technicalSucceeded">Het verslag is toegevoegd</small>
 
-     <section v-if="step == 'Technical'">
-       <h3>Technisch</h3>
-
-       <div class="row">
-
-         <label>
-           <h5>Logistiek</h5>
-         </label>
-         <br />
-         <br />
-         <div class="checkbox-container text-sm-left col-sm-4">
-           <!-- Types -->
-           <div v-for="type in reportTypes.defectTypes" :key="type.id">
-             <div class="typecontainer text-lg-left" id="defect">
-               <input @click="deselectMalfunction" type="radio" :id="type.typeName" :value="type.typeName" v-model="defectTypeSelected.typeName" @change="deselectSubtype" />
-               <label>{{ type.typeName }}</label>
-             </div>
-             <!-- Subtypes -->
-             <div v-for="subtype in reportTypes.defectSubtypes" :key="subtype.id">
-               <div v-if="subtype.defectTypeId == type.id">
-                 <div class="subtypecontainer text-lg-left" id="defect">
-                   <input @click="deselectMalfunction" type="radio" :id="type.typeName" :value="subtype.typeName" v-model="defectTypeSelected.subTypeName" @change="selectParent(subtype.defectTypeId, 'Defect')" />
-                   <label>{{ subtype.typeName }}</label>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
-
-         <label>
-           <h5>Technisch</h5>
-         </label>
-         <br />
-         <br />
-         <div class="checkbox-container text-sm-left col-sm-4">
-           <!-- Types -->
-           <div v-for="type in reportTypes.malfunctionTypes" :key="type.id">
-             <div @click="deselectDefect" class="typecontainer text-lg-left" id="malfunction">
-               <input type="radio" :id="type.typeName" :value="type.typeName" v-model="malfunctionTypeSelected.typeName" @change="deselectSubtype" />
-               <label>{{ type.typeName }}</label>
-             </div>
-             <!-- Subtypes -->
-             <div v-for="subtype in reportTypes.malfunctionSubtypes" :key="subtype.id">
-               <div v-if="subtype.malfunctionTypeId == type.id">
-                 <div class="subtypecontainer text-lg-left" id="malfunction">
-                   <input @click="deselectDefect" type="radio" :id="type.typeName" :value="subtype.typeName" v-model="malfunctionTypeSelected.subTypeName" @change="selectParent(subtype.malfunctionTypeId, 'Malfunction')" />
-                   <label>{{ subtype.typeName }}</label>
-                 </div>
-               </div>
-             </div>
-           </div>
-         </div>
-         <div class="container" v-if="defect">
-           <div class="input-group">
-             <div class="input-group">
-               <input name="Message" v-model="form.defectDescription" type="text" placeholder="Info over defect" class="form-control form-control-lg" />
-               <label><input type="checkbox" v-model="form.defectMonitoring">Opvolging</label>
-             </div>
-           </div>
-           <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addDefect">Opslaan</button>
-         </div>
-         <div class='container' v-else>
-           <div class="input-group">
-             <div class="input-group">
-               <input name="Message" v-model="form.malfunctionDescription" type="text" placeholder="Info over probleem" class="form-control form-control-lg" />
-               <input name="duration" v-model="form.malfunctionDuration" type="text" placeholder="Sinds wanneer is dit probleem er" class="form-control form-control-lg">
-               <label><input type="checkbox" v-model="form.malfunctionMonitoring">Opvolging</label>
-             </div>
-           </div>
-           <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addMalfunction">Opslaan</button>
-
-           <small v-if="form.technicalFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
-           <small v-if="form.technicalSucceeded">Het verslag is toegevoegd</small>
-         </div>
-       </div>
-     </section>
-   </form>
-   <div>{{typeSelected}}</div>
-   <div>
-     {{operationalTypeSelected}}
-   </div>
-   <div>
-     {{malfunctionTypeSelected}}
-   </div>
-   <div>
-     {{defectTypeSelected}}
-   </div>
- </div>
+          </div>
+        <div class='container text-sm-left col-lg' v-else>
+        <div class="input-group ">
+            <input name="Message" v-model="form.malfunctionDescription" type="text" placeholder="Info over probleem" class="form-control form-control-lg" />
+            <input name="duration" v-model="form.malfunctionDuration" type="text" placeholder="Sinds wanneer is dit probleem er" class="form-control form-control-lg">
+        </div>
+        <label><input type="checkbox" v-model="form.malfunctionMonitoring">Opvolging</label>
+        
+        <button class="btn btn-large btn-block btn-success" type="button" @click.prevent="addMalfunction">Opslaan</button>
+      
+      <small v-if="form.technicalFailed">Er is iets misgegaan bij het toevoegen aan de database</small>
+      <small v-if="form.technicalSucceeded">Het verslag is toegevoegd</small>
+      </div>
+      </div>
+      </div>
+    </section>
+  </form>
+</div>
+</div>
 </template>
 
 <script lang="ts">
@@ -216,25 +217,19 @@ export default Vue.extend({
         location: "",
         operationalDate: "",
         operationalMessage: "",
-        operationalMonitoring: false,
         operationalFailed: false,
         operationalSucceeded: false,
         operationalPrio: false,
         unit: "",
         //WORKFORCE OBJECTS
-        absent: "",
         replacement: "",
         workforceMessage: "",
         secretNotification: "",
         secretMonitoring: false,
         workplaceEvent: null,
         workPlaceMonitoring: false,
-        workforceDate: null,
         absentee: "",
         substitute: null,
-        employee: null,
-        workplaceEventType: null,
-        workForceFailed: false,
         workForceSucceeded: false,
         //TECHNICAL OBJECTS
         defectDescription: "",
@@ -244,9 +239,6 @@ export default Vue.extend({
         malfunctionDuration: "",
         malfunctionMonitoring: false,
 
-        technicalMessage: "",
-        technicalProblems: null,
-        technicalDescription: null,
         technicalFailed: false,
         technicalSucceeded: false
       },
@@ -290,14 +282,46 @@ export default Vue.extend({
       if (decodedToken.rights < 0 || decodedToken.rights > 1) {
         window.location.href = "/login";
       }
-
-      if (decodedToken === undefined) {
+      if (decodedToken === undefined){
         window.location.href = "/login"
       }
       this.tokenData.authorId = decodedToken.id;
     }
+    this.getAutoSave();
   },
   methods: {
+    async autoSave() {
+      ReportingService.autosaveOperational({
+        plNumber: this.form.plNumber,
+        location: this.form.location,
+        date: this.form.operationalDate,
+        description: this.form.operationalMessage,
+        unit: this.form.unit,
+        id:this.tokenData.authorId,
+        types: this.operationalTypeSelected.selectedTypes,
+        subtypes: this.operationalTypeSelected.selectedSubtypes,
+        priority: this.form.operationalPrio
+      })
+    },
+    async getAutoSave() {
+      const response = await ReportingService.getAutosavedOperational({
+        id: this.tokenData.authorId
+      });
+      if (response.bool && response.entry !== undefined) {
+        // types: this.operationalTypeSelected.selectedTypes,
+        // subtypes: this.operationalTypeSelected.selectedSubtypes,
+        this.form.plNumber = response.entry.plNumber;
+        this.form.location = response.entry.location;
+        this.form.operationalDate = new Date(response.entry.date).toLocaleString("nl-BE");
+        this.form.operationalMessage = response.entry.description;
+        this.form.unit = response.entry.unit;
+        this.form.operationalPrio = response.entry.priority;
+      //    ReportingService.getEventType(
+      //   "/api/reports/operationalEventTypes/" + String(response.entry.id)
+      // ).then(res => (this.operationalTypeSelected.selectedTypes = res.selectedTypes,
+      //                 this.operationalTypeSelected.selectedSubtypes = res.selectedSubtypes));
+      }
+    },
     getOperational: function () {
       if (this.step != "Operational") {
         this.step = "Operational";
@@ -384,6 +408,11 @@ export default Vue.extend({
         type: this.defectTypeSelected.typeName,
         subtype: this.defectTypeSelected.subTypeName
       })
+      if (response.bool) {
+        this.form.technicalSucceeded = true;
+        this.form.defectDescription = "";
+        this.form.defectMonitoring = false;
+      }
     },
     async addMalfunction() {
       const response = await ReportingService.addMalfunction({
@@ -394,6 +423,13 @@ export default Vue.extend({
         subtype: this.malfunctionTypeSelected.subTypeName,
         duration: this.form.malfunctionDuration
       })
+      if (response.bool) {
+        this.form.technicalSucceeded = true;
+        
+        this.form.malfunctionDescription = "";
+        this.form.malfunctionDuration = "";
+        this.form.malfunctionMonitoring = false;
+      }
     },
     async addSecretaryNotification() {
       const response = await ReportingService.addSecretaryNotification({
@@ -401,9 +437,10 @@ export default Vue.extend({
         description: this.form.secretNotification,
         monitoring: this.form.secretMonitoring,
       });
-      if (response.bool) {
-        this.form.secretNotification = "",
-          this.form.secretMonitoring = false
+      if (response.bool)  {
+        this.form.secretNotification = "";
+        this.form.secretMonitoring = false;
+        this.form.workForceSucceeded = true;
       }
 
     },
@@ -434,18 +471,23 @@ export default Vue.extend({
         id: this.tokenData.authorId,
         types: this.operationalTypeSelected.selectedTypes,
         subtypes: this.operationalTypeSelected.selectedSubtypes,
-        monitoring: this.form.operationalMonitoring,
         priority: this.form.operationalPrio
       });
       this.uncheckAllOperational(false);
-      this.form.operationalMonitoring = false;
-      this.form.operationalSucceeded = true;
       if (response.bool) {
         this.form.plNumber = "";
         this.form.location = "";
         this.form.operationalDate = "";
         this.form.operationalMessage = "";
-
+        this.form.unit = "";
+        this.form.operationalSucceeded = true;
+      } else {
+        this.form.operationalFailed = true;
+        this.form.plNumber = "";
+        this.form.location = "";
+        this.form.operationalDate = "";
+        this.form.operationalMessage = "";
+        this.form.unit = "";
       }
     },
     loadData: function () {
@@ -551,3 +593,33 @@ export default Vue.extend({
   }
 });
 </script>
+
+
+<style scoped>
+.formcontaier {
+  width: 100%;
+  height: fit-content;
+}
+
+.form-control {
+  height: fit-content;
+}
+
+.no-edit {
+  color: rgba(83, 72, 72, 0.705);
+}
+
+.typecontainer {
+  width: max-content;
+}
+
+.subtypecontainer {
+  width: max-content;
+  padding-left: 1rem;
+}
+
+.extraMargin {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+</style>

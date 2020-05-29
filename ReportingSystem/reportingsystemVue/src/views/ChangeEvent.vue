@@ -1,4 +1,9 @@
 <template>
+<div class="changeEvent">
+
+<div id="nav">
+    <router-link to="/">Startscherm</router-link>
+  </div>
 <div class="container pt-5 pb-5">
   <h1>Wijzig gebeurtenis</h1>
   <form id="changeOperationalEvent">
@@ -318,6 +323,7 @@
       </section>
     </fieldset>
   </form>
+</div>
 </div>
 </template>
 

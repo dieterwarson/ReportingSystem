@@ -21,19 +21,19 @@ const router = Router();
 router.get('/types', async (req: Request, res: Response) => {
 
   let operationalTypes = await OperationalType.findAll({
-    attributes: ['typeName'],
+    attributes: ['typeName', 'id'],
   });
 
   let workplaceTypes = await WorkplaceType.findAll({
-    attributes: ['typeName'],
+    attributes: ['typeName', 'id'],
   });
 
   let defectTypes = await DefectType.findAll({
-    attributes: ['typeName'],
+    attributes: ['typeName', 'id'],
   });
 
   let malfunctionTypes = await MalfunctionType.findAll({
-    attributes: ['typeName'],
+    attributes: ['typeName', 'id'],
   });
 
   let results = { operationalTypes, workplaceTypes, defectTypes, malfunctionTypes }
