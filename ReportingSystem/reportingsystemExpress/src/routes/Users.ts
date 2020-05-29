@@ -35,7 +35,7 @@ interface INewUserData {
 }
 
 function checkUsername(username: string) {
-  if (/^[a-z0-9_-]{3,15}$/.test(username)) {
+  if (/^[a-zA-Z0-9_-]{3,15}$/.test(username)) {
     return true;
   }
   return false;
