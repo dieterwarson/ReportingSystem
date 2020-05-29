@@ -51,6 +51,16 @@ export default {
         alert(error);
       });
   },
+  getFilteredEvents(data: any, id: number) {
+    return Api()
+      .post("api/reports/getTypeEvents/" + id, data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
+  },
   getPaginationReports(offset: number) {
     return Api()
       .post("api/reports/all", {offset: offset})
