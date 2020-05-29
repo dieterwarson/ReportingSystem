@@ -1,7 +1,15 @@
 <template>
 <div class="home">
   <div class="container my-4">
-    <button type="submit" class="btn btn-primary btn-block" @click.prevent="logOut">Afmelden</button>
+    <div class="row ">
+      <div>Aangemeld als {{tokenData.username}} </div>
+      <div v-if="tokenData.accessRights == 0"> (Administrator)</div>
+      <div v-else-if="tokenData.accessRights == 1" >(Supervisor)</div>
+      <div v-else-if="tokenData.accessRights == 2" >(Secretariaat)</div>
+      <button  type="submit" class="btn btn-primary logout" @click.prevent="logOut">Afmelden</button>
+    </div>
+    
+    
     <!-- Search form -->
     <form>
       <div v-if="tokenData.seeReports" class="form-row align-items-center">
@@ -272,5 +280,12 @@ export default Vue.extend({
 .options ul li:hover {
   background: steelblue;
   color: black;
+}
+
+.logout {
+  margin-left: 60%;
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-bottom: 10px;
 }
 </style>

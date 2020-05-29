@@ -43,6 +43,7 @@ export default class User extends Model<User> {
 
   @HasMany(() => OperationalEvent)
   operationalEvents!: OperationalEvent[];
+  
 }
 
 // TODO provide safe way to save user
