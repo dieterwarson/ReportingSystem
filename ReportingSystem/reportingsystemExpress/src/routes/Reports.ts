@@ -55,7 +55,7 @@ router.get('/count', async (req: Request, res: Response) => {
       temporary: false,
     },
   });
-  res.send({count: count});
+  res.send({ count: count });
 });
 
 
@@ -563,8 +563,8 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
   });
 
   let operationalEvents: OperationalEvent[] = [];
-  let secretariatNotifications: SecretariatNotification[] = [];
   let workplaceEvents: WorkplaceEvent[] = [];
+  let secretariatNotifications: SecretariatNotification[] = [];
   let defects: Defect[] = [];
   let malfunctions: Malfunction[] = [];
 
@@ -584,27 +584,12 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     });
   }
 
-  if (technical != null) {
-    defects = await Defect.findAll({
-      where: {
-        technicalId: technical.id
-      },
-      include: [DefectType, DefectSubtype ]
-    })
-
-    malfunctions = await Malfunction.findAll({
-      where: {
-        technicalId: technical.id
-      },
-      include: [ MalfunctionType, MalfunctionSubtype ]
-    })
-  }
   if (administrative != null) {
     workplaceEvents = await WorkplaceEvent.findAll({
       where: {
         administrativeId: administrative.id
       },
-      include: [ WorkplaceType, WorkplaceSubtype]
+      include: [WorkplaceType, WorkplaceSubtype]
     })
 
     secretariatNotifications = await SecretariatNotification.findAll({
@@ -613,6 +598,23 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
       }
     })
   }
+
+  if (technical != null) {
+    defects = await Defect.findAll({
+      where: {
+        technicalId: technical.id
+      },
+      include: [DefectType, DefectSubtype]
+    })
+
+    malfunctions = await Malfunction.findAll({
+      where: {
+        technicalId: technical.id
+      },
+      include: [MalfunctionType, MalfunctionSubtype]
+    })
+  }
+
   results = {
     report: report,
     operational: { operationalEvents },
@@ -1123,7 +1125,7 @@ router.post('/removeNotification', async (req, res) => {
     if (event !== null) {
       event.monitoring = false;
       await event.save();
-      
+
       res.send(true);
     }
   }
@@ -1152,8 +1154,171 @@ router.post('/removeNotification', async (req, res) => {
       res.send(true);
     }
   }
+});
 
 
+/******************************************************************************
+ *             Get Statistics - "POST /api/reports/getTypeEvents/:reportId"
+ ******************************************************************************/
+router.post('/getTypeEvents/:reportId', async (req, res) => {
+  const types = req.body.selectedTypes;
+console.log(types);
+
+  var results;
+  let reportId = req.param('reportId');
+  let report = await Report.findOne({
+    where: {
+      id: reportId,
+    },
+  });
+
+  let operational = await Operational.findOne({
+    where: {
+      reportId: reportId
+    }
+  });
+  let administrative = await Administrative.findOne({
+    where: {
+      reportId: reportId
+    }
+  });
+  let technical = await Technical.findOne({
+    where: {
+      reportId: reportId
+    }
+  });
+
+  let operationalEvents: OperationalEvent[] = [];
+  let workplaceEvents: WorkplaceEvent[] = [];
+  let secretariatNotifications: SecretariatNotification[] = [];
+  let defects: Defect[] = [];
+  let malfunctions: Malfunction[] = [];
+
+  if (operational != null) {
+    for (let i in types.operational) {
+      var type = types.operational[i];
+      var result = [];
+      result = await OperationalEvent.findAll({
+        where: {
+          operationalId: operational.id
+        },
+        include: [{
+          model: EventType,
+          required: true,
+          include: [{
+            model: OperationalType,
+            required: true,
+            where: {
+              typeName: {
+                [Op.like]: '' + type,
+              },
+            },
+          }]
+        }]
+      });
+
+      if (result.length != 0) {
+        result.forEach(event => {
+          operationalEvents.push(event);
+        });
+      }
+    }
+  }
+
+  if (administrative != null) {
+    for (let i in types.workplaceevent) {
+      var type = types.workplaceevent[i];
+      var result = [];
+      result = await WorkplaceEvent.findAll({
+        where: {
+          administrativeId: administrative.id
+        },
+        include: [{
+          model: WorkplaceType,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }],
+      });
+
+      if (result.length != 0) {
+        result.forEach(event => {
+          workplaceEvents.push(event);
+        });
+      }
+    }
+
+    if (types.includes("secretariatNotifications")) {
+      secretariatNotifications = await SecretariatNotification.findAll({
+        where: {
+          administrativeId: administrative.id
+        }
+      })
+    }
+  }
+
+  if (technical != null) {
+    for (let i in types.defect) {
+      var type = types.defect[i];
+      var result = [];
+      result = await Defect.findAll({
+        where: {
+          technicalId: technical.id
+        },
+        include: [{
+          model: DefectType,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+
+      });
+
+      if (result.length != 0) {
+        result.forEach(event => {
+          defects.push(event);
+        });
+      }
+    }
+
+    for (let i in types.malfunction) {
+      var type = types.malfunction[i];
+      var result = [];
+      result = await Malfunction.findAll({
+        where: {
+          technicalId: technical.id
+        },
+        include: [{
+          model: MalfunctionType,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+
+      });
+
+      if (result.length != 0) {
+        result.forEach(event => {
+          malfunctions.push(event);
+        });
+      }
+    }
+  }
+
+  results = {
+    report: report,
+    operational: { operationalEvents },
+    administrative: { workplaceEvents, secretariatNotifications },
+    technical: { defects, malfunctions },
+  };
+
+  res.send(results);
 });
 
 /******************************************************************************
