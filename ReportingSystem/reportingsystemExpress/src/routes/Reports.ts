@@ -179,7 +179,18 @@ interface reportData {
 }
 
 router.get('/search/:keyword', async (req: Request, res: Response) => {
-  const search: string = req.param('keyword');
+  let search: string = req.param('keyword');
+  search = search.replace("/","");
+  search = search.replace(".","");
+  search = search.replace("?","");
+  search = search.replace("!","");
+  search = search.replace("_","");
+  search = search.replace(" ","");
+  search = search.replace("-","");
+
+  if (search === '') {
+    search = "invalid_character"
+  }
   const searchString: string = '%' + search + '%';
 
   let reportIds: reportData[] = [];
