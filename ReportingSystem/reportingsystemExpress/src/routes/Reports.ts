@@ -1186,12 +1186,11 @@ router.post('/removeNotification', async (req, res) => {
 
 
 /******************************************************************************
- *             Get Statistics - "POST /api/reports/getTypeEvents/:reportId"
+ *             Get reports - "POST /api/reports/getTypeEvents/:reportId"
  ******************************************************************************/
 router.post('/getTypeEvents/:reportId', async (req, res) => {
   const types = req.body.selectedTypes;
-console.log(types);
-
+  console.log(types);
   var results;
   let reportId = req.param('reportId');
   let report = await Report.findOne({
@@ -1222,9 +1221,12 @@ console.log(types);
   let defects: Defect[] = [];
   let malfunctions: Malfunction[] = [];
 
+
   if (operational != null) {
+    console.log(types);
     for (let i in types.operational) {
       var type = types.operational[i];
+      console.log(type);
       var result = [];
       result = await OperationalEvent.findAll({
         where: {
@@ -1245,9 +1247,17 @@ console.log(types);
         }]
       });
 
+      console.log(result);
+
       if (result.length != 0) {
         result.forEach(event => {
-          operationalEvents.push(event);
+          let contains = false;
+          operationalEvents.forEach(value => {  
+            if(value.id == event.id)
+              contains = true;
+          })     
+          if(!contains)
+            operationalEvents.push(event);
         });
       }
     }
@@ -1278,12 +1288,16 @@ console.log(types);
       }
     }
 
-    if (types.includes("secretariatNotifications")) {
-      secretariatNotifications = await SecretariatNotification.findAll({
-        where: {
-          administrativeId: administrative.id
-        }
-      })
+    console.log(types.workplaceevent);
+
+    if(types.workplaceevent != null){
+      if (types.workplaceevent.includes("secretariatNotification")) {
+        secretariatNotifications = await SecretariatNotification.findAll({
+          where: {
+            administrativeId: administrative.id
+          }
+        })
+      }
     }
   }
 
@@ -1345,6 +1359,8 @@ console.log(types);
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
+
+  // console.log(results);
 
   res.send(results);
 });

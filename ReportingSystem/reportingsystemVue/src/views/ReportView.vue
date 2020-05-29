@@ -222,16 +222,9 @@
     <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
     <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
   </div>
-  {{selectedTypes}}
   <!-- Operational -->
   <section v-if="step == 'Operational'" class="container">
-    <div v-if="
-          Object.keys(reportContent.operational.operationalEvents).length === 0
-        ">
-      <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
-    </div>
-    <div v-else class="row row-cols-1 row-cols-md-2">
-      <!-- Filter types -->
+    <!-- Filter types -->
       <div v-if="Object.keys(reportTypes).length === 0">
         <p>Er zijn nog geen types</p>
       </div>
@@ -244,13 +237,20 @@
           <div class="checkbox-container text-sm-left col-sm-7">
             <div v-for="value in reportTypes.operationalTypes" :key="value.id">
               <div class="typecontainer text-lg-left" id="operational">
-                <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes.operational" />
+                <input type="checkbox" id="operational" :value="value.typeName" v-model="selectedTypes.operational" />
                 <label>{{ value.typeName }}</label>
               </div>
             </div>
           </div>
         </div>
       </form>
+    <div v-if="
+          Object.keys(reportContent.operational.operationalEvents).length === 0
+        ">
+      <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
+    </div>
+    <div v-else class="row row-cols-1 row-cols-md-2">
+      
       <!-- Change form -->
       <div v-for="event in reportContent.operational.operationalEvents" :key="event.id">
         <div class="col card h-100">
@@ -300,16 +300,7 @@
   </section>
   <!-- Workforce -->
   <section v-if="step == 'Workforce'" class="container">
-    <div v-if="
-          Object.keys(reportContent.administrative.workplaceEvents).length ===
-            0 &&
-            Object.keys(reportContent.administrative.secretariatNotifications)
-              .length === 0
-        ">
-      <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
-    </div>
-    <div v-else class="row row-cols-1 row-cols-md-2">
-      <!-- Filter types -->
+    <!-- Filter types -->
       <div v-if="Object.keys(reportTypes).length === 0">
         <p>Er zijn nog geen types</p>
       </div>
@@ -320,15 +311,29 @@
             <h5>Alle types</h5>
           </label>
           <div class="checkbox-container text-sm-left col-sm-7">
+            <div class="typecontainer text-lg-left" id="workplace">
+                <input type="checkbox" id="secretariatNotification" value="secretariatNotification" v-model="selectedTypes.workplaceevent" />
+                <label>Melding aan het secretariaat</label>
+              </div>
             <div v-for="value in this.reportTypes.workplaceTypes" :key="value.id">
               <div class="typecontainer text-lg-left" id="workplace">
-                <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes.workplaceevent" />
+                <input type="checkbox" id="workplace" :value="value.typeName" v-model="selectedTypes.workplaceevent" />
                 <label>{{ value.typeName }}</label>
               </div>
             </div>
           </div>
         </div>
       </form>
+    <div v-if="
+          Object.keys(reportContent.administrative.workplaceEvents).length ===
+            0 &&
+            Object.keys(reportContent.administrative.secretariatNotifications)
+              .length === 0
+        ">
+      <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
+    </div>
+    <div v-else class="row row-cols-1 row-cols-md-2">
+      
       <!-- Change form -->
       <div v-for="event in reportContent.administrative.workplaceEvents" :key="event.id">
         <div v-if="!(Object.keys(event) === 0)" class="col card h-100">
@@ -385,14 +390,7 @@
   </section>
   <!-- Technical -->
   <section v-if="step == 'Technical'" class="container">
-    <div v-if="
-          Object.keys(reportContent.technical.defects).length === 0 &&
-            Object.keys(reportContent.technical.malfunctions).length === 0
-        ">
-      <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
-    </div>
-    <div v-else class="row row-cols-1 row-cols-md-2">
-      <!-- Filter types -->
+    <!-- Filter types -->
       <div v-if="Object.keys(reportTypes).length === 0">
         <p>Er zijn nog geen types</p>
       </div>
@@ -405,7 +403,7 @@
           <div class="checkbox-container text-sm-left col-sm-7">
             <div v-for="value in this.reportTypes.defectTypes" :key="value.id">
               <div class="typecontainer text-lg-left" id="defect">
-                <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes.defect" />
+                <input type="checkbox" id="defect" :value="value.typeName" v-model="selectedTypes.defect" />
                 <label>{{ value.typeName }}</label>
               </div>
             </div>
@@ -418,13 +416,21 @@
           <div class="checkbox-container text-sm-left col-sm-7">
             <div v-for="value in this.reportTypes.malfunctionTypes" :key="value.id">
               <div class="typecontainer text-lg-left" id="malfunction">
-                <input type="checkbox" :id="value.typeName" :value="value.typeName" v-model="selectedTypes.malfunction" />
+                <input type="checkbox" id="malfunction" :value="value.typeName" v-model="selectedTypes.malfunction" />
                 <label>{{ value.typeName }}</label>
               </div>
             </div>
           </div>
         </div>
       </form>
+    <div v-if="
+          Object.keys(reportContent.technical.defects).length === 0 &&
+            Object.keys(reportContent.technical.malfunctions).length === 0
+        ">
+      <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
+    </div>
+    <div v-else class="row row-cols-1 row-cols-md-2">
+      
       <!-- Change form -->
       <div v-for="event in reportContent.technical.defects" :key="event.id">
         <div class="col card h-100">
@@ -499,6 +505,7 @@
           </div>
         </div>
       </div>
+    </div>
     </section>
   </div>
   <div v-else>
@@ -572,18 +579,22 @@ export default Vue.extend({
     priorityContent: function () {
       this.loadNotifications();
     },
-    selectedTypes: function () {
+    selectedTypes: {
+      handler () {
       ReportingService.getFilteredEvents({
         selectedTypes: this.selectedTypes
       }, Number(this.$route.query.reportId)).then(
         res => (this.reportContent = res)
       );
+      
+      },
+      deep: true,
     }
   },
 
   mounted() {
     this.loadData();
-    this.interval = window.setInterval(this.loadData, 5000);
+    // this.interval = window.setInterval(this.loadData, 5000);
   },
 
   methods: {
@@ -611,6 +622,24 @@ export default Vue.extend({
         const check = checks[i] as HTMLInputElement;
         if (check.checked != status) check.click();
       }
+    },
+
+    allTrue: function(section: string) {
+      const checks = document.querySelectorAll(
+        "#" + section + ' input[type="checkbox"]'
+      );
+
+      for (let i = 0; i < checks.length; i++) {
+        const check = checks[i] as HTMLInputElement;
+        check.checked = true;
+      }
+    },
+
+    selectAllSections: function() {
+      this.allTrue('operational');
+      this.allTrue('workplace');
+      this.allTrue('defect');
+      this.allTrue('malfunction');
     },
 
     setShift: function () {
@@ -676,6 +705,7 @@ export default Vue.extend({
           subcategorie: String(subcat)
         }
       });
+      this.selectAllSections();
     }
   },
   beforeDestroy: function () {
