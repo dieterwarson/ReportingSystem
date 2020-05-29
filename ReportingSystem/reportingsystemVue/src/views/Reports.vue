@@ -68,10 +68,6 @@ export default Vue.extend({
 
     calculatePages: function(count: number) {
       this.pages = Math.ceil(count/10);
-      /* if(count%10 != 0)
-        this.pages = count/10+1;
-      else
-        this.pages = count/10; */
     },
 
     reportClick: function (id: string) {
