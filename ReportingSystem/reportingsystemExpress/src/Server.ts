@@ -160,7 +160,7 @@ for (let i = 39; i < 1825; i++) {
     description: 'Jacob sleutelbeen gebroken',
     absentee: 'Jacob Franssen',
     substitute: 'James Brook',
-    monitoring: true,
+    monitoring: false,
     date: new Date('2020/03/16 9:10:23'),
   });
   workplaceEvent1.save();
@@ -169,7 +169,7 @@ for (let i = 39; i < 1825; i++) {
     authorId: 2,
     administrativeId: i,
     description: 'Jan Janssens Inp ziek',
-    monitoring: true,
+    monitoring: false,
     date: new Date('2020/03/16 20:30:46'),
   });
   secretariatNotification1.save();
@@ -190,7 +190,7 @@ for (let i = 39; i < 1825; i++) {
     technicalId: i,
     authorId: 2,
     description: 'Voertuig P320 achterlicht kapot',
-    monitoring: true,
+    monitoring: false,
     date: new Date('2020/03/16 13:03:57'),
   });
   defect1.save();
@@ -199,7 +199,7 @@ for (let i = 39; i < 1825; i++) {
     technicalId: i,
     authorId: 1,
     description: 'lekkende kraan in kamer 304',
-    monitoring: true,
+    monitoring: false,
     date: new Date('2020/03/16 10:46:45'),
     duration: '2:16'
   });
