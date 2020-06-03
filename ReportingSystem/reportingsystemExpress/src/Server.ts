@@ -127,7 +127,7 @@ const user2 = new User({
 
 
 
-for (let i = 39; i < 1000; i++) {
+for (let i = 39; i < 2500; i++) {
   const report1 = new Report({
     id: i,
     date: new Date('2020/03/16 23:01:00'),
@@ -211,6 +211,8 @@ for (let i = 39; i < 1000; i++) {
   });
   malfunction1.save();
 }
+
+
 
 
 const report2 = new Report({

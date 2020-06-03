@@ -8,7 +8,7 @@
   <h5 class="container my-2 card-title" v-for="value in reports" :key="value.reportId">
     <button class="btn btn-secondary btn-lg btn-block" v-on:click="reportClick(String(value.reportId))">
       {{
-        new Date(value.date).toLocaleString([], {
+        new Date(value.date).toLocaleString("nl-BE", {
           year: "numeric",
           month: "numeric",
           day: "numeric",
@@ -55,7 +55,7 @@ export default Vue.extend({
   },
   created() {
     this.loadData();
-    setInterval(this.loadData, 5000);
+    // setInterval(this.loadData, 5000);
   },
   mounted() {
     this.loadData();
