@@ -127,7 +127,7 @@ const user2 = new User({
 
 
 
-for (let i = 39; i < 2500; i++) {
+for (let i = 39; i < 1825; i++) {
   const report1 = new Report({
     id: i,
     date: new Date('2020/03/16 23:01:00'),
@@ -157,8 +157,6 @@ for (let i = 39; i < 2500; i++) {
   const workplaceEvent1 = new WorkplaceEvent({
     authorId: 1,
     administrativeId: i,
-    workplaceTypeId: 1,
-    workplaceSubtypeId: 1,
     description: 'Jacob sleutelbeen gebroken',
     absentee: 'Jacob Franssen',
     substitute: 'James Brook',
@@ -172,7 +170,7 @@ for (let i = 39; i < 2500; i++) {
     administrativeId: i,
     description: 'Jan Janssens Inp ziek',
     monitoring: true,
-    date: new Date('2020/03/22 20:30:46'),
+    date: new Date('2020/03/16 20:30:46'),
   });
   secretariatNotification1.save();
 
@@ -191,19 +189,15 @@ for (let i = 39; i < 2500; i++) {
   const defect1 = new Defect({
     technicalId: i,
     authorId: 2,
-    defectTypeId: 1,
-    defectSubtypeId: 1,
     description: 'Voertuig P320 achterlicht kapot',
     monitoring: true,
-    date: new Date('2020/03/17 13:03:57'),
+    date: new Date('2020/03/16 13:03:57'),
   });
   defect1.save();
 
   const malfunction1 = new Malfunction({
     technicalId: i,
     authorId: 1,
-    malfunctionTypeId: 1,
-    malfunctionSubtypeId: 1,
     description: 'lekkende kraan in kamer 304',
     monitoring: true,
     date: new Date('2020/03/16 10:46:45'),
