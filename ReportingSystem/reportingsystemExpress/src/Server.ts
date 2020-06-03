@@ -129,6 +129,7 @@ const user2 = new User({
 
 for (let i = 39; i < 1000; i++) {
   const report1 = new Report({
+    id: i,
     date: new Date('2020/03/16 23:01:00'),
     temporary: false,
     nightShift: true,
@@ -136,23 +137,26 @@ for (let i = 39; i < 1000; i++) {
   report1.save();  
 
   const technical1 = new Technical({
-  reportId: report1.id,
+  reportId: i,
+  id: i,
   });
   technical1.save();
 
   const administrative1 = new Administrative({
-    reportId: report1.id,
+    reportId: i,
+    id: i,
   });
   administrative1.save();
 
   const operational1 = new Operational({
-    reportId: report1.id,
+    reportId: i,
+    id: i,
   });
   operational1.save();
 
   const workplaceEvent1 = new WorkplaceEvent({
     authorId: 1,
-    administrativeId: report1.id,
+    administrativeId: i,
     workplaceTypeId: 1,
     workplaceSubtypeId: 1,
     description: 'Jacob sleutelbeen gebroken',
@@ -165,7 +169,7 @@ for (let i = 39; i < 1000; i++) {
 
   const secretariatNotification1 = new SecretariatNotification({
     authorId: 2,
-    administrativeId: report1.id,
+    administrativeId: i,
     description: 'Jan Janssens Inp ziek',
     monitoring: true,
     date: new Date('2020/03/22 20:30:46'),
@@ -174,7 +178,7 @@ for (let i = 39; i < 1000; i++) {
 
   const operationalEvent1 = new OperationalEvent({
     authorId: 2,
-    operationalId: report1.id,
+    operationalId: i,
     signaling: 'Verlies inschrijvingsbewijs CIM NR 545102920 / 1ABC123',
     plNumber: null,
     description: null,
@@ -185,7 +189,7 @@ for (let i = 39; i < 1000; i++) {
   operationalEvent1.save();
 
   const defect1 = new Defect({
-    technicalId: report1.id,
+    technicalId: i,
     authorId: 2,
     defectTypeId: 1,
     defectSubtypeId: 1,
@@ -196,7 +200,7 @@ for (let i = 39; i < 1000; i++) {
   defect1.save();
 
   const malfunction1 = new Malfunction({
-    technicalId: report1.id,
+    technicalId: i,
     authorId: 1,
     malfunctionTypeId: 1,
     malfunctionSubtypeId: 1,
