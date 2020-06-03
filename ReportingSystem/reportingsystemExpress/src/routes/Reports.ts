@@ -1463,6 +1463,7 @@ router.post('/getFile', async (req, res) => {
 router.post('/addSecretaryNotification', async (req, res) => {
   Administrative.findAll({
     limit: 1,
+    where: {reportId: 17}, //demo
     order: [ ['reportId', 'DESC']]
   }).then(function(entries){
     SecretariatNotification.create({
@@ -1494,6 +1495,7 @@ router.post('/addOperationalEvent', async (req, res) => {
   const selectedSubtypes = req.body.subtypes;
   Operational.findAll({
     limit: 1,
+    where: {reportId: 17}, //demo
     order: [ ['reportId', 'DESC']]
   }).then(function(entries){
 
@@ -1601,6 +1603,7 @@ router.post('/addWorkPlaceEvent', async (req, res) => {
   
   Administrative.findAll({
     limit: 1,
+    where: {reportId: 17}, //demo
     order: [ ['reportId', 'DESC']]
   }).then(async function(entries){
     let type = req.body.type;
@@ -1658,6 +1661,7 @@ router.post('/addWorkPlaceEvent', async (req, res) => {
 router.post('/addMalfunction', async(req, res) => {
   Technical.findAll({
     limit: 1,
+    where: {reportId: 17},  //demo
     order: [ ['reportId', 'DESC']]
   }).then(async function(entries){
     let type = req.body.type;
@@ -1719,6 +1723,7 @@ router.post('/addMalfunction', async(req, res) => {
 router.post('/addDefect', async (req, res) => {
   Technical.findAll({
     limit: 1,
+    where: {reportId: 17},  //demo
     order: [ ['reportId', 'DESC']]
   }).then(async function(entries){
     let type = req.body.type;

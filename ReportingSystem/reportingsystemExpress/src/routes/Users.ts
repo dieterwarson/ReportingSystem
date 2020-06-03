@@ -149,7 +149,7 @@ router.post('/changePassword', async (req, res) => {
  ******************************************************************************/
 router.post('/changeAcces', async (req, res) => {
   const data = req.body;
-  if (data.username && data.newAcces) {
+  if (data.username && (data.newAcces >= 0 && data.newAcces < 3)) {
     User.update(
       { accessRights: req.body.newAcces },
       { where: { username: data.username } }
