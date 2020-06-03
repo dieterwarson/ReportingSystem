@@ -547,7 +547,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'chass_beerts','test', 'test@gmail.com', 0, 1, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'jan_janssens','', 'test@gmail.com',1, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(3, 'test', '$2y$10$nANkNP.Z8ZYTDbYDc58WcOsJvQ1LtaOHHkM/v2CRR22QwZsqmu0Pi', 'test@tester.com',0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(4, 'sup', '$2y$10$nANkNP.Z8ZYTDbYDc58WcOsJvQ1LtaOHHkM/v2CRR22QwZsqmu0Pi', 'test@tester.com',0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(5, 'sec', '$2y$10$nANkNP.Z8ZYTDbYDc58WcOsJvQ1LtaOHHkM/v2CRR22QwZsqmu0Pi', 'test@tester.com',0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(6, 'admin', '$2y$10$nANkNP.Z8ZYTDbYDc58WcOsJvQ1LtaOHHkM/v2CRR22QwZsqmu0Pi', 'test@tester.com',0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34');
+INSERT INTO `Users` VALUES (1,'chass_beerts','test', 'test@gmail.com', 0, 1, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(2,'jan_janssens','', 'test@gmail.com',1, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(3, 'test', '$2y$10$nANkNP.Z8ZYTDbYDc58WcOsJvQ1LtaOHHkM/v2CRR22QwZsqmu0Pi', 'test@tester.com',0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(4, 'sup', '$2y$10$nANkNP.Z8ZYTDbYDc58WcOsJvQ1LtaOHHkM/v2CRR22QwZsqmu0Pi', 'test@tester.com',1, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(5, 'sec', '$2y$10$nANkNP.Z8ZYTDbYDc58WcOsJvQ1LtaOHHkM/v2CRR22QwZsqmu0Pi', 'test@tester.com',2, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34'),(6, 'admin', '$2y$10$nANkNP.Z8ZYTDbYDc58WcOsJvQ1LtaOHHkM/v2CRR22QwZsqmu0Pi', 'test@tester.com',0, 0, 0,'2020-05-14 14:31:34','2020-05-14 14:31:34');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
