@@ -529,7 +529,7 @@ CREATE TABLE `Users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-    `email` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `accessRights` int(11) DEFAULT NULL,
   `subscription` tinyint(1) DEFAULT NULL,
   `loggedIn` TINYINT(1) DEFAULT 0,
