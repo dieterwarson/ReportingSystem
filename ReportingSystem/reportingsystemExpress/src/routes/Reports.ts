@@ -21,6 +21,7 @@ import MalfunctionSubtype from 'src/models/malfunctionSubtype';
 import OperationalSubtype from 'src/models/operationalSubtype';
 import EventType from 'src/models/eventType';
 import DummyDatabase from 'src/models/dummyDataBase';
+import { log } from 'winston';
 
 // Init router
 const router = Router();
@@ -180,17 +181,40 @@ interface reportData {
 
 router.get('/search/:keyword', async (req: Request, res: Response) => {
   let search: string = req.param('keyword');
-  search = search.replace("/", "");
-  search = search.replace(".", "");
-  search = search.replace("?", "");
-  search = search.replace("!", "");
-  search = search.replace("_", "");
-  search = search.replace(" ", "");
-  search = search.replace("-", "");
+  console.log("\n\n\n\n\n");
+  console.log(search);
+  console.log("\n\n\n\n\n");
 
-  if (search === '') {
-    search = "invalid_character"
-  }
+  // infinites lege resultaten: # - \
+  // alle resultaten: é è ç à ù
+  // auto-replace door invalid_character: ! _ ? . / spatie
+  // Error: Request failed with status code 400: %
+
+  // na fix met escape
+  // fixed: # \ ! ? spatie
+  // infinites lege resultaten: -
+  // alle resultaten: %
+  // auto-replace door invalid_character: _ . /
+  // Error: Request failed with status code 400: é è ç à ù
+
+
+  // search = search.replace("!", "aaaaaaaa");
+  search = unescape(search)
+
+  // search = search.replace("-", "");
+  // search = search.replace("!", "");
+  // search = search.replace("_", "");
+  // search = search.replace("?", "");
+  // search = search.replace(".", "");
+  // search = search.replace(" ", "");
+
+  console.log("\n\n\n\n\n");
+  console.log(search);
+  console.log("\n\n\n\n\n");
+
+  // if (search === '') {
+  //   search = "invalid_character"
+  // }
   const searchString: string = '%' + search + '%';
 
   let reportIds: reportData[] = [];

@@ -144,7 +144,7 @@ export default Vue.extend({
         this.$router.push({
           path: "reportssearch",
           query: {
-            keyword: String(this.keyword),
+            keyword: escape(String(this.keyword)),
             plNumber: String(this.plNumber)
           }
         });
