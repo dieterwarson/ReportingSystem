@@ -127,7 +127,7 @@ const user2 = new User({
 
 
 
-// for (let i = 39; i < 1000; i++) {
+// for (let i = 19; i < 1000; i++) {
 //   const report1 = new Report({
 //     id: i,
 //     date: new Date('2020/03/16 23:01:00'),
@@ -218,7 +218,6 @@ const user2 = new User({
 //   });
 //   eventType1.save();
 // }
-
 
 
 

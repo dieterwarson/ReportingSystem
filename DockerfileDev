@@ -12,6 +12,7 @@ ADD /ReportingSystem/startServerDev.sh  startServerDev.sh
 ADD ReportingSystem/setup/mysql_secure_installation.sql mysql_secure_installation.sql
 ADD ReportingSystem/setup/testdata.sql testdata.sql
 ADD ReportingSystem/setup/levenshtein.sql levenshtein.sql
+ADD ReportingSystem/setup/indexes.sql indexes.sql
 
 # fixes problem mysql-server not starting on Windows due to CRLF characters
 RUN  apt-get update && apt-get install -y dos2unix && dos2unix startServerDev.sh
