@@ -191,15 +191,34 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
   // Error: Request failed with status code 400: %
 
   // na fix met escape
-  // fixed: # \ ! ? spatie
+  // fixed: ?
+  // vind niks: # \ ! spatie
   // infinites lege resultaten: -
   // alle resultaten: %
   // auto-replace door invalid_character: _ . /
   // Error: Request failed with status code 400: é è ç à ù
 
+  // na fix met encodeURIComponent
+  // fixed: ? / spatie #
+  // vind niks: \
+  // infinites lege resultaten: -
+  // alle resultaten: é è ç à ù
+  // auto-replace door invalid_character: ! _ .
+  // Error: Request failed with status code 400: %
 
-  // search = search.replace("!", "aaaaaaaa");
-  search = unescape(search)
+  // na fix met encodeURIComponent en replace
+  // fixed: ? / spatie #
+  // vind niks: \
+  // infinites lege resultaten: -
+  // alle resultaten: é è ç à ù
+  // auto-replace door invalid_character: ! _ .
+  // Error: Request failed with status code 400: %
+
+  // na fix met encodeURIComponent en replaces
+  // fixed (juiste resultaten): ? / spatie # - \ ! .
+  // alle resultaten: é è ç à ù % _
+
+  search = decodeURIComponent(search);
 
   // search = search.replace("-", "");
   // search = search.replace("!", "");
