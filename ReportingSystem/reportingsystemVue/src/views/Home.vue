@@ -192,10 +192,7 @@ export default Vue.extend({
         });
       } else {
         let newKeyword = String(this.keyword);
-        // newKeyword = escape(newKeyword);
-        // newKeyword = encodeURI(newKeyword);
         newKeyword = encodeURIComponent(newKeyword);
-        // newKeyword = newKeyword.replace(/[^a-z0-9 ,.?!]/ig, '');
         newKeyword = newKeyword.replace(/[[\]{}()*+?,^$|#\s]/g, "\\$&");
         newKeyword = newKeyword.split("-").join("--");
         newKeyword = newKeyword.split("%").join("%25");

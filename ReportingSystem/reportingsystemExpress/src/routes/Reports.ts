@@ -181,59 +181,8 @@ interface reportData {
 
 router.get('/search/:keyword', async (req: Request, res: Response) => {
   let search: string = req.param('keyword');
-  console.log("\n\n\n\n\n");
-  console.log(search);
-  console.log("\n\n\n\n\n");
-
-  // infinites lege resultaten: # - \
-  // alle resultaten: é è ç à ù
-  // auto-replace door invalid_character: ! _ ? . / spatie
-  // Error: Request failed with status code 400: %
-
-  // na fix met escape
-  // fixed: ?
-  // vind niks: # \ ! spatie
-  // infinites lege resultaten: -
-  // alle resultaten: %
-  // auto-replace door invalid_character: _ . /
-  // Error: Request failed with status code 400: é è ç à ù
-
-  // na fix met encodeURIComponent
-  // fixed: ? / spatie #
-  // vind niks: \
-  // infinites lege resultaten: -
-  // alle resultaten: é è ç à ù
-  // auto-replace door invalid_character: ! _ .
-  // Error: Request failed with status code 400: %
-
-  // na fix met encodeURIComponent en replace
-  // fixed: ? / spatie #
-  // vind niks: \
-  // infinites lege resultaten: -
-  // alle resultaten: é è ç à ù
-  // auto-replace door invalid_character: ! _ .
-  // Error: Request failed with status code 400: %
-
-  // na fix met encodeURIComponent en replaces
-  // fixed (juiste resultaten): ? / spatie # - \ ! .
-  // alle resultaten: é è ç à ù % _
-
   search = decodeURIComponent(search);
-
-  // search = search.replace("-", "");
-  // search = search.replace("!", "");
-  // search = search.replace("_", "");
-  // search = search.replace("?", "");
-  // search = search.replace(".", "");
-  // search = search.replace(" ", "");
-
-  console.log("\n\n\n\n\n");
-  console.log(search);
-  console.log("\n\n\n\n\n");
-
-  // if (search === '') {
-  //   search = "invalid_character"
-  // }
+  
   const searchString: string = '%' + search + '%';
 
   let reportIds: reportData[] = [];
