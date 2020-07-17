@@ -179,17 +179,11 @@ interface reportData {
   nightShift: Boolean;
 }
 
-router.get('/search/:keyword', async (req: Request, res: Response) => {
-  let search: string = req.param('keyword');
-  search = decodeURIComponent(search);
-  
-  const searchString: string = '%' + search + '%';
 
-  let reportIds: reportData[] = [];
-
-  let operationalEvents = await OperationalEvent.findAll({
+async function searchSignaling(searchString: String, reportIds: reportData[]) {
+  const operationalEvents = await OperationalEvent.findAll({
     where: {
-      signaling: {
+      description: {
         [Op.like]: searchString,
       },
     },
@@ -207,8 +201,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll({
+async function searchPlNumber(searchString: String, reportIds: reportData[]) {
+  const operationalEvents = await OperationalEvent.findAll({
     where: {
       plNumber: {
         [Op.like]: searchString,
@@ -228,8 +224,25 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll({
+
+// router.get('/search/:fields/:keyword) fields=array van geselecteerde velden
+// over velden in array loopen, per veld de overeenkomstige zoekfunctie oproepen
+// het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
+
+router.get('/search/:keyword', async (req: Request, res: Response) => {
+  let search: string = req.param('keyword');
+  search = decodeURIComponent(search);
+
+  const searchString: string = '%' + search + '%';
+
+  let reportIds: reportData[] = [];
+
+  searchSignaling(searchString, reportIds);
+  searchPlNumber(searchString, reportIds);
+
+  let operationalEvents = await OperationalEvent.findAll({
     where: {
       description: {
         [Op.like]: searchString,
