@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, QueryTypes } from 'sequelize';
 import { Request, Response, Router } from 'express';
 import OperationalEvent from 'src/models/operationalEvent';
 import SecretariatNotification from '../models/secretariatNotification';
@@ -22,6 +22,7 @@ import OperationalSubtype from 'src/models/operationalSubtype';
 import EventType from 'src/models/eventType';
 import DummyDatabase from 'src/models/dummyDataBase';
 import { log } from 'winston';
+import sequelize from 'src/config/config';
 
 // Init router
 const router = Router();
@@ -179,18 +180,26 @@ interface reportData {
   nightShift: Boolean;
 }
 
+async function loop(headCategory: any, category: any, field: any, reportIds: reportData[], searchString: string) {
+  // let array = await category.findAll({
+  //   where: {
+  //     signaling: {
+  //       [Op.like]: searchString,
+  //     },
+  //   },
+  // });
 
-async function searchSignaling(searchString: String, reportIds: reportData[]) {
-  const operationalEvents = await OperationalEvent.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
-      },
-    },
-  });
-  for (let i in operationalEvents) {
-    const curEvent = operationalEvents[i];
-    const event = await Operational.findOne({
+  const array = await sequelize.query(
+    'SELECT * FROM OperationalEvents WHERE signaling LIKE ":string"',
+    {
+      replacements: { category: category, field: field, string: searchString },
+      type: QueryTypes.SELECT
+    }
+  );
+
+  for (let i in array) {
+    const curEvent: any = array[i];
+    const event = await headCategory.findOne({
       where: {
         id: curEvent.operationalId
       },
@@ -203,8 +212,43 @@ async function searchSignaling(searchString: String, reportIds: reportData[]) {
   }
 }
 
-async function searchPlNumber(searchString: String, reportIds: reportData[]) {
-  const operationalEvents = await OperationalEvent.findAll({
+
+// router.get('/search/:fields/:keyword) fields=array van geselecteerde velden
+// over velden in array loopen, per veld de overeenkomstige zoekfunctie oproepen
+// het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
+
+router.get('/search/:keyword', async (req: Request, res: Response) => {
+  let search: string = req.param('keyword');
+  search = decodeURIComponent(search);
+
+  const searchString: string = '%' + search + '%';
+
+  let reportIds: reportData[] = [];
+  let event: OperationalEvent = new OperationalEvent;
+
+  loop(Operational, 'OperationalEvents', event.signaling, reportIds, searchString);
+  // let operationalEvents = await OperationalEvent.findAll({
+  //   where: {
+  //     signaling: {
+  //       [Op.like]: searchString,
+  //     },
+  //   },
+  // });
+  // for (let i in operationalEvents) {
+  //   const curEvent = operationalEvents[i];
+  //   const event = await Operational.findOne({
+  //     where: {
+  //       id: curEvent.operationalId
+  //     },
+  //     include: [{ model: Report }]
+  //   });
+  //   if (event != null) {
+  //     let report: reportData = { reportId: event.reportId, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
+  //     addReport(report, reportIds);
+  //   }
+  // }
+
+  let operationalEvents = await OperationalEvent.findAll({
     where: {
       plNumber: {
         [Op.like]: searchString,
@@ -224,25 +268,8 @@ async function searchPlNumber(searchString: String, reportIds: reportData[]) {
       addReport(report, reportIds);
     }
   }
-}
 
-
-// router.get('/search/:fields/:keyword) fields=array van geselecteerde velden
-// over velden in array loopen, per veld de overeenkomstige zoekfunctie oproepen
-// het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
-
-router.get('/search/:keyword', async (req: Request, res: Response) => {
-  let search: string = req.param('keyword');
-  search = decodeURIComponent(search);
-
-  const searchString: string = '%' + search + '%';
-
-  let reportIds: reportData[] = [];
-
-  searchSignaling(searchString, reportIds);
-  searchPlNumber(searchString, reportIds);
-
-  let operationalEvents = await OperationalEvent.findAll({
+  operationalEvents = await OperationalEvent.findAll({
     where: {
       description: {
         [Op.like]: searchString,
