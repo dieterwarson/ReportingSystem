@@ -17,42 +17,38 @@
       <form>
         <div v-if="tokenData.seeReports" class="form-row align-items-center">
           <div class="col my-1">
-            <!-- Keyword input -->
-            <input
-              v-model="keyword"
-              type="text"
-              class="form-control"
-              id="inlineFormInputName"
-              placeholder="Trefwoord"
-              @click="toggleInvisible"
-            />
+            <div class="input-group">
+              <div class="autocomplete">
+                <!-- Keyword input -->
+                <input
+                  autocomplete="off"
+                  v-model="keyword"
+                  type="text"
+                  class="form-control"
+                  id="inlineFormInputName"
+                  placeholder="Trefwoord"
+                  @keyup="getKeywordOptions(keyword)"
+                  @click="toggleVisibleKeyword"
+                />
+                <div class="popover" v-show="visibleKeyword">
+                  <div class="options">
+                    <ul>
+                      <li
+                        v-for="event in eventsKeyword"
+                        :key="event.id"
+                        v-on:click="getKeyword(event.description)"
+                      >{{event.description}}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="col my-1">
             <div class="input-group">
               <div class="autocomplete">
                 <!-- Pl number input -->
-                <!-- <input
-                  autocomplete="off"
-                  v-model="plNumber"
-                  type="text"
-                  class="form-control"
-                  id="inlineFormInputGroupUsername"
-                  placeholder="PL-nummer"
-                  @keyup="getOptions(plNumber)"
-                  @click="toggleVisible"
-                />
-                <div class="contenta">
-                  <div class="options">
-                    <ul>
-                      <li
-                        v-for="event in events"
-                        :key="event.id"
-                        v-on:click="getPlNumber(event.plNumber)"
-                      >{{event.plNumber}}</li>
-                    </ul>
-                  </div>
-                </div> -->
-
                 <input
                   autocomplete="off"
                   v-model="plNumber"
@@ -60,21 +56,20 @@
                   class="form-control"
                   id="inlineFormInputGroupUsername"
                   placeholder="PL-nummer"
-                  @keyup="getOptions(plNumber)"
-                  @click="toggleVisible"
+                  @keyup="getPlNumberOptions(plNumber)"
+                  @click="toggleVisiblePlNumber"
                 />
-                <div class="popover">
+                <div class="popover" v-show="visiblePlNumber">
                   <div class="options">
                     <ul>
                       <li
-                        v-for="event in events"
+                        v-for="event in eventsPlNumber"
                         :key="event.id"
                         v-on:click="getPlNumber(event.plNumber)"
                       >{{event.plNumber}}</li>
                     </ul>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
@@ -165,8 +160,10 @@ export default Vue.extend({
     return {
       keyword: "",
       plNumber: "",
-      visible: false,
-      events: null,
+      visiblePlNumber: false,
+      visibleKeyword: false,
+      eventsPlNumber: null,
+      eventsKeyword: null,
       tokenData: {
         accessRights: -1,
         makeReports: false,
@@ -184,22 +181,36 @@ export default Vue.extend({
   },
 
   methods: {
-    async getOptions(plNumber: string) {
-      const sign = "%";
-      plNumber = sign.concat(plNumber);
-      plNumber = plNumber.concat(sign);
-      const response = await ReportingService.autoCompleteOperationalEvent({
+    async getPlNumberOptions(plNumber: string) {
+      plNumber = "%" + plNumber + "%";
+      const response = await ReportingService.autoCompletePlNumber({
         plNumber: plNumber
       });
-      this.events = response;
+      this.eventsPlNumber = response;
     },
-    toggleVisible() {
-      this.visible = !this.visible;
+    async getKeywordOptions(keyword: string) {
+      keyword = "%" + keyword + "%";
+      const response = await ReportingService.autoCompleteKeyword({
+        keyword: keyword
+      });
+      this.eventsKeyword = response;
+    },
+
+    toggleVisiblePlNumber() {
+      this.visiblePlNumber = !this.visiblePlNumber;
+    },
+    toggleVisibleKeyword() {
+      this.visibleKeyword = !this.visibleKeyword;
     },
     getPlNumber(plNumber: string) {
       this.plNumber = plNumber;
-      this.toggleVisible();
-      this.getOptions(plNumber);
+      this.toggleVisiblePlNumber();
+      this.getPlNumberOptions(plNumber);
+    },
+    getKeyword(keyword: string) {
+      this.keyword = keyword;
+      this.toggleVisibleKeyword();
+      this.getKeywordOptions(keyword);
     },
     logOut() {
       window.location.href = "/login";
@@ -243,8 +254,8 @@ export default Vue.extend({
       }
     },
     toggleInvisible: function() {
-      if (this.visible) {
-        this.visible = !this.visible;
+      if (this.visiblePlNumber) {
+        this.visiblePlNumber = !this.visiblePlNumber;
       }
     },
 
@@ -260,7 +271,8 @@ export default Vue.extend({
   },
   mounted() {
     this.loadShiftId();
-    this.getOptions("");
+    this.getPlNumberOptions("");
+    this.getKeywordOptions("");
     if (
       window.localStorage.getItem("token") === null ||
       window.localStorage.getItem("token") === undefined
@@ -331,10 +343,10 @@ export default Vue.extend({
 }
 
 .popover {
-  display: none;
   width: 100%;
   min-height: 50px;
   border: 2px solid lightgray;
+  position: absolute;
   top: 46px;
   left: 0;
   right: 0;
@@ -352,10 +364,6 @@ export default Vue.extend({
   border-radius: 3px;
   border: 1px solid lightgray;
   padding-left: 8px;
-}
-
-.popover:focus {
-  outline: none;
 }
 
 .options {
@@ -387,17 +395,5 @@ export default Vue.extend({
   margin-top: 0px;
   margin-right: 0px;
   margin-bottom: 10px;
-}
-
-input[type="text"] {
-  color: transparent;
-  text-shadow: 0 0 0 #000;
-  cursor: pointer;
-}
-input[type="text"]:focus {
-  outline: none;
-}
-input:focus + div.popover {
-  display: block;
 }
 </style>

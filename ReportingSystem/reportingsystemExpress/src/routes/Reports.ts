@@ -1,4 +1,4 @@
-import { Op, QueryTypes } from 'sequelize';
+import { Op } from 'sequelize';
 import { Request, Response, Router } from 'express';
 import OperationalEvent from 'src/models/operationalEvent';
 import SecretariatNotification from '../models/secretariatNotification';
@@ -21,8 +21,6 @@ import MalfunctionSubtype from 'src/models/malfunctionSubtype';
 import OperationalSubtype from 'src/models/operationalSubtype';
 import EventType from 'src/models/eventType';
 import DummyDatabase from 'src/models/dummyDataBase';
-import { log } from 'winston';
-import sequelize from 'src/config/config';
 
 // Init router
 const router = Router();
@@ -30,11 +28,7 @@ const router = Router();
 /******************************************************************************
  *                   Get All Reports - "GET /api/reports/all"
  ******************************************************************************/
-
 // only get the reports that are finished
-
-
-
 router.post('/all', async (req: Request, res: Response) => {
   let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
   if (!(req.body.dateRange.start == '' && req.body.dateRange.end == ''))
@@ -61,7 +55,6 @@ router.post('/all', async (req: Request, res: Response) => {
 /******************************************************************************
  *                   Count All Reports - "GET /api/reports/count"
  ******************************************************************************/
-
 router.post('/count', async (req: Request, res: Response) => {
   console.log(req.body);
   let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
@@ -81,11 +74,9 @@ router.post('/count', async (req: Request, res: Response) => {
   res.send({ count: count });
 });
 
-
 /******************************************************************************
  *          Get the report from the last shift - "GET /api/reports/lastShift"
  ******************************************************************************/
-
 router.get('/lastShift', async (req: Request, res: Response) => {
   const reports = await Report.findOne({
     order: [['date', 'DESC']],
@@ -98,12 +89,9 @@ router.get('/lastShift', async (req: Request, res: Response) => {
   res.send(reports);
 });
 
-
-
 /******************************************************************************
  *                   Get All Reports - "GET /api/reports/one/:reportId"
  ******************************************************************************/
-
 router.get('/one/:reportId', async (req: Request, res: Response) => {
   const reportId = Number(req.param('reportId'));
 
@@ -120,15 +108,8 @@ router.get('/one/:reportId', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get All monitored Reports - "GET /api/reports/monitored"
  ******************************************************************************/
-
 // only get the reports that are finished and arer being monitored
-
 router.get('/monitored', async (req: Request, res: Response) => {
-  var reports: (
-    | Defect[]
-    | Malfunction[]
-    | SecretariatNotification[]
-  )[] = [];
 
   let defects = await Defect.findAll({
     order: [['date', 'DESC']],
@@ -145,7 +126,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
     },
     include: [{ model: MalfunctionType }]
   });
-
 
   let workplaceEvents = await WorkplaceEvent.findAll({
     order: [['date', 'DESC']],
@@ -801,8 +781,6 @@ router.get('/priority/:reportId', async (req: Request, res: Response) => {
     operational: { operationalEvents },
   };
 
-
-
   res.send(results);
 });
 
@@ -835,7 +813,6 @@ router.get('/types', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/operationalTypes"
  ******************************************************************************/
-
 router.get('/operationalTypes', async (req: Request, res: Response) => {
   let operationalTypes = await OperationalType.findAll({
     attributes: ['id', 'typeName'],
@@ -852,7 +829,6 @@ router.get('/operationalTypes', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/workplaceTypes"
  ******************************************************************************/
-
 router.get('/workplaceTypes', async (req: Request, res: Response) => {
   let workplaceTypes = await WorkplaceType.findAll({
     attributes: ['id', 'typeName'],
@@ -869,7 +845,6 @@ router.get('/workplaceTypes', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/defectTypes"
  ******************************************************************************/
-
 router.get('/defectTypes', async (req: Request, res: Response) => {
   let defectTypes = await DefectType.findAll({
     attributes: ['id', 'typeName'],
@@ -886,7 +861,6 @@ router.get('/defectTypes', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/malfunctionTypes"
  ******************************************************************************/
-
 router.get('/malfunctionTypes', async (req: Request, res: Response) => {
   let malfunctionTypes = await MalfunctionType.findAll({
     attributes: ['id', 'typeName'],
@@ -900,11 +874,9 @@ router.get('/malfunctionTypes', async (req: Request, res: Response) => {
   res.send(results);
 });
 
-
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/operationalEvent/:id"
  ******************************************************************************/
-
 router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await OperationalEvent.findOne({
@@ -918,11 +890,9 @@ router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
   return false;
 });
 
-
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/workplaceEvent/:id"
  ******************************************************************************/
-
 router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await WorkplaceEvent.findOne({
@@ -939,7 +909,6 @@ router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/secretariatNotification/:id"
  ******************************************************************************/
-
 router.get('/secretariatNotification/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await SecretariatNotification.findOne({
@@ -956,7 +925,6 @@ router.get('/secretariatNotification/:id', async (req: Request, res: Response) =
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/defectEvent/:id"
  ******************************************************************************/
-
 router.get('/defectEvent/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await Defect.findOne({
@@ -973,7 +941,6 @@ router.get('/defectEvent/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/malfunctionEvent/:id"
  ******************************************************************************/
-
 router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await Malfunction.findOne({
@@ -986,7 +953,6 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
   }
   return false;
 });
-
 
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/operationalEventTypes/:id"
@@ -1047,7 +1013,6 @@ router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => 
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/workplaceEventTypes/:id"
  ******************************************************************************/
-
 router.get('/workplaceEventTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const event = await WorkplaceEvent.findOne({
@@ -1094,7 +1059,6 @@ router.get('/workplaceEventTypes/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/defectTypes/:id"
  ******************************************************************************/
-
 router.get('/defectTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const event = await Defect.findOne({
@@ -1141,7 +1105,6 @@ router.get('/defectTypes/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/malfunctionTypes/:id"
  ******************************************************************************/
-
 router.get('/malfunctionTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const event = await Malfunction.findOne({
@@ -1243,13 +1206,11 @@ router.post('/removeNotification', async (req, res) => {
   }
 });
 
-
 /******************************************************************************
  *             Get reports - "POST /api/reports/getTypeEvents/:reportId"
  ******************************************************************************/
 router.post('/getTypeEvents/:reportId', async (req, res) => {
   const types = req.body.selectedTypes;
-  console.log(types);
   var results;
   let reportId = req.param('reportId');
   let report = await Report.findOne({
@@ -1280,13 +1241,11 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
   let defects: Defect[] = [];
   let malfunctions: Malfunction[] = [];
 
-
   if (operational != null) {
-    console.log(types);
     for (let i in types.operational) {
       var type = types.operational[i];
-      console.log(type);
       var result = [];
+
       result = await OperationalEvent.findAll({
         where: {
           operationalId: operational.id
@@ -1305,9 +1264,6 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
           }]
         }]
       });
-
-      console.log(result);
-
       if (result.length != 0) {
         result.forEach(event => {
           let contains = false;
@@ -1339,16 +1295,12 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
           },
         }],
       });
-
       if (result.length != 0) {
         result.forEach(event => {
           workplaceEvents.push(event);
         });
       }
     }
-
-    console.log(types.workplaceevent);
-
     if (types.workplaceevent != null) {
       if (types.workplaceevent.includes("secretariatNotification")) {
         secretariatNotifications = await SecretariatNotification.findAll({
@@ -1376,9 +1328,7 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
             },
           },
         }]
-
       });
-
       if (result.length != 0) {
         result.forEach(event => {
           defects.push(event);
@@ -1401,9 +1351,7 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
             },
           },
         }]
-
       });
-
       if (result.length != 0) {
         result.forEach(event => {
           malfunctions.push(event);
@@ -1418,8 +1366,6 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
   };
-
-  // console.log(results);
 
   res.send(results);
 });
@@ -1446,7 +1392,7 @@ router.post('/autoSaveOperational', async (req, res) => {
       unit: req.body.unit,
       date: Date.now(),
     })
-  }).catch(async function (err) {
+  }).catch(async function () {
     await OperationalEvent.create({
       authorId: req.body.id,
       signaling: req.body.signaling,
@@ -1456,7 +1402,7 @@ router.post('/autoSaveOperational', async (req, res) => {
       location: req.body.location,
       unit: req.body.unit,
       date: Date.now(),
-    }).then(async function (event) {
+    }).then(async function () {
       res.json({
         bool: true
       })
@@ -1487,7 +1433,6 @@ router.post('/getAutoSavedFile', async (req, res) => {
   })
 })
 
-
 /******************************************************************************
  *      POST data from file in dummydatabase - "POST /api/reports/getFile"
  ******************************************************************************/
@@ -1504,7 +1449,6 @@ router.post('/getFile', async (req, res) => {
   }
 });
 
-
 /******************************************************************************
  *      POST Add secretary notification - "POST /api/reports/addSecretaryNotification"
  ******************************************************************************/
@@ -1520,7 +1464,7 @@ router.post('/addSecretaryNotification', async (req, res) => {
       description: req.body.description,
       monitoring: req.body.monitoring,
       date: Date.now(),
-    }).then(function (not) {
+    }).then(function () {
       SecretariatNotification.sync();
       res.json({
         bool: true
@@ -1642,7 +1586,6 @@ router.post('/addOperationalEvent', async (req, res) => {
   });
 
 });
-
 
 /******************************************************************************
  *      POST Add WorkPlaceEvent - "POST /api/reports/addWorkPlaceEvent"
@@ -2109,9 +2052,9 @@ router.post('/changeMalfunction', async (req, res) => {
 });
 
 /******************************************************************************
-*      GET Get Operational Events - "POST /api/reports/getOperationalEvents"
+*      GET Get PlNumber searched reports - "POST /api/reports/getPlNumberReports"
 ******************************************************************************/
-router.post("/getOperationalEvents", async (req, res) => {
+router.post("/getPlNumberReports", async (req, res) => {
   var matched_events = await OperationalEvent.findAll({
     where: {
       plNumber: {
@@ -2121,6 +2064,37 @@ router.post("/getOperationalEvents", async (req, res) => {
     limit: 5
   });
   res.json(matched_events);
+});
+
+/******************************************************************************
+*      GET Get keyword searched reports - "POST /api/reports/getKeywordReports"
+******************************************************************************/
+router.post("/getKeywordReports", async (req, res) => {
+  const search = req.body.keyword;
+  const searchString: string = '%' + search + '%';
+
+  let reportIds: reportData[] = [];
+
+  await searchOperationalEventSignaling(reportIds, searchString);
+  await searchOperationalEventPlNumber(reportIds, searchString);
+  await searchOperationalEventDescription(reportIds, searchString);
+  await searchOperationalEventLocation(reportIds, searchString);
+  await searchOperationalEventUnit(reportIds, searchString);
+  await searchOperationalEventDate(reportIds, search);
+  await searchWorkplaceEventDescription(reportIds, searchString);
+  await searchWorkplaceEventAbsentee(reportIds, searchString);
+  await searchWorkplaceEventSubstitute(reportIds, searchString);
+  await searchWorkplaceEventDate(reportIds, search);
+  await searchSecretariatNotificationDescription(reportIds, searchString);
+  await searchSecretariatNotificationDate(reportIds, search);
+  await searchDefectDescription(reportIds, searchString);
+  await searchDefectDate(reportIds, search);
+  await searchMalfunctionDescription(reportIds, searchString);
+  await searchMalfunctionDate(reportIds, search);
+
+  const outputArr = reportIds.slice(0, 10);
+
+  res.json(outputArr);
 });
 
 /******************************************************************************
