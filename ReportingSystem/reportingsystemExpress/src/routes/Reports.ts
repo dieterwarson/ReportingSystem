@@ -180,26 +180,17 @@ interface reportData {
   nightShift: Boolean;
 }
 
-async function loop(headCategory: any, category: any, field: any, reportIds: reportData[], searchString: string) {
-  // let array = await category.findAll({
-  //   where: {
-  //     signaling: {
-  //       [Op.like]: searchString,
-  //     },
-  //   },
-  // });
-
-  const array = await sequelize.query(
-    'SELECT * FROM OperationalEvents WHERE signaling LIKE ":string"',
-    {
-      replacements: { category: category, field: field, string: searchString },
-      type: QueryTypes.SELECT
-    }
-  );
-
-  for (let i in array) {
-    const curEvent: any = array[i];
-    const event = await headCategory.findOne({
+async function searchOperationalEventSignaling(reportIds: reportData[], searchString: string) {
+  let operationalEvents = await OperationalEvent.findAll({
+    where: {
+      signaling: {
+        [Op.like]: searchString,
+      },
+    },
+  });
+  for (let i in operationalEvents) {
+    const curEvent = operationalEvents[i];
+    const event = await Operational.findOne({
       where: {
         id: curEvent.operationalId
       },
@@ -212,42 +203,7 @@ async function loop(headCategory: any, category: any, field: any, reportIds: rep
   }
 }
 
-
-// router.get('/search/:fields/:keyword) fields=array van geselecteerde velden
-// over velden in array loopen, per veld de overeenkomstige zoekfunctie oproepen
-// het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
-
-router.get('/search/:keyword', async (req: Request, res: Response) => {
-  let search: string = req.param('keyword');
-  search = decodeURIComponent(search);
-
-  const searchString: string = '%' + search + '%';
-
-  let reportIds: reportData[] = [];
-  let event: OperationalEvent = new OperationalEvent;
-
-  loop(Operational, 'OperationalEvents', event.signaling, reportIds, searchString);
-  // let operationalEvents = await OperationalEvent.findAll({
-  //   where: {
-  //     signaling: {
-  //       [Op.like]: searchString,
-  //     },
-  //   },
-  // });
-  // for (let i in operationalEvents) {
-  //   const curEvent = operationalEvents[i];
-  //   const event = await Operational.findOne({
-  //     where: {
-  //       id: curEvent.operationalId
-  //     },
-  //     include: [{ model: Report }]
-  //   });
-  //   if (event != null) {
-  //     let report: reportData = { reportId: event.reportId, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
-  //     addReport(report, reportIds);
-  //   }
-  // }
-
+async function searchOperationalEventPlNumber(reportIds: reportData[], searchString: string) {
   let operationalEvents = await OperationalEvent.findAll({
     where: {
       plNumber: {
@@ -268,14 +224,20 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll({
+async function searchOperationalEventDescription(reportIds: reportData[], searchString: string) {
+  let operationalEvents = await OperationalEvent.findAll({
     where: {
       description: {
         [Op.like]: searchString,
       },
     },
   });
+  console.log("lijst:");
+
+  console.log(operationalEvents);
+
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -289,8 +251,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll({
+async function searchOperationalEventLocation(reportIds: reportData[], searchString: string) {
+  let operationalEvents = await OperationalEvent.findAll({
     where: {
       location: {
         [Op.like]: searchString,
@@ -310,8 +274,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll({
+async function searchOperationalEventUnit(reportIds: reportData[], searchString: string) {
+  let operationalEvents = await OperationalEvent.findAll({
     where: {
       unit: {
         [Op.like]: searchString,
@@ -331,8 +297,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll();
+async function searchOperationalEventDate(reportIds: reportData[], search: string) {
+  let operationalEvents = await OperationalEvent.findAll();
   for (let i = 0; i < operationalEvents.length; i++) {
     const curEvent = operationalEvents[i];
     let dateString = curEvent.date.toLocaleString();
@@ -350,7 +318,9 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+}
 
+async function searchWorkplaceEventDescription(reportIds: reportData[], searchString: string) {
   let workplaceEvents = await WorkplaceEvent.findAll({
     where: {
       description: {
@@ -371,8 +341,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  workplaceEvents = await WorkplaceEvent.findAll({
+async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchString: string) {
+  let workplaceEvents = await WorkplaceEvent.findAll({
     where: {
       absentee: {
         [Op.like]: searchString,
@@ -392,8 +364,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  workplaceEvents = await WorkplaceEvent.findAll({
+async function searchWorkplaceEventSubstitute(reportIds: reportData[], searchString: string) {
+  let workplaceEvents = await WorkplaceEvent.findAll({
     where: {
       substitute: {
         [Op.like]: searchString,
@@ -413,8 +387,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  workplaceEvents = await WorkplaceEvent.findAll();
+async function searchWorkplaceEventDate(reportIds: reportData[], search: string) {
+  let workplaceEvents = await WorkplaceEvent.findAll();
   for (let i = 0; i < workplaceEvents.length; i++) {
     const curEvent = workplaceEvents[i];
     let dateString = curEvent.date.toLocaleString();
@@ -432,7 +408,9 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+}
 
+async function searchSecretariatNotificationDescription(reportIds: reportData[], searchString: string) {
   let secretariatNotifications = await SecretariatNotification.findAll({
     where: {
       description: {
@@ -453,8 +431,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  secretariatNotifications = await SecretariatNotification.findAll();
+async function searchSecretariatNotificationDate(reportIds: reportData[], search: string) {
+  let secretariatNotifications = await SecretariatNotification.findAll();
   for (let i = 0; i < secretariatNotifications.length; i++) {
     const curEvent = secretariatNotifications[i];
     let dateString = curEvent.date.toLocaleString();
@@ -472,7 +452,9 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+}
 
+async function searchDefectDescription(reportIds: reportData[], searchString: string) {
   let defects = await Defect.findAll({
     where: {
       description: {
@@ -493,8 +475,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  defects = await Defect.findAll();
+async function searchDefectDate(reportIds: reportData[], search: string) {
+  let defects = await Defect.findAll();
   for (let i = 0; i < defects.length; i++) {
     const curEvent = defects[i];
     let dateString = curEvent.date.toLocaleString();
@@ -512,7 +496,9 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+}
 
+async function searchMalfunctionDescription(reportIds: reportData[], searchString: string) {
   let malfunctions = await Malfunction.findAll({
     where: {
       description: {
@@ -533,8 +519,10 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       addReport(report, reportIds);
     }
   }
+}
 
-  malfunctions = await Malfunction.findAll();
+async function searchMalfunctionDate(reportIds: reportData[], search: string) {
+  let malfunctions = await Malfunction.findAll();
   for (let i = 0; i < malfunctions.length; i++) {
     const curEvent = malfunctions[i];
     let dateString = curEvent.date.toLocaleString();
@@ -552,6 +540,34 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       }
     }
   }
+}
+
+// router.get('/search/:fields/:keyword) fields=array van geselecteerde velden
+// over velden in array loopen, per veld de overeenkomstige zoekfunctie oproepen
+// het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
+
+router.get('/search/:keyword', async (req: Request, res: Response) => {
+  const search = decodeURIComponent(req.param('keyword'));
+  const searchString: string = '%' + search + '%';
+
+  let reportIds: reportData[] = [];
+
+  await searchOperationalEventSignaling(reportIds, searchString);
+  await searchOperationalEventPlNumber(reportIds, searchString);
+  await searchOperationalEventDescription(reportIds, searchString);
+  await searchOperationalEventLocation(reportIds, searchString);
+  await searchOperationalEventUnit(reportIds, searchString);
+  await searchOperationalEventDate(reportIds, search);
+  await searchWorkplaceEventDescription(reportIds, searchString);
+  await searchWorkplaceEventAbsentee(reportIds, searchString);
+  await searchWorkplaceEventSubstitute(reportIds, searchString);
+  await searchWorkplaceEventDate(reportIds, search);
+  await searchSecretariatNotificationDescription(reportIds, searchString);
+  await searchSecretariatNotificationDate(reportIds, search);
+  await searchDefectDescription(reportIds, searchString);
+  await searchDefectDate(reportIds, search);
+  await searchMalfunctionDescription(reportIds, searchString);
+  await searchMalfunctionDate(reportIds, search);
 
   res.send(reportIds);
 });
