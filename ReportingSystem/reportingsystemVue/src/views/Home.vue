@@ -19,18 +19,40 @@
           <div class="col my-1">
             <!-- Keyword input -->
             <input
-              @click="toggleInvisible"
+              v-model="keyword"
               type="text"
               class="form-control"
               id="inlineFormInputName"
-              v-model="keyword"
               placeholder="Trefwoord"
+              @click="toggleInvisible"
             />
           </div>
           <div class="col my-1">
             <div class="input-group">
               <div class="autocomplete">
                 <!-- Pl number input -->
+                <!-- <input
+                  autocomplete="off"
+                  v-model="plNumber"
+                  type="text"
+                  class="form-control"
+                  id="inlineFormInputGroupUsername"
+                  placeholder="PL-nummer"
+                  @keyup="getOptions(plNumber)"
+                  @click="toggleVisible"
+                />
+                <div class="contenta">
+                  <div class="options">
+                    <ul>
+                      <li
+                        v-for="event in events"
+                        :key="event.id"
+                        v-on:click="getPlNumber(event.plNumber)"
+                      >{{event.plNumber}}</li>
+                    </ul>
+                  </div>
+                </div> -->
+
                 <input
                   autocomplete="off"
                   v-model="plNumber"
@@ -41,7 +63,7 @@
                   @keyup="getOptions(plNumber)"
                   @click="toggleVisible"
                 />
-                <div class="popover" v-show="visible">
+                <div class="popover">
                   <div class="options">
                     <ul>
                       <li
@@ -52,6 +74,7 @@
                     </ul>
                   </div>
                 </div>
+
               </div>
             </div>
           </div>
@@ -308,10 +331,10 @@ export default Vue.extend({
 }
 
 .popover {
+  display: none;
   width: 100%;
   min-height: 50px;
   border: 2px solid lightgray;
-  position: absolute;
   top: 46px;
   left: 0;
   right: 0;
@@ -329,6 +352,10 @@ export default Vue.extend({
   border-radius: 3px;
   border: 1px solid lightgray;
   padding-left: 8px;
+}
+
+.popover:focus {
+  outline: none;
 }
 
 .options {
@@ -360,5 +387,17 @@ export default Vue.extend({
   margin-top: 0px;
   margin-right: 0px;
   margin-bottom: 10px;
+}
+
+input[type="text"] {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+  cursor: pointer;
+}
+input[type="text"]:focus {
+  outline: none;
+}
+input:focus + div.popover {
+  display: block;
 }
 </style>
