@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, QueryTypes } from 'sequelize';
 import { Request, Response, Router } from 'express';
 import OperationalEvent from 'src/models/operationalEvent';
 import SecretariatNotification from '../models/secretariatNotification';
@@ -21,6 +21,7 @@ import MalfunctionSubtype from 'src/models/malfunctionSubtype';
 import OperationalSubtype from 'src/models/operationalSubtype';
 import EventType from 'src/models/eventType';
 import DummyDatabase from 'src/models/dummyDataBase';
+import sequelize from 'src/config/config';
 
 // Init router
 const router = Router();
@@ -160,14 +161,26 @@ interface reportData {
   nightShift: Boolean;
 }
 
-async function searchOperationalEventSignaling(reportIds: reportData[], searchString: string) {
-  let operationalEvents = await OperationalEvent.findAll({
-    where: {
-      signaling: {
-        [Op.like]: searchString,
+async function searchOperationalEventSignaling(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, signaling) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        signaling: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -176,21 +189,33 @@ async function searchOperationalEventSignaling(reportIds: reportData[], searchSt
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.signaling != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
 }
 
-async function searchOperationalEventPlNumber(reportIds: reportData[], searchString: string) {
-  let operationalEvents = await OperationalEvent.findAll({
-    where: {
-      plNumber: {
-        [Op.like]: searchString,
+async function searchOperationalEventPlNumber(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, plNumber) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        plNumber: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -199,25 +224,33 @@ async function searchOperationalEventPlNumber(reportIds: reportData[], searchStr
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.plNumber != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
 }
 
-async function searchOperationalEventDescription(reportIds: reportData[], searchString: string) {
-  let operationalEvents = await OperationalEvent.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchOperationalEventDescription(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
-  console.log("lijst:");
-
-  console.log(operationalEvents);
-
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -226,21 +259,33 @@ async function searchOperationalEventDescription(reportIds: reportData[], search
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.description != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
 }
 
-async function searchOperationalEventLocation(reportIds: reportData[], searchString: string) {
-  let operationalEvents = await OperationalEvent.findAll({
-    where: {
-      location: {
-        [Op.like]: searchString,
+async function searchOperationalEventLocation(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, location) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        location: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -249,21 +294,33 @@ async function searchOperationalEventLocation(reportIds: reportData[], searchStr
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.location != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.location, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
 }
 
-async function searchOperationalEventUnit(reportIds: reportData[], searchString: string) {
-  let operationalEvents = await OperationalEvent.findAll({
-    where: {
-      unit: {
-        [Op.like]: searchString,
+async function searchOperationalEventUnit(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, unit) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        unit: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -272,7 +329,7 @@ async function searchOperationalEventUnit(reportIds: reportData[], searchString:
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.unit != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.unit, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -292,7 +349,7 @@ async function searchOperationalEventDate(reportIds: reportData[], search: strin
         },
         include: [{ model: Report }]
       });
-      if (event != null) {
+      if (event != null && dateString != null) {
         let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
@@ -300,14 +357,26 @@ async function searchOperationalEventDate(reportIds: reportData[], search: strin
   }
 }
 
-async function searchWorkplaceEventDescription(reportIds: reportData[], searchString: string) {
-  let workplaceEvents = await WorkplaceEvent.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchWorkplaceEventDescription(reportIds: reportData[], searchString: string, type: string) {
+  let workplaceEvents: WorkplaceEvent[];
+  if (type === "l") {
+    workplaceEvents = await sequelize.query(
+      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in workplaceEvents) {
     const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
@@ -316,21 +385,33 @@ async function searchWorkplaceEventDescription(reportIds: reportData[], searchSt
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.description != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
 }
 
-async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchString: string) {
-  let workplaceEvents = await WorkplaceEvent.findAll({
-    where: {
-      absentee: {
-        [Op.like]: searchString,
+async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchString: string, type: string) {
+  let workplaceEvents: WorkplaceEvent[];
+  if (type === "l") {
+    workplaceEvents = await sequelize.query(
+      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, absentee) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        absentee: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in workplaceEvents) {
     const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
@@ -339,21 +420,33 @@ async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchStrin
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.absentee != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.absentee, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
 }
 
-async function searchWorkplaceEventSubstitute(reportIds: reportData[], searchString: string) {
-  let workplaceEvents = await WorkplaceEvent.findAll({
-    where: {
-      substitute: {
-        [Op.like]: searchString,
+async function searchWorkplaceEventSubstitute(reportIds: reportData[], searchString: string, type: string) {
+  let workplaceEvents: WorkplaceEvent[];
+  if (type === "l") {
+    workplaceEvents = await sequelize.query(
+      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, substitute) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        substitute: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in workplaceEvents) {
     const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
@@ -362,7 +455,7 @@ async function searchWorkplaceEventSubstitute(reportIds: reportData[], searchStr
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.substitute != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.substitute, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -390,14 +483,26 @@ async function searchWorkplaceEventDate(reportIds: reportData[], search: string)
   }
 }
 
-async function searchSecretariatNotificationDescription(reportIds: reportData[], searchString: string) {
-  let secretariatNotifications = await SecretariatNotification.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchSecretariatNotificationDescription(reportIds: reportData[], searchString: string, type: string) {
+  let secretariatNotifications: SecretariatNotification[];
+  if (type === "l") {
+    secretariatNotifications = await sequelize.query(
+      'SELECT * FROM SecretariatNotifications WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    secretariatNotifications = await SecretariatNotification.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in secretariatNotifications) {
     const curEvent = secretariatNotifications[i];
     const event = await Administrative.findOne({
@@ -406,7 +511,7 @@ async function searchSecretariatNotificationDescription(reportIds: reportData[],
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.description != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -434,14 +539,26 @@ async function searchSecretariatNotificationDate(reportIds: reportData[], search
   }
 }
 
-async function searchDefectDescription(reportIds: reportData[], searchString: string) {
-  let defects = await Defect.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchDefectDescription(reportIds: reportData[], searchString: string, type: string) {
+  let defects: Defect[];
+  if (type === "l") {
+    defects = await sequelize.query(
+      'SELECT * FROM Defects WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    defects = await Defect.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in defects) {
     const curEvent = defects[i];
     const event = await Technical.findOne({
@@ -450,7 +567,7 @@ async function searchDefectDescription(reportIds: reportData[], searchString: st
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.description != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -478,14 +595,26 @@ async function searchDefectDate(reportIds: reportData[], search: string) {
   }
 }
 
-async function searchMalfunctionDescription(reportIds: reportData[], searchString: string) {
-  let malfunctions = await Malfunction.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchMalfunctionDescription(reportIds: reportData[], searchString: string, type: string) {
+  let malfunctions: Malfunction[];
+  if (type === "l") {
+    malfunctions = await sequelize.query(
+      'SELECT * FROM Malfunctions WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    malfunctions = await Malfunction.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in malfunctions) {
     const curEvent = malfunctions[i];
     const event = await Technical.findOne({
@@ -494,7 +623,7 @@ async function searchMalfunctionDescription(reportIds: reportData[], searchStrin
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
+    if (event != null && curEvent.description != null) {
       let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -522,6 +651,7 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
   }
 }
 
+// voor multiselect:
 // router.get('/search/:fields/:keyword) fields=array van geselecteerde velden
 // over velden in array loopen, per veld de overeenkomstige zoekfunctie oproepen
 // het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
@@ -531,25 +661,34 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
  ******************************************************************************/
 router.get('/search/:keyword', async (req: Request, res: Response) => {
   const search = decodeURIComponent(req.param('keyword'));
-  const searchString: string = '%' + search + '%';
-
   let reportIds: reportData[] = [];
 
-  await searchOperationalEventSignaling(reportIds, searchString);
-  await searchOperationalEventPlNumber(reportIds, searchString);
-  await searchOperationalEventDescription(reportIds, searchString);
-  await searchOperationalEventLocation(reportIds, searchString);
-  await searchOperationalEventUnit(reportIds, searchString);
+  await searchOperationalEventSignaling(reportIds, search, "l");
+  await searchOperationalEventSignaling(reportIds, search, "s");
+  await searchOperationalEventPlNumber(reportIds, search, "l");
+  await searchOperationalEventPlNumber(reportIds, search, "s");
+  await searchOperationalEventDescription(reportIds, search, "l");
+  await searchOperationalEventDescription(reportIds, search, "s");
+  await searchOperationalEventLocation(reportIds, search, "l");
+  await searchOperationalEventLocation(reportIds, search, "s");
+  await searchOperationalEventUnit(reportIds, search, "l");
+  await searchOperationalEventUnit(reportIds, search, "s");
   await searchOperationalEventDate(reportIds, search);
-  await searchWorkplaceEventDescription(reportIds, searchString);
-  await searchWorkplaceEventAbsentee(reportIds, searchString);
-  await searchWorkplaceEventSubstitute(reportIds, searchString);
+  await searchWorkplaceEventDescription(reportIds, search, "l");
+  await searchWorkplaceEventDescription(reportIds, search, "s");
+  await searchWorkplaceEventAbsentee(reportIds, search, "l");
+  await searchWorkplaceEventAbsentee(reportIds, search, "s");
+  await searchWorkplaceEventSubstitute(reportIds, search, "l");
+  await searchWorkplaceEventSubstitute(reportIds, search, "s");
   await searchWorkplaceEventDate(reportIds, search);
-  await searchSecretariatNotificationDescription(reportIds, searchString);
+  await searchSecretariatNotificationDescription(reportIds, search, "l");
+  await searchSecretariatNotificationDescription(reportIds, search, "s");
   await searchSecretariatNotificationDate(reportIds, search);
-  await searchDefectDescription(reportIds, searchString);
+  await searchDefectDescription(reportIds, search, "l");
+  await searchDefectDescription(reportIds, search, "s");
   await searchDefectDate(reportIds, search);
-  await searchMalfunctionDescription(reportIds, searchString);
+  await searchMalfunctionDescription(reportIds, search, "l");
+  await searchMalfunctionDescription(reportIds, search, "s");
   await searchMalfunctionDate(reportIds, search);
 
   res.send(reportIds);
@@ -2093,25 +2232,24 @@ router.post("/getDummyEvents", async (req, res) => {
 ******************************************************************************/
 router.post("/getKeywordReports", async (req, res) => {
   const search = req.body.keyword;
-  const searchString: string = '%' + search + '%';
 
   let reportIds: reportData[] = [];
 
-  await searchOperationalEventSignaling(reportIds, searchString);
-  await searchOperationalEventPlNumber(reportIds, searchString);
-  await searchOperationalEventDescription(reportIds, searchString);
-  await searchOperationalEventLocation(reportIds, searchString);
-  await searchOperationalEventUnit(reportIds, searchString);
+  await searchOperationalEventSignaling(reportIds, search, "s");
+  await searchOperationalEventPlNumber(reportIds, search, "s");
+  await searchOperationalEventDescription(reportIds, search, "s");
+  await searchOperationalEventLocation(reportIds, search, "s");
+  await searchOperationalEventUnit(reportIds, search, "s");
   await searchOperationalEventDate(reportIds, search);
-  await searchWorkplaceEventDescription(reportIds, searchString);
-  await searchWorkplaceEventAbsentee(reportIds, searchString);
-  await searchWorkplaceEventSubstitute(reportIds, searchString);
+  await searchWorkplaceEventDescription(reportIds, search, "s");
+  await searchWorkplaceEventAbsentee(reportIds, search, "s");
+  await searchWorkplaceEventSubstitute(reportIds, search, "s");
   await searchWorkplaceEventDate(reportIds, search);
-  await searchSecretariatNotificationDescription(reportIds, searchString);
+  await searchSecretariatNotificationDescription(reportIds, search, "s");
   await searchSecretariatNotificationDate(reportIds, search);
-  await searchDefectDescription(reportIds, searchString);
+  await searchDefectDescription(reportIds, search, "s");
   await searchDefectDate(reportIds, search);
-  await searchMalfunctionDescription(reportIds, searchString);
+  await searchMalfunctionDescription(reportIds, search, "s");
   await searchMalfunctionDate(reportIds, search);
 
   const outputArr = reportIds.slice(0, 10);
