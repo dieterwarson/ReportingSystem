@@ -189,7 +189,6 @@ export default Vue.extend({
       this.eventsPlNumber = response;
     },
     async getKeywordOptions(keyword: string) {
-      keyword = "%" + keyword + "%";
       const response = await ReportingService.autoCompleteKeyword({
         keyword: keyword
       });
@@ -228,7 +227,6 @@ export default Vue.extend({
         let newKeyword = String(this.keyword);
         newKeyword = encodeURIComponent(newKeyword);
         newKeyword = newKeyword.replace(/[[\]{}()*+?,^$|#\s]/g, "\\$&");
-        newKeyword = newKeyword.split("-").join("--");
         newKeyword = newKeyword.split("%").join("%25");
         newKeyword = newKeyword.split("\\").join("%5C%5C");
         newKeyword = newKeyword.split("!").join("%21");
