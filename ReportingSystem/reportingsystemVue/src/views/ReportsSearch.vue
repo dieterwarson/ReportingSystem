@@ -78,6 +78,7 @@ export default Vue.extend({
       ) {
         this.loadPlReports();
       } else {
+        /* Makes an array that contains every word in the string. */
         this.keywordSplit = this.keyword.split(/[\s,\-,_]+/);
         this.loadKeywordReports(this.keyword);
       }
@@ -94,23 +95,16 @@ export default Vue.extend({
      * Finds the reports which contain an event that contains the keyword partially.
      */
     loadKeywordReports: function (keyword: string) {
-      keyword = keyword.replace("/","");
-      keyword = keyword.replace(".","");
-      keyword = keyword.replace("?","");
-      keyword = keyword.replace("!","");
-      keyword = keyword.replace("_","");
-      keyword = keyword.replace(" ","");
+      /* Without this line, searching for '-' won't work. Don't know why. */
       keyword = keyword.replace("-"," ");
 
-      if (keyword === '') {
-        keyword = "invalid_character"
-      }
       ReportingService.getSearchReports(
           "/api/reports/search/" + keyword
         )
         .then(res => (this.reports = res))
         .then(() => {
           if (this.reports.length == 0) {
+            /* If the previous search string wasn't found, search for the next word in the array. */
             for (this.keywordIndex; this.keywordIndex < this.keywordSplit.length; this.keywordIndex++) {
               const word = this.keywordSplit[this.keywordIndex];
               this.loadKeywordReports(word);

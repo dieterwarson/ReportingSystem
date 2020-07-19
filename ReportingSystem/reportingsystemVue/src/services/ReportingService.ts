@@ -234,9 +234,9 @@ export default {
       alert(error);
     })
   },
-  autoCompleteOperationalEvent(data: any) {
+  autoCompletePlNumber(data: any) {
     return Api()
-    .post("api/reports/getOperationalEvents", data)
+    .post("api/reports/getPlNumberReports", data)
     .then(res => {
       return res.data;
     })
@@ -253,6 +253,16 @@ export default {
     .catch(error => {
       alert(error);
     })
+  },
+  autoCompleteKeyword(data: any) {
+    return Api()
+      .post("api/reports/getKeywordReports", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   deleteUser(data: any) {
     return Api()

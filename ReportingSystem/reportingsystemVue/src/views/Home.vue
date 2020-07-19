@@ -17,16 +17,34 @@
       <form>
         <div v-if="tokenData.seeReports" class="form-row align-items-center">
           <div class="col my-1">
-            <!-- Keyword input -->
-            <input
-              @click="toggleInvisible"
-              type="text"
-              class="form-control"
-              id="inlineFormInputName"
-              v-model="keyword"
-              placeholder="Trefwoord"
-            />
+            <div class="input-group">
+              <div class="autocomplete">
+                <!-- Keyword input -->
+                <input
+                  autocomplete="off"
+                  v-model="keyword"
+                  type="text"
+                  class="form-control"
+                  id="inlineFormInputName"
+                  placeholder="Trefwoord"
+                  @keyup="getKeywordOptions(keyword)"
+                  @click="toggleVisibleKeyword"
+                />
+                <div class="popover" v-show="visibleKeyword">
+                  <div class="options">
+                    <ul>
+                      <li
+                        v-for="event in eventsKeyword"
+                        :key="event.id"
+                        v-on:click="getKeyword(event.description)"
+                      >{{event.description}}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div class="col my-1">
             <div class="input-group">
               <div class="autocomplete">
@@ -38,14 +56,14 @@
                   class="form-control"
                   id="inlineFormInputGroupUsername"
                   placeholder="PL-nummer"
-                  @keyup="getOptions(plNumber)"
-                  @click="toggleVisible"
+                  @keyup="getPlNumberOptions(plNumber)"
+                  @click="toggleVisiblePlNumber"
                 />
-                <div class="popover" v-show="visible">
+                <div class="popover" v-show="visiblePlNumber">
                   <div class="options">
                     <ul>
                       <li
-                        v-for="event in events"
+                        v-for="event in eventsPlNumber"
                         :key="event.id"
                         v-on:click="getPlNumber(event.plNumber)"
                       >{{event.plNumber}}</li>
@@ -142,8 +160,10 @@ export default Vue.extend({
     return {
       keyword: "",
       plNumber: "",
-      visible: false,
-      events: null,
+      visiblePlNumber: false,
+      visibleKeyword: false,
+      eventsPlNumber: null,
+      eventsKeyword: null,
       tokenData: {
         accessRights: -1,
         makeReports: false,
@@ -161,22 +181,36 @@ export default Vue.extend({
   },
 
   methods: {
-    async getOptions(plNumber: string) {
-      const sign = "%";
-      plNumber = sign.concat(plNumber);
-      plNumber = plNumber.concat(sign);
-      const response = await ReportingService.autoCompleteOperationalEvent({
+    async getPlNumberOptions(plNumber: string) {
+      plNumber = "%" + plNumber + "%";
+      const response = await ReportingService.autoCompletePlNumber({
         plNumber: plNumber
       });
-      this.events = response;
+      this.eventsPlNumber = response;
     },
-    toggleVisible() {
-      this.visible = !this.visible;
+    async getKeywordOptions(keyword: string) {
+      keyword = "%" + keyword + "%";
+      const response = await ReportingService.autoCompleteKeyword({
+        keyword: keyword
+      });
+      this.eventsKeyword = response;
+    },
+
+    toggleVisiblePlNumber() {
+      this.visiblePlNumber = !this.visiblePlNumber;
+    },
+    toggleVisibleKeyword() {
+      this.visibleKeyword = !this.visibleKeyword;
     },
     getPlNumber(plNumber: string) {
       this.plNumber = plNumber;
-      this.toggleVisible();
-      this.getOptions(plNumber);
+      this.toggleVisiblePlNumber();
+      this.getPlNumberOptions(plNumber);
+    },
+    getKeyword(keyword: string) {
+      this.keyword = keyword;
+      this.toggleVisibleKeyword();
+      this.getKeywordOptions(keyword);
     },
     logOut() {
       window.location.href = "/login";
@@ -220,8 +254,8 @@ export default Vue.extend({
       }
     },
     toggleInvisible: function() {
-      if (this.visible) {
-        this.visible = !this.visible;
+      if (this.visiblePlNumber) {
+        this.visiblePlNumber = !this.visiblePlNumber;
       }
     },
 
@@ -237,7 +271,8 @@ export default Vue.extend({
   },
   mounted() {
     this.loadShiftId();
-    this.getOptions("");
+    this.getPlNumberOptions("");
+    this.getKeywordOptions("");
     if (
       window.localStorage.getItem("token") === null ||
       window.localStorage.getItem("token") === undefined
