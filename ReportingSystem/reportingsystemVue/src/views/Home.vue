@@ -201,7 +201,7 @@ export default Vue.extend({
         newKeyword = newKeyword.split("_").join("%5F");
 
         /* If the string contains only the '.'-character, a space is added. This is to prevent the url contains only '.'-characters, which gives problems. */
-        let match = newKeyword.match(/[.]/g);
+        const match = newKeyword.match(/[.]/g);
         if (newKeyword !== null) {
           if (match !== null) {
             if (match.length === newKeyword.length)

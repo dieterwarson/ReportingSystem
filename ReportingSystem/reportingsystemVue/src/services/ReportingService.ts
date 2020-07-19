@@ -244,6 +244,16 @@ export default {
       alert(error);
     })
   },
+  autoCompleteAddOperationalEvent(data: any) {
+    return Api()
+    .post("api/reports/getDummyEvents", data)
+    .then (res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
   deleteUser(data: any) {
     return Api()
     .post("api/users/deleteUser", data)
