@@ -2069,6 +2069,25 @@ router.post("/getPlNumberReports", async (req, res) => {
   res.json(matched_events);
 });
 
+
+
+/******************************************************************************
+*      GET Get Dummy database events - "POST /api/reports/getDummyEvents"
+******************************************************************************/
+router.post("/getDummyEvents", async (req, res) => {
+  var matched_events = await DummyDatabase.findAll({
+    where: {
+      plNumber: {
+        [Op.like]: req.body.plNumber
+      }
+    },
+    limit: 5
+  });
+  res.json(matched_events);
+});
+
+
+
 /******************************************************************************
 *      GET Get keyword searched reports - "POST /api/reports/getKeywordReports"
 ******************************************************************************/
