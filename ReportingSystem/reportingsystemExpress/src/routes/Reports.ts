@@ -151,7 +151,7 @@ router.get('/monitored', async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                      Search Reports - "GET /api/reports/search/:keyword"
+ *                      Search functions
  ******************************************************************************/
 interface reportData {
   reportId: number;
@@ -526,6 +526,9 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
 // over velden in array loopen, per veld de overeenkomstige zoekfunctie oproepen
 // het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
 
+/******************************************************************************
+ *                      Search Reports - "GET /api/reports/search/:keyword"
+ ******************************************************************************/
 router.get('/search/:keyword', async (req: Request, res: Response) => {
   const search = decodeURIComponent(req.param('keyword'));
   const searchString: string = '%' + search + '%';
