@@ -156,6 +156,7 @@ router.get('/monitored', async (req: Request, res: Response) => {
  ******************************************************************************/
 interface reportData {
   reportId: number;
+  // eventId: number;
   description: string;
   date: Date;
   nightShift: Boolean;
@@ -165,7 +166,7 @@ async function searchOperationalEventSignaling(reportIds: reportData[], searchSt
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
     operationalEvents = await sequelize.query(
-      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, signaling) BETWEEN 0 AND 4',
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, signaling) BETWEEN 4 AND 9',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
