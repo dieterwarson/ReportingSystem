@@ -156,7 +156,7 @@ router.get('/monitored', async (req: Request, res: Response) => {
  ******************************************************************************/
 interface reportData {
   reportId: number;
-  // eventId: number;
+  eventId: number;
   description: string;
   date: Date;
   nightShift: Boolean;
@@ -191,7 +191,7 @@ async function searchOperationalEventSignaling(reportIds: reportData[], searchSt
       include: [{ model: Report }]
     });
     if (event != null && curEvent.signaling != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -226,7 +226,7 @@ async function searchOperationalEventPlNumber(reportIds: reportData[], searchStr
       include: [{ model: Report }]
     });
     if (event != null && curEvent.plNumber != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -261,7 +261,7 @@ async function searchOperationalEventDescription(reportIds: reportData[], search
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -296,7 +296,7 @@ async function searchOperationalEventLocation(reportIds: reportData[], searchStr
       include: [{ model: Report }]
     });
     if (event != null && curEvent.location != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.location, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.location, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -331,7 +331,7 @@ async function searchOperationalEventUnit(reportIds: reportData[], searchString:
       include: [{ model: Report }]
     });
     if (event != null && curEvent.unit != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.unit, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.unit, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -351,7 +351,7 @@ async function searchOperationalEventDate(reportIds: reportData[], search: strin
         include: [{ model: Report }]
       });
       if (event != null && dateString != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
@@ -387,7 +387,7 @@ async function searchWorkplaceEventDescription(reportIds: reportData[], searchSt
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -422,7 +422,7 @@ async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchStrin
       include: [{ model: Report }]
     });
     if (event != null && curEvent.absentee != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.absentee, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.absentee, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -457,7 +457,7 @@ async function searchWorkplaceEventSubstitute(reportIds: reportData[], searchStr
       include: [{ model: Report }]
     });
     if (event != null && curEvent.substitute != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.substitute, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.substitute, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -477,7 +477,7 @@ async function searchWorkplaceEventDate(reportIds: reportData[], search: string)
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
@@ -513,7 +513,7 @@ async function searchSecretariatNotificationDescription(reportIds: reportData[],
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -533,7 +533,7 @@ async function searchSecretariatNotificationDate(reportIds: reportData[], search
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
@@ -569,7 +569,7 @@ async function searchDefectDescription(reportIds: reportData[], searchString: st
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -589,7 +589,7 @@ async function searchDefectDate(reportIds: reportData[], search: string) {
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
@@ -625,7 +625,7 @@ async function searchMalfunctionDescription(reportIds: reportData[], searchStrin
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -645,7 +645,7 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
@@ -691,7 +691,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
   await searchMalfunctionDescription(reportIds, search, "l");
   await searchMalfunctionDescription(reportIds, search, "s");
   await searchMalfunctionDate(reportIds, search);
-
+  
   res.send(reportIds);
 });
 
@@ -733,7 +733,7 @@ router.get('/pl/:pl', async (req: Request, res: Response) => {
       include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
