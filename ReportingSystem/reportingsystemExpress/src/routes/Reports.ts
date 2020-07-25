@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, QueryTypes } from 'sequelize';
 import { Request, Response, Router } from 'express';
 import OperationalEvent from 'src/models/operationalEvent';
 import SecretariatNotification from '../models/secretariatNotification';
@@ -21,6 +21,7 @@ import MalfunctionSubtype from 'src/models/malfunctionSubtype';
 import OperationalSubtype from 'src/models/operationalSubtype';
 import EventType from 'src/models/eventType';
 import DummyDatabase from 'src/models/dummyDataBase';
+import sequelize from 'src/config/config';
 
 // Init router
 const router = Router();
@@ -28,13 +29,12 @@ const router = Router();
 /******************************************************************************
  *                   Get All Reports - "GET /api/reports/all"
  ******************************************************************************/
-
 // only get the reports that are finished
 
 
 router.post('/all', async (req: Request, res: Response) => {
-  let date = {start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z"}
-  if(!(req.body.dateRange.start == '' && req.body.dateRange.end == ''))
+  let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
+  if (!(req.body.dateRange.start == '' && req.body.dateRange.end == ''))
     date = req.body.dateRange;
   const offset = req.body.offset;
   const reports = await Report.findAll({
@@ -71,12 +71,11 @@ router.post('/all', async (req: Request, res: Response) => {
 /******************************************************************************
  *                   Count All Reports - "GET /api/reports/count"
  ******************************************************************************/
-
 router.post('/count', async (req: Request, res: Response) => {
   console.log(req.body);
-  let date = {start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z"}
-  if(!(req.body.start == '' && req.body.end == ''))
-    date = {start: req.body.start, end: req.body.end};
+  let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
+  if (!(req.body.start == '' && req.body.end == ''))
+    date = { start: req.body.start, end: req.body.end };
   const count = await Report.count({
     where: {
       temporary: false,
@@ -91,11 +90,9 @@ router.post('/count', async (req: Request, res: Response) => {
   res.send({ count: count });
 });
 
-
 /******************************************************************************
  *          Get the report from the last shift - "GET /api/reports/lastShift"
  ******************************************************************************/
-
 router.get('/lastShift', async (req: Request, res: Response) => {
   const reports = await Report.findOne({
     order: [['date', 'DESC']],
@@ -108,12 +105,9 @@ router.get('/lastShift', async (req: Request, res: Response) => {
   res.send(reports);
 });
 
-
-
 /******************************************************************************
  *                   Get All Reports - "GET /api/reports/one/:reportId"
  ******************************************************************************/
-
 router.get('/one/:reportId', async (req: Request, res: Response) => {
   const reportId = Number(req.param('reportId'));
 
@@ -130,15 +124,8 @@ router.get('/one/:reportId', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get All monitored Reports - "GET /api/reports/monitored"
  ******************************************************************************/
-
 // only get the reports that are finished and arer being monitored
-
 router.get('/monitored', async (req: Request, res: Response) => {
-  var reports: (
-    | Defect[]
-    | Malfunction[]
-    | SecretariatNotification[]
-  )[] = [];
 
   let defects = await Defect.findAll({
     order: [['date', 'DESC']],
@@ -155,7 +142,6 @@ router.get('/monitored', async (req: Request, res: Response) => {
     },
     include: [{ model: MalfunctionType }]
   });
-
 
   let workplaceEvents = await WorkplaceEvent.findAll({
     order: [['date', 'DESC']],
@@ -181,39 +167,36 @@ router.get('/monitored', async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                      Search Reports - "GET /api/reports/search/:keyword"
+ *                      Search functions
  ******************************************************************************/
 interface reportData {
   reportId: number;
+  eventId: number;
   description: string;
   date: Date;
   nightShift: Boolean;
 }
 
-router.get('/search/:keyword', async (req: Request, res: Response) => {
-  let search: string = req.param('keyword');
-  search = search.replace("/","");
-  search = search.replace(".","");
-  search = search.replace("?","");
-  search = search.replace("!","");
-  search = search.replace("_","");
-  search = search.replace(" ","");
-  search = search.replace("-","");
-
-  if (search === '') {
-    search = "invalid_character"
-  }
-  const searchString: string = '%' + search + '%';
-
-  let reportIds: reportData[] = [];
-
-  let operationalEvents = await OperationalEvent.findAll({
-    where: {
-      signaling: {
-        [Op.like]: searchString,
+async function searchOperationalEventSignaling(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, signaling) BETWEEN 4 AND 9',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        signaling: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -222,19 +205,33 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.signaling != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll({
-    where: {
-      plNumber: {
-        [Op.like]: searchString,
+async function searchOperationalEventPlNumber(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, plNumber) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        plNumber: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -243,19 +240,33 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.plNumber != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchOperationalEventDescription(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -264,19 +275,33 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.description != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll({
-    where: {
-      location: {
-        [Op.like]: searchString,
+async function searchOperationalEventLocation(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, location) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        location: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -285,19 +310,33 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.location, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.location != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.location, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll({
-    where: {
-      unit: {
-        [Op.like]: searchString,
+async function searchOperationalEventUnit(reportIds: reportData[], searchString: string, type: string) {
+  let operationalEvents: OperationalEvent[];
+  if (type === "l") {
+    operationalEvents = await sequelize.query(
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, unit) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    operationalEvents = await OperationalEvent.findAll({
+      where: {
+        unit: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
     const event = await Operational.findOne({
@@ -306,13 +345,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.unit, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.unit != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.unit, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  operationalEvents = await OperationalEvent.findAll();
+async function searchOperationalEventDate(reportIds: reportData[], search: string) {
+  let operationalEvents = await OperationalEvent.findAll();
   for (let i = 0; i < operationalEvents.length; i++) {
     const curEvent = operationalEvents[i];
     let dateString = curEvent.date.toLocaleString();
@@ -324,20 +365,34 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
         },
         include: [{ model: Report }]
       });
-      if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+      if (event != null && dateString != null) {
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
   }
+}
 
-  let workplaceEvents = await WorkplaceEvent.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchWorkplaceEventDescription(reportIds: reportData[], searchString: string, type: string) {
+  let workplaceEvents: WorkplaceEvent[];
+  if (type === "l") {
+    workplaceEvents = await sequelize.query(
+      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in workplaceEvents) {
     const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
@@ -346,19 +401,33 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.description != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  workplaceEvents = await WorkplaceEvent.findAll({
-    where: {
-      absentee: {
-        [Op.like]: searchString,
+async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchString: string, type: string) {
+  let workplaceEvents: WorkplaceEvent[];
+  if (type === "l") {
+    workplaceEvents = await sequelize.query(
+      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, absentee) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        absentee: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in workplaceEvents) {
     const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
@@ -367,19 +436,33 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.absentee, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.absentee != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.absentee, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  workplaceEvents = await WorkplaceEvent.findAll({
-    where: {
-      substitute: {
-        [Op.like]: searchString,
+async function searchWorkplaceEventSubstitute(reportIds: reportData[], searchString: string, type: string) {
+  let workplaceEvents: WorkplaceEvent[];
+  if (type === "l") {
+    workplaceEvents = await sequelize.query(
+      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, substitute) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    workplaceEvents = await WorkplaceEvent.findAll({
+      where: {
+        substitute: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in workplaceEvents) {
     const curEvent = workplaceEvents[i];
     const event = await Administrative.findOne({
@@ -388,13 +471,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.substitute, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.substitute != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.substitute, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  workplaceEvents = await WorkplaceEvent.findAll();
+async function searchWorkplaceEventDate(reportIds: reportData[], search: string) {
+  let workplaceEvents = await WorkplaceEvent.findAll();
   for (let i = 0; i < workplaceEvents.length; i++) {
     const curEvent = workplaceEvents[i];
     let dateString = curEvent.date.toLocaleString();
@@ -407,19 +492,33 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
   }
+}
 
-  let secretariatNotifications = await SecretariatNotification.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchSecretariatNotificationDescription(reportIds: reportData[], searchString: string, type: string) {
+  let secretariatNotifications: SecretariatNotification[];
+  if (type === "l") {
+    secretariatNotifications = await sequelize.query(
+      'SELECT * FROM SecretariatNotifications WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    secretariatNotifications = await SecretariatNotification.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in secretariatNotifications) {
     const curEvent = secretariatNotifications[i];
     const event = await Administrative.findOne({
@@ -428,13 +527,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.description != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  secretariatNotifications = await SecretariatNotification.findAll();
+async function searchSecretariatNotificationDate(reportIds: reportData[], search: string) {
+  let secretariatNotifications = await SecretariatNotification.findAll();
   for (let i = 0; i < secretariatNotifications.length; i++) {
     const curEvent = secretariatNotifications[i];
     let dateString = curEvent.date.toLocaleString();
@@ -447,19 +548,33 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
   }
+}
 
-  let defects = await Defect.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchDefectDescription(reportIds: reportData[], searchString: string, type: string) {
+  let defects: Defect[];
+  if (type === "l") {
+    defects = await sequelize.query(
+      'SELECT * FROM Defects WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    defects = await Defect.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in defects) {
     const curEvent = defects[i];
     const event = await Technical.findOne({
@@ -468,13 +583,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.description != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  defects = await Defect.findAll();
+async function searchDefectDate(reportIds: reportData[], search: string) {
+  let defects = await Defect.findAll();
   for (let i = 0; i < defects.length; i++) {
     const curEvent = defects[i];
     let dateString = curEvent.date.toLocaleString();
@@ -487,19 +604,33 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
   }
+}
 
-  let malfunctions = await Malfunction.findAll({
-    where: {
-      description: {
-        [Op.like]: searchString,
+async function searchMalfunctionDescription(reportIds: reportData[], searchString: string, type: string) {
+  let malfunctions: Malfunction[];
+  if (type === "l") {
+    malfunctions = await sequelize.query(
+      'SELECT * FROM Malfunctions WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    malfunctions = await Malfunction.findAll({
+      where: {
+        description: {
+          [Op.like]: searchString,
+        },
       },
-    },
-  });
+    });
+  }
   for (let i in malfunctions) {
     const curEvent = malfunctions[i];
     const event = await Technical.findOne({
@@ -508,13 +639,15 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
       },
       include: [{ model: Report }]
     });
-    if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+    if (event != null && curEvent.description != null) {
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
+}
 
-  malfunctions = await Malfunction.findAll();
+async function searchMalfunctionDate(reportIds: reportData[], search: string) {
+  let malfunctions = await Malfunction.findAll();
   for (let i = 0; i < malfunctions.length; i++) {
     const curEvent = malfunctions[i];
     let dateString = curEvent.date.toLocaleString();
@@ -527,12 +660,53 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
   }
+}
 
+// voor multiselect:
+// router.get('/search/:fields/:keyword) fields=array van geselecteerde velden
+// over velden in array loopen, per veld de overeenkomstige zoekfunctie oproepen
+// het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
+
+/******************************************************************************
+ *                      Search Reports - "GET /api/reports/search/:keyword"
+ ******************************************************************************/
+router.get('/search/:keyword', async (req: Request, res: Response) => {
+  const search = decodeURIComponent(req.param('keyword'));
+  let reportIds: reportData[] = [];
+
+  await searchOperationalEventSignaling(reportIds, search, "l");
+  await searchOperationalEventSignaling(reportIds, search, "s");
+  await searchOperationalEventPlNumber(reportIds, search, "l");
+  await searchOperationalEventPlNumber(reportIds, search, "s");
+  await searchOperationalEventDescription(reportIds, search, "l");
+  await searchOperationalEventDescription(reportIds, search, "s");
+  await searchOperationalEventLocation(reportIds, search, "l");
+  await searchOperationalEventLocation(reportIds, search, "s");
+  await searchOperationalEventUnit(reportIds, search, "l");
+  await searchOperationalEventUnit(reportIds, search, "s");
+  await searchOperationalEventDate(reportIds, search);
+  await searchWorkplaceEventDescription(reportIds, search, "l");
+  await searchWorkplaceEventDescription(reportIds, search, "s");
+  await searchWorkplaceEventAbsentee(reportIds, search, "l");
+  await searchWorkplaceEventAbsentee(reportIds, search, "s");
+  await searchWorkplaceEventSubstitute(reportIds, search, "l");
+  await searchWorkplaceEventSubstitute(reportIds, search, "s");
+  await searchWorkplaceEventDate(reportIds, search);
+  await searchSecretariatNotificationDescription(reportIds, search, "l");
+  await searchSecretariatNotificationDescription(reportIds, search, "s");
+  await searchSecretariatNotificationDate(reportIds, search);
+  await searchDefectDescription(reportIds, search, "l");
+  await searchDefectDescription(reportIds, search, "s");
+  await searchDefectDate(reportIds, search);
+  await searchMalfunctionDescription(reportIds, search, "l");
+  await searchMalfunctionDescription(reportIds, search, "s");
+  await searchMalfunctionDate(reportIds, search);
+  
   res.send(reportIds);
 });
 
@@ -574,7 +748,7 @@ router.get('/pl/:pl', async (req: Request, res: Response) => {
       include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -765,8 +939,6 @@ router.get('/priority/:reportId', async (req: Request, res: Response) => {
     operational: { operationalEvents },
   };
 
-
-
   res.send(results);
 });
 
@@ -799,7 +971,6 @@ router.get('/types', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/operationalTypes"
  ******************************************************************************/
-
 router.get('/operationalTypes', async (req: Request, res: Response) => {
   let operationalTypes = await OperationalType.findAll({
     attributes: ['id', 'typeName'],
@@ -816,7 +987,6 @@ router.get('/operationalTypes', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/workplaceTypes"
  ******************************************************************************/
-
 router.get('/workplaceTypes', async (req: Request, res: Response) => {
   let workplaceTypes = await WorkplaceType.findAll({
     attributes: ['id', 'typeName'],
@@ -833,7 +1003,6 @@ router.get('/workplaceTypes', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/defectTypes"
  ******************************************************************************/
-
 router.get('/defectTypes', async (req: Request, res: Response) => {
   let defectTypes = await DefectType.findAll({
     attributes: ['id', 'typeName'],
@@ -850,7 +1019,6 @@ router.get('/defectTypes', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get types from Reports - "GET /api/reports/malfunctionTypes"
  ******************************************************************************/
-
 router.get('/malfunctionTypes', async (req: Request, res: Response) => {
   let malfunctionTypes = await MalfunctionType.findAll({
     attributes: ['id', 'typeName'],
@@ -864,11 +1032,9 @@ router.get('/malfunctionTypes', async (req: Request, res: Response) => {
   res.send(results);
 });
 
-
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/operationalEvent/:id"
  ******************************************************************************/
-
 router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await OperationalEvent.findOne({
@@ -882,11 +1048,9 @@ router.get('/operationalEvent/:id', async (req: Request, res: Response) => {
   return false;
 });
 
-
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/workplaceEvent/:id"
  ******************************************************************************/
-
 router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await WorkplaceEvent.findOne({
@@ -903,7 +1067,6 @@ router.get('/workplaceEvent/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/secretariatNotification/:id"
  ******************************************************************************/
-
 router.get('/secretariatNotification/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await SecretariatNotification.findOne({
@@ -920,7 +1083,6 @@ router.get('/secretariatNotification/:id', async (req: Request, res: Response) =
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/defectEvent/:id"
  ******************************************************************************/
-
 router.get('/defectEvent/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await Defect.findOne({
@@ -937,7 +1099,6 @@ router.get('/defectEvent/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/malfunctionEvent/:id"
  ******************************************************************************/
-
 router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const result = await Malfunction.findOne({
@@ -950,7 +1111,6 @@ router.get('/malfunctionEvent/:id', async (req: Request, res: Response) => {
   }
   return false;
 });
-
 
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/operationalEventTypes/:id"
@@ -1011,7 +1171,6 @@ router.get('/operationalEventTypes/:id', async (req: Request, res: Response) => 
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/workplaceEventTypes/:id"
  ******************************************************************************/
-
 router.get('/workplaceEventTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const event = await WorkplaceEvent.findOne({
@@ -1058,7 +1217,6 @@ router.get('/workplaceEventTypes/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/defectTypes/:id"
  ******************************************************************************/
-
 router.get('/defectTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const event = await Defect.findOne({
@@ -1105,7 +1263,6 @@ router.get('/defectTypes/:id', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get event from Reports - "GET /api/reports/malfunctionTypes/:id"
  ******************************************************************************/
-
 router.get('/malfunctionTypes/:id', async (req: Request, res: Response) => {
   const eventId = req.param('id');
   const event = await Malfunction.findOne({
@@ -1207,13 +1364,11 @@ router.post('/removeNotification', async (req, res) => {
   }
 });
 
-
 /******************************************************************************
  *             Get reports - "POST /api/reports/getTypeEvents/:reportId"
  ******************************************************************************/
 router.post('/getTypeEvents/:reportId', async (req, res) => {
   const types = req.body.selectedTypes;
-  console.log(types);
   var results;
   let reportId = req.param('reportId');
   let report = await Report.findOne({
@@ -1244,13 +1399,11 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
   let defects: Defect[] = [];
   let malfunctions: Malfunction[] = [];
 
-
   if (operational != null) {
-    console.log(types);
     for (let i in types.operational) {
       var type = types.operational[i];
-      console.log(type);
       var result = [];
+
       result = await OperationalEvent.findAll({
         where: {
           operationalId: operational.id
@@ -1269,17 +1422,14 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
           }]
         }]
       });
-
-      console.log(result);
-
       if (result.length != 0) {
         result.forEach(event => {
           let contains = false;
-          operationalEvents.forEach(value => {  
-            if(value.id == event.id)
+          operationalEvents.forEach(value => {
+            if (value.id == event.id)
               contains = true;
-          })     
-          if(!contains)
+          })
+          if (!contains)
             operationalEvents.push(event);
         });
       }
@@ -1303,17 +1453,13 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
           },
         }],
       });
-
       if (result.length != 0) {
         result.forEach(event => {
           workplaceEvents.push(event);
         });
       }
     }
-
-    console.log(types.workplaceevent);
-
-    if(types.workplaceevent != null){
+    if (types.workplaceevent != null) {
       if (types.workplaceevent.includes("secretariatNotification")) {
         secretariatNotifications = await SecretariatNotification.findAll({
           where: {
@@ -1340,9 +1486,7 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
             },
           },
         }]
-
       });
-
       if (result.length != 0) {
         result.forEach(event => {
           defects.push(event);
@@ -1365,9 +1509,7 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
             },
           },
         }]
-
       });
-
       if (result.length != 0) {
         result.forEach(event => {
           malfunctions.push(event);
@@ -1383,8 +1525,6 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
     technical: { defects, malfunctions },
   };
 
-  // console.log(results);
-
   res.send(results);
 });
 
@@ -1394,13 +1534,13 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
  ******************************************************************************/
 router.post('/autoSaveOperational', async (req, res) => {
   await OperationalEvent.findAll({
-    where:{
+    where: {
       authorId: req.body.id,
       operationalId: {
         [Op.eq]: null
       }
     }
-  }).then(async function(entries) {
+  }).then(async function (entries) {
     await entries[0].update({
       signaling: req.body.signaling,
       plNumber: req.body.plNumber,
@@ -1410,21 +1550,21 @@ router.post('/autoSaveOperational', async (req, res) => {
       unit: req.body.unit,
       date: Date.now(),
     })
-    }).catch(async function(err) {
-      await OperationalEvent.create({
-        authorId: req.body.id,
-        signaling: req.body.signaling,
-        plNumber: req.body.plNumber,
-        description: req.body.description,
-        priority: req.body.priority,
-        location: req.body.location,
-        unit: req.body.unit,
-        date: Date.now(),
-      }).then(async function(event){
-        res.json({
-          bool: true
-        })
+  }).catch(async function () {
+    await OperationalEvent.create({
+      authorId: req.body.id,
+      signaling: req.body.signaling,
+      plNumber: req.body.plNumber,
+      description: req.body.description,
+      priority: req.body.priority,
+      location: req.body.location,
+      unit: req.body.unit,
+      date: Date.now(),
+    }).then(async function () {
+      res.json({
+        bool: true
       })
+    })
   })
 })
 
@@ -1439,18 +1579,17 @@ router.post('/getAutoSavedFile', async (req, res) => {
         [Op.eq]: null
       }
     }
-  }).then(function(entries) {
+  }).then(function (entries) {
     res.json({
       bool: true,
       entry: entries[0],
     });
-  }).catch(function() {
+  }).catch(function () {
     res.json({
       bool: false,
     })
   })
 })
-
 
 /******************************************************************************
  *      POST data from file in dummydatabase - "POST /api/reports/getFile"
@@ -1468,34 +1607,33 @@ router.post('/getFile', async (req, res) => {
   }
 });
 
-
 /******************************************************************************
  *      POST Add secretary notification - "POST /api/reports/addSecretaryNotification"
  ******************************************************************************/
 router.post('/addSecretaryNotification', async (req, res) => {
   Administrative.findAll({
     limit: 1,
-    where: {reportId: 17}, //demo
-    order: [ ['reportId', 'DESC']]
-  }).then(function(entries){
+    where: { reportId: 17 }, //demo
+    order: [['reportId', 'DESC']]
+  }).then(function (entries) {
     SecretariatNotification.create({
       authorId: req.body.id,
       administrativeId: entries[0].id,
       description: req.body.description,
       monitoring: req.body.monitoring,
       date: Date.now(),
-    }).then(function(not) {
+    }).then(function () {
       SecretariatNotification.sync();
       res.json({
         bool: true
       })
     })
-    .catch(function(err) {
-      res.json({
-        bool: false,
-        message: err
+      .catch(function (err) {
+        res.json({
+          bool: false,
+          message: err
+        })
       })
-    })
   })
 })
 
@@ -1507,9 +1645,9 @@ router.post('/addOperationalEvent', async (req, res) => {
   const selectedSubtypes = req.body.subtypes;
   Operational.findAll({
     limit: 1,
-    where: {reportId: 17}, //demo
-    order: [ ['reportId', 'DESC']]
-  }).then(function(entries){
+    where: { reportId: 17 }, //demo
+    order: [['reportId', 'DESC']]
+  }).then(function (entries) {
 
     OperationalEvent.create({
       plNumber: req.body.plNumber,
@@ -1521,16 +1659,16 @@ router.post('/addOperationalEvent', async (req, res) => {
       operationalId: entries[0].id,
       monitoring: req.body.monitoring,
       priority: req.body.priority,
-    }).then(async function(event) {
+    }).then(async function (event) {
       OperationalEvent.findAll({
-        where:{
+        where: {
           authorId: req.body.id,
           operationalId: {
             [Op.eq]: null
           }
         }
-      }).then(function(entries){
-        if (entries.length > 0){
+      }).then(function (entries) {
+        if (entries.length > 0) {
           entries[0].destroy({});
 
         }
@@ -1540,7 +1678,7 @@ router.post('/addOperationalEvent', async (req, res) => {
         const curType = selectedTypes[i];
         let curTypeId = null;
         let curSubtypeId = null;
-  
+
         let curTypeObject = await OperationalType.findOne({
           where: {
             typeName: curType
@@ -1560,7 +1698,7 @@ router.post('/addOperationalEvent', async (req, res) => {
           }
           for (let j = 0; j < selectedSubtypes.length; j++) {
             const curSubtype = selectedSubtypes[j];
-  
+
             let curSubtypeObject = await OperationalSubtype.findOne({
               where: {
                 typeName: curSubtype
@@ -1592,90 +1730,89 @@ router.post('/addOperationalEvent', async (req, res) => {
       res.json({
         bool: true,
       })
-    }).catch(function(err) {
+    }).catch(function (err) {
       res.json({
         bool: false,
-        message: 'OperationalEvent was not created '  + err
+        message: 'OperationalEvent was not created ' + err
       })
     })
-  }).catch(function(err){
+  }).catch(function (err) {
     res.json({
       bool: false,
-      message:"No operational row found  " + err
+      message: "No operational row found  " + err
     })
   });
-  
-});
 
+});
 
 /******************************************************************************
  *      POST Add WorkPlaceEvent - "POST /api/reports/addWorkPlaceEvent"
  ******************************************************************************/
 router.post('/addWorkPlaceEvent', async (req, res) => {
-  
+
   Administrative.findAll({
     limit: 1,
-    where: {reportId: 17}, //demo
-    order: [ ['reportId', 'DESC']]
-  }).then(async function(entries){
+    where: { reportId: 17 }, //demo
+    order: [['reportId', 'DESC']]
+  }).then(async function (entries) {
     let type = req.body.type;
-  let subtype = req.body.subtype;
+    let subtype = req.body.subtype;
 
-  let workplaceType = await WorkplaceType.findOne({
-    where: {
-      typename: type
-    },
-    attributes: ['id', 'typeName'],
-  });
+    let workplaceType = await WorkplaceType.findOne({
+      where: {
+        typename: type
+      },
+      attributes: ['id', 'typeName'],
+    });
 
-  let workplaceSubtype = await WorkplaceSubtype.findOne({
-    where: {
-      typename: subtype
-    },
-    attributes: ['id', 'typeName'],
-  });
+    let workplaceSubtype = await WorkplaceSubtype.findOne({
+      where: {
+        typename: subtype
+      },
+      attributes: ['id', 'typeName'],
+    });
 
-  let workplaceTypeId = null;
-  if (workplaceType != null) {
-    workplaceTypeId = workplaceType.id;
-  }
+    let workplaceTypeId = null;
+    if (workplaceType != null) {
+      workplaceTypeId = workplaceType.id;
+    }
 
-  let workplaceSubtypeId = null;
-  if (workplaceSubtype != null) {
-    workplaceSubtypeId = workplaceSubtype.id;
-  }
-   WorkplaceEvent.create({
-     authorId: req.body.id,
-     administrativeId: entries[0].id,
-     workplaceTypeId: workplaceTypeId,
-     WorkplaceSubtypeId: workplaceSubtypeId,
-     description: req.body.message,
-     absentee: req.body.absentee,
-     substitute: req.body.substitute,
-     monitoring: req.body.monitoring,
-     date: Date.now(),
-   }).then(function(){
-    res.json({bool: true})
-   }).catch(function(){
-    res.json({bool: false, message: "Kon geen event aanmaken"})
-   });
-  }).catch(function(err) {
-      res.json({
-        bool: false,
-        message: err
-      })
+    let workplaceSubtypeId = null;
+    if (workplaceSubtype != null) {
+      workplaceSubtypeId = workplaceSubtype.id;
+    }
+    WorkplaceEvent.create({
+      authorId: req.body.id,
+      administrativeId: entries[0].id,
+      workplaceTypeId: workplaceTypeId,
+      WorkplaceSubtypeId: workplaceSubtypeId,
+      description: req.body.message,
+      absentee: req.body.absentee,
+      substitute: req.body.substitute,
+      monitoring: req.body.monitoring,
+      date: Date.now(),
+    }).then(function () {
+      res.json({ bool: true })
+    }).catch(function () {
+      res.json({ bool: false, message: "Kon geen event aanmaken" })
+    });
+  }).catch(function (err) {
+    res.json({
+      bool: false,
+      message: err
     })
+  })
 });
 
 /******************************************************************************
  *      POST Add Malfunction - "POST /api/reports/addMalfunction"
  ******************************************************************************/
-router.post('/addMalfunction', async(req, res) => {
+router.post('/addMalfunction', async (req, res) => {
   Technical.findAll({
     limit: 1,
-    where: {reportId: 17},  //demo
-    order: [ ['reportId', 'DESC']]
-  }).then(async function(entries){
+    where: { reportId: 17 },  //demo
+    order: [['reportId', 'DESC']]
+  }).then(async function (entries) {
     let type = req.body.type;
     let subtype = req.body.subtype;
 
@@ -1711,21 +1848,21 @@ router.post('/addMalfunction', async(req, res) => {
       monitoring: req.body.monitoring,
       date: Date.now(),
       duration: req.body.duration,
-    }).then(function() {
+    }).then(function () {
       Defect.sync();
       res.json({
         bool: true
       })
-    }).catch(function(){
-      res.json({bool: false, message:'Couldnt make Defect'})
+    }).catch(function () {
+      res.json({ bool: false, message: 'Couldnt make Defect' })
     })
 
-  }).catch(function(err) {
-      res.json({
-        bool: false,
-        message: err
-      })
+  }).catch(function (err) {
+    res.json({
+      bool: false,
+      message: err
     })
+  })
 })
 
 
@@ -1735,58 +1872,58 @@ router.post('/addMalfunction', async(req, res) => {
 router.post('/addDefect', async (req, res) => {
   Technical.findAll({
     limit: 1,
-    where: {reportId: 17},  //demo
-    order: [ ['reportId', 'DESC']]
-  }).then(async function(entries){
+    where: { reportId: 17 },  //demo
+    order: [['reportId', 'DESC']]
+  }).then(async function (entries) {
     let type = req.body.type;
-  let subtype = req.body.subtype;
+    let subtype = req.body.subtype;
 
-  let defectType = await DefectType.findOne({
-    where: {
-      typename: type
-    },
-    attributes: ['id', 'typeName'],
-  });
+    let defectType = await DefectType.findOne({
+      where: {
+        typename: type
+      },
+      attributes: ['id', 'typeName'],
+    });
 
-  let defectSubtype = await DefectSubtype.findOne({
-    where: {
-      typename: subtype
-    },
-    attributes: ['id', 'typeName'],
-  });
+    let defectSubtype = await DefectSubtype.findOne({
+      where: {
+        typename: subtype
+      },
+      attributes: ['id', 'typeName'],
+    });
 
-  let defectTypeId = null;
-  if (defectType != null) {
-    defectTypeId = defectType.id
-  }
+    let defectTypeId = null;
+    if (defectType != null) {
+      defectTypeId = defectType.id
+    }
 
-  let defectSubtypeId = null;
-  if (defectSubtype != null) {
-    defectSubtypeId = defectSubtype.id;
-  }
-  Defect.create({
-    technicalId: entries[0].id,
-    authorId: req.body.id,
-    defectTypeId: defectTypeId,
-    defectSubtypeId: defectSubtypeId,
-    description: req.body.description,
-    monitoring: req.body.monitoring,
-    date: Date.now(),
-  }).then(function() {
-    Defect.sync();
-    res.json({
-      bool: true
-    })
-  }).catch(function(){
-    res.json({bool: false, message:'Couldnt make Defect'})
-  })
-
-  }).catch(function(err) {
+    let defectSubtypeId = null;
+    if (defectSubtype != null) {
+      defectSubtypeId = defectSubtype.id;
+    }
+    Defect.create({
+      technicalId: entries[0].id,
+      authorId: req.body.id,
+      defectTypeId: defectTypeId,
+      defectSubtypeId: defectSubtypeId,
+      description: req.body.description,
+      monitoring: req.body.monitoring,
+      date: Date.now(),
+    }).then(function () {
+      Defect.sync();
       res.json({
-        bool: false,
-        message: err
+        bool: true
       })
+    }).catch(function () {
+      res.json({ bool: false, message: 'Couldnt make Defect' })
     })
+
+  }).catch(function (err) {
+    res.json({
+      bool: false,
+      message: err
+    })
+  })
 });
 
 /******************************************************************************
@@ -1877,9 +2014,9 @@ router.post('/changeOperationalEvent', async (req, res) => {
   res.send(true);
 });
 
- /******************************************************************************
- *      POST Change Workplace Event - "POST /api/reports/changeWorkplaceEvent"
- ******************************************************************************/
+/******************************************************************************
+*      POST Change Workplace Event - "POST /api/reports/changeWorkplaceEvent"
+******************************************************************************/
 
 router.post('/changeWorkplaceEvent', async (req, res) => {
   let type = req.body.type;
@@ -2017,9 +2154,9 @@ router.post('/changeDefect', async (req, res) => {
 });
 
 
- /******************************************************************************
- *      POST Change Malfunction - "POST /api/reports/changeMalfunction"
- ******************************************************************************/
+/******************************************************************************
+*      POST Change Malfunction - "POST /api/reports/changeMalfunction"
+******************************************************************************/
 router.post('/changeMalfunction', async (req, res) => {
   let type = req.body.type;
   let subtype = req.body.subtype;
@@ -2072,15 +2209,68 @@ router.post('/changeMalfunction', async (req, res) => {
   res.send(true);
 });
 
- /******************************************************************************
- *      GET Get Operational Events - "POST /api/reports/getOperationalEvents"
- ******************************************************************************/
-router.post("/getOperationalEvents", async (req, res) => {
+/******************************************************************************
+*      GET Get PlNumber searched reports - "POST /api/reports/getPlNumberReports"
+******************************************************************************/
+router.post("/getPlNumberReports", async (req, res) => {
   var matched_events = await OperationalEvent.findAll({
-    where: { plNumber: { [Op.like]: req.body.plNumber } },
+    where: {
+      plNumber: {
+        [Op.like]: req.body.plNumber
+      }
+    },
     limit: 5
   });
   res.json(matched_events);
+});
+
+
+
+/******************************************************************************
+*      GET Get Dummy database events - "POST /api/reports/getDummyEvents"
+******************************************************************************/
+router.post("/getDummyEvents", async (req, res) => {
+  var matched_events = await DummyDatabase.findAll({
+    where: {
+      plNumber: {
+        [Op.like]: req.body.plNumber
+      }
+    },
+    limit: 5
+  });
+  res.json(matched_events);
+});
+
+
+
+/******************************************************************************
+*      GET Get keyword searched reports - "POST /api/reports/getKeywordReports"
+******************************************************************************/
+router.post("/getKeywordReports", async (req, res) => {
+  const search = req.body.keyword;
+
+  let reportIds: reportData[] = [];
+
+  await searchOperationalEventSignaling(reportIds, search, "s");
+  await searchOperationalEventPlNumber(reportIds, search, "s");
+  await searchOperationalEventDescription(reportIds, search, "s");
+  await searchOperationalEventLocation(reportIds, search, "s");
+  await searchOperationalEventUnit(reportIds, search, "s");
+  await searchOperationalEventDate(reportIds, search);
+  await searchWorkplaceEventDescription(reportIds, search, "s");
+  await searchWorkplaceEventAbsentee(reportIds, search, "s");
+  await searchWorkplaceEventSubstitute(reportIds, search, "s");
+  await searchWorkplaceEventDate(reportIds, search);
+  await searchSecretariatNotificationDescription(reportIds, search, "s");
+  await searchSecretariatNotificationDate(reportIds, search);
+  await searchDefectDescription(reportIds, search, "s");
+  await searchDefectDate(reportIds, search);
+  await searchMalfunctionDescription(reportIds, search, "s");
+  await searchMalfunctionDate(reportIds, search);
+
+  const outputArr = reportIds.slice(0, 10);
+
+  res.json(outputArr);
 });
 
 /******************************************************************************
@@ -2090,156 +2280,156 @@ router.post("/addTypes", async (req, res) => {
   const data = req.body;
   //OPERTATIONEEL TYPE TOEVOEGEN
   if (data.type == 0) {
-    if ( data.operationaltype == -1) {
+    if (data.operationaltype == -1) {
       OperationalType.create({
         typeName: data.field,
-      }).then(function(){
+      }).then(function () {
         OperationalType.sync();
         res.json({
           check: true,
           message: "Nieuw type aangemaakt"
         })
-      }).catch(function(err : Error) {
+      }).catch(function (err: Error) {
         res.json({
-          check:false,
+          check: false,
           message: "Type niet aangemaakt" + err
         })
       });
-      
+
     } else {
       OperationalSubtype.create({
         typeName: data.field,
         operationalTypeId: data.operationaltype
-      }).then(function(){
+      }).then(function () {
         OperationalSubtype.sync();
         res.json({
           check: true,
           message: "Nieuw subtype aangemaakt"
         })
-      }).catch(function(err : Error){
+      }).catch(function (err: Error) {
         res.json({
-          check:false,
+          check: false,
           message: "Subtype niet aangemaakt" + err
         })
       });
-      
+
     }
     // PERSONEEL TYPE TOEVOEGEN
   } else if (data.type == 1) {
     if (data.workplacetype == -1) {
       WorkplaceType.create({
         typeName: data.field,
-      }).then(function(){
+      }).then(function () {
         WorkplaceType.sync();
         res.json({
           check: true,
           message: "Nieuw type aangemaakt"
         })
-      }).catch(function(err : Error) {
+      }).catch(function (err: Error) {
         res.json({
-          check:false,
+          check: false,
           message: "Type niet aangemaakt" + err
         })
       });
-     
+
     } else {
       WorkplaceSubtype.create({
         typeName: data.field,
         workplaceTypeId: data.workplacetype
-      }).then(function(){
+      }).then(function () {
         WorkplaceSubtype.sync();
         res.json({
           check: true,
           message: "Nieuw subtype aangemaakt"
         });
-      }).catch(function(err : Error) {
+      }).catch(function (err: Error) {
         res.json({
-          check:false,
+          check: false,
           message: "Subype niet aangemaakt" + err
         })
       });
-      
-    
-  }
+
+
+    }
     //LOGISTIEK TYPE TOEVOEGEN
   } else if (data.type == 2) { //LOG
-    if (data.defectTypes ==  -1) {
+    if (data.defectTypes == -1) {
       DefectType.create({
         typeName: data.field,
-      }).then(function(){
+      }).then(function () {
         DefectType.sync();
         res.json({
           check: true,
           message: "Nieuw type aangemaakt"
         })
-      }).catch(function(err : Error){
+      }).catch(function (err: Error) {
         res.json({
-          check:false,
+          check: false,
           message: "Type niet aangemaakt" + err
         })
       });
-      
+
     } else {
       DefectSubtype.create({
         typeName: data.field,
         defectTypeId: data.defectTypes
-      }).then(function(){
+      }).then(function () {
         DefectSubtype.sync();
         res.json({
           check: true,
           message: "Nieuw subtype aangemaakt"
         })
-      }).catch(function(err : Error){
+      }).catch(function (err: Error) {
         res.json({
-          check:false,
+          check: false,
           message: "Subype niet aangemaakt" + err
         })
       });
-      
+
     }
     //TECHNISCH TYPE TOEVOEGEN
   } else if (data.type == 3) { //TECH
     if (data.malfunctionTypes == -1) {
       MalfunctionType.create({
         typeName: data.field,
-      }).then(function(){
+      }).then(function () {
         MalfunctionType.sync();
         res.json({
           check: true,
           message: "Nieuw type aangemaakt"
         })
-      }).catch(function(err : Error){
+      }).catch(function (err: Error) {
         res.json({
-          check:false,
+          check: false,
           message: "Type niet aangemaakt" + err
         })
       });
-      
+
     } else {
       MalfunctionSubtype.create({
         typeName: data.field,
         operationalTypeId: data.malfunctionTypes
-      }).then(function(){
+      }).then(function () {
         MalfunctionSubtype.sync();
         res.json({
           check: true,
           message: "Nieuw subtype aangemaakt"
         })
-      }).catch(function(err: Error){
+      }).catch(function (err: Error) {
         res.json({
-          check:false,
+          check: false,
           message: "Subtype niet aangemaakt" + err
         })
       });
-      
+
     }
   } else {
-    res.json({bool: false, message:"Veld toevoegen mislukt"})
+    res.json({ bool: false, message: "Veld toevoegen mislukt" })
   }
 });
 
- /******************************************************************************
- *                                     Export
- ******************************************************************************/
+/******************************************************************************
+*                                     Export
+******************************************************************************/
 
 export default router;

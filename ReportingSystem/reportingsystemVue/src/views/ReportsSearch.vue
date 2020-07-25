@@ -1,40 +1,46 @@
 <template>
-<div class="search">
-<div id="nav">
-    <router-link to="/">Startscherm</router-link>
-  </div>
-<div v-if="reports.length != 0">
-  <h1>Gevonden verslagen</h1>
-  <h5 class="container my-2 card-title" v-for="value in reports" :key="value.reportId">
-    <button class="btn btn-secondary btn-lg btn-block" v-on:click="reportClick(String(value.reportId))">
-      {{
-        new Date(value.date).toLocaleString("nl-BE", {
+  <div class="search">
+    <div id="nav">
+      <router-link to="/">Startscherm</router-link>
+    </div>
+    <div v-if="reports.length != 0">
+      <h1>Gevonden verslagen</h1>
+      <h5 class="container my-2 card-title" v-for="value in reports" :key="value.reportId">
+        <button
+          class="btn btn-secondary btn-lg btn-block"
+          v-on:click="reportClick(String(value.reportId))"
+        >
+          {{
+          new Date(value.date).toLocaleString("nl-BE", {
           year: "numeric",
           month: "numeric",
           day: "numeric",
           hour: "2-digit",
           minute: "2-digit",
           hour12: false
-        })
-      }}
-      <span class="badge badge-primary ml-3">{{ getShift(value.nightShift) }}</span>
-      <h5 class="card-text"> Zoekresultaat: {{value.description}}</h5>
-    </button>
-  </h5>
-</div>
-<div v-else>
-  <h1>Geen verslagen gevonden.</h1>
-</div>
-</div>
+          })
+          }}
+          <span
+            class="badge badge-primary ml-3"
+          >{{ getShift(value.nightShift) }}</span>
+          <h5 class="card-text">Zoekresultaat: {{value.description}}</h5>
+        </button>
+      </h5>
+    </div>
+    <div v-else>
+      <h1>Geen verslagen gevonden.</h1>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import ReportingService from "../services/ReportingService";
 export default Vue.extend({
-  data: function () {
+  data: function() {
     return {
-      reports: [{
+      reports: [
+        {
           reportId: Number
         },
         {
@@ -65,7 +71,7 @@ export default Vue.extend({
     /**
      * Loads the correct reports.
      */
-    loadData: function () {
+    loadData: function() {
       if (this.$route.query.keyword != null)
         this.keyword = String(this.$route.query.keyword);
       if (this.$route.query.plNumber != null)
@@ -78,6 +84,7 @@ export default Vue.extend({
       ) {
         this.loadPlReports();
       } else {
+        /* Makes an array that contains every word in the string. */
         this.keywordSplit = this.keyword.split(/[\s,\-,_]+/);
         this.loadKeywordReports(this.keyword);
       }
@@ -85,7 +92,7 @@ export default Vue.extend({
     /**
      * Finds the reports which contain an event that contains the pl-number partially.
      */
-    loadPlReports: function () {
+    loadPlReports: function() {
       ReportingService.getSearchReports(
         "/api/reports/pl/" + this.plNumber
       ).then(res => (this.reports = res));
@@ -93,36 +100,18 @@ export default Vue.extend({
     /**
      * Finds the reports which contain an event that contains the keyword partially.
      */
-    loadKeywordReports: function (keyword: string) {
-      keyword = keyword.replace("/","");
-      keyword = keyword.replace(".","");
-      keyword = keyword.replace("?","");
-      keyword = keyword.replace("!","");
-      keyword = keyword.replace("_","");
-      keyword = keyword.replace(" ","");
-      keyword = keyword.replace("-"," ");
+    loadKeywordReports: function(keyword: string) {
+      /* Without this line, searching for '-' won't work. Don't know why. */
 
-      if (keyword === '') {
-        keyword = "invalid_character"
-      }
-      ReportingService.getSearchReports(
-          "/api/reports/search/" + keyword
-        )
-        .then(res => (this.reports = res))
-        .then(() => {
-          if (this.reports.length == 0) {
-            for (this.keywordIndex; this.keywordIndex < this.keywordSplit.length; this.keywordIndex++) {
-              const word = this.keywordSplit[this.keywordIndex];
-              this.loadKeywordReports(word);
-            }
-          }
-        })
+      ReportingService.getSearchReports("/api/reports/search/" + keyword).then(
+        res => (this.reports = res)
+      );
     },
 
     /**
      * Handles when a report is pushed. Will show the content of the report.
      */
-    reportClick: function (id: string) {
+    reportClick: function(id: string) {
       this.$router.push({
         path: "reportView",
         query: {
@@ -131,12 +120,11 @@ export default Vue.extend({
       });
     },
 
-    getShift: function (nightShift: boolean) {
-      if (nightShift)
-        return "Nachtshift ☾";
+    getShift: function(nightShift: boolean) {
+      if (nightShift) return "Nachtshift ☾";
 
       return "Dagshift 🌣";
-    },
+    }
   }
 });
 </script>

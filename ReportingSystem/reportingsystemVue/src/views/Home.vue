@@ -1,91 +1,153 @@
 <template>
-<div class="home">
-  <div id="nav">
-    <router-link to="/">Startscherm</router-link>
-  </div>
-  <router-view />
-  <div class="container my-4">
-    <div class="row ">
-      <div>Aangemeld als {{tokenData.username}} </div>
-      <div v-if="tokenData.accessRights == 0"> (Administrator)</div>
-      <div v-else-if="tokenData.accessRights == 1" >(Supervisor)</div>
-      <div v-else-if="tokenData.accessRights == 2" >(Secretariaat)</div>
-      <button  type="submit" class="btn btn-primary logout" @click.prevent="logOut">Afmelden</button>
+  <div class="home">
+    <div id="nav">
+      <router-link to="/">Startscherm</router-link>
     </div>
-    
-    
-    <!-- Search form -->
-    <form>
-      <div v-if="tokenData.seeReports" class="form-row align-items-center">
-        <div class="col my-1">
-          <!-- Keyword input -->
-          <input @click="toggleUnvisible" type="text" class="form-control" id="inlineFormInputName" v-model="keyword" placeholder="Trefwoord" />
-        </div>
-        <div class="col my-1">
-          <div class="input-group">
-            <div class="autocomplete">
-              <!-- Pl number input -->
-              <input autocomplete="off" v-model="plNumber" type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="PL-nummer" @keyup="getOptions(plNumber)" @click="toggleVisible" />
-              <div class="popover" v-show="visible">
-                <div class="options">
-                  <ul>
-                    <li v-for="event in events" :key="event.id" v-on:click="getPlNumber(event.plNumber)">
-                      {{event.plNumber}}
-                    </li>
-                  </ul>
+    <router-view />
+    <div class="container my-4">
+      <div class="row">
+        <div>Aangemeld als {{tokenData.username}}</div>
+        <div v-if="tokenData.accessRights == 0">(Administrator)</div>
+        <div v-else-if="tokenData.accessRights == 1">(Supervisor)</div>
+        <div v-else-if="tokenData.accessRights == 2">(Secretariaat)</div>
+        <button type="submit" class="btn btn-primary logout" @click.prevent="logOut">Afmelden</button>
+      </div>
+
+      <!-- Search form -->
+      <form>
+        <div v-if="tokenData.seeReports" class="form-row align-items-center">
+          <div class="col my-1">
+            <div class="input-group">
+              <div class="autocomplete">
+                <!-- Keyword input -->
+                <input
+                  autocomplete="off"
+                  v-model="keyword"
+                  type="text"
+                  class="form-control"
+                  id="inlineFormInputName"
+                  placeholder="Trefwoord"
+                  @keyup="getKeywordOptions(keyword)"
+                  @click="toggleVisibleKeyword"
+                />
+                <div class="popover" v-show="visibleKeyword">
+                  <div class="options">
+                    <ul>
+                      <li
+                        v-for="event in eventsKeyword"
+                        :key="event.id"
+                        v-on:click="getKeyword(event.description)"
+                      >{{event.description}}</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
+          <div class="col my-1">
+            <div class="input-group">
+              <div class="autocomplete">
+                <!-- Pl number input -->
+                <input
+                  autocomplete="off"
+                  v-model="plNumber"
+                  type="text"
+                  class="form-control"
+                  id="inlineFormInputGroupUsername"
+                  placeholder="PL-nummer"
+                  @keyup="getPlNumberOptions(plNumber)"
+                  @click="toggleVisiblePlNumber"
+                />
+                <div class="popover" v-show="visiblePlNumber">
+                  <div class="options">
+                    <ul>
+                      <li
+                        v-for="event in eventsPlNumber"
+                        :key="event.id"
+                        v-on:click="getPlNumber(event.plNumber)"
+                      >{{event.plNumber}}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-auto my-1">
+            <!--  Search button -->
+            <button
+              @click="toggleInvisible"
+              type="submit"
+              class="btn btn-secondary btn-block"
+              @click.prevent="searchReports"
+            >Zoek</button>
+          </div>
         </div>
-
-        <div class="col-auto my-1">
-          <!--  Search button -->
-          <button @click="toggleUnvisible" type="submit" class="btn btn-secondary btn-block" @click.prevent="searchReports">Zoek</button>
-        </div>
-      </div>
-    </form>
-    <div class="container">
-
-      <router-link v-if="tokenData.makeReports" to="/AddReport" tag="button" class="btn btn-primary btn-lg btn-block">+ Nieuwe gebeurtenis</router-link>
-
+      </form>
       <div class="container">
-        <div class="row">
-          <div class="col-sm" v-if="tokenData.seeReports">
-            <router-link to="/Reports" tag="button" class="btn btn-secondary btn-lg btn-block">Verslagen</router-link>
-          </div>
+        <router-link
+          v-if="tokenData.makeReports"
+          to="/AddReport"
+          tag="button"
+          class="btn btn-primary btn-lg btn-block"
+        >+ Nieuwe gebeurtenis</router-link>
 
-          <div class="col-sm" v-if="tokenData.seeNotifications">
-            <router-link to="/Notifications" tag="button" class="btn btn-secondary btn-lg btn-block">Meldingen</router-link>
-          </div>
-        </div>
-      </div>
-
-      <div class="container">
-        <div class="row">
-          <div class="col-sm" v-if="tokenData.seePreviousShift">
-            <button @click="goToLastReport()" tag="button" class="btn btn-secondary btn-lg btn-block">Overzicht vorige shift</button>
-          </div>
-
-          <div class="col-sm" v-if="(tokenData.seeStatistics)">
-
-            <router-link to="/Statistics" tag="button" class="btn btn-secondary btn-lg btn-block">Statistieken</router-link>
-          </div>
-
-        </div>
-      </div>
-      <div v-if="tokenData.admin" class="Container">
-        <div class="Container">
+        <div class="container">
           <div class="row">
-            <div class="col-sm">
-              <router-link to="/admin" tag="button" class="btn btn-secondary btn-lg btn-block">Administrator functies</router-link>
+            <div class="col-sm" v-if="tokenData.seeReports">
+              <router-link
+                to="/Reports"
+                tag="button"
+                class="btn btn-secondary btn-lg btn-block"
+              >Verslagen</router-link>
+            </div>
+
+            <div class="col-sm" v-if="tokenData.seeNotifications">
+              <router-link
+                to="/Notifications"
+                tag="button"
+                class="btn btn-secondary btn-lg btn-block"
+              >Meldingen</router-link>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-sm" v-if="tokenData.seePreviousShift">
+              <button
+                @click="goToLastReport()"
+                tag="button"
+                class="btn btn-secondary btn-lg btn-block"
+              >Overzicht vorige shift</button>
+            </div>
+
+            <div class="col-sm" v-if="(tokenData.seeStatistics)">
+              <router-link
+                to="/Statistics"
+                tag="button"
+                class="btn btn-secondary btn-lg btn-block"
+              >Statistieken</router-link>
+            </div>
+          </div>
+        </div>
+        <div v-if="tokenData.admin" class="Container">
+          <div class="Container">
+            <div class="row">
+              <div class="col-sm">
+                <router-link
+                  to="/admin"
+                  tag="button"
+                  class="btn btn-secondary btn-lg btn-block"
+                >Administrator functies</router-link>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script lang="ts">
@@ -94,12 +156,14 @@ import Vue from "vue";
 import ReportingService from "../services/ReportingService";
 import jwt from "jsonwebtoken";
 export default Vue.extend({
-  data: function () {
+  data: function() {
     return {
       keyword: "",
       plNumber: "",
-      visible: false,
-      events: null,
+      visiblePlNumber: false,
+      visibleKeyword: false,
+      eventsPlNumber: null,
+      eventsKeyword: null,
       tokenData: {
         accessRights: -1,
         makeReports: false,
@@ -112,71 +176,110 @@ export default Vue.extend({
       },
       lastShift: {
         id: 1
-      },
-    }
+      }
+    };
   },
 
   methods: {
-    async getOptions(plNumber: string) {
-      plNumber = plNumber.concat('%');
-      const response = await ReportingService.autoCompleteOperationalEvent({
+    async getPlNumberOptions(plNumber: string) {
+      plNumber = "%" + plNumber + "%";
+      const response = await ReportingService.autoCompletePlNumber({
         plNumber: plNumber
       });
-      this.events = response;
+      this.eventsPlNumber = response;
     },
-    toggleVisible() {
-      this.visible = !this.visible;
+    async getKeywordOptions(keyword: string) {
+      const response = await ReportingService.autoCompleteKeyword({
+        keyword: keyword
+      });
+      this.eventsKeyword = response;
+    },
+
+    toggleVisiblePlNumber() {
+      this.visiblePlNumber = !this.visiblePlNumber;
+    },
+    toggleVisibleKeyword() {
+      this.visibleKeyword = !this.visibleKeyword;
     },
     getPlNumber(plNumber: string) {
       this.plNumber = plNumber;
-      this.toggleVisible();
-      this.getOptions(plNumber);
+      this.toggleVisiblePlNumber();
+      this.getPlNumberOptions(plNumber);
+    },
+    getKeyword(keyword: string) {
+      this.keyword = keyword;
+      this.toggleVisibleKeyword();
+      this.getKeywordOptions(keyword);
     },
     logOut() {
-      window.location.href = "/login"
+      window.location.href = "/login";
       ReportingService.logoutUser({
-        username: this.tokenData.username,
+        username: this.tokenData.username
       });
     },
 
-    searchReports: function () {
+    searchReports: function() {
       if (this.keyword == "" && this.plNumber == "") {
         this.$router.push({
           path: "reports"
-        })
+        });
       } else {
+        let newKeyword = String(this.keyword);
+        newKeyword = encodeURIComponent(newKeyword);
+        newKeyword = newKeyword.replace(/[[\]{}()*+?,^$|#\s]/g, "\\$&");
+        newKeyword = newKeyword.split("%").join("%25");
+        newKeyword = newKeyword.split("\\").join("%5C%5C");
+        newKeyword = newKeyword.split("!").join("%21");
+        newKeyword = newKeyword.split("_").join("%5F");
+
+        /* If the string contains only the '.'-character, a space is added. This is to prevent the url contains only '.'-characters, which gives problems. */
+        const match = newKeyword.match(/[.]/g);
+        if (newKeyword !== null) {
+          if (match !== null) {
+            if (match.length === newKeyword.length)
+              newKeyword = newKeyword.concat("%20");
+          }
+        }
+        newKeyword = newKeyword.split(".").join("%2E");
+
         this.$router.push({
           path: "reportssearch",
           query: {
-            keyword: String(this.keyword),
+            keyword: newKeyword,
             plNumber: String(this.plNumber)
           }
-        })
+        });
       }
     },
-    toggleUnvisible: function () {
-      if (this.visible) {
-        this.visible = !this.visible;
+    toggleInvisible: function() {
+      if (this.visiblePlNumber) {
+        this.visiblePlNumber = !this.visiblePlNumber;
       }
     },
 
-    goToLastReport: function () {
+    goToLastReport: function() {
       this.$router.push("/reportView?reportId=" + this.lastShift.id);
     },
 
-    loadShiftId: async function () {
+    loadShiftId: async function() {
       await ReportingService.getAllReports("/api/reports/lastShift").then(
         res => (this.lastShift = res)
       );
-    },
+    }
   },
   mounted() {
     this.loadShiftId();
-    this.getOptions('');
-    if (window.localStorage.getItem("token") === null || window.localStorage.getItem("token") === undefined) {
+    this.getPlNumberOptions("");
+    this.getKeywordOptions("");
+    if (
+      window.localStorage.getItem("token") === null ||
+      window.localStorage.getItem("token") === undefined
+    ) {
       window.location.href = "/login";
     } else {
-      const decodedToken: any = jwt.decode(window.localStorage.getItem("token") !);
+      const decodedToken: any = jwt.decode(
+        window.localStorage.getItem("token")!
+      );
       if (decodedToken.rights < 0 || decodedToken.rights > 2) {
         window.location.href = "/login";
       }
@@ -195,7 +298,7 @@ export default Vue.extend({
       this.tokenData.makeReports = decodedToken.makeReports;
 
       if (decodedToken === undefined) {
-        window.location.href = "/login"
+        window.location.href = "/login";
       }
     }
   }
@@ -226,7 +329,6 @@ export default Vue.extend({
 .autocomplete {
   width: 100%;
   position: relative;
-
 }
 
 .inputPL {
