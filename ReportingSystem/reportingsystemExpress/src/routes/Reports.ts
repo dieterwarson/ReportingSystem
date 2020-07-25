@@ -32,7 +32,6 @@ const router = Router();
 // only get the reports that are finished
 
 
-
 router.post('/all', async (req: Request, res: Response) => {
   let date = {start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z"}
   if(!(req.body.dateRange.start == '' && req.body.dateRange.end == ''))
@@ -40,7 +39,7 @@ router.post('/all', async (req: Request, res: Response) => {
   const offset = req.body.offset;
   const reports = await Report.findAll({
     offset: offset,
-    limit: 10,
+    limit: 20,
     order: [['date', 'DESC']],
     where: {
       temporary: false,
@@ -53,7 +52,20 @@ router.post('/all', async (req: Request, res: Response) => {
     },
     attributes: ['id', 'date', 'nightShift'],
   });
-  res.send(reports);
+  let filteredReports = []
+  let lastDate = new Date("2013-05-10T00:00:00.000Z").setHours(0,0,0,0);
+  for(let i = 0; i < reports.length - 1; i++) {
+    const date1 = new Date(new Date(reports[i].date).setTime(reports[i].date.getTime() + 3600*1000)).setHours(0,0,0,0); 
+    const date2 = new Date(new Date(reports[i + 1].date).setTime(reports[i + 1].date.getTime() + 3600*1000)).setHours(0,0,0,0); 
+    if(date1 == date2 && reports[i].nightShift != reports[i+1].nightShift){
+      filteredReports.push([reports[i], reports[i + 1]])
+    }
+    else if(lastDate !== date1){
+      filteredReports.push([reports[i]]);
+    }
+    lastDate = new Date(reports[i].date).setHours(0,0,0,0);
+  }
+  res.send(filteredReports);
 });
 
 /******************************************************************************
