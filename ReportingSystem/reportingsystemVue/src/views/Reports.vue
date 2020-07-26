@@ -44,22 +44,20 @@
               class="btn btn-secondary btn-lg btn-block"
               v-on:click="reportClick(String(value.id))"
             >
-              {{
-                new Date(value.date).toLocaleString("nl-BE", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false
-                })
-              }}
-              <span class="badge badge-primary ml-3">{{
-                getShift(value.nightShift)
-              }}</span>
-            </button>
-          </div>
-        </div>
+    <div class="col-md-8">
+      <div class="container my-2" v-for="value in reports" :key="value.id">
+        <button class="btn btn-secondary btn-lg btn-block">
+          {{
+            new Date(value[0].date).toLocaleString("nl-BE", {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+            })
+          }}
+          <!--- Only displays nightshift button if it's included in the list --->
+          <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value[0].id))">{{ getShift(value[0].nightShift) }} </span>
+          <span v-if="value.length == 2" class="badge badge-primary ml-3" v-on:click="reportClick(String(value[1].id))">{{ getShift(value[1].nightShift)}}</span>
+        </button>
       </div>
       <vPagination
         :classes="bootstrapPaginationClasses"
