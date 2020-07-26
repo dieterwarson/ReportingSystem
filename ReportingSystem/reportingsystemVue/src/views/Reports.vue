@@ -1,41 +1,77 @@
 <template>
-<div class="reports">
-  <div id="nav">
-    <router-link to="/">Startscherm</router-link>
-  </div>
+  <div class="reports">
+    <div id="nav">
+      <router-link to="/">Startscherm</router-link>
+    </div>
+    {{ reportTypes }}
+    <div v-if="reports" class="container">
+      <h1>Verslagen</h1>
+      <div class="row">
+        <form class="col-md-4">
+          <p class="mb-1 text-sm-left">Selecteer hier de datums:</p>
+          <VueRangedatePicker
+            class="mb-5"
+            @selected="onDateSelected"
+            i18n="EN"
+            :months="months"
+            :shortDays="shortDays"
+            :captions="captions"
+            :presetRanges="presetRanges"
+          ></VueRangedatePicker>
+          <div class="filter-select">
+            <!-- <div v-for="type in reportTypes" :key="type.id"> -->
+              <!-- {{ options }} -->
+              <!-- <div v-for="(value, propertyName) in reportTypes" :key="propertyName"> -->
+                <!-- <span>{{ fillOptions(propertyName) }}</span> -->
+                <!-- == {{ value }} -->
+                <!-- {{ fillOptions() }} -->
+              <!-- </div> -->
 
-  <div v-if="reports" class="container">
-    <h1>Verslagen</h1>
-    <div class="row">
-      <form class="col-md-4">
-        <p class="mb-1 text-sm-left">Selecteer hier de datums:</p>
-        <VueRangedatePicker class="mb-5" @selected="onDateSelected" i18n="EN" :months="months" :shortDays="shortDays" :captions="captions" :presetRanges="presetRanges"></VueRangedatePicker>
-        <div class="filter-select">
-          <treeselect placeholder="Choose filters" v-model="value" :multiple="true" :options="options" />
-          <button type="button" class="btn btn-info">Filter</button>
-        </div>
-      </form>
-      <div class="col-md-8">
-        <div class="container my-2" v-for="value in reports" :key="value.id">
-          <button class="btn btn-secondary btn-lg btn-block" v-on:click="reportClick(String(value.id))">
-            {{
-              new Date(value.date).toLocaleString("nl-BE", {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false
-              })
-            }}
-            <span class="badge badge-primary ml-3">{{ getShift(value.nightShift) }}</span>
-          </button>
+            <treeselect
+              placeholder="Kies filters"
+              v-model="value"
+              :multiple="true"
+              :options="options"
+            />
+              <!-- <button type="button" class="btn btn-info" @click="fillOptions('hoi')">Filter</button> -->
+            <!-- </div> -->
+
+          </div>
+        </form>
+        <div class="col-md-8">
+          <div class="container my-2" v-for="value in reports" :key="value.id">
+            <button
+              class="btn btn-secondary btn-lg btn-block"
+              v-on:click="reportClick(String(value.id))"
+            >
+              {{
+                new Date(value.date).toLocaleString("nl-BE", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false
+                })
+              }}
+              <span class="badge badge-primary ml-3">{{
+                getShift(value.nightShift)
+              }}</span>
+            </button>
+          </div>
         </div>
       </div>
+      <vPagination
+        :classes="bootstrapPaginationClasses"
+        v-model="currentPage"
+        :page-count="pages"
+      ></vPagination>
     </div>
-    <vPagination :classes="bootstrapPaginationClasses" v-model="currentPage" :page-count="pages"></vPagination>
+    <p>{{ testarray }}</p>
+    <p>{{ a }}</p>
+    <p>{{ aa.propertyName }}</p>
+    <p>{{ reportTypesArray }}</p>
   </div>
-</div>
 </template>
 
 <script lang="ts">
@@ -44,7 +80,7 @@ import ReportingService from "../services/ReportingService";
 import vPagination from "vue-plain-pagination";
 import VueRangedatePicker from "vue-rangedate-picker";
 import Treeselect from "@riophae/vue-treeselect";
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 interface DateRange {
   start: string;
@@ -57,8 +93,15 @@ export default Vue.extend({
     VueRangedatePicker,
     Treeselect
   },
-  data: function () {
+  data: function() {
     return {
+      typesFound: false,
+      length: 0,
+      a: '' as any,
+      aa: '' as any,
+      testarray: [] as any[],
+      reportTypesArray: [] as any[],
+      reportTypes: {},
       reports: [] as any[],
       list: [],
       interval: 0,
@@ -95,7 +138,7 @@ export default Vue.extend({
         okButton: "Toepassen"
       },
       presetRanges: {
-        today: function () {
+        today: function() {
           const n = new Date();
           const startToday = new Date(
             n.getFullYear(),
@@ -120,7 +163,7 @@ export default Vue.extend({
             }
           };
         },
-        thisMonth: function () {
+        thisMonth: function() {
           const n = new Date();
           const startMonth = new Date(
             Date.UTC(n.getFullYear(), n.getMonth(), 1)
@@ -137,7 +180,7 @@ export default Vue.extend({
             }
           };
         },
-        lastMonth: function () {
+        lastMonth: function() {
           const n = new Date();
           const startMonth = new Date(
             Date.UTC(n.getFullYear(), n.getMonth() - 1, 1)
@@ -152,7 +195,7 @@ export default Vue.extend({
             }
           };
         },
-        last7days: function () {
+        last7days: function() {
           const n = new Date();
           const start = new Date(
             Date.UTC(n.getFullYear(), n.getMonth(), n.getDate() - 6)
@@ -169,7 +212,7 @@ export default Vue.extend({
             }
           };
         },
-        last30days: function () {
+        last30days: function() {
           const n = new Date();
           const start = new Date(
             Date.UTC(n.getFullYear(), n.getMonth(), n.getDate() - 30)
@@ -189,169 +232,207 @@ export default Vue.extend({
       },
       // define the default value
       value: [],
-      options: [{
-          id: 'signaling',
-          label: 'Seining',
-          children: [{ // names of all signalings
-            id: 'signaling-jan',
-            label: 'Seining Jan',
-          }],
-        }, {
-          id: 'plNumber',
-          label: 'PL-nummer',
-          children: [{ // names of all plNumbers
-            id: 'plNumber',
-            label: '007',
-          }],
-        }, {
-          id: 'description',
-          label: 'Beschrijving',
-          children: [{ // names of all descriptions
-            id: 'description',
-            label: 'bes',
-          }],
-        }, {
-          id: 'location',
-          label: 'Adres',
-          children: [{ // names of all locations
-            id: 'location-hasselt',
-            label: 'Hasselt',
-          }],
-        }, {
-          id: 'unit',
-          label: 'Unit',
-          children: [{ // names of all units
-            id: 'unit-kampla',
-            label: 'KAMPLA',
-          }],
-        }, {
-          id: 'absentee',
-          label: 'Afwezige',
-          children: [{ // names of all personel
-            id: 'absentee-jan',
-            label: 'Jan',
-          }],
-        },
+      options: [
+        // {
+        //   id: "signaling",
+        //   label: "Signalering",
+        //   children: [
+        //     {
+        //       // names of all signalings
+        //       id: "signaling-jan",
+        //       label: "Signalering Jan"
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: "plNumber",
+        //   label: "PL-nummer",
+        //   children: [
+        //     {
+        //       // names of all plNumbers
+        //       id: "plNumber",
+        //       label: "007"
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: "description",
+        //   label: "Beschrijving",
+        //   children: [
+        //     {
+        //       // names of all descriptions
+        //       id: "description",
+        //       label: "bes"
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: "location",
+        //   label: "Adres",
+        //   children: [
+        //     {
+        //       // names of all locations
+        //       id: "location-hasselt",
+        //       label: "Hasselt"
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: "unit",
+        //   label: "Unit",
+        //   children: [
+        //     {
+        //       // names of all units
+        //       id: "unit-kampla",
+        //       label: "KAMPLA"
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: "absentee",
+        //   label: "Afwezige",
+        //   children: [
+        //     {
+        //       // names of all personel
+        //       id: "absentee-jan",
+        //       label: "Jan"
+        //     }
+        //   ]
+        // },
+        // {
+        //   id: "substitute",
+        //   label: "Vervanger",
+        //   children: [
+        //     {
+        //       // names of all personel
+        //       id: "substitute-jan",
+        //       label: "Jan"
+        //     }
+        //   ]
+        // },
         {
-          id: 'substitute',
-          label: 'Vervanger',
-          children: [{ // names of all personel
-            id: 'substitute-jan',
-            label: 'Jan',
-          }],
-        },
-        {
-          id: 'types',
-          label: 'Types',
-          children: [ // all types
+          id: "types",
+          label: "Types",
+          children: [
+            // all types
             {
-              id: 'operational-types',
-              label: 'Operationeel',
-              children: [ // all operational types
+              id: "operational-types",
+              label: "Operationeel",
+              children: [
+                // all operational types
                 {
-                  id: 'operational-types-operator',
-                  label: 'Bevraging GSM operatoren',
-                },
-                {
-                  id: 'operational-types-bin',
-                  label: 'BIN-alarm',
-                },
-                {
-                  id: 'operational-types-pursuit',
-                  label: 'Grensoverschrijdende achtervolging',
-                },
-                {
-                  id: 'operational-types-signaling',
-                  label: 'Signalering',
-                },
-                {
-                  id: 'operational-types-specific',
-                  label: 'Specifieke gebeurtenis',
-                },
-                {
-                  id: 'operational-types-helicopter',
-                  label: 'Zoeken met helikopter',
-                },
-              ],
-            },
-            {
-              id: 'workplaceevent-types',
-              label: 'Voorval tijdens de dienst',
-              children: [ // all workplaceevent types
-                {
-                  id: 'workplaceevent-types-accident',
-                  label: 'Arbeidsongeval',
-                },
-                {
-                  id: 'workplaceevent-types-sick',
-                  label: 'Ziekte',
-                },
-              ],
-            },
-            {
-              id: 'administrative-types',
-              label: 'Logistiek',
-              children: [ // all administrative types
-                {
-                  id: 'administrative-types-vehicle',
-                  label: 'Schade aan voertuig',
-                },
-              ],
-            },
-            {
-              id: 'technical-types',
-              label: 'Technisch',
-              children: [ // all technical types
-                {
-                  id: 'technical-types-announcement-others',
-                  label: 'Verwittiging (anderen)',
-                },
-                {
-                  id: 'technical-types-announcement-asc',
-                  label: 'Verwittiging ASC',
-                },
-                {
-                  id: 'technical-types-object',
-                  label: 'Voorwerp',
-                },
-              ],
+                  id: "operational-types-operator",
+                  label: "Bevraging GSM operatoren"
+                }
+                // {
+                //   id: "operational-types-bin",
+                //   label: "BIN-alarm"
+                // },
+                // {
+                //   id: "operational-types-pursuit",
+                //   label: "Grensoverschrijdende achtervolging"
+                // },
+                // {
+                //   id: "operational-types-signaling",
+                //   label: "Signalering"
+                // },
+                // {
+                //   id: "operational-types-specific",
+                //   label: "Specifieke gebeurtenis"
+                // },
+                // {
+                //   id: "operational-types-helicopter",
+                //   label: "Zoeken met helikopter"
+                // }
+              ]
             }
-          ],
+            // {
+            //   id: "workplaceevent-types",
+            //   label: "Voorval tijdens de dienst",
+            //   children: [
+            //     // all workplaceevent types
+            //     {
+            //       id: "workplaceevent-types-accident",
+            //       label: "Arbeidsongeval"
+            //     },
+            //     {
+            //       id: "workplaceevent-types-sick",
+            //       label: "Ziekte"
+            //     }
+            //   ]
+            // },
+            // {
+            //   id: "administrative-types",
+            //   label: "Logistiek",
+            //   children: [
+            //     // all administrative types
+            //     {
+            //       id: "administrative-types-vehicle",
+            //       label: "Schade aan voertuig"
+            //     }
+            //   ]
+            // },
+            // {
+            //   id: "technical-types",
+            //   label: "Technisch",
+            //   children: [
+            //     // all technical types
+            //     {
+            //       id: "technical-types-announcement-others",
+            //       label: "Verwittiging (anderen)"
+            //     },
+            //     {
+            //       id: "technical-types-announcement-asc",
+            //       label: "Verwittiging ASC"
+            //     },
+            //     {
+            //       id: "technical-types-object",
+            //       label: "Voorwerp"
+            //     }
+            //   ]
+            // }
+          ]
         }
-      ],
+      ]
     };
   },
   created() {
     this.loadData();
     this.interval = window.setInterval(this.loadData, 5000);
+    this.fillOptions();
   },
   mounted() {
     this.loadData();
     this.loadCount();
+    this.fillOptions();
   },
 
   methods: {
-    loadData: function () {
+    loadData: function() {
       ReportingService.getPaginationReports(
         this.currentPage * 10 - 10,
         this.selectedDate
       ).then(res => (this.reports = res));
+
+      ReportingService.getAllReports("/api/statistics/types").then(
+        res => (this.reportTypes = res, this.reportTypesArray = [res]) 
+      )
     },
-    onDateSelected: function (daterange: DateRange) {
+    onDateSelected: function(daterange: DateRange) {
       this.selectedDate = daterange;
     },
 
-    loadCount: function () {
+    loadCount: function() {
       ReportingService.getReportCount(this.selectedDate).then(res =>
         this.calculatePages(res.count)
       );
     },
 
-    calculatePages: function (count: number) {
+    calculatePages: function(count: number) {
       this.pages = Math.ceil(count / 10);
     },
 
-    reportClick: function (id: string) {
+    reportClick: function(id: string) {
       this.$router.push({
         path: "reportView",
         query: {
@@ -360,15 +441,94 @@ export default Vue.extend({
       });
     },
 
-    getShift: function (nightShift: boolean) {
+    getShift: function(nightShift: boolean) {
       if (nightShift) return "Nachtshift ☾";
 
       return "Dagshift 🌣";
+    },
+
+    fillOptions: function() {
+      this.testarray.push("...");
+
+      const types: any = this.reportTypes;
+
+      // const children = this.options.types
+      // for (let i = 0; i < types.length; i++) {
+      //   const type = types[i];
+      //   if (type.id == "types") {
+      //     const val: {
+      //       id: string;
+      //       label: string;
+      //     } = {
+      //       id: types.typeName, 
+      //       label: types.typeName,
+      //     }
+      //     type.children.push(val);
+      //   }
+      // }
+
+      // const reportTypes: any = this.reportTypes;
+      // for (let i = 0; i < reportTypes.length; i++) {
+      //   const reportType = reportTypes[i];
+      //   for (let j = 0; j < this.options.length; j++) {
+      //     const option = this.options[j];
+      //     if (option.id == "types") {
+      //       const val: {
+      //         id: string;
+      //         label: string;
+      //         children: any[];
+      //       } = {
+      //         id: types.typeName, 
+      //         label: types.typeName,
+      //         children: [],
+      //       }
+      //       option.children.push(val);
+      //     }
+      //   }
+      // }
+    
+      // let typesFound = false;
+      // this.length = this.options.length;
+      // this.a = this.options[0];
+      // this.aa = this.a.id;
+      // for (let j = 0; j < this.options.length; j++) {
+      //   const option = this.options[j];
+      //   if (!this.typesFound && option.id == "types") {
+      //     const val: {
+      //       id: string
+      //       label: string
+      //       children: any[]
+      //     } = {
+      //       id: propertyName,
+      //       label: propertyName,
+      //       children: value,
+      //     }
+      //     option.children.push(val);
+      //     this.typesFound = true;
+      //   }
+      // }
+
+      // for (let i = 0; i < this.reportTypesArray.length; i++) {
+      //   const type = this.reportTypesArray[i];
+        
+      //   this.testarray.push(type);
+      //   this.aa = type;
+      // }
+
+      // for (let i = 0; i < reportTypes.operationalTypes; i++) {
+      //   const operationalType = reportTypes.operationalTypes[i];
+        
+      // }
+      // this.reportTypesArray.push(types);
+
+      return 1;
     }
   },
-  beforeDestroy: function () {
+
+  beforeDestroy: function() {
     window.clearInterval(this.interval);
   },
+
   watch: {
     currentPage: {
       handler() {
@@ -393,6 +553,6 @@ export default Vue.extend({
       },
       deep: true
     }
-  }
+  },
 });
 </script>
