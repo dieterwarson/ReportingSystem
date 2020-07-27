@@ -33,7 +33,7 @@
                 :multiple="true"
                 :options="options"
               />
-              <button type="button" class="btn btn-info" @click="fillOptions('hoi')">Filter</button>
+              <button type="button" class="btn btn-info" @click="fillOptionsTypes">Filter</button>
             <!-- </div> -->
           </div>
         </form>
@@ -60,10 +60,19 @@
         :page-count="pages"
       ></vPagination>
     </div>
-    <p>{{ testarray }}</p>
-    <p>{{ a }}</p>
-    <p>{{ aa.propertyName }}</p>
-    <p>{{ reportTypesArray }}</p>
+    <p>testarray: {{ testarray }}</p>
+    <p>a: {{ a }}</p>
+    <p>aa: {{ aa }}</p>
+    <p>reportTypes: {{ reportTypes }}</p>
+    <!-- <p>reportTypesArray: {{ reportTypesArray }}</p> -->
+    <!-- <p>reportTypesArray.length: {{ reportTypesArray.length }}</p> -->
+    <!-- <p>reportTypesArray[0]: {{ reportTypesArray[0] }}</p> -->
+    <p>options: {{ options }}</p>
+    <!-- <p>options.length: {{ options.length }}</p>
+    <p>options[1]: {{ options[1] }}</p>
+    <p>options[1].children: {{ options[1].children }}</p>
+    <p>options[1].children.length: {{ options[1].children.length }}</p> -->
+
   </div>
 </template>
 
@@ -74,6 +83,7 @@ import vPagination from "vue-plain-pagination";
 import VueRangedatePicker from "vue-rangedate-picker";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import { log } from "util";
 
 interface DateRange {
   start: string;
@@ -90,8 +100,8 @@ export default Vue.extend({
     return {
       typesFound: false,
       length: 0,
-      a: '' as any,
-      aa: '' as any,
+      a: [] as any[],
+      aa: [] as any[],
       testarray: [] as any[],
       reportTypesArray: [] as any[],
       reportTypes: {},
@@ -309,14 +319,14 @@ export default Vue.extend({
           children: [
             // all types
             {
-              id: "operational-types",
-              label: "Operationeel",
-              children: [
+              // id: "operational-types",
+              // label: "Operationeel",
+              // children: [
                 // all operational types
-                {
-                  id: "operational-types-operator",
-                  label: "Bevraging GSM operatoren"
-                }
+                // {
+                //   id: "operational-types-operator",
+                //   label: "Bevraging GSM operatoren"
+                // }
                 // {
                 //   id: "operational-types-bin",
                 //   label: "BIN-alarm"
@@ -337,8 +347,8 @@ export default Vue.extend({
                 //   id: "operational-types-helicopter",
                 //   label: "Zoeken met helikopter"
                 // }
-              ]
-            }
+              // ]
+            },
             // {
             //   id: "workplaceevent-types",
             //   label: "Voorval tijdens de dienst",
@@ -441,9 +451,11 @@ export default Vue.extend({
     },
 
     fillOptions: function() {
-      this.testarray.push("...");
+      // this.testarray.push("...");
 
       const types: any = this.reportTypes;
+      if (!this.typesFound)
+        this.fillOptionsTypes();
 
       // const children = this.options.types
       // for (let i = 0; i < types.length; i++) {
@@ -515,6 +527,99 @@ export default Vue.extend({
       // this.reportTypesArray.push(types);
 
       return 1;
+    },
+    fillOptionsTypes: function() {
+      for (let i = 0; i < this.options.length; i++) {
+        const option = this.options[i];
+        option.children.pop()
+        
+        if (option.id == "types") {
+          const reportTypes: any = this.reportTypes;
+          // hier moet ik over de reportTypes gaan loopen, om alle juiste namen van alle types te krijgen
+          // oppassen met children van elke type (subtypes), dan moet die child zelf ook een val zijn
+          // kijken hoe dat moet gaan zijn
+
+          // let categoryName = "";
+          // let children: any = [];
+          
+          // Object.entries(reportTypes).forEach(
+          //   ([key, value]) => (
+          //     this.testarray.push(key, value),
+          //     categoryName = key,
+          //     children = value
+          //   ).then(
+          //     option.children.push(val)
+          //   )
+          // );
+
+          // for (const i in reportTypes) {
+          //   if (Object.prototype.hasOwnProperty.call(reportTypes, i)) {
+          //     const type = reportTypes[i];
+              
+          //     this.testarray.push(type);
+          //   }
+          // }
+
+          Object.entries(reportTypes).map(item => {
+            this.testarray.push(item)
+          })
+
+          for (const [key, value] of Object.entries(reportTypes)) {
+            // this.a.push(key);
+            // this.aa.push(value);
+            const valueArr: any = [value];
+            this.testarray.push(valueArr);
+
+            // als value (children) lengte > 0, dan moeten die namen ook verandert worden naar id en label
+            if (valueArr.length > 0) {
+              for (const [key, value] of Object.entries(valueArr)) {
+                this.a.push(key);
+                this.aa.push(value);
+              }
+            }
+
+            const val = {
+              'id': key,
+              'label': key,
+              'children': value
+            }
+            option.children.push(val);
+          }
+
+          // for (var property in this.reportTypes) {
+          //   console.log(property, this.reportTypes[property]);
+          // }
+
+
+
+
+          // this.testarray = option.children;
+
+
+
+          // const items = {
+          //   'first': new Date(),
+          //   'second': 2,
+          //   'third': 'test'
+          // }
+
+          // this.a = reportTypes;
+
+          // for (const item in reportTypes) {
+          //   this.aa.push(item)
+          // }
+        }
+      }
+
+      //     const val: {
+      //       id: string;
+      //       label: string;
+      //     } = {
+      //       id: types.typeName, 
+      //       label: types.typeName,
+      //     }
+
+      // this.typesFound = true;
     }
   },
 
