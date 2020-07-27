@@ -1,8 +1,8 @@
 <script>
-import { Line } from "vue-chartjs";
+import { Scatter } from "vue-chartjs";
 
 export default {
-  extends: Line,
+  extends: Scatter,
   props: {
     chartdata: {
       type: Object,
@@ -33,6 +33,21 @@ export default {
             },
           ],
         },
+        /* tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              const label = this.chartdata.LineData[tooltipItem.index].label;
+              return (
+                label +
+                ": (" +
+                tooltipItem.xLabel +
+                ", " +
+                tooltipItem.yLabel +
+                ")"
+              );
+            },
+          },
+        }, */
       },
     };
   },

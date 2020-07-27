@@ -57,7 +57,7 @@ interface lineData {
 }
 
 interface eventDate {
-  t: string;
+  x: string;
   y: number;
 }
 
@@ -66,13 +66,13 @@ function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Ma
   result.forEach((element: { date: { toDateString: () => string; }; }) => {
     let dateFound = false;
     for (let i = 0; i < events.length; i++) {
-      if (events[i].t == element.date.toDateString()) {
+      if (events[i].x == element.date.toDateString()) {
         dateFound = true;
         events[i].y++;
       }
     }
     if (!dateFound) {
-      events.push({ t: element.date.toDateString(), y: 1 });
+      events.push({ x: element.date.toDateString(), y: 1 });
     }
   });
 
@@ -248,7 +248,7 @@ router.post('/getStatistics', async (req, res) => {
       reports.counts.push(count);
     }
   }
-
+  console.log(reports);
   res.send(reports);
 });
 

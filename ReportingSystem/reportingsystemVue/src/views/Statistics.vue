@@ -124,8 +124,8 @@
         <div class="col-md-6">
           <!-- charts -->
           <PieChart v-if="loaded" :chartdata="PieData" />
-          <LineChart v-if="loaded" :chartdata="LineData" :options="options" />
-          <h5 v-else class="mt-10">Selecteer vakjes om grafieken te zien</h5>
+          <ScatterChart v-if="loaded" :chartdata="LineData" :options="options" />
+          <h5 v-else class="mt-10">Selecteer de gewenste types om grafieken te zien</h5>
         </div>
       </div>
     </div>
@@ -135,7 +135,7 @@
 <script lang="ts">
 import Vue from "vue";
 import ReportingService from "../services/ReportingService";
-import LineChart from "../views/components/LineChart.vue";
+import ScatterChart from "../views/components/ScatterChart.vue";
 import PieChart from "../views/components/PieChart.vue";
 import VueRangedatePicker from "vue-rangedate-picker";
 
@@ -300,7 +300,7 @@ export default Vue.extend({
   },
 
   components: {
-    LineChart,
+    ScatterChart,
     PieChart,
     VueRangedatePicker,
   },
