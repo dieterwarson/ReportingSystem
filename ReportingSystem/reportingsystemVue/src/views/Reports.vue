@@ -19,21 +19,21 @@
             :presetRanges="presetRanges"
           ></VueRangedatePicker>
           <div class="filter-select">
-            <!-- <div v-for="type in reportTypes" :key="type.id"> -->
-              <!-- {{ options }} -->
-              <!-- <div v-for="(value, propertyName) in reportTypes" :key="propertyName"> -->
-                <!-- <span>{{ fillOptions(propertyName) }}</span> -->
-                <!-- == {{ value }} -->
-                <!-- {{ fillOptions() }} -->
-              <!-- </div> -->
+            <!-- <div v-for="type in reportTypes" :key="type.id">
+              {{ options }}
+              <div v-for="(value, propertyName) in reportTypes" :key="propertyName">
+                <span>{{ fillOptions(propertyName) }}</span>
+                == {{ value }}
+                {{ fillOptions() }}
+              </div> -->
 
-            <treeselect
-              placeholder="Kies filters"
-              v-model="value"
-              :multiple="true"
-              :options="options"
-            />
-              <!-- <button type="button" class="btn btn-info" @click="fillOptions('hoi')">Filter</button> -->
+              <treeselect
+                placeholder="Kies filters"
+                v-model="value"
+                :multiple="true"
+                :options="options"
+              />
+              <button type="button" class="btn btn-info" @click="fillOptions('hoi')">Filter</button>
             <!-- </div> -->
 
           </div>
@@ -44,20 +44,25 @@
               class="btn btn-secondary btn-lg btn-block"
               v-on:click="reportClick(String(value.id))"
             >
-    <div class="col-md-8">
-      <div class="container my-2" v-for="value in reports" :key="value.id">
-        <button class="btn btn-secondary btn-lg btn-block">
-          {{
-            new Date(value[0].date).toLocaleString("nl-BE", {
-              year: "numeric",
-              month: "numeric",
-              day: "numeric",
-            })
-          }}
-          <!--- Only displays nightshift button if it's included in the list --->
-          <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value[0].id))">{{ getShift(value[0].nightShift) }} </span>
-          <span v-if="value.length == 2" class="badge badge-primary ml-3" v-on:click="reportClick(String(value[1].id))">{{ getShift(value[1].nightShift)}}</span>
-        </button>
+            <div class="col-md-8">
+              <div class="container my-2" v-for="value in reports" :key="value.id">
+                <button class="btn btn-secondary btn-lg btn-block">
+                  {{
+                    new Date(value[0].date).toLocaleString("nl-BE", {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                    })
+                  }}
+                  <!--- Only displays nightshift button if it's included in the list --->
+                  <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value[0].id))">{{ getShift(value[0].nightShift) }} </span>
+                  <span v-if="value.length == 2" class="badge badge-primary ml-3" v-on:click="reportClick(String(value[1].id))">{{ getShift(value[1].nightShift) }}</span>
+                </button>
+              </div>
+            </div>
+            </button>
+          </div>
+        </div>
       </div>
       <vPagination
         :classes="bootstrapPaginationClasses"
