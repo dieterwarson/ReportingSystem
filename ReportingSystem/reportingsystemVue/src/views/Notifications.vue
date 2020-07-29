@@ -16,40 +16,47 @@
             label-align-sm="right"
             label-size="sm"
             label-for="filterInput"
-            class="mb-0"
+            class="mb-0 mt-4"
           >
-            <b-input-group size="sm">
-              <b-form-input
-                v-model="filter"
-                type="search"
-                id="filterInput"
-                placeholder="Type to Search"
-              ></b-form-input>
-              <b-input-group-append>
-                <b-button :disabled="!filter" @click="filter = ''"
-                  >Clear</b-button
+            <b-row>
+              <b-col lg="6" class="my-1">
+                <b-input-group size="sm">
+                  <b-form-input
+                    v-model="filter"
+                    type="search"
+                    id="filterInput"
+                    placeholder="Type to Search"
+                  ></b-form-input>
+                  <b-input-group-append>
+                    <b-button :disabled="!filter" @click="filter = ''"
+                      >Clear</b-button
+                    >
+                  </b-input-group-append>
+                </b-input-group>
+              </b-col>
+              <b-col lg="6" class="my-1">
+                <b-form-group
+                  label="Per page"
+                  label-cols-sm="6"
+                  label-cols-md="4"
+                  label-cols-lg="3"
+                  label-align-sm="right"
+                  label-size="sm"
+                  label-for="perPageSelect"
+                  class="mb-0"
                 >
-              </b-input-group-append>
-            </b-input-group>
-            <b-form-group
-              label="Per page"
-              label-cols-sm="6"
-              label-cols-md="4"
-              label-cols-lg="3"
-              label-align-sm="right"
-              label-size="sm"
-              label-for="perPageSelect"
-              class="mb-0"
-            >
-              <b-form-select
-                v-model="perPage"
-                id="perPageSelect"
-                size="sm"
-                :options="pageOptions"
-              ></b-form-select>
-            </b-form-group>
+                  <b-form-select
+                    v-model="perPage"
+                    id="perPageSelect"
+                    size="sm"
+                    :options="pageOptions"
+                  ></b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
           </b-form-group>
-          <b-table
+
+          <b-table v-if="loaded"
             :current-page="currentPage"
             :per-page="perPage"
             :filter="filter"
@@ -63,7 +70,11 @@
             hover
             :table-variant="Primary"
             :fields="fields"
-            :items="this.monitored.administrative.workplaceEvents /*.concat(this.monitored.administrative.secretariatNotifications)*/"
+            :items="
+              this.monitored.administrative.workplaceEvents.concat(
+                this.monitored.administrative.secretariatNotifications
+              )
+            "
           >
             <template v-slot:cell(date)="data">
               {{
@@ -78,24 +89,25 @@
               }}
             </template>
             <template v-slot:cell(delete)="data">
-                <button
-                              class="btn btn-primary btn-sm"
-                              @click="removeClicked(data.item.id, 'WorkplaceEvent')"
-                            >
-                              🗑</button>
-              
+              <button
+                class="btn btn-primary btn-sm"
+                @click="removeClicked(data.item.id, data.item.listName)"
+              >
+                🗑
+              </button>
             </template>
             <template v-slot:cell(type)="data">
-                <span class="card-text badge badge-danger">
-                  {{data.item.workplaceType.typeName}}</span>
+              <span class="card-text badge badge-danger">
+                {{ getType(data.item.id, data.item.listName) }}</span
+              >
             </template>
-
-
-            
           </b-table>
           <b-pagination
             v-model="currentPage"
-            :total-rows="this.monitored.administrative.workplaceEvents.length + this.monitored.administrative.secretariatNotifications.length"
+            :total-rows="
+              this.monitored.administrative.workplaceEvents.length +
+                this.monitored.administrative.secretariatNotifications.length
+            "
             :per-page="perPage"
             aria-controls="my-table"
           ></b-pagination>
@@ -325,6 +337,7 @@ export default Vue.extend({
   },
   data: function() {
     return {
+      loaded: false,
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
@@ -353,7 +366,7 @@ export default Vue.extend({
         {
           label: "Type",
           key: "type",
-          sortable: false
+          sortable: false,
         },
         {
           label: "Afwezige",
@@ -366,10 +379,9 @@ export default Vue.extend({
           sortable: true,
         },
         {
-          label: 'Melding verwijderen ',
-          key: "delete"
-        }
-        
+          label: "Melding verwijderen ",
+          key: "delete",
+        },
       ],
       administrativeCurrentPage: 1,
       administrativePages: 1,
@@ -423,6 +435,16 @@ export default Vue.extend({
   },
 
   methods: {
+    getType: function(id:number, list:string){
+      if(list == "workplaceEvent"){
+        for (let i = 0; i < this.monitored.administrative.workplaceEvents.length; i++) {
+          /* if(this.monitored.administrative.workplaceEvents[i].id == id){
+            return this.monitored.administrative.workplaceEvents.workplaceType.typeName
+          } */
+          
+        }
+      }
+    },
     loadData: function() {
       const response = ReportingService.getAllReports(
         "/api/reports/monitored"
@@ -448,6 +470,7 @@ export default Vue.extend({
       if (this.step != "Technical") this.step = "Technical";
     },
     removeClicked: function(id: number, category: string) {
+      alert(category);
       ReportingService.removeNotification({
         id,
         category,
@@ -612,8 +635,38 @@ export default Vue.extend({
   },
 
   watch: {
-    monitored: function() {
+    monitored: {
+      deep: true,
+      handler() {
+        for (
+          let i = 0;
+          i < this.monitored.administrative.secretariatNotifications.length;
+          i++
+        ) {
+          if(this.monitored.administrative.secretariatNotifications[i] != null)
+            (this.monitored.administrative.secretariatNotifications[i] as any).listName = "SecretariatNotification";
+          
+        }
+        for (
+          let i = 0;
+          i < this.monitored.administrative.workplaceEvents.length;
+          i++
+        ) {
+          if(this.monitored.administrative.workplaceEvents[i] != null)
+            (this.monitored.administrative.workplaceEvents[i] as any).listName = "WorkplaceEvent";
+        }
+
+      
+        
+        /* for (let i = 0; i < this.monitored.administrative.secretariatNotifications.length; i++) {
+        this.monitored.administrative.secretariatNotifications.length[i].list = "SecretariatNotification";
+      }
+      for (let i = 0; i < this.monitored.administrative.secretariatNotifications.length; i++) {
+        this.monitored.administrative.secretariatNotifications.length[i].list = "SecretariatNotification";
+      } */
+      this.loaded = true;
       this.paginate();
+      },
     },
     defectCurrentPage: function() {
       this.paginate();

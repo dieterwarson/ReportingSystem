@@ -124,7 +124,7 @@ router.get('/one/:reportId', async (req: Request, res: Response) => {
 /******************************************************************************
  *             Get All monitored Reports - "GET /api/reports/monitored"
  ******************************************************************************/
-// only get the reports that are finished and arer being monitored
+// only get the reports that are finished and are being monitored
 router.get('/monitored', async (req: Request, res: Response) => {
 
   let defects = await Defect.findAll({
