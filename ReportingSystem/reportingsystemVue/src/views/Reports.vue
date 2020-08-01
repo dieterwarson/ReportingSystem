@@ -3,7 +3,6 @@
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
     </div>
-    {{ reportTypes }}
     <div v-if="reports" class="container">
       <h1>Verslagen</h1>
       <div class="row">
@@ -18,23 +17,15 @@
             :captions="captions"
             :presetRanges="presetRanges"
           ></VueRangedatePicker>
+          <!-- Selection box for filters -->
           <div class="filter-select">
-            <!-- <div v-for="type in reportTypes" :key="type.id">
-              {{ options }}
-              <div v-for="(value, propertyName) in reportTypes" :key="propertyName">
-                <span>{{ fillOptions(propertyName) }}</span>
-                == {{ value }}
-                {{ fillOptions() }}
-              </div> -->
-
-              <treeselect
-                placeholder="Kies filters"
-                v-model="value"
-                :multiple="true"
-                :options="options"
-              />
-              <button type="button" class="btn btn-info" @click="fillOptionsTypes">Filter</button>
-            <!-- </div> -->
+            <treeselect
+              placeholder="Kies filters"
+              v-model="value"
+              :multiple="true"
+              :options="options"
+            />
+            <button type="button" class="btn btn-info" @click="fillOptionsTypes">Filter</button>
           </div>
         </form>
         <div class="col-md-8">
@@ -63,7 +54,6 @@
     <p>testarray: {{ testarray }}</p>
     <p>a: {{ a }}</p>
     <p>aa: {{ aa }}</p>
-    <p>reportTypes: {{ reportTypes }}</p>
     <p>options: {{ options }}</p>
 
   </div>
@@ -319,14 +309,10 @@ export default Vue.extend({
   created() {
     this.loadData();
     this.interval = window.setInterval(this.loadData, 5000);
-    this.fillOptions();
-    this.fillOptionsTypes();
   },
   mounted() {
     this.loadData();
     this.loadCount();
-    this.fillOptions();
-    this.fillOptionsTypes();
   },
 
   methods: {
@@ -370,9 +356,8 @@ export default Vue.extend({
     },
 
     fillOptions: function() {
-      this.testarray.push("...");
-
       const types: any = this.reportTypes;
+
       if (!this.typesFound)
         this.fillOptionsTypes();
 
@@ -388,15 +373,6 @@ export default Vue.extend({
 
           for (const [key, value] of Object.entries(reportTypes)) {
             const valueArr: any = value;
-            // this.testarray.push(value);
-
-            // // als value (children) lengte > 0, dan moeten die namen ook verandert worden naar id en label
-            // if (valueArr.length > 0) {
-            //   for (const [key, value] of Object.entries(valueArr)) {
-            //     this.a.push(key);
-            //     this.aa.push(value);
-            //   }
-            // }
 
             // onze hard-coded velden zijn in het Engels, hiermee worden de velden 
             // die getoond worden omgezet naar Nederlands
@@ -468,6 +444,12 @@ export default Vue.extend({
         this.loadCount();
       },
       deep: true
+    },
+
+    reportTypes: {
+      handler() {
+        this.fillOptions();
+      }
     }
   },
 });
