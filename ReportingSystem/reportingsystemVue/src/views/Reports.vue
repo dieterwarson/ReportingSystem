@@ -64,14 +64,7 @@
     <p>a: {{ a }}</p>
     <p>aa: {{ aa }}</p>
     <p>reportTypes: {{ reportTypes }}</p>
-    <!-- <p>reportTypesArray: {{ reportTypesArray }}</p> -->
-    <!-- <p>reportTypesArray.length: {{ reportTypesArray.length }}</p> -->
-    <!-- <p>reportTypesArray[0]: {{ reportTypesArray[0] }}</p> -->
     <p>options: {{ options }}</p>
-    <!-- <p>options.length: {{ options.length }}</p>
-    <p>options[1]: {{ options[1] }}</p>
-    <p>options[1].children: {{ options[1].children }}</p>
-    <p>options[1].children.length: {{ options[1].children.length }}</p> -->
 
   </div>
 </template>
@@ -233,7 +226,6 @@ export default Vue.extend({
           };
         }
       },
-      // define the default value
       value: [],
       options: [
         // {
@@ -318,82 +310,7 @@ export default Vue.extend({
           label: "Types",
           children: [
             // all types
-            {
-              // id: "operational-types",
-              // label: "Operationeel",
-              // children: [
-                // all operational types
-                // {
-                //   id: "operational-types-operator",
-                //   label: "Bevraging GSM operatoren"
-                // }
-                // {
-                //   id: "operational-types-bin",
-                //   label: "BIN-alarm"
-                // },
-                // {
-                //   id: "operational-types-pursuit",
-                //   label: "Grensoverschrijdende achtervolging"
-                // },
-                // {
-                //   id: "operational-types-signaling",
-                //   label: "Signalering"
-                // },
-                // {
-                //   id: "operational-types-specific",
-                //   label: "Specifieke gebeurtenis"
-                // },
-                // {
-                //   id: "operational-types-helicopter",
-                //   label: "Zoeken met helikopter"
-                // }
-              // ]
-            },
-            // {
-            //   id: "workplaceevent-types",
-            //   label: "Voorval tijdens de dienst",
-            //   children: [
-            //     // all workplaceevent types
-            //     {
-            //       id: "workplaceevent-types-accident",
-            //       label: "Arbeidsongeval"
-            //     },
-            //     {
-            //       id: "workplaceevent-types-sick",
-            //       label: "Ziekte"
-            //     }
-            //   ]
-            // },
-            // {
-            //   id: "administrative-types",
-            //   label: "Logistiek",
-            //   children: [
-            //     // all administrative types
-            //     {
-            //       id: "administrative-types-vehicle",
-            //       label: "Schade aan voertuig"
-            //     }
-            //   ]
-            // },
-            // {
-            //   id: "technical-types",
-            //   label: "Technisch",
-            //   children: [
-            //     // all technical types
-            //     {
-            //       id: "technical-types-announcement-others",
-            //       label: "Verwittiging (anderen)"
-            //     },
-            //     {
-            //       id: "technical-types-announcement-asc",
-            //       label: "Verwittiging ASC"
-            //     },
-            //     {
-            //       id: "technical-types-object",
-            //       label: "Voorwerp"
-            //     }
-            //   ]
-            // }
+            {},
           ]
         }
       ]
@@ -403,11 +320,13 @@ export default Vue.extend({
     this.loadData();
     this.interval = window.setInterval(this.loadData, 5000);
     this.fillOptions();
+    this.fillOptionsTypes();
   },
   mounted() {
     this.loadData();
     this.loadCount();
     this.fillOptions();
+    this.fillOptionsTypes();
   },
 
   methods: {
@@ -451,133 +370,36 @@ export default Vue.extend({
     },
 
     fillOptions: function() {
-      // this.testarray.push("...");
+      this.testarray.push("...");
 
       const types: any = this.reportTypes;
       if (!this.typesFound)
         this.fillOptionsTypes();
-
-      // const children = this.options.types
-      // for (let i = 0; i < types.length; i++) {
-      //   const type = types[i];
-      //   if (type.id == "types") {
-      //     const val: {
-      //       id: string;
-      //       label: string;
-      //     } = {
-      //       id: types.typeName, 
-      //       label: types.typeName,
-      //     }
-      //     type.children.push(val);
-      //   }
-      // }
-
-      // const reportTypes: any = this.reportTypes;
-      // for (let i = 0; i < reportTypes.length; i++) {
-      //   const reportType = reportTypes[i];
-      //   for (let j = 0; j < this.options.length; j++) {
-      //     const option = this.options[j];
-      //     if (option.id == "types") {
-      //       const val: {
-      //         id: string;
-      //         label: string;
-      //         children: any[];
-      //       } = {
-      //         id: types.typeName, 
-      //         label: types.typeName,
-      //         children: [],
-      //       }
-      //       option.children.push(val);
-      //     }
-      //   }
-      // }
-    
-      // let typesFound = false;
-      // this.length = this.options.length;
-      // this.a = this.options[0];
-      // this.aa = this.a.id;
-      // for (let j = 0; j < this.options.length; j++) {
-      //   const option = this.options[j];
-      //   if (!this.typesFound && option.id == "types") {
-      //     const val: {
-      //       id: string
-      //       label: string
-      //       children: any[]
-      //     } = {
-      //       id: propertyName,
-      //       label: propertyName,
-      //       children: value,
-      //     }
-      //     option.children.push(val);
-      //     this.typesFound = true;
-      //   }
-      // }
-
-      // for (let i = 0; i < this.reportTypesArray.length; i++) {
-      //   const type = this.reportTypesArray[i];
-        
-      //   this.testarray.push(type);
-      //   this.aa = type;
-      // }
-
-      // for (let i = 0; i < reportTypes.operationalTypes; i++) {
-      //   const operationalType = reportTypes.operationalTypes[i];
-        
-      // }
-      // this.reportTypesArray.push(types);
 
       return 1;
     },
     fillOptionsTypes: function() {
       for (let i = 0; i < this.options.length; i++) {
         const option = this.options[i];
-        option.children.pop()
+        option.children.pop(); // children begint met een lege default waarde
         
         if (option.id == "types") {
           const reportTypes: any = this.reportTypes;
-          // hier moet ik over de reportTypes gaan loopen, om alle juiste namen van alle types te krijgen
-          // oppassen met children van elke type (subtypes), dan moet die child zelf ook een val zijn
-          // kijken hoe dat moet gaan zijn
-
-          // let categoryName = "";
-          // let children: any = [];
-          
-          // Object.entries(reportTypes).forEach(
-          //   ([key, value]) => (
-          //     this.testarray.push(key, value),
-          //     categoryName = key,
-          //     children = value
-          //   ).then(
-          //     option.children.push(val)
-          //   )
-          // );
-
-          // for (const i in reportTypes) {
-          //   if (Object.prototype.hasOwnProperty.call(reportTypes, i)) {
-          //     const type = reportTypes[i];
-              
-          //     this.testarray.push(type);
-          //   }
-          // }
-
-          // Object.entries(reportTypes).map(item => {
-          //   this.testarray.push(item)
-          // })
 
           for (const [key, value] of Object.entries(reportTypes)) {
-            // this.a.push(key);
-            // this.aa.push(value);
             const valueArr: any = value;
-            this.testarray.push(value);
+            // this.testarray.push(value);
 
-            // als value (children) lengte > 0, dan moeten die namen ook verandert worden naar id en label
-            if (valueArr.length > 0) {
-              for (const [key, value] of Object.entries(valueArr)) {
-                this.a.push(key);
-                this.aa.push(value);
-              }
-            }
+            // // als value (children) lengte > 0, dan moeten die namen ook verandert worden naar id en label
+            // if (valueArr.length > 0) {
+            //   for (const [key, value] of Object.entries(valueArr)) {
+            //     this.a.push(key);
+            //     this.aa.push(value);
+            //   }
+            // }
 
+            // onze hard-coded velden zijn in het Engels, hiermee worden de velden 
+            // die getoond worden omgezet naar Nederlands
             let type = key;
             switch (key) {
               case "operationalTypes":
@@ -597,14 +419,6 @@ export default Vue.extend({
             }
 
             const children: any[] = [];
-            // valueArr.forEach(element => {
-            //   child = {
-            //     'id': element.typeName,
-            //     'label': element.typeName,
-            //     'children': []
-            //   }
-            // });
-
             for (const val of valueArr) {
               const child = {
                 'id': val.typeName,
@@ -614,8 +428,6 @@ export default Vue.extend({
               children.push(child);
             }
 
-
-
             const val = {
               'id': type,
               'label': type,
@@ -623,41 +435,9 @@ export default Vue.extend({
             }
             option.children.push(val);
           }
-
-          // for (var property in this.reportTypes) {
-          //   console.log(property, this.reportTypes[property]);
-          // }
-
-
-
-
-          // this.testarray = option.children;
-
-
-
-          // const items = {
-          //   'first': new Date(),
-          //   'second': 2,
-          //   'third': 'test'
-          // }
-
-          // this.a = reportTypes;
-
-          // for (const item in reportTypes) {
-          //   this.aa.push(item)
-          // }
         }
       }
-
-      //     const val: {
-      //       id: string;
-      //       label: string;
-      //     } = {
-      //       id: types.typeName, 
-      //       label: types.typeName,
-      //     }
-
-      // this.typesFound = true;
+      this.typesFound = true;
     }
   },
 
