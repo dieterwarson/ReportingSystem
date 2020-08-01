@@ -2476,18 +2476,9 @@ router.post('/getFiltered', async (req, res) => {
   if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
     date = req.body.selectedDate;
 
-  let events: eventDate[] = []
-
-  console.log("\n\n\n\n");
-  console.log(selectedTypes);
-  console.log("\n\n\n\n");
-  console.log(values);
-  console.log("\n\n\n\n");
-
   if (values.includes("types"))
     values = types;
 
-  
   if (values.includes("workplaceTypes")) {
     types.push("workplaceTypes")
     values = types;
@@ -2533,7 +2524,6 @@ router.post('/getFiltered', async (req, res) => {
   if (values.includes("workplaceTypes"))
     values = selectedTypes.chosenValues;
 
-  
   if (values.includes("operationalTypes")) {
     types.push("operationalTypes")
     values = types;
@@ -2583,7 +2573,6 @@ router.post('/getFiltered', async (req, res) => {
   if (values.includes("operationalTypes"))
     values = selectedTypes.chosenValues;
 
-
   if (values.includes("defectTypes")) {
     types.push("defectTypes")
     values = types;
@@ -2625,11 +2614,9 @@ router.post('/getFiltered', async (req, res) => {
         addReport(report, reports);
       }
     }
-
   }
   if (values.includes("defectTypes"))
     values = selectedTypes.chosenValues;
-
   
   if (values.includes("malfunctionTypes")) {
     types.push("malfunctionTypes")
@@ -2672,11 +2659,9 @@ router.post('/getFiltered', async (req, res) => {
         addReport(report, reports);
       }
     }
-
   }
   if (values.includes("malfunctionTypes"))
     values = selectedTypes.chosenValues;
-
   
   console.log(reports);
   res.send(reports);

@@ -25,23 +25,41 @@
               :multiple="true"
               :options="options"
             />
-            <button type="button" class="btn btn-info" @click="fillOptionsTypes">Filter</button>
           </div>
         </form>
         <div class="col-md-8">
-          <div class="container my-2" v-for="value in reports" :key="value.id">
-            <button class="btn btn-secondary btn-lg btn-block">
-              {{
-                new Date(value[0].date).toLocaleString("nl-BE", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                })
-              }}
-              <!--- Only displays nightshift button if it's included in the list --->
-              <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value[0].id))">{{ getShift(value[0].nightShift) }} </span>
-              <span v-if="value.length == 2" class="badge badge-primary ml-3" v-on:click="reportClick(String(value[1].id))">{{ getShift(value[1].nightShift)}}</span>
-            </button>
+          <div v-if="filteredReports.length == 0">
+
+            <div class="container my-2" v-for="value in reports" :key="value.id">
+              <button class="btn btn-secondary btn-lg btn-block">
+                {{
+                  new Date(value[0].date).toLocaleString("nl-BE", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                  })
+                }}
+                <!--- Only displays nightshift button if it's included in the list --->
+                <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value[0].id))">{{ getShift(value[0].nightShift) }} </span>
+                <span v-if="value.length == 2" class="badge badge-primary ml-3" v-on:click="reportClick(String(value[1].id))">{{ getShift(value[1].nightShift) }}</span>
+              </button>
+            </div>
+          
+          </div>
+          <div v-else>
+            <div class="container my-2" v-for="value in filteredReports" :key="value.id">
+              <button class="btn btn-secondary btn-lg btn-block">
+                {{
+                  new Date(value.date).toLocaleString("nl-BE", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                  })
+                }}
+                <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value.id))">{{ getShift(value.nightShift) }} </span>
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
@@ -51,13 +69,6 @@
         :page-count="pages"
       ></vPagination>
     </div>
-    <!-- <p>testarray: {{ testarray }}</p>
-    <p>a: {{ a }}</p>
-    <p>aa: {{ aa }}</p>
-    <p>options: {{ options }}</p> -->
-    <p>statisticsData: {{ statisticsData }}</p>
-    <p>types: {{ types }}</p>
-
   </div>
 </template>
 
@@ -218,40 +229,12 @@ export default Vue.extend({
           };
         }
       },
-      statisticsData: {
-        counts: [
-          {
-            typeName: "Arbeidsongeval",
-            count: 5,
-          },
-          {
-            typeName: "Ziekte",
-            count: 3,
-          },
-          {
-            typeName: "Schade aan voertuig",
-            count: 4,
-          },
-          {
-            typeName: "Verwittiging (anderen)",
-            count: 1,
-          },
-          {
-            typeName: "Verwittiging ASC",
-            count: 1,
-          },
-          {
-            typeName: "Voorwerp",
-            count: 3,
-          },
-        ],
-        lineContent: [],
-      },
+      filteredReports: [],
       types: [] as string[],
 
-      value: {
+      value: { // bevat de gekozen filter(s)
         chosenValues: []
-      }, // bevat de gekozen filter
+      }, 
       options: [
         // {
         //   id: "signaling",
@@ -352,11 +335,14 @@ export default Vue.extend({
 
   methods: {
     loadData: function() {
-      ReportingService.getPaginationReports(
-        this.currentPage * 10 - 10,
-        this.selectedDate
-      ).then(res => (this.reports = res));
-
+      if (this.filteredReports.length == 0) {
+        ReportingService.getPaginationReports(
+          this.currentPage * 10 - 10,
+          this.selectedDate
+        ).then(res => (this.reports = res));
+      } else {
+        this.reports = this.filteredReports;
+      }
       ReportingService.getAllReports("/api/statistics/types").then(
         res => (this.reportTypes = res, this.reportTypesArray = [res]) 
       )
@@ -366,9 +352,13 @@ export default Vue.extend({
     },
 
     loadCount: function() {
-      ReportingService.getReportCount(this.selectedDate).then(res =>
-        this.calculatePages(res.count)
-      );
+      if (this.filteredReports.length == 0) {
+        ReportingService.getReportCount(this.selectedDate).then(res =>
+          this.calculatePages(res.count)
+        );      
+      } else {
+        this.calculatePages(this.filteredReports.length);
+      }
     },
 
     calculatePages: function(count: number) {
@@ -455,14 +445,13 @@ export default Vue.extend({
 
     getFiltered: function() {
       ReportingService.getFiltered({selectedTypes: this.value, selectedDate: this.selectedDate, types: this.types}).then(
-        (res) => (this.statisticsData = res)
+        (res) => (this.filteredReports = res)
       );
     },
 
     addToTypes: function(type: string) {
       this.types.push(type);
     },
-
   },
 
   beforeDestroy: function() {
@@ -472,17 +461,14 @@ export default Vue.extend({
   watch: {
     currentPage: {
       handler() {
-        // alert("request");
         this.loadData();
-        // this.loaded = true;
       },
       deep: true
     },
+    
     selectedDate: {
       handler() {
-        // alert("request");
         this.loadData();
-        // this.loaded = true;
       },
       deep: true
     },
@@ -502,9 +488,7 @@ export default Vue.extend({
 
     value: {
       handler() {
-        // alert("request");
         this.getFiltered();
-        // this.loaded = true;
       },
       deep: true,
     },
