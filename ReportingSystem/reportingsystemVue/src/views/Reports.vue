@@ -560,15 +560,15 @@ export default Vue.extend({
           //   }
           // }
 
-          Object.entries(reportTypes).map(item => {
-            this.testarray.push(item)
-          })
+          // Object.entries(reportTypes).map(item => {
+          //   this.testarray.push(item)
+          // })
 
           for (const [key, value] of Object.entries(reportTypes)) {
             // this.a.push(key);
             // this.aa.push(value);
-            const valueArr: any = [value];
-            this.testarray.push(valueArr);
+            const valueArr: any = value;
+            this.testarray.push(value);
 
             // als value (children) lengte > 0, dan moeten die namen ook verandert worden naar id en label
             if (valueArr.length > 0) {
@@ -578,10 +578,48 @@ export default Vue.extend({
               }
             }
 
+            let type = key;
+            switch (key) {
+              case "operationalTypes":
+                type = "Operationeel"
+                break;
+              case "workplaceTypes":
+                type = "Voorval tijdens de dienst"
+                break
+              case "defectTypes":
+                type = "Logistiek"
+                break;
+              case "malfunctionTypes":
+                type = "Technisch"
+                break;
+              default:
+                break;
+            }
+
+            const children: any[] = [];
+            // valueArr.forEach(element => {
+            //   child = {
+            //     'id': element.typeName,
+            //     'label': element.typeName,
+            //     'children': []
+            //   }
+            // });
+
+            for (const val of valueArr) {
+              const child = {
+                'id': val.typeName,
+                'label': val.typeName,
+              }
+
+              children.push(child);
+            }
+
+
+
             const val = {
-              'id': key,
-              'label': key,
-              'children': value
+              'id': type,
+              'label': type,
+              'children': children
             }
             option.children.push(val);
           }
