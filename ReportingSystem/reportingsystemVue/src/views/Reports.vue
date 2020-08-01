@@ -3,7 +3,7 @@
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
     </div>
-    <div v-if="reports" class="container">
+    <div v-if="reports.reports" class="container">
       <h1>Verslagen</h1>
       <div class="row">
         <form class="col-md-4">
@@ -28,9 +28,9 @@
           </div>
         </form>
         <div class="col-md-8">
-          <div v-if="filteredReports.length == 0">
+          <div v-if="filteredReports.reports.length == 0">
 
-            <div class="container my-2" v-for="value in reports" :key="value.id">
+            <div class="container my-2" v-for="value in reports.reports" :key="value.id">
               <button class="btn btn-secondary btn-lg btn-block">
                 {{
                   new Date(value[0].date).toLocaleString("nl-BE", {
@@ -47,7 +47,7 @@
           
           </div>
           <div v-else>
-            <div class="container my-2" v-for="value in filteredReports" :key="value.id">
+            <div class="container my-2" v-for="value in filteredReports.reports" :key="value.id">
               <button class="btn btn-secondary btn-lg btn-block">
                 {{
                   new Date(value.date).toLocaleString("nl-BE", {
@@ -101,7 +101,10 @@ export default Vue.extend({
       testarray: [] as any[],
       reportTypesArray: [] as any[],
       reportTypes: {},
-      reports: [] as any[],
+      reports: {
+        reports: [] as any[],
+        count: 0
+      },
       list: [],
       interval: 0,
       currentPage: 1,
@@ -229,7 +232,10 @@ export default Vue.extend({
           };
         }
       },
-      filteredReports: [],
+      filteredReports: {
+        reports: [] as any[],
+        count: 0
+      },
       types: [] as string[],
 
       value: { // bevat de gekozen filter(s)
@@ -335,13 +341,13 @@ export default Vue.extend({
 
   methods: {
     loadData: function() {
-      if (this.filteredReports.length == 0) {
+      if (this.filteredReports.reports.length == 0) {
         ReportingService.getPaginationReports(
           this.currentPage * 10 - 10,
           this.selectedDate
-        ).then(res => (this.reports = res));
+        ).then(res => (this.reports.reports = res));
       } else {
-        this.reports = this.filteredReports;
+        this.reports.reports = this.filteredReports.reports;
       }
       ReportingService.getAllReports("/api/statistics/types").then(
         res => (this.reportTypes = res, this.reportTypesArray = [res]) 
@@ -352,12 +358,12 @@ export default Vue.extend({
     },
 
     loadCount: function() {
-      if (this.filteredReports.length == 0) {
+      if (this.filteredReports.reports.length == 0) {
         ReportingService.getReportCount(this.selectedDate).then(res =>
           this.calculatePages(res.count)
         );      
       } else {
-        this.calculatePages(this.filteredReports.length);
+        this.pages = this.filteredReports.count;
       }
     },
 
@@ -444,9 +450,9 @@ export default Vue.extend({
     },
 
     getFiltered: function() {
-      ReportingService.getFiltered({selectedTypes: this.value, selectedDate: this.selectedDate, types: this.types}).then(
+      ReportingService.getFiltered({selectedTypes: this.value, selectedDate: this.selectedDate, types: this.types, offset: this.currentPage * 10 - 10, numPages: 10}).then(
         (res) => (this.filteredReports = res)
-      );
+      )
     },
 
     addToTypes: function(type: string) {

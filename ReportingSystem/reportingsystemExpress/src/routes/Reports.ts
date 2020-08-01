@@ -2475,6 +2475,8 @@ router.post('/getFiltered', async (req, res) => {
   let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
   if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
     date = req.body.selectedDate;
+  const offset = req.body.offset;
+  const reportsPerPage = req.body.numPages;
 
   if (values.includes("types"))
     values = types;
@@ -2663,8 +2665,15 @@ router.post('/getFiltered', async (req, res) => {
   if (values.includes("malfunctionTypes"))
     values = selectedTypes.chosenValues;
   
-  console.log(reports);
-  res.send(reports);
+  const count = reports.length;
+  console.log("\n\n\n");
+  console.log(count);
+  reports = reports.slice(offset, offset + reportsPerPage / 2);
+  
+  const reportsData = { reports: reports, count: count };
+
+  console.log(reportsData);
+  res.send(reportsData);
 });
 
 /******************************************************************************
