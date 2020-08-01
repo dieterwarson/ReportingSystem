@@ -53,7 +53,7 @@ export default {
   },
   getPaginationReports(offset: number, dateRange: any) {
     return Api()
-      .post("api/reports/all", {offset: offset, dateRange: dateRange})
+      .post("api/reports/all", { offset: offset, dateRange: dateRange })
       .then((res) => {
         return res.data;
       })
@@ -71,15 +71,15 @@ export default {
         alert(error);
       })
   },
-  getReportCount(dateRange: any){
+  getReportCount(dateRange: any) {
     return Api()
-    .post("api/reports/count", dateRange)
-    .then((res) => {
-      return res.data;
-    })
-    .catch((error) => {
-      alert(error);
-    });
+      .post("api/reports/count", dateRange)
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        alert(error);
+      });
   },
   addOperationalEvent(data: any) {
     return Api()
@@ -93,43 +93,43 @@ export default {
   },
   getAllUsers(url: string) {
     return Api()
-    .get(url)
-    .then(res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    });
+      .get(url)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      });
   },
   addSecretaryNotification(data: any) {
     return Api()
-    .post('api/reports/addSecretaryNotification', data)
-    .then(res => {
-      return res.data
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .post('api/reports/addSecretaryNotification', data)
+      .then(res => {
+        return res.data
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   getAccessRoleData() {
     return Api()
-    .get('api/permissions/all')
-    .then(res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .get('api/permissions/all')
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   updateAccessRoleData(data: any) {
     return Api()
-    .post('api/permissions/update', data)
-    .then(res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .post('api/permissions/update', data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   addWorkForceEvent(data: any) {
     return Api()
@@ -215,7 +215,7 @@ export default {
     return Api()
       .post('api/users/loginUser', data)
       .then(res => {
-        window.localStorage.setItem("token",res.data.token);
+        window.localStorage.setItem("token", res.data.token);
         window.location.href = res.data.redirect;
         return;
       })
@@ -223,36 +223,36 @@ export default {
         return error.response.data;
       });
   },
-  
+
   changeSubscription(data: any) {
     return Api()
-    .post("api/users/changeSubscription", data)
-    .then(res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .post("api/users/changeSubscription", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   autoCompletePlNumber(data: any) {
     return Api()
-    .post("api/reports/getPlNumberReports", data)
-    .then(res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .post("api/reports/getPlNumberReports", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   autoCompleteAddOperationalEvent(data: any) {
     return Api()
-    .post("api/reports/getDummyEvents", data)
-    .then (res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .post("api/reports/getDummyEvents", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   autoCompleteKeyword(data: any) {
     return Api()
@@ -266,38 +266,38 @@ export default {
   },
   deleteUser(data: any) {
     return Api()
-    .post("api/users/deleteUser", data)
-    .then(res => {
-      window.location.href = "/userlist";
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .post("api/users/deleteUser", data)
+      .then(res => {
+        window.location.href = "/userlist";
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   addTypes(data: any) {
     return Api()
-    .post("api/reports/addTypes", data)
-    .then(res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .post("api/reports/addTypes", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   logoutUser(data: any) {
     return Api()
-    .post('api/users/logoutUser', data)
-    .then(res => {
-      window.location.href= "/login";
-      window.localStorage.setItem("token", "");
-    })
+      .post('api/users/logoutUser', data)
+      .then(res => {
+        window.location.href = "/login";
+        window.localStorage.setItem("token", "");
+      })
   },
-  checkAuthentication(){
+  checkAuthentication() {
     return Api()
-    .post('api/users/checkAuthentication', {token: window.localStorage.getItem('token')})
-    .then(res => {
-      return res.data.check;
-    });
+      .post('api/users/checkAuthentication', { token: window.localStorage.getItem('token') })
+      .then(res => {
+        return res.data.check;
+      });
   },
 
   getSearchReports(url: string) {
@@ -332,39 +332,50 @@ export default {
   },
   getStatistics(data: any) {
     return Api()
-    .post("api/statistics/getStatistics", data)
-    .then(res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .post("api/statistics/getStatistics", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   removeNotification(data: any) {
     return Api()
-    .post("api/reports/removeNotification", data)
-    .then(res => {
-      return res.data;
-    })
+      .post("api/reports/removeNotification", data)
+      .then(res => {
+        return res.data;
+      })
   },
   autosaveOperational(data: any) {
     return Api()
-    .post("api/reports/autoSaveOperational", data)
-    .then(res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    })
+      .post("api/reports/autoSaveOperational", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
   },
   getAutosavedOperational(data: any) {
     return Api()
-    .post('api/reports/getAutoSavedFile', data)
-    .then(res => {
-      return res.data;
-    })
-    .catch(error => {
-      alert(error);
-    })
-  }
+      .post('api/reports/getAutoSavedFile', data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
+  },
+  getFiltered(data: any) {
+    return Api()
+      .post("api/reports/getFiltered", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
+  },
+
 };

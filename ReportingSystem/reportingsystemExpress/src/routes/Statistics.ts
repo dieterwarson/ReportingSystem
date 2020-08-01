@@ -92,6 +92,9 @@ router.post('/getStatistics', async (req, res) => {
   let events: eventDate[] = []
 
   console.log(date);
+  console.log("\n\n\n\n");
+  console.log(types);
+  console.log("\n\n\n\n");
 
   for (let i in types.workplaceevent) {
     var type = types.workplaceevent[i];

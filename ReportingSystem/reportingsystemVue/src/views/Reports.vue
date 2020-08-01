@@ -21,7 +21,7 @@
           <div class="filter-select">
             <treeselect
               placeholder="Kies filters"
-              v-model="value"
+              v-model="value.chosenValues"
               :multiple="true"
               :options="options"
             />
@@ -51,10 +51,12 @@
         :page-count="pages"
       ></vPagination>
     </div>
-    <p>testarray: {{ testarray }}</p>
+    <!-- <p>testarray: {{ testarray }}</p>
     <p>a: {{ a }}</p>
     <p>aa: {{ aa }}</p>
-    <p>options: {{ options }}</p>
+    <p>options: {{ options }}</p> -->
+    <p>statisticsData: {{ statisticsData }}</p>
+    <p>types: {{ types }}</p>
 
   </div>
 </template>
@@ -216,7 +218,40 @@ export default Vue.extend({
           };
         }
       },
-      value: [],
+      statisticsData: {
+        counts: [
+          {
+            typeName: "Arbeidsongeval",
+            count: 5,
+          },
+          {
+            typeName: "Ziekte",
+            count: 3,
+          },
+          {
+            typeName: "Schade aan voertuig",
+            count: 4,
+          },
+          {
+            typeName: "Verwittiging (anderen)",
+            count: 1,
+          },
+          {
+            typeName: "Verwittiging ASC",
+            count: 1,
+          },
+          {
+            typeName: "Voorwerp",
+            count: 3,
+          },
+        ],
+        lineContent: [],
+      },
+      types: [] as string[],
+
+      value: {
+        chosenValues: []
+      }, // bevat de gekozen filter
       options: [
         // {
         //   id: "signaling",
@@ -401,11 +436,13 @@ export default Vue.extend({
                 'label': val.typeName,
               }
 
+              this.addToTypes(val.typeName);
+
               children.push(child);
             }
 
             const val = {
-              'id': type,
+              'id': key,
               'label': type,
               'children': children
             }
@@ -414,7 +451,18 @@ export default Vue.extend({
         }
       }
       this.typesFound = true;
-    }
+    },
+
+    getFiltered: function() {
+      ReportingService.getFiltered({selectedTypes: this.value, selectedDate: this.selectedDate, types: this.types}).then(
+        (res) => (this.statisticsData = res)
+      );
+    },
+
+    addToTypes: function(type: string) {
+      this.types.push(type);
+    },
+
   },
 
   beforeDestroy: function() {
@@ -450,7 +498,16 @@ export default Vue.extend({
       handler() {
         this.fillOptions();
       }
-    }
+    },
+
+    value: {
+      handler() {
+        // alert("request");
+        this.getFiltered();
+        // this.loaded = true;
+      },
+      deep: true,
+    },
   },
 });
 </script>
