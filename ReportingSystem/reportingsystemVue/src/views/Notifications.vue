@@ -93,6 +93,10 @@
                 })
               }}
             </template>
+            <template v-slot:cell(edit)="data">
+              <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(data.item.id), data.item.listName, 'Workforce')" />
+            </template>
+            
             <template v-slot:cell(delete)="data">
               <button
                 class="btn btn-primary btn-sm"
@@ -211,6 +215,9 @@
                 🗑
               </button>
             </template>
+            <template v-slot:cell(edit)="data">
+              <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(data.item.id), data.item.listName, 'Technical')" />
+            </template>
             <template v-slot:cell(type)="data">
               <span class="card-text badge badge-danger">
                 {{ getType(data.item.id, data.item.listName) }}</span
@@ -277,7 +284,11 @@ export default Vue.extend({
           sortable: true,
         },
         {
-          label: "Melding verwijderen ",
+          label: "Melding aanpassen",
+          key: "edit",
+        },
+        {
+          label: "Melding archiveren",
           key: "delete",
         },
       ],
@@ -307,11 +318,15 @@ export default Vue.extend({
           sortable: true,
         },
         {
+          label: "Melding aanpassen",
+          key: "edit",
+        },
+        {
           label: "Melding verwijderen ",
           key: "delete",
         },
       ],
-
+      interval: 0,
       monitored: {
         administrative: {
           workplaceEvents: [],
@@ -406,6 +421,18 @@ export default Vue.extend({
         category,
       }).then((res) => this.loadData());
     },
+    changeEventClick: function (id: string, subcat: string, categorie: string) {
+      subcat = subcat[0].toLowerCase() + subcat.substring(1);
+      this.$router.push({
+        path: "changeEvent",
+        query: {
+          reportId: String(0),
+          eventId: String(id),
+          categorie: categorie,
+          subcategorie: String(subcat + 's')
+        }
+      });
+    },
   },
 
   watch: {
@@ -449,15 +476,9 @@ export default Vue.extend({
         }
       
         this.loaded = true;
-        this.paginate();
       },
     },
-    defectCurrentPage: function() {
-      this.paginate();
-    },
-    administrativeCurrentPage: function() {
-      this.paginate();
-    },
+    
   },
 
   beforeDestroy: function() {
@@ -465,3 +486,11 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+
+#topright {
+  height: 30px;
+  width: 30px;
+}
+</style>
