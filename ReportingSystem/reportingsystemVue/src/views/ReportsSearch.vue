@@ -30,7 +30,7 @@
         <div class="col-md-8">
 
           <div v-if="selectedDate.start == ''">
-            <div class="container my-2" v-for="value in reports" :key="value.reportId">
+            <div class="container my-2" v-for="value in reports.reports" :key="value.reportId">
               <button class="btn btn-secondary btn-lg btn-block">
                 {{
                   new Date(value.date).toLocaleString("nl-BE", {
@@ -44,7 +44,7 @@
               </button>
             </div>
           </div>
-          
+
           <div v-else>
             <div class="container my-2" v-for="value in filteredReports.reports" :key="value.reportId">
               <button class="btn btn-secondary btn-lg btn-block">
@@ -362,14 +362,22 @@ export default Vue.extend({
       if (this.$route.query.plNumber != null)
         this.plNumber = String(this.$route.query.plNumber);
 
-      if (
-        this.keyword == "" ||
-        this.keyword == null ||
-        this.keyword == undefined
-      ) {
-        this.loadPlReports();
+      if (this.selectedDate.start == "" && this.filteredReports.reports.length == 0) {
+        if (
+          this.keyword == "" ||
+          this.keyword == null ||
+          this.keyword == undefined
+        ) {
+          this.loadPlReports();
+        } else {
+          this.loadKeywordReports(this.keyword);
+        }
       } else {
-        this.loadKeywordReports(this.keyword);
+        if (this.filteredReports.reports.length == 0)
+          this.filterDate();
+        else
+          this.getFiltered();
+        this.reports.reports = this.filteredReports.reports;
       }
     },
     /**
@@ -377,7 +385,11 @@ export default Vue.extend({
      */
     loadPlReports: function() {
       ReportingService.getSearchPlReports(
-        {plNumber: this.plNumber}
+        {
+          plNumber: this.plNumber,
+          offset: this.currentPage * 10 - 10, 
+          numPages: this.numPages
+        }      
       ).then(res => (this.reports = res));    
     },
     /**
@@ -385,8 +397,12 @@ export default Vue.extend({
      */
     loadKeywordReports: function(keyword: string) {
       ReportingService.getSearchReports(
-        {keyword: keyword}
-      ).then(res => (this.reports = res));
+        {
+          keyword: this.keyword,
+          offset: this.currentPage * 10 - 10, 
+          numPages: this.numPages
+        }      
+      ).then(res => (this.reports = res));    
     },
 
     onDateSelected: function(daterange: DateRange) {
@@ -394,12 +410,11 @@ export default Vue.extend({
     },
 
     loadCount: function() {
-      if (this.filteredReports.reports.length == 0) {
-        ReportingService.getReportCount(this.selectedDate).then(res =>
-          this.calculatePages(res.count)
-        );      
+      if (this.selectedDate.start == "" && this.filteredReports.reports.length == 0) {
+        this.calculatePages(this.reports.count);     
       } else {
-        this.calculatePages(this.filteredReports.count);
+        if (this.filteredReports.reports.length != 0)
+          this.calculatePages(this.filteredReports.count);
       }
     },
 
@@ -492,7 +507,7 @@ export default Vue.extend({
     filterDate: function () {
       ReportingService.filterDate(
         {
-          data: this.reports,
+          data: this.reports.reports,
           selectedDate: this.selectedDate,
           offset: this.currentPage * 10 - 10, 
           numPages: this.numPages

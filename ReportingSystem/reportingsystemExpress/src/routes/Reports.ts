@@ -677,6 +677,8 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
  ******************************************************************************/
 router.post('/search', async (req, res) => {
   let temp: string = req.body.keyword;
+  const offset = req.body.offset;
+  const reportsPerPage = req.body.numPages;
   let search = decodeURIComponent(temp);
 
   // Door omzetting naar post moeten deze erbij, anders worden die niet omgezet
@@ -687,7 +689,6 @@ router.post('/search', async (req, res) => {
   let reportIds: reportData[] = [];
 
   console.log("\n\n\n");
-  console.log(temp);
   console.log(search);
   console.log("\n\n\n");
 
@@ -719,7 +720,16 @@ router.post('/search', async (req, res) => {
   await searchMalfunctionDescription(reportIds, search, "s");
   await searchMalfunctionDate(reportIds, search);
 
-  res.send(reportIds);
+  const count = reportIds.length;
+  console.log("\n\n\n");
+  console.log(count);
+  reportIds = reportIds.slice(offset, offset + reportsPerPage);
+
+  const reportsData = { reports: reportIds, count: count };
+
+  console.log(reportsData);
+  console.log(reportIds);
+  res.send(reportsData);
 });
 
 function addReport(report: reportData, reportIds: reportData[]) {
@@ -2664,10 +2674,6 @@ router.post('/filterDate', async (req, res) => {
   const offset = req.body.offset;
   const reportsPerPage = req.body.numPages;
 
-  console.log("\n\n\n")
-  console.log(req.body)
-  console.log("\n\n\n")
-
   for (let i in oldReports) {
     var oldReport = oldReports[i];
     var result;
@@ -2684,14 +2690,89 @@ router.post('/filterDate', async (req, res) => {
         id: oldReport.eventId
       },
     });
-    console.log("\n\n\n")
-    console.log(result)
-    console.log("\n\n\n")
 
     if (result != null) {
       const event = await Operational.findOne({
         where: {
           id: result.operationalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null) {
+        let report: reportData = { reportId: event.reportId, eventId: result.id, description: oldReport.description, date: result.date, nightShift: event.report.nightShift };
+        addReport(report, reports);
+      }
+    }
+
+    result = await WorkplaceEvent.findOne({
+      order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        },
+        id: oldReport.eventId
+      },
+    });
+
+    if (result != null) {
+      const event = await Administrative.findOne({
+        where: {
+          id: result.administrativeId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null) {
+        let report: reportData = { reportId: event.reportId, eventId: result.id, description: oldReport.description, date: result.date, nightShift: event.report.nightShift };
+        addReport(report, reports);
+      }
+    }
+
+    result = await Defect.findOne({
+      order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        },
+        id: oldReport.eventId
+      },
+    });
+
+    if (result != null) {
+      const event = await Technical.findOne({
+        where: {
+          id: result.technicalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null) {
+        let report: reportData = { reportId: event.reportId, eventId: result.id, description: oldReport.description, date: result.date, nightShift: event.report.nightShift };
+        addReport(report, reports);
+      }
+    }
+
+    result = await Malfunction.findOne({
+      order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        },
+        id: oldReport.eventId
+      },
+    });
+
+    if (result != null) {
+      const event = await Technical.findOne({
+        where: {
+          id: result.technicalId
         },
         include: [{ model: Report }]
       });
