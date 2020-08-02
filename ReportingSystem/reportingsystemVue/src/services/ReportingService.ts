@@ -223,7 +223,6 @@ export default {
         return error.response.data;
       });
   },
-
   changeSubscription(data: any) {
     return Api()
       .post("api/users/changeSubscription", data)
@@ -377,5 +376,4 @@ export default {
         alert(error);
       })
   },
-
 };

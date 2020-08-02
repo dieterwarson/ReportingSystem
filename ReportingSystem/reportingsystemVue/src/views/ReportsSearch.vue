@@ -101,8 +101,6 @@ export default Vue.extend({
      * Finds the reports which contain an event that contains the keyword partially.
      */
     loadKeywordReports: function(keyword: string) {
-      /* Without this line, searching for '-' won't work. Don't know why. */
-
       ReportingService.getSearchReports("/api/reports/search/" + keyword).then(
         res => (this.reports = res)
       );

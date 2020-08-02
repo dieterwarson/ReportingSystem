@@ -96,16 +96,11 @@ export default Vue.extend({
     return {
       typesFound: false,
       length: 0,
-      a: [] as any[],
-      aa: [] as any[],
-      testarray: [] as any[],
-      reportTypesArray: [] as any[],
       reportTypes: {},
       reports: {
         reports: [] as any[],
         count: 0
       },
-      list: [],
       interval: 0,
       currentPage: 1,
       bootstrapPaginationClasses: {
@@ -351,10 +346,10 @@ export default Vue.extend({
         this.reports.reports = this.filteredReports.reports;
       }
       ReportingService.getAllReports("/api/statistics/types").then(
-        res => (this.reportTypes = res, this.reportTypesArray = [res]) 
+        res => (this.reportTypes = res) 
       )
     },
-    
+
     onDateSelected: function(daterange: DateRange) {
       this.selectedDate = daterange;
     },
