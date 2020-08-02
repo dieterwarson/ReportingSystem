@@ -136,8 +136,8 @@ export default Vue.extend({
       ],
       shortDays: ["ma", "di", "woe", "do", "vrij", "zat", "zo"],
       captions: {
-        title: "Kies de datums",
-        okButton: "Toepassen"
+        "title": "Kies de datums",
+        "ok_button": "Toepassen"
       },
       presetRanges: {
         today: function() {
