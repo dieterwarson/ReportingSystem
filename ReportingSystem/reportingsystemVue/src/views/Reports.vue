@@ -47,6 +47,7 @@
           
           </div>
           <div v-else>
+
             <div class="container my-2" v-for="value in filteredReports.reports" :key="value.id">
               <button class="btn btn-secondary btn-lg btn-block">
                 {{
@@ -79,7 +80,6 @@ import vPagination from "vue-plain-pagination";
 import VueRangedatePicker from "vue-rangedate-picker";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import { log } from "util";
 
 interface DateRange {
   start: string;
@@ -94,6 +94,7 @@ export default Vue.extend({
   },
   data: function() {
     return {
+      numPages: 10, // numper per page
       typesFound: false,
       length: 0,
       reportTypes: {},
@@ -447,7 +448,14 @@ export default Vue.extend({
     },
 
     getFiltered: function() {
-      ReportingService.getFiltered({selectedTypes: this.value, selectedDate: this.selectedDate, types: this.types, offset: this.currentPage * 10 - 10, numPages: 10}).then(
+      ReportingService.getFiltered(
+        {
+          selectedTypes: this.value, 
+          selectedDate: this.selectedDate, 
+          types: this.types, 
+          offset: this.currentPage * 10 - 10, 
+          numPages: this.numPages
+        }).then(
         (res) => (this.filteredReports = res)
       )
     },

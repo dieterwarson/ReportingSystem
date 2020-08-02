@@ -2653,6 +2653,68 @@ router.post('/getFiltered', async (req, res) => {
 });
 
 /******************************************************************************
+ *             Get Statistics - "POST /api/reports/filterDate"
+ ******************************************************************************/
+router.post('/filterDate', async (req, res) => {
+  let reports: reportData[] = [];
+  let oldReports = req.body.data;
+  let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
+  if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
+    date = req.body.selectedDate;
+  const offset = req.body.offset;
+  const reportsPerPage = req.body.numPages;
+
+  console.log("\n\n\n")
+  console.log(req.body)
+  console.log("\n\n\n")
+
+  for (let i in oldReports) {
+    var oldReport = oldReports[i];
+    var result;
+
+    result = await OperationalEvent.findOne({
+      order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        },
+        id: oldReport.eventId
+      },
+    });
+    console.log("\n\n\n")
+    console.log(result)
+    console.log("\n\n\n")
+
+    if (result != null) {
+      const event = await Operational.findOne({
+        where: {
+          id: result.operationalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null) {
+        let report: reportData = { reportId: event.reportId, eventId: result.id, description: oldReport.description, date: result.date, nightShift: event.report.nightShift };
+        addReport(report, reports);
+      }
+    }
+  }
+
+
+  const count = reports.length;
+  console.log("\n\n\n");
+  console.log(count);
+  reports = reports.slice(offset, offset + reportsPerPage);
+
+  const reportsData = { reports: reports, count: count };
+
+  console.log(reportsData);
+  res.send(reportsData);
+});
+
+/******************************************************************************
 *                                     Export
 ******************************************************************************/
 

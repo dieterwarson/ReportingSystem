@@ -386,4 +386,14 @@ export default {
         alert(error);
       })
   },
+  filterDate(data: any) {
+    return Api()
+      .post("api/reports/filterDate", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
+  },
 };
