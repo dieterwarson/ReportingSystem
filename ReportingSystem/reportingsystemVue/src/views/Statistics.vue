@@ -138,6 +138,7 @@ import ReportingService from "../services/ReportingService";
 import ScatterChart from "../views/components/ScatterChart.vue";
 import PieChart from "../views/components/PieChart.vue";
 import VueRangedatePicker from "vue-rangedate-picker";
+import { Parser } from 'json2csv';
 
 interface DateRange {
   start: string;
@@ -306,6 +307,12 @@ export default Vue.extend({
   },
 
   methods: {
+    exportCSV: function(){
+      const json2csvParser = new Parser();
+      const csv = json2csvParser.parse(this.statisticsData);
+ 
+      alert(csv);
+    },
     loadData: function() {
       ReportingService.getAllReports("/api/statistics/types").then(
         (res) => (this.reportTypes = res)
@@ -360,6 +367,7 @@ export default Vue.extend({
       ReportingService.getStatistics({selectedTypes: this.selectedTypes, selectedDate: this.selectedDate}).then(
         (res) => (this.statisticsData = res)
       );
+      this.exportCSV();
     },
   },
   watch: {
