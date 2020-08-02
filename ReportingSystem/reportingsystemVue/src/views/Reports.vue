@@ -94,7 +94,7 @@ export default Vue.extend({
   },
   data: function() {
     return {
-      numPages: 10, // numper per page
+      numPerPage: 10, // numper per page
       typesFound: false,
       length: 0,
       reportTypes: {},
@@ -454,7 +454,7 @@ export default Vue.extend({
           selectedDate: this.selectedDate, 
           types: this.types, 
           offset: this.currentPage * 10 - 10, 
-          numPages: this.numPages
+          numPerPage: this.numPerPage
         }).then(
         (res) => (this.filteredReports = res)
       )

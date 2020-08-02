@@ -30,8 +30,6 @@ const router = Router();
  *                   Get All Reports - "GET /api/reports/all"
  ******************************************************************************/
 // only get the reports that are finished
-
-
 router.post('/all', async (req: Request, res: Response) => {
   let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
   if (!(req.body.dateRange.start == '' && req.body.dateRange.end == ''))
@@ -72,7 +70,6 @@ router.post('/all', async (req: Request, res: Response) => {
  *                   Count All Reports - "GET /api/reports/count"
  ******************************************************************************/
 router.post('/count', async (req: Request, res: Response) => {
-  console.log(req.body);
   let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
   if (!(req.body.start == '' && req.body.end == ''))
     date = { start: req.body.start, end: req.body.end };
@@ -206,7 +203,8 @@ async function searchOperationalEventSignaling(reportIds: reportData[], searchSt
       include: [{ model: Report }]
     });
     if (event != null && curEvent.signaling != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Signalering: " + curEvent.signaling;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -241,7 +239,8 @@ async function searchOperationalEventPlNumber(reportIds: reportData[], searchStr
       include: [{ model: Report }]
     });
     if (event != null && curEvent.plNumber != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "PL-nummer: " + curEvent.plNumber;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -276,7 +275,8 @@ async function searchOperationalEventDescription(reportIds: reportData[], search
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Beschrijving: " + curEvent.description;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -311,7 +311,8 @@ async function searchOperationalEventLocation(reportIds: reportData[], searchStr
       include: [{ model: Report }]
     });
     if (event != null && curEvent.location != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.location, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Locatie: " + curEvent.location;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -346,7 +347,8 @@ async function searchOperationalEventUnit(reportIds: reportData[], searchString:
       include: [{ model: Report }]
     });
     if (event != null && curEvent.unit != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.unit, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Unit: " + curEvent.unit;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -366,7 +368,8 @@ async function searchOperationalEventDate(reportIds: reportData[], search: strin
         include: [{ model: Report }]
       });
       if (event != null && dateString != null) {
-        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        const description = "Datum: " + dateString;
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
@@ -402,7 +405,8 @@ async function searchWorkplaceEventDescription(reportIds: reportData[], searchSt
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Beschrijving: " + curEvent.description;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -437,7 +441,8 @@ async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchStrin
       include: [{ model: Report }]
     });
     if (event != null && curEvent.absentee != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.absentee, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Afwezige: " + curEvent.absentee;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -472,7 +477,8 @@ async function searchWorkplaceEventSubstitute(reportIds: reportData[], searchStr
       include: [{ model: Report }]
     });
     if (event != null && curEvent.substitute != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.substitute, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Vervanger: " + curEvent.substitute;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -492,7 +498,8 @@ async function searchWorkplaceEventDate(reportIds: reportData[], search: string)
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        const description = "Datum: " + dateString;
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
@@ -528,7 +535,8 @@ async function searchSecretariatNotificationDescription(reportIds: reportData[],
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Beschrijving: " + curEvent.description;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -548,7 +556,8 @@ async function searchSecretariatNotificationDate(reportIds: reportData[], search
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        const description = "Datum: " + dateString;
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
@@ -584,7 +593,8 @@ async function searchDefectDescription(reportIds: reportData[], searchString: st
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Beschrijving: " + curEvent.description;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -604,7 +614,8 @@ async function searchDefectDate(reportIds: reportData[], search: string) {
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        const description = "Datum: " + dateString;
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
@@ -640,7 +651,8 @@ async function searchMalfunctionDescription(reportIds: reportData[], searchStrin
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = "Beschrijving: " + curEvent.description;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -660,17 +672,13 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
         include: [{ model: Report }]
       });
       if (event != null) {
-        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: dateString, date: curEvent.date, nightShift: event.report.nightShift };
+        const description = "Datum: " + dateString;
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
     }
   }
 }
-
-// voor multiselect:
-// router.get('/search/:fields/:keyword) fields=array van geselecteerde velden
-// over velden in array loopen, per veld de overeenkomstige zoekfunctie oproepen
-// het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
 
 /******************************************************************************
  *                      Search Reports - "POST /api/reports/search"
@@ -678,7 +686,7 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
 router.post('/search', async (req, res) => {
   let temp: string = req.body.keyword;
   const offset = req.body.offset;
-  const reportsPerPage = req.body.numPages;
+  const reportsPerPage = req.body.numPerPage;
   let search = decodeURIComponent(temp);
 
   // Door omzetting naar post moeten deze erbij, anders worden die niet omgezet
@@ -687,10 +695,6 @@ router.post('/search', async (req, res) => {
   search = search.split("%5C%5C").join("\\");
 
   let reportIds: reportData[] = [];
-
-  console.log("\n\n\n");
-  console.log(search);
-  console.log("\n\n\n");
 
   await searchOperationalEventSignaling(reportIds, search, "l");
   await searchOperationalEventSignaling(reportIds, search, "s");
@@ -721,14 +725,10 @@ router.post('/search', async (req, res) => {
   await searchMalfunctionDate(reportIds, search);
 
   const count = reportIds.length;
-  console.log("\n\n\n");
-  console.log(count);
   reportIds = reportIds.slice(offset, offset + reportsPerPage);
 
   const reportsData = { reports: reportIds, count: count };
 
-  console.log(reportsData);
-  console.log(reportIds);
   res.send(reportsData);
 });
 
@@ -747,10 +747,11 @@ function addReport(report: reportData, reportIds: reportData[]) {
 /******************************************************************************
  *                      Search Reports - "POST /api/reports/pl"
  ******************************************************************************/
-
 router.post('/pl', async (req, res) => {
   const pl: string = req.body.plNumber;
   const plString: string = '%' + pl + '%';
+  const offset = req.body.offset;
+  const reportsPerPage = req.body.numPerPage;
 
   let reportIds: reportData[] = [];
 
@@ -770,12 +771,19 @@ router.post('/pl', async (req, res) => {
       include: [{ model: Report }]
     });
     if (event != null) {
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.plNumber, date: curEvent.date, nightShift: event.report.nightShift };
+      let description = "PL-nummer: " + curEvent.plNumber;
+
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
 
-  res.send(reportIds);
+  const count = reportIds.length;
+  reportIds = reportIds.slice(offset, offset + reportsPerPage);
+
+  const reportsData = { reports: reportIds, count: count };
+
+  res.send(reportsData);
 });
 
 /******************************************************************************
@@ -1328,7 +1336,6 @@ router.get('/malfunctionTypes/:id', async (req: Request, res: Response) => {
   res.send("");
 });
 
-
 /******************************************************************************
  *      Remove notification from event - "POST /api/reports/removeNotification"
  ******************************************************************************/
@@ -1549,7 +1556,6 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
 
   res.send(results);
 });
-
 
 /******************************************************************************
  *      POST Autosave Operational event - "POST /api/reports/autoSaveOperational"
@@ -1887,7 +1893,6 @@ router.post('/addMalfunction', async (req, res) => {
   })
 })
 
-
 /******************************************************************************
  *      POST Add Defect - "POST /api/reports/addDefect"
  ******************************************************************************/
@@ -2175,7 +2180,6 @@ router.post('/changeDefect', async (req, res) => {
   res.send(true);
 });
 
-
 /******************************************************************************
 *      POST Change Malfunction - "POST /api/reports/changeMalfunction"
 ******************************************************************************/
@@ -2246,8 +2250,6 @@ router.post("/getPlNumberReports", async (req, res) => {
   res.json(matched_events);
 });
 
-
-
 /******************************************************************************
 *      GET Get Dummy database events - "POST /api/reports/getDummyEvents"
 ******************************************************************************/
@@ -2262,8 +2264,6 @@ router.post("/getDummyEvents", async (req, res) => {
   });
   res.json(matched_events);
 });
-
-
 
 /******************************************************************************
 *      GET Get keyword searched reports - "POST /api/reports/getKeywordReports"
@@ -2462,7 +2462,7 @@ router.post('/getFiltered', async (req, res) => {
   if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
     date = req.body.selectedDate;
   const offset = req.body.offset;
-  const reportsPerPage = req.body.numPages;
+  const reportsPerPage = req.body.numPerPage;
 
   if (values.includes("types"))
     values = types;
@@ -2605,7 +2605,7 @@ router.post('/getFiltered', async (req, res) => {
   }
   if (values.includes("defectTypes"))
     values = selectedTypes.chosenValues;
-  
+
   if (values.includes("malfunctionTypes")) {
     types.push("malfunctionTypes")
     values = types;
@@ -2650,15 +2650,396 @@ router.post('/getFiltered', async (req, res) => {
   }
   if (values.includes("malfunctionTypes"))
     values = selectedTypes.chosenValues;
-  
+
   const count = reports.length;
-  console.log("\n\n\n");
-  console.log(count);
   reports = reports.slice(offset, offset + reportsPerPage);
-  
+
   const reportsData = { reports: reports, count: count };
 
-  console.log(reportsData);
+  res.send(reportsData);
+});
+
+/******************************************************************************
+ *             Get Statistics - "POST /api/reports/getSearchFiltered"
+ ******************************************************************************/
+router.post('/getSearchFiltered', async (req, res) => {
+  let reports: reportData[] = [];
+  let temp: string = req.body.keyword;
+  const oldReports = req.body.oldReports;
+  const selectedTypes = req.body.selectedTypes;
+  let values = selectedTypes.chosenValues;
+  const offset = req.body.offset;
+  const reportsPerPage = req.body.numPerPage;
+  const types = req.body.types;
+  let search = decodeURIComponent(temp);
+
+  // Door omzetting naar post moeten deze erbij, anders worden die niet omgezet
+  search = search.split("%20").join(" ");
+  search = search.split("%25").join("%");
+  search = search.split("%5C%5C").join("\\");
+
+  let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
+  if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
+    date = req.body.selectedDate;
+
+  if (values.includes("types"))
+    values = types;
+
+  for (let i = 0; i < oldReports.length; i++) {
+    if (values.includes("workplaceTypes")) {
+      types.push("workplaceTypes")
+      values = types;
+    }
+    for (let i in values) {
+      var type = values[i];
+      var result = [];
+
+      result = await WorkplaceEvent.findAll({
+        order: ['date'],
+        where: {
+          date: {
+            [Op.and]: {
+              [Op.lt]: date.end,
+              [Op.gt]: date.start,
+            }
+          },
+          [Op.or]: {
+            description: {
+              [Op.like]: '%' + search + '%'
+            },
+            absentee: {
+              [Op.like]: '%' + search + '%'
+            },
+            substitute: {
+              [Op.like]: '%' + search + '%'
+            },
+          }
+        },
+        include: [{
+          model: WorkplaceType,
+          required: true,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }],
+      });
+
+      for (let i in result) {
+        const curEvent = result[i];
+        const event = await Administrative.findOne({
+          where: {
+            id: curEvent.administrativeId
+          },
+          include: [{ model: Report }]
+        });
+
+        if (event != null) {
+          let description = "";
+
+          if (curEvent.description != null && curEvent.description.toLowerCase().includes(search))
+            description = "Beschrijving: " + curEvent.description;
+          else if (curEvent.absentee != null && curEvent.absentee.toLowerCase().includes(search))
+            description = "Afwezige: " + curEvent.absentee;
+          else if (curEvent.substitute != null && curEvent.substitute.toLowerCase().includes(search))
+            description = "Vervanger: " + curEvent.substitute;
+
+          let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+          addReport(report, reports);
+        }
+      }
+    }
+    if (values.includes("workplaceTypes"))
+      values = selectedTypes.chosenValues;
+
+    if (values.includes("operationalTypes")) {
+      types.push("operationalTypes")
+      values = types;
+    }
+    for (let i in values) {
+      var type = values[i];
+      var result = [];
+
+      result = await OperationalEvent.findAll({
+        order: ['date'],
+        where: {
+          date: {
+            [Op.and]: {
+              [Op.lt]: date.end,
+              [Op.gt]: date.start,
+            }
+          },
+          [Op.or]: {
+            signaling: {
+              [Op.like]: '%' + search + '%'
+            },
+            plNumber: {
+              [Op.like]: '%' + search + '%'
+            },
+            description: {
+              [Op.like]: '%' + search + '%'
+            },
+            location: {
+              [Op.like]: '%' + search + '%'
+            },
+            unit: {
+              [Op.like]: '%' + search + '%'
+            },
+          }
+        },
+        include: [{
+          model: EventType,
+          required: true,
+          include: [{
+            model: OperationalType,
+            required: true,
+            where: {
+              typeName: {
+                [Op.like]: '' + type,
+              },
+            },
+          }]
+        }]
+      });
+
+      for (let i in result) {
+        const curEvent = result[i];
+        const event = await Operational.findOne({
+          where: {
+            id: curEvent.operationalId
+          },
+          include: [{ model: Report }]
+        });
+
+        if (event != null) {
+          let description = "";
+
+          if (curEvent.signaling != null && curEvent.signaling.toLowerCase().includes(search))
+            description = "Signalering: " + curEvent.signaling;
+          else if (curEvent.plNumber != null && curEvent.plNumber.toLowerCase().includes(search))
+            description = "PL-nummer: " + curEvent.plNumber;
+          else if (curEvent.description != null && curEvent.description.toLowerCase().includes(search))
+            description = "Beschrijving: " + curEvent.description;
+          else if (curEvent.location != null && curEvent.location.toLowerCase().includes(search))
+            description = "Locatie: " + curEvent.location;
+          else if (curEvent.unit != null && curEvent.unit.toLowerCase().includes(search))
+            description = "Unit: " + curEvent.unit;
+
+          let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+          addReport(report, reports);
+        }
+      }
+    }
+    if (values.includes("operationalTypes"))
+      values = selectedTypes.chosenValues;
+
+    if (values.includes("defectTypes")) {
+      types.push("defectTypes")
+      values = types;
+    }
+    for (let i in values) {
+      var type = values[i];
+      var result = [];
+
+      result = await Defect.findAll({
+        order: ['date'],
+        where: {
+          date: {
+            [Op.and]: {
+              [Op.lt]: date.end,
+              [Op.gt]: date.start,
+            }
+          },
+          [Op.or]: {
+            description: {
+              [Op.like]: '%' + search + '%'
+            },
+          }
+        },
+        include: [{
+          model: DefectType,
+          required: true,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+      });
+      for (let i in result) {
+        const curEvent = result[i];
+        const event = await Technical.findOne({
+          where: {
+            id: curEvent.technicalId
+          },
+          include: [{ model: Report }]
+        });
+        if (event != null) {
+          let description = "";
+
+          if (curEvent.description != null && curEvent.description.toLowerCase().includes(search))
+            description = "Beschrijving: " + curEvent.description;
+
+          let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+          addReport(report, reports);
+        }
+      }
+    }
+    if (values.includes("defectTypes"))
+      values = selectedTypes.chosenValues;
+
+    if (values.includes("malfunctionTypes")) {
+      types.push("malfunctionTypes")
+      values = types;
+    }
+    for (let i in values) {
+      var type = values[i];
+      var result = [];
+
+      result = await Malfunction.findAll({
+        order: ['date'],
+        where: {
+          date: {
+            [Op.and]: {
+              [Op.lt]: date.end,
+              [Op.gt]: date.start,
+            }
+          },
+          [Op.or]: {
+            description: {
+              [Op.like]: '%' + search + '%'
+            },
+            duration: {
+              [Op.like]: '%' + search + '%'
+            },
+          }
+        },
+        include: [{
+          model: MalfunctionType,
+          required: true,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+      });
+
+      for (let i in result) {
+        const curEvent = result[i];
+        const event = await Technical.findOne({
+          where: {
+            id: curEvent.technicalId
+          },
+          include: [{ model: Report }]
+        });
+
+        if (event != null) {
+          let description = "";
+
+          if (curEvent.description != null && curEvent.description.toLowerCase().includes(search))
+            description = "Beschrijving: " + curEvent.description;
+          else if (curEvent.duration != null && curEvent.duration.toLowerCase().includes(search))
+            description = "Duratie: " + curEvent.duration;
+
+          let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+          addReport(report, reports);
+        }
+      }
+    }
+    if (values.includes("malfunctionTypes"))
+      values = selectedTypes.chosenValues;
+  }
+
+  const count = reports.length;
+  reports = reports.slice(offset, offset + reportsPerPage);
+
+  const reportsData = { reports: reports, count: count };
+
+  res.send(reportsData);
+});
+
+/******************************************************************************
+ *             Get Statistics - "POST /api/reports/getSearchPlFiltered"
+ ******************************************************************************/
+router.post('/getSearchPlFiltered', async (req, res) => {
+  let reports: reportData[] = [];
+  const oldReports = req.body.oldReports;
+  const selectedTypes = req.body.selectedTypes;
+  let values = selectedTypes.chosenValues;
+  const offset = req.body.offset;
+  const reportsPerPage = req.body.numPerPage;
+  const types = req.body.types;
+  let pl = req.body.plNumber;
+
+  let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
+  if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
+    date = req.body.selectedDate;
+
+  if (values.includes("types"))
+    values = types;
+
+  for (let i = 0; i < oldReports.length; i++) {
+    if (values.includes("operationalTypes"))
+      values = types;
+
+    for (let i in values) {
+      var type = values[i];
+      var result = [];
+
+      result = await OperationalEvent.findAll({
+        order: ['date'],
+        where: {
+          date: {
+            [Op.and]: {
+              [Op.lt]: date.end,
+              [Op.gt]: date.start,
+            }
+          },
+          plNumber: {
+            [Op.like]: '%' + pl + '%'
+          },
+        },
+        include: [{
+          model: EventType,
+          required: true,
+          include: [{
+            model: OperationalType,
+            required: true,
+            where: {
+              typeName: {
+                [Op.like]: '' + type,
+              },
+            },
+          }]
+        }]
+      });
+
+      for (let i in result) {
+        const curEvent = result[i];
+        const event = await Operational.findOne({
+          where: {
+            id: curEvent.operationalId
+          },
+          include: [{ model: Report }]
+        });
+
+        if (event != null) {
+          let description = "PL-nummer: " + curEvent.plNumber;
+
+          let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+          addReport(report, reports);
+        }
+      }
+    }
+  }
+
+  const count = reports.length;
+  reports = reports.slice(offset, offset + reportsPerPage);
+
+  const reportsData = { reports: reports, count: count };
+
   res.send(reportsData);
 });
 
@@ -2672,7 +3053,7 @@ router.post('/filterDate', async (req, res) => {
   if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
     date = req.body.selectedDate;
   const offset = req.body.offset;
-  const reportsPerPage = req.body.numPages;
+  const reportsPerPage = req.body.numPerPage;
 
   for (let i in oldReports) {
     var oldReport = oldReports[i];
@@ -2785,13 +3166,62 @@ router.post('/filterDate', async (req, res) => {
 
 
   const count = reports.length;
-  console.log("\n\n\n");
-  console.log(count);
   reports = reports.slice(offset, offset + reportsPerPage);
 
   const reportsData = { reports: reports, count: count };
 
-  console.log(reportsData);
+  res.send(reportsData);
+});
+
+/******************************************************************************
+ *             Get Statistics - "POST /api/reports/filterPlDate"
+ ******************************************************************************/
+router.post('/filterPlDate', async (req, res) => {
+  let reports: reportData[] = [];
+  let oldReports = req.body.data;
+  let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
+  if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
+    date = req.body.selectedDate;
+  const offset = req.body.offset;
+  const reportsPerPage = req.body.numPerPage;
+
+  for (let i in oldReports) {
+    var oldReport = oldReports[i];
+    var result;
+
+    result = await OperationalEvent.findOne({
+      order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        },
+        id: oldReport.eventId
+      },
+    });
+
+    if (result != null) {
+      const event = await Operational.findOne({
+        where: {
+          id: result.operationalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null) {
+        const description = "PL-nummer: " + oldReport.description;
+        let report: reportData = { reportId: event.reportId, eventId: result.id, description: description, date: result.date, nightShift: event.report.nightShift };
+        addReport(report, reports);
+      }
+    }
+  }
+
+  const count = reports.length;
+  reports = reports.slice(offset, offset + reportsPerPage);
+
+  const reportsData = { reports: reports, count: count };
+
   res.send(reportsData);
 });
 

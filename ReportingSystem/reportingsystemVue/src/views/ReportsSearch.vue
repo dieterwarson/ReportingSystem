@@ -3,7 +3,7 @@
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
     </div>
-    <div v-if="reports.length != 0"  class="container">
+    <div v-if="reports.reports.length != 0"  class="container">
       <h1>Gevonden verslagen</h1>
       <div class="row">
         <form class="col-md-4">
@@ -28,8 +28,8 @@
           </div>
         </form>
         <div class="col-md-8">
-
-          <div v-if="selectedDate.start == ''">
+          <div v-if="selectedDate.start == '' && value.chosenValues.length == 0">
+            
             <div class="container my-2" v-for="value in reports.reports" :key="value.reportId">
               <button class="btn btn-secondary btn-lg btn-block">
                 {{
@@ -72,7 +72,6 @@
     <div v-else>
       <h1>Geen verslagen gevonden.</h1>
     </div>
-  <p>filteredReports: {{ filteredReports }}</p>
   </div>
 </template>
 
@@ -97,26 +96,13 @@ export default Vue.extend({
   },
   data: function() {
     return {
-      numPages: 10,
+      numPerPage: 10,
       keyword: "",
       plNumber: "",
       typesFound: false,
       reportTypes: {},
       reports: {
-        reports: [
-          {
-            reportId: Number
-          },
-          {
-            description: String
-          },
-          {
-            date: Date
-          },
-          {
-            nightShift: Boolean
-          }
-        ],
+        reports: [] as any[],
         count: 0
       },
       interval: 0,
@@ -149,8 +135,8 @@ export default Vue.extend({
       ],
       shortDays: ["ma", "di", "woe", "do", "vrij", "zat", "zo"],
       captions: {
-        title: "Kies de datums",
-        okButton: "Toepassen"
+        "title": "Kies de datums",
+        "ok_button": "Toepassen"
       },
       presetRanges: {
         today: function() {
@@ -362,7 +348,7 @@ export default Vue.extend({
       if (this.$route.query.plNumber != null)
         this.plNumber = String(this.$route.query.plNumber);
 
-      if (this.selectedDate.start == "" && this.filteredReports.reports.length == 0) {
+      if (this.selectedDate.start == "" && this.value.chosenValues.length == 0) {
         if (
           this.keyword == "" ||
           this.keyword == null ||
@@ -373,12 +359,15 @@ export default Vue.extend({
           this.loadKeywordReports(this.keyword);
         }
       } else {
-        if (this.filteredReports.reports.length == 0)
+        if (this.value.chosenValues.length == 0)
           this.filterDate();
         else
           this.getFiltered();
-        this.reports.reports = this.filteredReports.reports;
+        this.loadCount();
       }
+      ReportingService.getAllReports("/api/statistics/types").then(
+        res => (this.reportTypes = res) 
+      )
     },
     /**
      * Finds the reports which contain an event that contains the pl-number partially.
@@ -388,7 +377,7 @@ export default Vue.extend({
         {
           plNumber: this.plNumber,
           offset: this.currentPage * 10 - 10, 
-          numPages: this.numPages
+          numPerPage: this.numPerPage
         }      
       ).then(res => (this.reports = res));    
     },
@@ -400,7 +389,7 @@ export default Vue.extend({
         {
           keyword: this.keyword,
           offset: this.currentPage * 10 - 10, 
-          numPages: this.numPages
+          numPerPage: this.numPerPage
         }      
       ).then(res => (this.reports = res));    
     },
@@ -410,10 +399,10 @@ export default Vue.extend({
     },
 
     loadCount: function() {
-      if (this.selectedDate.start == "" && this.filteredReports.reports.length == 0) {
+      if (this.selectedDate.start == "" && this.value.chosenValues.length == 0) {
         this.calculatePages(this.reports.count);     
       } else {
-        if (this.filteredReports.reports.length != 0)
+        if (this.value.chosenValues.length != 0)
           this.calculatePages(this.filteredReports.count);
       }
     },
@@ -505,29 +494,66 @@ export default Vue.extend({
     },
 
     filterDate: function () {
-      ReportingService.filterDate(
-        {
-          data: this.reports.reports,
-          selectedDate: this.selectedDate,
-          offset: this.currentPage * 10 - 10, 
-          numPages: this.numPages
-        }
-      ).then(
-        (res) => (this.filteredReports = res)
-      )
+      if (this.plNumber == "") {
+        ReportingService.filterDate(
+          {
+            data: this.reports.reports,
+            selectedDate: this.selectedDate,
+            offset: this.currentPage * 10 - 10, 
+            numPerPage: this.numPerPage
+          }
+        ).then(
+          (res) => (this.filteredReports = res)
+        )
+      } else {
+        ReportingService.filterPlDate(
+          {
+            data: this.reports.reports,
+            selectedDate: this.selectedDate,
+            offset: this.currentPage * 10 - 10, 
+            numPerPage: this.numPerPage
+          }
+        ).then(
+          (res) => (this.filteredReports = res)
+        )
+      }
     },
 
     getFiltered: function() {
-      ReportingService.getFiltered(
-        {
-          selectedTypes: this.value, 
-          selectedDate: this.selectedDate, 
-          types: this.types, 
-          offset: this.currentPage * 10 - 10, 
-          numPages: this.numPages
-        }).then(
-        (res) => (this.filteredReports = res)
-      )
+      if (this.value.chosenValues.length != 0) {
+        if (this.plNumber == "") {
+          ReportingService.getSearchFiltered(
+            {
+              oldReports: this.reports.reports,
+              keyword: this.keyword,
+              selectedTypes: this.value, 
+              selectedDate: this.selectedDate, 
+              types: this.types, 
+              offset: this.currentPage * 10 - 10, 
+              numPerPage: this.numPerPage
+            }
+          ).then(
+            (res) => (this.filteredReports = res)
+          )
+        } else {
+          ReportingService.getSearchPlFiltered(
+            {
+              oldReports: this.reports.reports,
+              plNumber: this.plNumber,
+              selectedTypes: this.value, 
+              selectedDate: this.selectedDate, 
+              types: this.types, 
+              offset: this.currentPage * 10 - 10, 
+              numPerPage: this.numPerPage
+            }
+          ).then(
+            (res) => (this.filteredReports = res)
+          )
+        }
+      } else {
+        this.filteredReports.reports = [];
+        this.filteredReports.count = 0;
+      }
     },
 
     addToTypes: function(type: string) {
