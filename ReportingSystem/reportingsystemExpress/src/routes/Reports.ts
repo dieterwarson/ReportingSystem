@@ -2429,42 +2429,6 @@ router.post("/addTypes", async (req, res) => {
 });
 
 /******************************************************************************
- *             Filter interfaces, functinos
- ******************************************************************************/
-
-interface Counts {
-  typeName: string;
-  count: number;
-}
-
-interface filteredEvents {
-  counts: Array<Counts>;
-}
-
-interface eventDate {
-  x: string;
-  y: number;
-}
-
-function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Malfunction[], events: eventDate[]) {
-
-  result.forEach((element: { date: { toDateString: () => string; }; }) => {
-    let dateFound = false;
-    for (let i = 0; i < events.length; i++) {
-      if (events[i].x == element.date.toDateString()) {
-        dateFound = true;
-        events[i].y++;
-      }
-    }
-    if (!dateFound) {
-      events.push({ x: element.date.toDateString(), y: 1 });
-    }
-  });
-
-  return events;
-}
-
-/******************************************************************************
  *             Get Statistics - "POST /api/reports/getFiltered"
  ******************************************************************************/
 router.post('/getFiltered', async (req, res) => {
@@ -2668,7 +2632,7 @@ router.post('/getFiltered', async (req, res) => {
   const count = reports.length;
   console.log("\n\n\n");
   console.log(count);
-  reports = reports.slice(offset, offset + reportsPerPage / 2);
+  reports = reports.slice(offset, offset + reportsPerPage);
   
   const reportsData = { reports: reports, count: count };
 

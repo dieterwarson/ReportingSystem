@@ -347,12 +347,14 @@ export default Vue.extend({
           this.selectedDate
         ).then(res => (this.reports.reports = res));
       } else {
+        this.getFiltered();
         this.reports.reports = this.filteredReports.reports;
       }
       ReportingService.getAllReports("/api/statistics/types").then(
         res => (this.reportTypes = res, this.reportTypesArray = [res]) 
       )
     },
+    
     onDateSelected: function(daterange: DateRange) {
       this.selectedDate = daterange;
     },
@@ -363,7 +365,7 @@ export default Vue.extend({
           this.calculatePages(res.count)
         );      
       } else {
-        this.pages = this.filteredReports.count;
+        this.calculatePages(this.filteredReports.count);
       }
     },
 
