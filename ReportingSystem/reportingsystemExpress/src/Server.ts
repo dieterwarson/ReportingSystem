@@ -35,7 +35,8 @@ const cron = require("node-cron");
 import cronServer from './cron'
 const cors = require('cors');
 import { Op } from "sequelize";
-const fs = require('fs')
+const fs = require('fs');
+require('dotenv').config({ path: '../.env' });
 
 
 // Init express
@@ -1004,18 +1005,16 @@ sequelize.sync();
 
 // DummyDatabase.sync();
 
-/************************************************************************************
- *                              AXIOS     NEEDS TO BE REPLACED LATER
- ***********************************************************************************/
 const shiftChange = new Date("December 17, 1995 12:00:00");
-
 let cronInstance = new cronServer(shiftChange.getHours());
-// makes a new report every 12 hours, the hour can be changed with shiftChange
-cron.schedule(shiftChange.getMinutes() + " */" + shiftChange.getHours() + " * * *", function () {
-  cronInstance.cronTask();
-});
 
-// cronInstance.cronTask();
+// makes a new report every 12 hours, the hour can be changed with shiftChange
+if(process.env.EMAIL_USER !== undefined && process.env.EMAIL_PASS !== undefined){
+  cron.schedule(shiftChange.getMinutes() + " */" + shiftChange.getHours() + " * * *", function () {
+    cronInstance.cronTask(process.env.EMAIL_USER as string, process.env.EMAIL_PASS as string);
+  });
+}
+
 
 // Export express instance
 export default app;

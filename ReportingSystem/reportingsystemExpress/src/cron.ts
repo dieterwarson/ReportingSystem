@@ -14,13 +14,13 @@ export default class cronServer{
         this.shiftswitch = hour;
     }
 
-    cronTask() {
-        this.sendEmail();
+    cronTask(user:string, pass:string) {
+        this.sendEmail(user, pass);
         this.makeNewReport();
         console.log("crontask");
     }
 
-    sendEmail() {
+    sendEmail(user: string, pass:string) {
         let pg = new pdfGenerator();
         pg.generateReport();
 
@@ -32,12 +32,12 @@ export default class cronServer{
                 ciphers: 'SSLv3'
             },
             auth: {
-                user: '',
-                pass: '',
+                user: user,
+                pass: pass,
             }
         })
         var mailOptions = {
-            from: '" Verslag Systeem " <VerslagSysteem@police.belgium.eu>', // sender address (who sends)
+            from: '" Verslag Systeem " <' + user + '>', // sender address (who sends)
             to: this.getEmails(), // list of receivers (who receives)
             subject: 'Verslag van ' + new Date().getDate() + "/" + (new Date().getMonth() + 1), // Subject line
             text: 'Beste, \n \n In bijlage het verslag van de vorige shift ', // plaintext body
