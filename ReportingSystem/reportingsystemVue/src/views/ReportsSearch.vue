@@ -93,17 +93,17 @@ export default Vue.extend({
      * Finds the reports which contain an event that contains the pl-number partially.
      */
     loadPlReports: function() {
-      ReportingService.getSearchReports(
-        "/api/reports/pl/" + this.plNumber
-      ).then(res => (this.reports = res));
+      ReportingService.getSearchPlReports(
+        {plNumber: this.plNumber}
+      ).then(res => (this.reports = res));    
     },
     /**
      * Finds the reports which contain an event that contains the keyword partially.
      */
     loadKeywordReports: function(keyword: string) {
-      ReportingService.getSearchReports("/api/reports/search/" + keyword).then(
-        res => (this.reports = res)
-      );
+      ReportingService.getSearchReports(
+        {keyword: keyword}
+      ).then(res => (this.reports = res));
     },
 
     /**

@@ -673,11 +673,23 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
 // het resultaat van elke aparte functie samenvoegen in 1 grote array van alle resultaten
 
 /******************************************************************************
- *                      Search Reports - "GET /api/reports/search/:keyword"
+ *                      Search Reports - "POST /api/reports/search"
  ******************************************************************************/
-router.get('/search/:keyword', async (req: Request, res: Response) => {
-  const search = decodeURIComponent(req.param('keyword'));
+router.post('/search', async (req, res) => {
+  let temp: string = req.body.keyword;
+  let search = decodeURIComponent(temp);
+
+  // Door omzetting naar post moeten deze erbij, anders worden die niet omgezet
+  search = search.split("%20").join(" ");
+  search = search.split("%25").join("%");
+  search = search.split("%5C%5C").join("\\");
+
   let reportIds: reportData[] = [];
+
+  console.log("\n\n\n");
+  console.log(temp);
+  console.log(search);
+  console.log("\n\n\n");
 
   await searchOperationalEventSignaling(reportIds, search, "l");
   await searchOperationalEventSignaling(reportIds, search, "s");
@@ -723,11 +735,11 @@ function addReport(report: reportData, reportIds: reportData[]) {
 }
 
 /******************************************************************************
- *                      Search Reports - "GET /api/reports/pl/:pl"
+ *                      Search Reports - "POST /api/reports/pl"
  ******************************************************************************/
 
-router.get('/pl/:pl', async (req: Request, res: Response) => {
-  const pl: string = req.param('pl');
+router.post('/pl', async (req, res) => {
+  const pl: string = req.body.plNumber;
   const plString: string = '%' + pl + '%';
 
   let reportIds: reportData[] = [];

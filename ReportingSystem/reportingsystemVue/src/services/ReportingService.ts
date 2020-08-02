@@ -299,9 +299,19 @@ export default {
       });
   },
 
-  getSearchReports(url: string) {
+  getSearchReports(data: any) {
     return Api()
-      .get(url)
+      .post("api/reports/search", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      });
+  },
+  getSearchPlReports(data: any) {
+    return Api()
+      .post("api/reports/pl", data)
       .then(res => {
         return res.data;
       })
