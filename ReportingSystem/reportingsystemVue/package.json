@@ -10,6 +10,7 @@
   "dependencies": {
     "@riophae/vue-treeselect": "^0.4.0",
     "@types/chart.js": "^2.9.20",
+    "@types/json2csv": "^5.0.1",
     "@types/jsonwebtoken": "^8.3.9",
     "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
@@ -22,6 +23,7 @@
     "express-session": "^1.17.1",
     "install": "^0.13.0",
     "jquery": "^3.5.1",
+    "json2csv": "^5.0.1",
     "jsonwebtoken": "^8.5.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
