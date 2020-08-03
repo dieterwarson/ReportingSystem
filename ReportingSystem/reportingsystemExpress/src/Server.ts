@@ -31,6 +31,7 @@ import WorkplaceType from './models/workplaceType';
 import EventType from './models/eventType';
 import OperationalType from './models/operationalType';
 import OperationalSubtype from './models/operationalSubtype';
+import Custom from './models/custom'
 const cron = require("node-cron");
 import cronServer from './cron'
 const cors = require('cors');
@@ -110,8 +111,10 @@ app.get('*', (req: Request, res: Response) => {
 // Na eenmaal toevoegen, dus eenmaal herstarten via nodemon, moeten de save()'s terug gecomment worden
 // Anders wordt elke keer nodemon hetstart opnieuw al deze kolommen toegevoegd
 
-
-
+const custom = new Custom({
+  reportId: 13
+});
+custom.save() 
 const user1 = new User({
   username: 'jan_janssens',
   password: '',

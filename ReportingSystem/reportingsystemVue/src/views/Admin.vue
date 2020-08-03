@@ -5,6 +5,9 @@
     </div>
     <div class="container pt-5 pb-5">
       <h1>Admin functies</h1>
+      <div>
+        {{this.fieldnames}}
+      </div>
       <div class="container mb-2">
         <div class="row">
           <div class="col-sm">
@@ -67,7 +70,7 @@
 
             <button
               type="button"
-              class="btn btn-success btn-block"
+              class="btn btn-info btn-block"
               @click.prevent="doNewUser"
             >
               Voeg gebruiker toe
@@ -121,7 +124,7 @@
 
             <button
               type="button"
-              class="btn btn-success btn-block"
+              class="btn btn-info btn-block"
               @click.prevent="doChangeAccess"
             >
               Verander toegangsrechten
@@ -177,7 +180,7 @@
 
             <button
               type="button"
-              class="btn btn-success btn-block"
+              class="btn btn-info btn-block"
               @click.prevent="doChangePassword"
             >
               Verander wachtwoord
@@ -282,12 +285,55 @@
           />
           <button
             type="button"
-            class="btn btn-success btn-block"
+            class="btn btn-info btn-block"
             @click.prevent="doAddField"
           >
             Voeg veld toe
           </button>
           <small v-if="addField.completed">Het veld is toegevoegd!</small>
+        </section>
+      </div>
+
+      <div class="container mb-2">
+        <div class="row">
+          <div class="col-sm">
+            <button
+              type="button"
+              class="btn btn-primary btn-block"
+              @click.prevent="getCustomFiche"
+            >
+              Maak nieuwe gepersonaliseerde fiche
+            </button>
+          </div>
+        </div>
+        <section v-if="option == 'customFiche'">
+          <div class="input-group-vertical mt-2">
+            <label>Naam fiche</label><input class="form-control form-control-lg" v-model="customTitle" name="titel" type="text" placeholder="Naam fiche">
+
+            <div v-for="(inputfield, index) in customFiche" :key="index">
+              <label>Veld {{index + 1 }}</label><input class="form-control form-control-lg" v-model="customFiche[index].title" type="text" placeholder="Naam veld">
+
+            </div>
+            <div>
+              <div class="btn-group d-flex">
+                <button v-if="customFiche.length <= 9 && customFiche.length > 0" @click="addInputField" type="button" class="btn btn-success btn-block form-control form-control-lg">+ invoerveld</button><button v-if="customFiche.length <= 10 && customFiche.length > 1" @click="delInputField" type="button" class="btn btn-danger btn-block form-control form-control-lg">- invoerveld</button>
+              </div>
+              
+            </div> 
+            <button
+              type="button"
+              class="btn btn-info btn-block"
+              @click.prevent="addNewCustom"
+            >
+              Voeg gepersonaliseerde fiche toe
+            </button>
+            <small v-if="newCustom.failed"
+              >De gebruiker toevoegen is niet gelukt!</small
+            >
+            <small v-if="newCustom.completed"
+              >De nieuwe gebruiker is toegevoegd!</small
+            >
+          </div>
         </section>
       </div>
 
@@ -328,6 +374,8 @@ export default Vue.extend({
   data() {
     return {
       option: "no-option",
+      fieldnames: "",
+      customTitle: "",
       newUserData: {
         username: "",
         password: "",
@@ -367,12 +415,34 @@ export default Vue.extend({
         reportTypes: {},
         completed: false,
       },
+      customFiche: [
+        {
+          title: ""
+        }
+      ],
+      newCustom: {
+        failed: false,
+        completed: false,
+
+      }
     };
   },
   mounted() {
     this.loadData();
+    this.getCustom();
   },
   methods: {
+    addInputField: function() {
+      
+      if (this.customFiche.length < 10)
+        this.customFiche.push({
+          title: ""
+        })
+    },
+    delInputField: function() {
+      if (this.customFiche.length > 0)
+        this.customFiche.pop();
+      },
     getNewUser: function() {
       if (this.option == "newUser") {
         this.option = "no_option";
@@ -381,6 +451,15 @@ export default Vue.extend({
       }
       this.emptyAllFields();
     },
+    getCustomFiche: function() {
+      if (this.option == "customFiche") {
+        this.option = 'no_option';
+      } else if (this.option != "customFiche") {
+        this.option = "customFiche"
+      }
+      
+    },
+
     getChangeAccesRights: function() {
       if (this.option == "changeAccess") {
         this.option = "no_option";
@@ -560,6 +639,16 @@ export default Vue.extend({
         (res) => (this.addField.reportTypes = res)
       );
     },
+    async addNewCustom() {
+      const response = await ReportingService.addCustomFiche({
+        fields: this.customFiche,
+        title: this.customTitle
+      })
+    },
+    async getCustom() {
+    this.fieldnames = await ReportingService.getCustomFiche();
+  }
   },
+   
 });
 </script>

@@ -6,21 +6,19 @@ import {
     ForeignKey,
     BelongsTo,
   } from 'sequelize-typescript';
-  import Report from './report';
+
+import Report from './report';
   
   @Table
-  export default class CustomNames extends Model<CustomNames> {
+  export default class Custom extends Model<Custom> {
     @Index
   
     @ForeignKey(() => Report)
     @Column
     reportId!: number;
-  
+    
     @BelongsTo(() => Report)
     report!: Report;
-  
-    @Column
-    columnName!: string;
-
+    
   }
   

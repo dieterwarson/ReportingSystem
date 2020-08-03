@@ -5,7 +5,7 @@
   </div>
 <!-- script has to be implemented again to achieve the seperate forms -->
 <div class="container pt-5 pb-5">
-  
+  {{customEvents}}
   <h1>Voeg gebeurtenis toe</h1>
   <form id="addReport" class="formcontainer">
 
@@ -13,6 +13,7 @@
       <button id="operationalButton" type="button" class="btn btn-info" @click.prevent="getOperational">Operationeel</button>
       <button id="workForceButton" type="button" class="btn btn-primary" @click.prevent="getWorkforce">Personeel</button>
       <button id="technicalButton" type="button" class="btn btn-primary" @click.prevent="getTechnical">Technisch</button>
+      <button id="customButton" type="button" class="btn btn-primary" @click.prevent="getCustom">Custom</button>
     </div>
 
     <section v-if="step == 'Operational'">
@@ -219,6 +220,63 @@
       </div>
       </div>
     </section>
+    <section v-if="step == 'Custom'">
+      <div class="row">
+        <select class="form-control form-control-lg" v-model="selectedOption">
+          <option v-for="option in this.fieldOptions" :key="option.id" :value="option.id">
+            {{option.customName}}
+          </option>
+          
+        </select>
+        <div v-if="selectedOption < 0">
+          Nog geen optie geselecteerd {{this.selectedOption}}
+        <button type="button" class="btn btn-info" @click.prevent="alerter">Operationeel</button>
+
+        </div>
+        <div v-if="selectedOption > 0" class="input-group">
+          <div class="input-group">
+          <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name1 !== null" v-model="customFiche.field1" :placeholder="this.fieldOptions[selectedOption - 1].name1">
+
+          </div>
+          <div class="input-group">
+                      <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name2 !== null" v-model="customFiche.field2" :placeholder="this.fieldOptions[selectedOption - 1].name2">
+
+          </div>
+          <div class="input-group">
+                      <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name3 !== null" v-model="customFiche.field3" :placeholder="this.fieldOptions[selectedOption - 1].name3">
+
+          </div>
+          <div class="input-group">
+          <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name4 !== null" v-model="customFiche.field4" :placeholder="this.fieldOptions[selectedOption - 1].name4">
+
+          </div>
+          <div class="input-group">
+          <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name5 !== null" v-model="customFiche.field5" :placeholder="this.fieldOptions[selectedOption - 1].name5">
+          </div>
+          <div class="input-group">
+          <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name6 !== null" v-model="customFiche.field6" :placeholder="this.fieldOptions[selectedOption - 1].name6">
+          </div>
+          <div class="input-group">
+          <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name7 !== null" v-model="customFiche.field7" :placeholder="this.fieldOptions[selectedOption - 1].name7">
+          </div>
+          <div class="input-group">
+          <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name8 !== null" v-model="customFiche.field8" :placeholder="this.fieldOptions[selectedOption - 1].name8">
+
+          </div>
+          <div class="input-group">
+                      <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name9 !== null" v-model="customFiche.field9" :placeholder="this.fieldOptions[selectedOption - 1].name9">
+
+          </div>
+          <div class="input-group">
+                      <input class="form-control form-control-lg" type="text" v-if="this.fieldOptions[selectedOption - 1].name10 !== null" v-model="customFiche.field10" :placeholder="this.fieldOptions[selectedOption - 1].name10">
+
+          </div>
+        <button type="button" class="btn btn-large btn-block btn-success" @click.prevent="addCustomFiche">Operationeel</button>
+
+
+        </div>
+      </div>
+    </section>
   </form>
 </div>
 </div>
@@ -232,11 +290,14 @@ import jwt from "jsonwebtoken";
 export default Vue.extend({
   data() {
     return {
+      customEvents: null,
       events: null,
       visible: false,
       test: true,
       secretary: true,
       defect: true,
+      fieldOptions: [],
+      selectedOption: -1,
       step: "Operational",
       form: {
         //OPERATIONAL OBJECTS
@@ -268,6 +329,19 @@ export default Vue.extend({
 
         technicalFailed: false,
         technicalSucceeded: false
+      },
+      customFiche: {
+        field1: null,
+        field2: null,
+        field3: null,
+        field4: null,
+        field5: null,
+        field6: null,
+        field7: null,
+        field8: null,
+        field9: null,
+        field10: null,
+
       },
       tokenData: {
         authorId: 0
@@ -303,6 +377,8 @@ export default Vue.extend({
   mounted() {
     this.loadData();
     this.getOptions("");
+    this.getCustomOptions()
+    this.getAllCustomEvents()
 
     if (window.localStorage.getItem("token") === null || window.localStorage.getItem("token") === undefined) {
       window.location.href = "/login";
@@ -367,9 +443,31 @@ export default Vue.extend({
         const operationalButton = document.getElementById("operationalButton") !;
         const workForceButton = document.getElementById("workForceButton") !;
         const technicalButton = document.getElementById("technicalButton") !;
+        const customButton = document.getElementById("customButton") !;
+        customButton.classList.replace("btn-info", "btn-primary");
         operationalButton.classList.replace("btn-primary", "btn-info");
         workForceButton.classList.replace("btn-info", "btn-primary");
         technicalButton.classList.replace("btn-info", "btn-primary");
+        operationalButton.classList.replace("btn-primary", "btn-info");
+        this.form.operationalSucceeded = false;
+        this.form.workForceSucceeded = false;
+        this.form.technicalSucceeded = false;
+      }
+    },
+    getCustom: function () {
+      if (this.step != "Custom") {
+        this.step = "Custom";
+        const operationalButton = document.getElementById("operationalButton") !;
+        const workForceButton = document.getElementById("workForceButton") !;
+        const technicalButton = document.getElementById("technicalButton") !;
+        const customButton = document.getElementById("customButton") !;
+        customButton.classList.replace("btn-primary", "btn-info");
+        operationalButton.classList.replace("btn-info", "btn-primary");
+        workForceButton.classList.replace("btn-info", "btn-primary");
+        technicalButton.classList.replace("btn-info", "btn-primary");
+
+        
+        
         this.form.operationalSucceeded = false;
         this.form.workForceSucceeded = false;
         this.form.technicalSucceeded = false;
@@ -401,6 +499,8 @@ export default Vue.extend({
         const operationalButton = document.getElementById("operationalButton") !;
         const workForceButton = document.getElementById("workForceButton") !;
         const technicalButton = document.getElementById("technicalButton") !;
+        const customButton = document.getElementById("customButton") !;
+        customButton.classList.replace("btn-info", "btn-primary");
         operationalButton.classList.replace("btn-info", "btn-primary");
         workForceButton.classList.replace("btn-primary", "btn-info");
         technicalButton.classList.replace("btn-info", "btn-primary");
@@ -415,6 +515,8 @@ export default Vue.extend({
         const operationalButton = document.getElementById("operationalButton") !;
         const workForceButton = document.getElementById("workForceButton") !;
         const technicalButton = document.getElementById("technicalButton") !;
+        const customButton = document.getElementById("customButton") !;
+        customButton.classList.replace("btn-info", "btn-primary");
         operationalButton.classList.replace("btn-info", "btn-primary");
         workForceButton.classList.replace("btn-info", "btn-primary");
         technicalButton.classList.replace("btn-primary", "btn-info");
@@ -654,6 +756,29 @@ export default Vue.extend({
         plNumber: plNumber
       });
       this.events = response;
+    },
+    async getCustomOptions() {
+    this.fieldOptions = await ReportingService.getCustomFiche();
+    },
+    async addCustomFiche() {
+      alert(this.customFiche.field1)
+      const response = await ReportingService.addCustomEvent({
+        selectedFiche: this.selectedOption,
+        field1: this.customFiche.field1,
+        field2: this.customFiche.field2,
+        field3: this.customFiche.field3,
+        field4: this.customFiche.field4,
+        field5: this.customFiche.field5,
+        field6: this.customFiche.field6,
+        field7: this.customFiche.field7,
+        field8: this.customFiche.field8,
+        field9: this.customFiche.field9,
+        field10: this.customFiche.field10,
+        author: this.tokenData.authorId,
+      })
+    },
+    async getAllCustomEvents() {
+      this.customEvents = await ReportingService.getAllCustomEvents();
     }
   },
   
