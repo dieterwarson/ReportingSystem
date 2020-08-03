@@ -56,17 +56,17 @@ router.post('/all', async (req: Request, res: Response) => {
     attributes: ['id', 'date', 'nightShift'],
   });
   let filteredReports = []
-  let lastDate = new Date("2013-05-10T00:00:00.000Z").setHours(0,0,0,0);
-  for(let i = 0; i < reports.length - 1; i++) {
-    const date1 = new Date(new Date(reports[i].date).setTime(reports[i].date.getTime() + 3600*1000)).setHours(0,0,0,0); 
-    const date2 = new Date(new Date(reports[i + 1].date).setTime(reports[i + 1].date.getTime() + 3600*1000)).setHours(0,0,0,0); 
-    if(date1 == date2 && reports[i].nightShift != reports[i+1].nightShift){
+  let lastDate = new Date("2013-05-10T00:00:00.000Z").setHours(0, 0, 0, 0);
+  for (let i = 0; i < reports.length - 1; i++) {
+    const date1 = new Date(new Date(reports[i].date).setTime(reports[i].date.getTime() + 3600 * 1000)).setHours(0, 0, 0, 0);
+    const date2 = new Date(new Date(reports[i + 1].date).setTime(reports[i + 1].date.getTime() + 3600 * 1000)).setHours(0, 0, 0, 0);
+    if (date1 == date2 && reports[i].nightShift != reports[i + 1].nightShift) {
       filteredReports.push([reports[i], reports[i + 1]])
     }
-    else if(lastDate !== date1){
+    else if (lastDate !== date1) {
       filteredReports.push([reports[i]]);
     }
-    lastDate = new Date(reports[i].date).setHours(0,0,0,0);
+    lastDate = new Date(reports[i].date).setHours(0, 0, 0, 0);
   }
   res.send(filteredReports);
 });
@@ -526,7 +526,7 @@ async function searchSecretariatNotificationDescription(reportIds: reportData[],
     const curEvent = secretariatNotifications[i];
     const event = await Administrative.findOne({
       where: {
-        id: secretariatNotifications[i].administrativeId
+        id: curEvent.administrativeId
       },
       include: [{ model: Report }]
     });
@@ -582,7 +582,7 @@ async function searchDefectDescription(reportIds: reportData[], searchString: st
     const curEvent = defects[i];
     const event = await Technical.findOne({
       where: {
-        id: defects[i].technicalId
+        id: curEvent.technicalId
       },
       include: [{ model: Report }]
     });
@@ -638,7 +638,7 @@ async function searchMalfunctionDescription(reportIds: reportData[], searchStrin
     const curEvent = malfunctions[i];
     const event = await Technical.findOne({
       where: {
-        id: malfunctions[i].technicalId
+        id: curEvent.technicalId
       },
       include: [{ model: Report }]
     });
@@ -709,7 +709,7 @@ router.get('/search/:keyword', async (req: Request, res: Response) => {
   await searchMalfunctionDescription(reportIds, search, "l");
   await searchMalfunctionDescription(reportIds, search, "s");
   await searchMalfunctionDate(reportIds, search);
-  
+
   res.send(reportIds);
 });
 
@@ -2521,7 +2521,217 @@ router.post("/getAllCustomEvents", async (req, res) => {
   )
 });
 
+/******************************************************************************
+ *             Get Statistics - "POST /api/reports/getFiltered"
+ ******************************************************************************/
+router.post('/getFiltered', async (req, res) => {
+  let reports: reportData[] = [];
+  const selectedTypes = req.body.selectedTypes;
+  let values = selectedTypes.chosenValues;
+  const types = req.body.types;
+  let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
+  if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
+    date = req.body.selectedDate;
+  const offset = req.body.offset;
+  const reportsPerPage = req.body.numPages;
 
+  if (values.includes("types"))
+    values = types;
+
+  if (values.includes("workplaceTypes")) {
+    types.push("workplaceTypes")
+    values = types;
+  }
+  for (let i in values) {
+    var type = values[i];
+    var result = [];
+
+    result = await WorkplaceEvent.findAll({
+      order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
+      include: [{
+        model: WorkplaceType,
+        required: true,
+        where: {
+          typeName: {
+            [Op.like]: '' + type,
+          },
+        },
+      }],
+    });
+    for (let i in result) {
+      const curEvent = result[i];
+      const event = await Administrative.findOne({
+        where: {
+          id: curEvent.administrativeId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null) {
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: "", date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reports);
+      }
+    }
+  }
+  if (values.includes("workplaceTypes"))
+    values = selectedTypes.chosenValues;
+
+  if (values.includes("operationalTypes")) {
+    types.push("operationalTypes")
+    values = types;
+  }
+  for (let i in values) {
+    var type = values[i];
+    var result = [];
+
+    result = await OperationalEvent.findAll({
+      order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
+      include: [{
+        model: EventType,
+        required: true,
+        include: [{
+          model: OperationalType,
+          required: true,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+      }]
+    });
+    for (let i in result) {
+      const curEvent = result[i];
+      const event = await Operational.findOne({
+        where: {
+          id: curEvent.operationalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null) {
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: "", date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reports);
+      }
+    }
+  }
+  if (values.includes("operationalTypes"))
+    values = selectedTypes.chosenValues;
+
+  if (values.includes("defectTypes")) {
+    types.push("defectTypes")
+    values = types;
+  }
+  for (let i in values) {
+    var type = values[i];
+    var result = [];
+
+    result = await Defect.findAll({
+      order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
+      include: [{
+        model: DefectType,
+        required: true,
+        where: {
+          typeName: {
+            [Op.like]: '' + type,
+          },
+        },
+      }]
+    });
+    for (let i in result) {
+      const curEvent = result[i];
+      const event = await Technical.findOne({
+        where: {
+          id: curEvent.technicalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null) {
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: "", date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reports);
+      }
+    }
+  }
+  if (values.includes("defectTypes"))
+    values = selectedTypes.chosenValues;
+  
+  if (values.includes("malfunctionTypes")) {
+    types.push("malfunctionTypes")
+    values = types;
+  }
+  for (let i in values) {
+    var type = values[i];
+    var result = [];
+
+    result = await Malfunction.findAll({
+      order: ['date'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
+      include: [{
+        model: MalfunctionType,
+        required: true,
+        where: {
+          typeName: {
+            [Op.like]: '' + type,
+          },
+        },
+      }]
+    });
+    for (let i in result) {
+      const curEvent = result[i];
+      const event = await Technical.findOne({
+        where: {
+          id: curEvent.technicalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null) {
+        let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: "", date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reports);
+      }
+    }
+  }
+  if (values.includes("malfunctionTypes"))
+    values = selectedTypes.chosenValues;
+  
+  const count = reports.length;
+  console.log("\n\n\n");
+  console.log(count);
+  reports = reports.slice(offset, offset + reportsPerPage);
+  
+  const reportsData = { reports: reports, count: count };
+
+  console.log(reportsData);
+  res.send(reportsData);
+});
 
 /******************************************************************************
 *                                     Export
