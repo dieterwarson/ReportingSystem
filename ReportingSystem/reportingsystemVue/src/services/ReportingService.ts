@@ -366,5 +366,45 @@ export default {
     .catch(error => {
       alert(error);
     })
+  },
+  addCustomFiche(data: any) {
+    return Api()
+    .post('api/reports/newCustomFiche', data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
+  getCustomFiche() {
+    return Api()
+    .post('api/reports/getCustomFiche')
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
+  addCustomEvent(data: any) {
+    return Api()
+    .post('api/reports/addCustomEvent', data)
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  },
+  getAllCustomEvents(){
+    return Api()
+    .post('api/reports/getAllCustomEvents')
+    .then(res => {
+      return res.data;
+    })
+    .catch(error => {
+      alert(error);
+    })
   }
 };

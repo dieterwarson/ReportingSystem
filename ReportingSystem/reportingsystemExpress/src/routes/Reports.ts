@@ -22,6 +22,9 @@ import OperationalSubtype from 'src/models/operationalSubtype';
 import EventType from 'src/models/eventType';
 import DummyDatabase from 'src/models/dummyDataBase';
 import sequelize from 'src/config/config';
+import FieldNames from 'src/models/fieldnames'
+import Custom from 'src/models/custom';
+import CustomEvent from 'src/models/customevent'
 
 // Init router
 const router = Router();
@@ -2427,6 +2430,98 @@ router.post("/addTypes", async (req, res) => {
     res.json({ bool: false, message: "Veld toevoegen mislukt" })
   }
 });
+
+/******************************************************************************
+*      POST Get keyword searched reports - "POST /api/reports/newCustomFiche"
+******************************************************************************/
+router.post("/newCustomFiche", async (req, res) => {
+  const amtFields = 10 - req.body.fields.length;
+  for (let i = 0; i < amtFields; i++) {
+    req.body.fields.push({title: null})
+  }
+  console.log(req.body.fields)
+
+  FieldNames.create({
+    customName: req.body.title,
+    name1: req.body.fields[0].title,
+    name2: req.body.fields[1].title,
+    name3: req.body.fields[2].title,
+    name4: req.body.fields[3].title,
+    name5: req.body.fields[4].title,
+    name6: req.body.fields[5].title,
+    name7: req.body.fields[6].title,
+    name8: req.body.fields[7].title,
+    name9: req.body.fields[8].title,
+    name10: req.body.fields[9].title
+
+
+  })
+
+  res.json({
+    bool: true
+  })
+});
+
+/******************************************************************************
+*      POST Get Fieldnames - "POST /api/reports/getFieldnames"
+******************************************************************************/
+router.post("/getCustomFiche", async (req, res) => {
+  
+  const fieldNames = await FieldNames.findAll();
+  res.send(
+    fieldNames
+  )
+});
+
+
+
+/******************************************************************************
+*      POST Add custom fiche - "POST /api/reports/addCustomEvent"
+******************************************************************************/
+router.post("/addCustomEvent", async (req, res) => {
+  console.log(req.body)
+  Custom.findAll({
+    limit: 1,
+    order: [['id', 'DESC']]
+  }).then(async function (entries) {
+    CustomEvent.create({
+      authorId: req.body.author,
+      customId: entries[0].id,
+      FieldnameId: req.body.selectedFiche,
+      field1: req.body.field1,
+      field2: req.body.field2,
+      field3: req.body.field3,
+      field4: req.body.field4,
+      field5: req.body.field5,
+      field6: req.body.field6,
+      field7: req.body.field7,
+      field8: req.body.field8,
+      field9: req.body.field9,
+      field10: req.body.field10,
+    })
+  }).catch(function (err: Error) {
+    res.json({
+      check: false,
+      message: err
+    })
+  });
+    res.json({
+      check: true
+    })
+});
+
+/******************************************************************************
+*      POST Get Fieldnames - "POST /api/reports/getFieldnames"
+******************************************************************************/
+router.post("/getAllCustomEvents", async (req, res) => {
+  
+  const customEvents = await CustomEvent.findAll();
+  res.send(
+    customEvents
+  )
+});
+
+
 
 /******************************************************************************
 *                                     Export
