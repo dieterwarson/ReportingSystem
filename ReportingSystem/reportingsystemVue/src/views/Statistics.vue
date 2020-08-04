@@ -122,6 +122,15 @@
         </form>
 
         <div class="col-md-6">
+          <p>{{ this.combinedData }}</p>
+          <download-csv
+            class   = "btn btn-default"
+            :data="combinedData"
+            name    = "filename.csv">
+
+            Download CSV
+
+          </download-csv>
           <!-- charts -->
           <PieChart v-if="loaded" :chartdata="PieData" />
           <ScatterChart v-if="loaded" :chartdata="LineData" :options="options" />
@@ -138,7 +147,9 @@ import ReportingService from "../services/ReportingService";
 import ScatterChart from "../views/components/ScatterChart.vue";
 import PieChart from "../views/components/PieChart.vue";
 import VueRangedatePicker from "vue-rangedate-picker";
-import { Parser } from 'json2csv';
+import JsonCSV from 'vue-json-csv';
+
+Vue.component('downloadCsv', JsonCSV);
 
 interface DateRange {
   start: string;
@@ -155,6 +166,7 @@ export default Vue.extend({
         defect: [],
         malfunction: [],
       },
+      combinedData: {},
       statisticsData: {
         counts: [
           {
@@ -303,20 +315,18 @@ export default Vue.extend({
   components: {
     ScatterChart,
     PieChart,
-    VueRangedatePicker,
+    VueRangedatePicker
   },
 
   methods: {
-    exportCSV: function(){
-      const json2csvParser = new Parser();
-      const csv = json2csvParser.parse(this.statisticsData);
- 
-      alert(csv);
-    },
     loadData: function() {
       ReportingService.getAllReports("/api/statistics/types").then(
         (res) => (this.reportTypes = res)
       );
+    },
+
+    combineData() {
+      this.combinedData = this.statisticsData.counts.concat(this.statisticsData.lineContent);
     },
 
     onDateSelected: function(daterange: DateRange) {
@@ -367,7 +377,7 @@ export default Vue.extend({
       ReportingService.getStatistics({selectedTypes: this.selectedTypes, selectedDate: this.selectedDate}).then(
         (res) => (this.statisticsData = res)
       );
-      this.exportCSV();
+      this.combineData();
     },
   },
   watch: {
@@ -390,6 +400,7 @@ export default Vue.extend({
     statisticsData: function() {
       this.getPieData();
       this.getLineData();
+      this.combineData();
       this.loaded = true;
     },
   },

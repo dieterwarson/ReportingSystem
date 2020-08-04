@@ -5,11 +5,9 @@
     </div>
     <div v-if="reports.length != 0">
       <h1>Gevonden verslagen</h1>
-      <h5 class="container my-2 card-title" v-for="value in reports" :key="value.reportId">
-        <button
-          class="btn btn-secondary btn-lg btn-block"
-          v-on:click="reportClick(String(value.reportId))"
-        >
+      <h5 class="container my-2" v-for="value in reports" :key="value.reportId">
+        <div class="card shadow">
+          <div class="card-body h5" v-on:click="reportClick(String(value.reportId))">
           {{
           new Date(value.date).toLocaleString("nl-BE", {
           year: "numeric",
@@ -20,11 +18,12 @@
           hour12: false
           })
           }}
-          <span
-            class="badge badge-primary ml-3"
-          >{{ getShift(value.nightShift) }}</span>
+          <button
+            class="ml-3 btn btn-primary"
+          >{{ getShift(value.nightShift) }}</button>
           <h5 class="card-text">Zoekresultaat: {{value.description}}</h5>
-        </button>
+        </div>
+        </div>
       </h5>
     </div>
     <div v-else>
@@ -132,5 +131,8 @@ export default Vue.extend({
 <style scoped>
 .card-text {
   margin-top: 1rem;
+}
+.card-body {
+  padding: 0.4em;
 }
 </style>
