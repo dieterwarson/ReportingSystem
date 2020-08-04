@@ -3,7 +3,7 @@
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
     </div>
-    <div v-if="reports.reports.length != 0"  class="container">
+    <div v-if="reports.reports.length != 0" class="container">
       <h1>Gevonden verslagen</h1>
       <div class="row">
         <form class="col-md-4">
@@ -28,39 +28,71 @@
           </div>
         </form>
         <div class="col-md-8">
-          <div v-if="selectedDate.start == '' && value.chosenValues.length == 0">
-            
-            <div class="container my-2" v-for="value in reports.reports" :key="value.reportId">
-              <button class="btn btn-secondary btn-lg btn-block">
-                {{
-                  new Date(value.date).toLocaleString("nl-BE", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                  })
-                }}
-                <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value.reportId))">{{ getShift(value.nightShift) }} </span>
-                <h5 class="card-text">Zoekresultaat: {{value.description}}</h5>              
-              </button>
+          <div
+            v-if="selectedDate.start == '' && value.chosenValues.length == 0"
+          >
+            <div
+              class="container my-2"
+              v-for="value in reports.reports"
+              :key="value.reportId"
+            >
+              <div class="card shadow">
+                <div
+                  class="card-body h5"
+                  v-on:click="reportClick(String(value.reportId))"
+                >
+                  {{
+                    new Date(value.date).toLocaleString("nl-BE", {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                    })
+                  }}
+                  <button
+                    class="ml-3 btn btn-primary"
+                    v-on:click="reportClick(String(value.reportId))"
+                  >
+                    {{ getShift(value.nightShift) }}
+                  </button>
+                  <h5 class="card-text">
+                    Zoekresultaat: {{ value.description }}
+                  </h5>
+                </div>
+              </div>
             </div>
           </div>
 
           <div v-else>
-            <div class="container my-2" v-for="value in filteredReports.reports" :key="value.reportId">
-              <button class="btn btn-secondary btn-lg btn-block">
-                {{
-                  new Date(value.date).toLocaleString("nl-BE", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                  })
-                }}
-                <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value.reportId))">{{ getShift(value.nightShift) }} </span>
-                <h5 class="card-text">Zoekresultaat: {{value.description}}</h5>              
-              </button>
+            <div
+              class="container my-2"
+              v-for="value in filteredReports.reports"
+              :key="value.reportId"
+            >
+              <div class="card shadow">
+                <div
+                  class="card-body h5"
+                  v-on:click="reportClick(String(value.reportId))"
+                >
+                  {{
+                    new Date(value.date).toLocaleString("nl-BE", {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                    })
+                  }}
+                  <button
+                    class="ml-3 btn btn-primary"
+                    v-on:click="reportClick(String(value.reportId))"
+                  >
+                    {{ getShift(value.nightShift) }}
+                  </button>
+                  <h5 class="card-text">
+                    Zoekresultaat: {{ value.description }}
+                  </h5>
+                </div>
+              </div>
             </div>
           </div>
-
         </div>
       </div>
       <vPagination
@@ -92,7 +124,7 @@ export default Vue.extend({
   components: {
     vPagination,
     VueRangedatePicker,
-    Treeselect
+    Treeselect,
   },
   data: function() {
     return {
@@ -103,7 +135,7 @@ export default Vue.extend({
       reportTypes: {},
       reports: {
         reports: [] as any[],
-        count: 0
+        count: 0,
       },
       interval: 0,
       currentPage: 1,
@@ -112,12 +144,12 @@ export default Vue.extend({
         li: "page-item",
         liActive: "active",
         liDisable: "disabled",
-        button: "page-link"
+        button: "page-link",
       },
       pages: 1,
       selectedDate: {
         start: "",
-        end: ""
+        end: "",
       },
       months: [
         "Januari",
@@ -131,12 +163,12 @@ export default Vue.extend({
         "September",
         "October",
         "November",
-        "December"
+        "December",
       ],
       shortDays: ["ma", "di", "woe", "do", "vrij", "zat", "zo"],
       captions: {
-        "title": "Kies de datums",
-        "ok_button": "Toepassen"
+        title: "Kies de datums",
+        ok_button: "Toepassen",
       },
       presetRanges: {
         today: function() {
@@ -160,8 +192,8 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: startToday,
-              end: endToday
-            }
+              end: endToday,
+            },
           };
         },
         thisMonth: function() {
@@ -177,8 +209,8 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: startMonth,
-              end: endMonth
-            }
+              end: endMonth,
+            },
           };
         },
         lastMonth: function() {
@@ -192,8 +224,8 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: startMonth,
-              end: endMonth
-            }
+              end: endMonth,
+            },
           };
         },
         last7days: function() {
@@ -209,8 +241,8 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: start,
-              end: end
-            }
+              end: end,
+            },
           };
         },
         last30days: function() {
@@ -226,20 +258,21 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: start,
-              end: end
-            }
+              end: end,
+            },
           };
-        }
+        },
       },
       filteredReports: {
         reports: [] as any[],
-        count: 0
+        count: 0,
       },
       types: [] as string[],
 
-      value: { // bevat de gekozen filter(s)
-        chosenValues: []
-      }, 
+      value: {
+        // bevat de gekozen filter(s)
+        chosenValues: [],
+      },
       options: [
         // {
         //   id: "signaling",
@@ -324,9 +357,9 @@ export default Vue.extend({
           children: [
             // all types
             {},
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     };
   },
   created() {
@@ -348,7 +381,10 @@ export default Vue.extend({
       if (this.$route.query.plNumber != null)
         this.plNumber = String(this.$route.query.plNumber);
 
-      if (this.selectedDate.start == "" && this.value.chosenValues.length == 0) {
+      if (
+        this.selectedDate.start == "" &&
+        this.value.chosenValues.length == 0
+      ) {
         if (
           this.keyword == "" ||
           this.keyword == null ||
@@ -359,39 +395,33 @@ export default Vue.extend({
           this.loadKeywordReports(this.keyword);
         }
       } else {
-        if (this.value.chosenValues.length == 0)
-          this.filterDate();
-        else
-          this.getFiltered();
+        if (this.value.chosenValues.length == 0) this.filterDate();
+        else this.getFiltered();
         this.loadCount();
       }
       ReportingService.getAllReports("/api/statistics/types").then(
-        res => (this.reportTypes = res) 
-      )
+        (res) => (this.reportTypes = res)
+      );
     },
     /**
      * Finds the reports which contain an event that contains the pl-number partially.
      */
     loadPlReports: function() {
-      ReportingService.getSearchPlReports(
-        {
-          plNumber: this.plNumber,
-          offset: this.currentPage * 10 - 10, 
-          numPerPage: this.numPerPage
-        }      
-      ).then(res => (this.reports = res));    
+      ReportingService.getSearchPlReports({
+        plNumber: this.plNumber,
+        offset: this.currentPage * 10 - 10,
+        numPerPage: this.numPerPage,
+      }).then((res) => (this.reports = res));
     },
     /**
      * Finds the reports which contain an event that contains the keyword partially.
      */
     loadKeywordReports: function(keyword: string) {
-      ReportingService.getSearchReports(
-        {
-          keyword: this.keyword,
-          offset: this.currentPage * 10 - 10, 
-          numPerPage: this.numPerPage
-        }      
-      ).then(res => (this.reports = res));    
+      ReportingService.getSearchReports({
+        keyword: this.keyword,
+        offset: this.currentPage * 10 - 10,
+        numPerPage: this.numPerPage,
+      }).then((res) => (this.reports = res));
     },
 
     onDateSelected: function(daterange: DateRange) {
@@ -399,8 +429,11 @@ export default Vue.extend({
     },
 
     loadCount: function() {
-      if (this.selectedDate.start == "" && this.value.chosenValues.length == 0) {
-        this.calculatePages(this.reports.count);     
+      if (
+        this.selectedDate.start == "" &&
+        this.value.chosenValues.length == 0
+      ) {
+        this.calculatePages(this.reports.count);
       } else {
         if (this.value.chosenValues.length != 0)
           this.calculatePages(this.filteredReports.count);
@@ -418,8 +451,8 @@ export default Vue.extend({
       this.$router.push({
         path: "reportView",
         query: {
-          reportId: id
-        }
+          reportId: id,
+        },
       });
     },
 
@@ -432,8 +465,7 @@ export default Vue.extend({
     fillOptions: function() {
       const types: any = this.reportTypes;
 
-      if (!this.typesFound)
-        this.fillOptionsTypes();
+      if (!this.typesFound) this.fillOptionsTypes();
 
       return 1;
     },
@@ -442,28 +474,28 @@ export default Vue.extend({
       for (let i = 0; i < this.options.length; i++) {
         const option = this.options[i];
         option.children.pop(); // children begint met een lege default waarde
-        
+
         if (option.id == "types") {
           const reportTypes: any = this.reportTypes;
 
           for (const [key, value] of Object.entries(reportTypes)) {
             const valueArr: any = value;
 
-            // onze hard-coded velden zijn in het Engels, hiermee worden de velden 
+            // onze hard-coded velden zijn in het Engels, hiermee worden de velden
             // die getoond worden omgezet naar Nederlands
             let type = key;
             switch (key) {
               case "operationalTypes":
-                type = "Operationeel"
+                type = "Operationeel";
                 break;
               case "workplaceTypes":
-                type = "Voorval tijdens de dienst"
-                break
+                type = "Voorval tijdens de dienst";
+                break;
               case "defectTypes":
-                type = "Logistiek"
+                type = "Logistiek";
                 break;
               case "malfunctionTypes":
-                type = "Technisch"
+                type = "Technisch";
                 break;
               default:
                 break;
@@ -472,9 +504,9 @@ export default Vue.extend({
             const children: any[] = [];
             for (const val of valueArr) {
               const child = {
-                'id': val.typeName,
-                'label': val.typeName,
-              }
+                id: val.typeName,
+                label: val.typeName,
+              };
 
               this.addToTypes(val.typeName);
 
@@ -482,10 +514,10 @@ export default Vue.extend({
             }
 
             const val = {
-              'id': key,
-              'label': type,
-              'children': children
-            }
+              id: key,
+              label: type,
+              children: children,
+            };
             option.children.push(val);
           }
         }
@@ -493,62 +525,46 @@ export default Vue.extend({
       this.typesFound = true;
     },
 
-    filterDate: function () {
+    filterDate: function() {
       if (this.plNumber == "") {
-        ReportingService.filterDate(
-          {
-            data: this.reports.reports,
-            selectedDate: this.selectedDate,
-            offset: this.currentPage * 10 - 10, 
-            numPerPage: this.numPerPage
-          }
-        ).then(
-          (res) => (this.filteredReports = res)
-        )
+        ReportingService.filterDate({
+          data: this.reports.reports,
+          selectedDate: this.selectedDate,
+          offset: this.currentPage * 10 - 10,
+          numPerPage: this.numPerPage,
+        }).then((res) => (this.filteredReports = res));
       } else {
-        ReportingService.filterPlDate(
-          {
-            data: this.reports.reports,
-            selectedDate: this.selectedDate,
-            offset: this.currentPage * 10 - 10, 
-            numPerPage: this.numPerPage
-          }
-        ).then(
-          (res) => (this.filteredReports = res)
-        )
+        ReportingService.filterPlDate({
+          data: this.reports.reports,
+          selectedDate: this.selectedDate,
+          offset: this.currentPage * 10 - 10,
+          numPerPage: this.numPerPage,
+        }).then((res) => (this.filteredReports = res));
       }
     },
 
     getFiltered: function() {
       if (this.value.chosenValues.length != 0) {
         if (this.plNumber == "") {
-          ReportingService.getSearchFiltered(
-            {
-              oldReports: this.reports.reports,
-              keyword: this.keyword,
-              selectedTypes: this.value, 
-              selectedDate: this.selectedDate, 
-              types: this.types, 
-              offset: this.currentPage * 10 - 10, 
-              numPerPage: this.numPerPage
-            }
-          ).then(
-            (res) => (this.filteredReports = res)
-          )
+          ReportingService.getSearchFiltered({
+            oldReports: this.reports.reports,
+            keyword: this.keyword,
+            selectedTypes: this.value,
+            selectedDate: this.selectedDate,
+            types: this.types,
+            offset: this.currentPage * 10 - 10,
+            numPerPage: this.numPerPage,
+          }).then((res) => (this.filteredReports = res));
         } else {
-          ReportingService.getSearchPlFiltered(
-            {
-              oldReports: this.reports.reports,
-              plNumber: this.plNumber,
-              selectedTypes: this.value, 
-              selectedDate: this.selectedDate, 
-              types: this.types, 
-              offset: this.currentPage * 10 - 10, 
-              numPerPage: this.numPerPage
-            }
-          ).then(
-            (res) => (this.filteredReports = res)
-          )
+          ReportingService.getSearchPlFiltered({
+            oldReports: this.reports.reports,
+            plNumber: this.plNumber,
+            selectedTypes: this.value,
+            selectedDate: this.selectedDate,
+            types: this.types,
+            offset: this.currentPage * 10 - 10,
+            numPerPage: this.numPerPage,
+          }).then((res) => (this.filteredReports = res));
         }
       } else {
         this.filteredReports.reports = [];
@@ -570,27 +586,27 @@ export default Vue.extend({
       handler() {
         this.loadData();
       },
-      deep: true
+      deep: true,
     },
-    
+
     selectedDate: {
       handler() {
         this.filterDate();
       },
-      deep: true
+      deep: true,
     },
 
     reports: {
       handler() {
         this.loadCount();
       },
-      deep: true
+      deep: true,
     },
 
     reportTypes: {
       handler() {
         this.fillOptions();
-      }
+      },
     },
 
     value: {
