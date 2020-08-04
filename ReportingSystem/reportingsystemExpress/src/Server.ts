@@ -112,7 +112,7 @@ app.get('*', (req: Request, res: Response) => {
 // Anders wordt elke keer nodemon hetstart opnieuw al deze kolommen toegevoegd
 
 const custom = new Custom({
-  reportId: 13
+  reportId: 17
 });
 custom.save() 
 const user1 = new User({

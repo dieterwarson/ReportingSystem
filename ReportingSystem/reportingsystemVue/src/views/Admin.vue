@@ -5,9 +5,7 @@
     </div>
     <div class="container pt-5 pb-5">
       <h1>Admin functies</h1>
-      <div>
-        {{this.fieldnames}}
-      </div>
+      <div>{{this.fieldnames}}</div>
       <div class="container mb-2">
         <div class="row">
           <div class="col-sm">
@@ -15,13 +13,12 @@
               type="button"
               class="btn btn-primary btn-block"
               @click.prevent="getNewUser"
-            >
-              Maak nieuwe gebruiker
-            </button>
+            >Maak nieuwe gebruiker</button>
           </div>
         </div>
         <section v-if="option == 'newUser'">
           <div class="input-group-vertical mt-2">
+            <label>Gebruikersnaam (3 tot 15 tekens):</label>
             <input
               name="username"
               v-model="newUserData.username"
@@ -29,6 +26,8 @@
               placeholder="Gebruikersnaam"
               class="form-control form-control-lg"
             />
+            <p v-if="!newUserData.usernameCheck">De gebruikersnaam voldoet niet aan de voorwaarden</p>
+            <label>Email:</label>
             <input
               name="email"
               v-model="newUserData.email"
@@ -36,6 +35,7 @@
               placeholder="E-mail"
               class="form-control form-control-lg"
             />
+            <label>Wachtwoord (6 tot 12 tekens, minstens 1 hoofdletter, minstens 1 cijfer):</label>
             <input
               name="password"
               v-model="newUserData.password"
@@ -50,6 +50,8 @@
               placeholder="Herhaal wachtwoord"
               class="form-control form-control-lg"
             />
+            <p v-if="!newUserData.passwordComp">De wachtwoorden voldoen niet aan de voorwaarden</p>
+            <label>toegangsrechten:</label>
             <select
               class="form-control form-control-lg"
               id="accessRights"
@@ -60,27 +62,17 @@
               <option value="2">Secretariaat</option>
             </select>
             <br />
-            <label
-              ><input
-                name="Subscription"
-                v-model="newUserData.subscription"
-                type="checkbox"
-              />Toevoegen aan maillijst</label
-            >
+            <label>
+              <input name="Subscription" v-model="newUserData.subscription" type="checkbox" />Toevoegen aan maillijst
+            </label>
 
             <button
               type="button"
               class="btn btn-info btn-block"
               @click.prevent="doNewUser"
-            >
-              Voeg gebruiker toe
-            </button>
-            <small v-if="newUserData.failed"
-              >De gebruiker toevoegen is niet gelukt!</small
-            >
-            <small v-if="newUserData.completed"
-              >De nieuwe gebruiker is toegevoegd!</small
-            >
+            >Voeg gebruiker toe</button>
+            <small v-if="newUserData.failed">De gebruiker toevoegen is niet gelukt!</small>
+            <small v-if="newUserData.completed">De nieuwe gebruiker is toegevoegd!</small>
           </div>
         </section>
       </div>
@@ -91,9 +83,7 @@
               type="button"
               class="btn btn-primary btn-block"
               @click.prevent="getChangeAccesRights"
-            >
-              Wijzig toegangsrechten gebruiker
-            </button>
+            >Wijzig toegangsrechten gebruiker</button>
           </div>
         </div>
         <section v-if="option == 'changeAccess'">
@@ -115,20 +105,14 @@
               <option value="2">Secretariaat</option>
             </select>
             <br />
-            <small v-if="changeAccesRights.completed"
-              >De toegangsrechten zijn gewijzigd!</small
-            >
-            <small v-if="changeAccesRights.failed"
-              >De toegangsrechten zijn niet gewijzigd!</small
-            >
+            <small v-if="changeAccesRights.completed">De toegangsrechten zijn gewijzigd!</small>
+            <small v-if="changeAccesRights.failed">De toegangsrechten zijn niet gewijzigd!</small>
 
             <button
               type="button"
               class="btn btn-info btn-block"
               @click.prevent="doChangeAccess"
-            >
-              Verander toegangsrechten
-            </button>
+            >Verander toegangsrechten</button>
           </div>
         </section>
       </div>
@@ -139,9 +123,7 @@
               type="button"
               class="btn btn-primary btn-block"
               @click.prevent="getChangePassword"
-            >
-              Wijzig wachtwoord gebruiker
-            </button>
+            >Wijzig wachtwoord gebruiker</button>
           </div>
         </div>
         <section v-if="option == 'chgPassword'">
@@ -153,6 +135,7 @@
               placeholder="Gebruikersnaam"
               class="form-control form-control-lg"
             />
+            <label>Wachtwoord (6 tot 12 tekens, minstens 1 hoofdletter, minstens 1 cijfer):</label>
             <input
               name="newPassword"
               v-model="changePassword.newPassword"
@@ -167,24 +150,16 @@
               placeholder="Herhaal nieuw wachtwoord"
               class="form-control form-control-lg"
             />
-            <small v-if="changePassword.passwordCheck"
-              >Het wachtwoord moet minstens 8 tekens lang zijn, een hoofdletter
-              en een cijfer bevatten!</small
-            >
-            <small v-if="changePassword.completed"
-              >Het wachtwoord is gewijzigd</small
-            >
-            <small v-if="changePassword.failed"
-              >Het wachtwoord is niet gewijzigd!</small
-            >
+            <p v-if="!changePassword.passwordComp">De wachtwoorden voldoen niet aan de voorwaarden</p>
+
+            <small v-if="changePassword.completed">Het wachtwoord is gewijzigd</small>
+            <small v-if="changePassword.failed">Het wachtwoord is niet gewijzigd!</small>
 
             <button
               type="button"
               class="btn btn-info btn-block"
               @click.prevent="doChangePassword"
-            >
-              Verander wachtwoord
-            </button>
+            >Verander wachtwoord</button>
           </div>
         </section>
       </div>
@@ -195,18 +170,12 @@
               type="button"
               class="btn btn-primary btn-block"
               @click.prevent="getAddField"
-            >
-              Nieuw veld toevoegen
-            </button>
+            >Nieuw veld toevoegen</button>
           </div>
         </div>
         <section v-if="option == 'addField'">
           <div class="input-group-vertical" mt-2>
-            <select
-              class="form-control form-control-lg"
-              id="addField"
-              v-model="addField.category"
-            >
+            <select class="form-control form-control-lg" id="addField" v-model="addField.category">
               <option value="0">Administratief</option>
               <option value="1">Personeel</option>
               <option value="2">Logistiek</option>
@@ -226,9 +195,7 @@
                 v-for="value in this.addField.reportTypes.operationalTypes"
                 :key="value.id"
                 :value="value.id"
-              >
-                {{ value.typeName }}</option
-              >
+              >{{ value.typeName }}</option>
             </select>
             <select
               v-else-if="addField.category == 1"
@@ -241,9 +208,7 @@
                 v-for="value in this.addField.reportTypes.workplaceTypes"
                 :key="value.id"
                 :value="value.id"
-              >
-                {{ value.typeName }}</option
-              >
+              >{{ value.typeName }}</option>
             </select>
             <select
               v-else-if="addField.category == 2"
@@ -256,9 +221,7 @@
                 v-for="value in this.addField.reportTypes.defectTypes"
                 :key="value.id"
                 :value="value.id"
-              >
-                {{ value.typeName }}</option
-              >
+              >{{ value.typeName }}</option>
             </select>
             <select
               v-else-if="addField.category == 3"
@@ -271,11 +234,10 @@
                 v-for="value in this.addField.reportTypes.malfunctionTypes"
                 :key="value.id"
                 :value="value.id"
-              >
-                {{ value.typeName }}</option
-              >
+              >{{ value.typeName }}</option>
             </select>
           </div>
+          <label>De naam van het veld moet minstens 3 tekens lang zijn</label>
           <input
             name="addField"
             v-model="addField.newField"
@@ -287,9 +249,7 @@
             type="button"
             class="btn btn-info btn-block"
             @click.prevent="doAddField"
-          >
-            Voeg veld toe
-          </button>
+          >Voeg veld toe</button>
           <small v-if="addField.completed">Het veld is toegevoegd!</small>
         </section>
       </div>
@@ -301,38 +261,52 @@
               type="button"
               class="btn btn-primary btn-block"
               @click.prevent="getCustomFiche"
-            >
-              Maak nieuwe gepersonaliseerde fiche
-            </button>
+            >Maak nieuwe gepersonaliseerde fiche</button>
           </div>
         </div>
         <section v-if="option == 'customFiche'">
           <div class="input-group-vertical mt-2">
-            <label>Naam fiche</label><input class="form-control form-control-lg" v-model="customTitle" name="titel" type="text" placeholder="Naam fiche">
+            <label>Naam fiche</label>
+            <input
+              class="form-control form-control-lg"
+              v-model="customTitle"
+              name="titel"
+              type="text"
+              placeholder="Naam fiche"
+            />
 
             <div v-for="(inputfield, index) in customFiche" :key="index">
-              <label>Veld {{index + 1 }}</label><input class="form-control form-control-lg" v-model="customFiche[index].title" type="text" placeholder="Naam veld">
-
+              <label>Veld {{index + 1 }} (Minstens 3 tekens lang)</label>
+              <input
+                class="form-control form-control-lg"
+                v-model="customFiche[index].title"
+                type="text"
+                placeholder="Naam veld"
+              />
             </div>
             <div>
               <div class="btn-group d-flex">
-                <button v-if="customFiche.length <= 9 && customFiche.length > 0" @click="addInputField" type="button" class="btn btn-success btn-block form-control form-control-lg">+ invoerveld</button><button v-if="customFiche.length <= 10 && customFiche.length > 1" @click="delInputField" type="button" class="btn btn-danger btn-block form-control form-control-lg">- invoerveld</button>
+                <button
+                  v-if="customFiche.length <= 9 && customFiche.length > 0"
+                  @click="addInputField"
+                  type="button"
+                  class="btn btn-success btn-block form-control form-control-lg"
+                >+ invoerveld</button>
+                <button
+                  v-if="customFiche.length <= 10 && customFiche.length > 1"
+                  @click="delInputField"
+                  type="button"
+                  class="btn btn-danger btn-block form-control form-control-lg"
+                >- invoerveld</button>
               </div>
-              
-            </div> 
+            </div>
             <button
               type="button"
               class="btn btn-info btn-block"
               @click.prevent="addNewCustom"
-            >
-              Voeg gepersonaliseerde fiche toe
-            </button>
-            <small v-if="newCustom.failed"
-              >De gebruiker toevoegen is niet gelukt!</small
-            >
-            <small v-if="newCustom.completed"
-              >De nieuwe gebruiker is toegevoegd!</small
-            >
+            >Voeg gepersonaliseerde fiche toe</button>
+            <small v-if="newCustom.failed">De gebruiker toevoegen is niet gelukt!</small>
+            <small v-if="newCustom.completed">De nieuwe gebruiker is toegevoegd!</small>
           </div>
         </section>
       </div>
@@ -344,8 +318,7 @@
               to="/changePermissions"
               tag="button"
               class="btn btn-primary btn-block"
-              >Gebruikersrollen wijzigen</router-link
-            >
+            >Gebruikersrollen wijzigen</router-link>
           </div>
         </div>
       </div>
@@ -357,8 +330,7 @@
               to="/userlist"
               tag="button"
               class="btn btn-primary btn-block"
-              >Gebruikerslijst</router-link
-            >
+            >Gebruikerslijst</router-link>
           </div>
         </div>
       </div>
@@ -383,18 +355,18 @@ export default Vue.extend({
         email: "",
         accessRights: 0,
         subscription: false,
-        passwordCheck: false,
-        usernameCheck: false,
+        passwordCheck: true,
+        usernameCheck: true,
         passwordComp: false,
         completed: false,
-        failed: false,
+        failed: false
       },
       changeAccesRights: {
         username: "",
         rights: "",
         newRights: 0,
         completed: false,
-        failed: false,
+        failed: false
       },
       changePassword: {
         username: "",
@@ -403,7 +375,7 @@ export default Vue.extend({
         passwordCheck: false,
         passwordComp: false,
         completed: false,
-        failed: false,
+        failed: false
       },
       addField: {
         newField: "",
@@ -413,7 +385,7 @@ export default Vue.extend({
         malfunctiontype: -1,
         defecttype: -1,
         reportTypes: {},
-        completed: false,
+        completed: false
       },
       customFiche: [
         {
@@ -422,8 +394,7 @@ export default Vue.extend({
       ],
       newCustom: {
         failed: false,
-        completed: false,
-
+        completed: false
       }
     };
   },
@@ -433,16 +404,14 @@ export default Vue.extend({
   },
   methods: {
     addInputField: function() {
-      
       if (this.customFiche.length < 10)
         this.customFiche.push({
           title: ""
-        })
+        });
     },
     delInputField: function() {
-      if (this.customFiche.length > 0)
-        this.customFiche.pop();
-      },
+      if (this.customFiche.length > 0) this.customFiche.pop();
+    },
     getNewUser: function() {
       if (this.option == "newUser") {
         this.option = "no_option";
@@ -453,11 +422,10 @@ export default Vue.extend({
     },
     getCustomFiche: function() {
       if (this.option == "customFiche") {
-        this.option = 'no_option';
+        this.option = "no_option";
       } else if (this.option != "customFiche") {
-        this.option = "customFiche"
+        this.option = "customFiche";
       }
-      
     },
 
     getChangeAccesRights: function() {
@@ -508,7 +476,7 @@ export default Vue.extend({
           rptPassword: this.newUserData.rptPassword,
           accessRights: this.newUserData.accessRights,
           mail: this.newUserData.email,
-          subscription: this.newUserData.subscription,
+          subscription: this.newUserData.subscription
         });
         this.newUserData.completed = true;
       } else {
@@ -525,17 +493,15 @@ export default Vue.extend({
       //CHECK IF PASSWORDS ARE THE SAME
       this.changePassword.completed = false;
       this.changePassword.failed = false;
-
-      if (
-        this.checkPasswords(
-          this.changePassword.newPassword,
-          this.changePassword.rptPassword
-        )
-      ) {
+      this.changePassword.passwordComp = this.checkPasswords(
+        this.changePassword.newPassword,
+        this.changePassword.rptPassword
+      );
+      if (this.changePassword.passwordComp) {
         const response = await ReportingService.changePassword({
           username: this.changePassword.username,
           password: this.changePassword.newPassword,
-          rptPassword: this.changePassword.rptPassword,
+          rptPassword: this.changePassword.rptPassword
         });
         this.changePassword.completed = true;
       } else {
@@ -551,7 +517,7 @@ export default Vue.extend({
       if (this.checkAccessRights(this.changeAccesRights.newRights)) {
         const response = await ReportingService.changeAcces({
           username: this.changeAccesRights.username,
-          newAcces: this.changeAccesRights.newRights,
+          newAcces: this.changeAccesRights.newRights
         });
         this.changeAccesRights.username = "";
         this.changeAccesRights.newRights = 0;
@@ -568,7 +534,7 @@ export default Vue.extend({
           workplacetype: this.addField.workplacetype,
           defectTypes: this.addField.defecttype,
           malfunctionTypes: this.addField.malfunctiontype,
-          field: this.addField.newField,
+          field: this.addField.newField
         });
         this.addField.newField = "";
         (this.addField.category = 0),
@@ -611,8 +577,8 @@ export default Vue.extend({
       this.newUserData.accessRights = 0;
       this.newUserData.subscription = false;
 
-      this.newUserData.passwordCheck = false;
-      this.newUserData.passwordComp = false;
+      this.newUserData.passwordCheck = true;
+      this.newUserData.passwordComp = true;
       this.newUserData.completed = false;
 
       this.changeAccesRights.username = "";
@@ -622,8 +588,8 @@ export default Vue.extend({
       this.changePassword.username = "";
       this.changePassword.newPassword = "";
       this.changePassword.rptPassword = "";
-      this.changePassword.passwordCheck = false;
-      this.changePassword.passwordComp = false;
+      this.changePassword.passwordCheck = true;
+      this.changePassword.passwordComp = true;
       this.changePassword.completed = false;
 
       this.addField.newField = "";
@@ -636,19 +602,18 @@ export default Vue.extend({
     },
     loadData: function() {
       ReportingService.getAllReports("/api/statistics/types").then(
-        (res) => (this.addField.reportTypes = res)
+        res => (this.addField.reportTypes = res)
       );
     },
     async addNewCustom() {
       const response = await ReportingService.addCustomFiche({
         fields: this.customFiche,
         title: this.customTitle
-      })
+      });
     },
     async getCustom() {
-    this.fieldnames = await ReportingService.getCustomFiche();
+      this.fieldnames = await ReportingService.getCustomFiche();
+    }
   }
-  },
-   
 });
 </script>

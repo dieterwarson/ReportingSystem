@@ -6,10 +6,10 @@
     <router-view />
     <div class="container my-4">
       <div class="row">
-        <div>Aangemeld als {{tokenData.username}}</div>
-        <div v-if="tokenData.accessRights == 0">(Administrator)</div>
-        <div v-else-if="tokenData.accessRights == 1">(Supervisor)</div>
-        <div v-else-if="tokenData.accessRights == 2">(Secretariaat)</div>
+        <div class="extra">Aangemeld als {{tokenData.username}}</div>
+        <div class="name" v-if="tokenData.accessRights == 0">(Administrator)</div>
+        <div class="name" v-else-if="tokenData.accessRights == 1">(Supervisor)</div>
+        <div class="name" v-else-if="tokenData.accessRights == 2">(Secretariaat)</div>
         <button type="submit" class="btn btn-primary logout" @click.prevent="logOut">Afmelden</button>
       </div>
 
@@ -388,10 +388,17 @@ export default Vue.extend({
   color: black;
 }
 
+.extra {
+  margin-left: 2%;
+}
+
+.name {
+  margin-right: auto;
+}
 .logout {
-  margin-left: 60%;
+  margin-left: 49%;
   margin-top: 0px;
-  margin-right: 0px;
+  margin-right: 2%;
   margin-bottom: 10px;
 }
 </style>
