@@ -96,6 +96,7 @@
         </div>
       </div>
       <vPagination
+        class="float-right mr-2"
         :classes="bootstrapPaginationClasses"
         v-model="currentPage"
         :page-count="pages"
@@ -167,8 +168,8 @@ export default Vue.extend({
       ],
       shortDays: ["ma", "di", "woe", "do", "vrij", "zat", "zo"],
       captions: {
-        title: "Kies de datums",
-        ok_button: "Toepassen",
+        "title": "Kies de datums",
+        "ok_button": "Toepassen",
       },
       presetRanges: {
         today: function() {
@@ -625,5 +626,6 @@ export default Vue.extend({
 }
 .card-body {
   padding: 0.4em;
+  cursor: pointer;
 }
 </style>
