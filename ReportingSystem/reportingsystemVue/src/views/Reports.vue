@@ -105,7 +105,6 @@ import vPagination from "vue-plain-pagination";
 import VueRangedatePicker from "vue-rangedate-picker";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import { log } from "util";
 
 interface DateRange {
   start: string;
@@ -120,18 +119,14 @@ export default Vue.extend({
   },
   data: function() {
     return {
+      numPerPage: 10, // numper per page
       typesFound: false,
       length: 0,
-      a: [] as any[],
-      aa: [] as any[],
-      testarray: [] as any[],
-      reportTypesArray: [] as any[],
       reportTypes: {},
       reports: {
         reports: [] as any[],
         count: 0,
       },
-      list: [],
       interval: 0,
       currentPage: 1,
       bootstrapPaginationClasses: {
@@ -478,13 +473,16 @@ export default Vue.extend({
     },
 
     getFiltered: function() {
-      ReportingService.getFiltered({
-        selectedTypes: this.value,
-        selectedDate: this.selectedDate,
-        types: this.types,
-        offset: this.currentPage * 10 - 10,
-        numPages: 10,
-      }).then((res) => (this.filteredReports = res));
+      ReportingService.getFiltered(
+        {
+          selectedTypes: this.value, 
+          selectedDate: this.selectedDate, 
+          types: this.types, 
+          offset: this.currentPage * 10 - 10, 
+          numPerPage: this.numPerPage
+        }).then(
+        (res) => (this.filteredReports = res)
+      )
     },
 
     addToTypes: function(type: string) {

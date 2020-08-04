@@ -223,7 +223,6 @@ export default {
         return error.response.data;
       });
   },
-
   changeSubscription(data: any) {
     return Api()
       .post("api/users/changeSubscription", data)
@@ -300,9 +299,19 @@ export default {
       });
   },
 
-  getSearchReports(url: string) {
+  getSearchReports(data: any) {
     return Api()
-      .get(url)
+      .post("api/reports/search", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      });
+  },
+  getSearchPlReports(data: any) {
+    return Api()
+      .post("api/reports/pl", data)
       .then(res => {
         return res.data;
       })
@@ -417,5 +426,44 @@ export default {
         alert(error);
       })
   },
-
+  getSearchFiltered(data: any) {
+    return Api()
+      .post("api/reports/getSearchFiltered", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
+  },
+  getSearchPlFiltered(data: any) {
+    return Api()
+      .post("api/reports/getSearchPlFiltered", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
+  },
+  filterDate(data: any) {
+    return Api()
+      .post("api/reports/filterDate", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
+  },
+  filterPlDate(data: any) {
+    return Api()
+      .post("api/reports/filterPlDate", data)
+      .then(res => {
+        return res.data;
+      })
+      .catch(error => {
+        alert(error);
+      })
+  },
 };
