@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
+import jwt, { decode } from "jsonwebtoken";
+
 import ReportingService from '@/services/ReportingService';
 
 Vue.use(VueRouter);
@@ -102,10 +104,30 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const response = ReportingService.checkAuthentication();
+  let ReportId : any;
+  const token = window.localStorage.getItem("token");
+  const decodedToken : any = jwt.decode(token!)!;
+  const test = ReportingService.latestReportId().then(result => {
+    ReportId = result
+  });
   response.then(res => {
     if (to.path !== '/login' && !res) next({name: 'Login'});
     else if (to.name === 'Login' && res) next({name: 'Home'})
+    else if (to.name === 'ReportView' && to.query.reportId == "18" && !decodedToken.seePreviousShift) next({name: 'Home'})
+    else if (to.name === 'ReportView' && to.query.reportId == "18" && decodedToken.seePreviousShift) next()
+    else if (to.name === 'ReportView' && !decodedToken.seeReports) next({name: 'Home'})
+    else if (to.name === 'Reports' && !decodedToken.seeReports) next({name: 'Home'})
+    else if (to.name === 'ChangeEvent' && !decodedToken.seeReports) next({name: 'Home'})
+    else if (to.name === 'ReportsSearch' && !decodedToken.seeReports) next({name: 'Home'})
+    else if (to.name === 'Statistics' && !decodedToken.seeStatistics) next({name: 'Home'})
+    else if (to.name === 'ChangePermissions' && decodedToken.rights > 0) next({name: 'Home'})
+    else if (to.name === 'Userlist' && decodedToken.rights > 0) next({name: 'Home'})
+    else if (to.name === 'Admin' && decodedToken.rights > 0) next({name: 'Home'})
+    else if (to.name === 'Notifications' && !decodedToken.seeNotifications) next({name: 'Home'})
+    else if (to.name === 'AddReport' && !decodedToken.makeReports) next({name: 'Home'})
+
     else next();
+
   });
   
 })

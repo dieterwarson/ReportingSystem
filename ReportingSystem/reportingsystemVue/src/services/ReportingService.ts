@@ -466,4 +466,14 @@ export default {
         alert(error);
       })
   },
+  latestReportId() {
+    return Api()
+    .post('api/reports/latestReport')
+    .then(res => {
+      return res.data.id;
+    })
+    .catch(error => {
+      alert(error);
+    })
+  }
 };

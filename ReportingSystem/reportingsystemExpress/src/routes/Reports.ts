@@ -25,6 +25,7 @@ import sequelize from 'src/config/config';
 import FieldNames from 'src/models/fieldnames'
 import Custom from 'src/models/custom';
 import CustomEvent from 'src/models/customevent'
+import { error } from 'winston';
 
 // Init router
 const router = Router();
@@ -3317,6 +3318,28 @@ router.post('/filterPlDate', async (req, res) => {
 
   res.send(reportsData);
 });
+
+
+/******************************************************************************
+ *             Get latest report id - "POST /api/reports/latestReport"
+ ******************************************************************************/
+
+router.post('/latestReport', async (req, res) => {
+  
+  Report.findAll({
+    limit: 1,
+    order: [['date', 'DESC']]
+  }).then(result => {
+    res.json({id: 18}); //demo
+    //res.json({id: result[0].id})
+  })
+  .catch(error => {
+    res.json({err: error})
+  });
+});
+
+
+
 
 /******************************************************************************
 *                                     Export
