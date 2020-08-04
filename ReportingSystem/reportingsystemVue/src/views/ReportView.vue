@@ -249,7 +249,132 @@
         ">
       <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
     </div>
-    <div v-else class="row row-cols-1 row-cols-md-2">
+    <div v-else>
+      <p>{{ this.reportContent.operational.operationalEvents }}</p>
+      <template>
+        <div>
+          <b-form-group
+            label="Filter"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            label-for="filterInput"
+            class="mb-0 mt-4"
+          >
+            <b-row>
+              <b-col lg="6" class="my-1">
+                <b-input-group size="sm">
+                  <b-form-input
+                    v-model="Filter"
+                    type="search"
+                    id="filterInput"
+                    placeholder="Type om te zoeken"
+                  ></b-form-input>
+                  <b-input-group-append>
+                    <b-button :disabled="!operationalFilter" @click="operationalFilter = ''"
+                      >Verwijder</b-button
+                    >
+                  </b-input-group-append>
+                </b-input-group>
+              </b-col>
+              <b-col lg="6" class="my-1">
+                <b-form-group
+                  label="Per pagina"
+                  label-cols-sm="6"
+                  label-cols-md="4"
+                  label-cols-lg="3"
+                  label-align-sm="right"
+                  label-size="sm"
+                  label-for="operationalPerPageSelect"
+                  class="mb-0"
+                >
+                  <b-form-select
+                    v-model="operationalPerPage"
+                    id="operationalPerPageSelect"
+                    size="sm"
+                    :options="pageOptions"
+                  ></b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-form-group>
+
+          <b-table
+            :head-variant="light"
+            :current-page="operationalCurrentPage"
+            :per-page="operationalPerPage"
+            :filter="operationalFilter"
+            :filterIncludedFields="operationalFilterOn"
+            :sort-by.sync="operationalSortBy"
+            :sort-desc.sync="operationalSortDesc"
+            :sort-direction="operationalSortDirection"
+            @filtered="operationalOnFiltered"
+            id="operational-table"
+            bordered
+            hover
+            :table-variant="primary"
+            :fields="operationalFields"
+            :items="
+              this.reportContent.operational.operationalEvents
+            "
+          >
+            <template v-slot:cell(date)="data">
+              {{
+                new Date(data.item.date).toLocaleString("nl-BE", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                })
+              }}
+            </template>
+            <template v-slot:cell(edit)="data">
+              <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(data.item.id), data.item.listName, 'Workforce')" />
+            </template>
+            
+            <template v-slot:cell(delete)="data">
+              <button
+                class="btn btn-primary btn-sm"
+                @click="removeClicked(data.item.id, data.item.listName)"
+              >
+                🗑
+              </button>
+            </template>
+            <template v-slot:cell(type)="data">
+              <div v-if="!(data.item.eventTypes == null)">
+              <div v-for="type in data.item.eventTypes" :key="type.id">
+                <h5 class="card-text">
+                  <div v-if="!(type.operationalType == null)">
+                    <span class="card-text badge badge-secondary mr-1">
+                      {{
+                        type.operationalType.typeName
+                        }}
+                    </span>
+                    <span v-if="!(type.operationalSubtype == null)">
+                      <span class="card-text badge badge-secondary">
+                        {{
+                          type.operationalSubtype.typeName
+                          }}
+                      </span>
+                    </span>
+                  </div>
+                </h5>
+              </div>
+            </div>
+            </template>
+          </b-table>
+          <b-pagination
+            v-model="operationalCurrentPage"
+            :total-rows="
+              this.reportContent.operational.operationalEvents.length
+            "
+            :per-page="operationalPerPage"
+            aria-controls="operational-table"
+          ></b-pagination>
+        </div>
+      </template>
       
       <!-- Change form -->
       <div v-for="event in reportContent.operational.operationalEvents" :key="event.id">
@@ -517,9 +642,48 @@
 <script lang="ts">
 import Vue from "vue";
 import ReportingService from "../services/ReportingService";
+import BootstrapVue from "bootstrap-vue";
+Vue.use(BootstrapVue);
 export default Vue.extend({
   data: function () {
     return {
+      pageOptions: [5, 10, 15],
+      operationalTotalRows: 1,
+      operationalCurrentPage: 1,
+      operationalPerPage: 5,
+      operationalSortBy: "date",
+      operationalSortDesc: true,
+      operationalSortDirection: "asc",
+      operationalFilter: null,
+      operationalFilterOn: [],
+      operationalFields: [
+        {
+          label: "Datum",
+          key: "date",
+          sortable: true,
+        },
+        {
+          label: "Omschrijving",
+          key: "description",
+          sortable: false,
+        },
+        {
+          label: "Signalering",
+          key: "signaling",
+          sortable: false
+        },
+        {
+          label: "Type",
+          key: "type",
+          sortable: true,
+        },
+        {
+          label: "Eenheid",
+          key: "unit",
+          sortable: true
+        },
+      ],
+
       reportTypes: {},
       selectedTypes: {
         operational: [],

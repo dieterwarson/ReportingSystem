@@ -119,7 +119,7 @@ export default Vue.extend({
   },
   data: function() {
     return {
-      numPerPage: 10, // numper per page
+      numPerPage: 10, // number per page
       typesFound: false,
       length: 0,
       reportTypes: {},
