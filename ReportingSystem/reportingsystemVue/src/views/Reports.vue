@@ -29,45 +29,71 @@
         </form>
         <div class="col-md-8">
           <div v-if="filteredReports.reports.length == 0">
-
-            <div class="container my-2" v-for="value in reports.reports" :key="value.id">
-              <button class="btn btn-secondary btn-lg btn-block">
-                {{
-                  new Date(value[0].date).toLocaleString("nl-BE", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                  })
-                }}
-                <!--- Only displays nightshift button if it's included in the list --->
-                <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value[0].id))">{{ getShift(value[0].nightShift) }} </span>
-                <span v-if="value.length == 2" class="badge badge-primary ml-3" v-on:click="reportClick(String(value[1].id))">{{ getShift(value[1].nightShift) }}</span>
-              </button>
+            <div
+              class="container my-2"
+              v-for="value in reports.reports"
+              :key="value.id"
+            >
+              <div class="card shadow">
+                <div class="card-body h5">
+                  {{
+                    new Date(value[0].date).toLocaleString("nl-BE", {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                    })
+                  }}
+                  <!--- Only displays nightshift button if it's included in the list --->
+                  <button
+                    class="ml-3 btn btn-primary"
+                    v-on:click="reportClick(String(value[0].id))"
+                  >
+                    {{ getShift(value[0].nightShift) }}
+                  </button>
+                  <button
+                    v-if="value.length == 2"
+                    class="btn btn-primary ml-3"
+                    v-on:click="reportClick(String(value[1].id))"
+                  >
+                    {{ getShift(value[1].nightShift) }}
+                  </button>
+                </div>
+              </div>
             </div>
-          
           </div>
           <div v-else>
-            <div class="container my-2" v-for="value in filteredReports.reports" :key="value.id">
-              <button class="btn btn-secondary btn-lg btn-block">
-                {{
-                  new Date(value.date).toLocaleString("nl-BE", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                  })
-                }}
-                <span class="badge badge-primary ml-3" v-on:click="reportClick(String(value.id))">{{ getShift(value.nightShift) }} </span>
-              </button>
+            <div
+              class="container my-2"
+              v-for="value in filteredReports.reports"
+              :key="value.id"
+            >
+              <div class="card shadow">
+                <div class="card-body h5">
+                  {{
+                    new Date(value.date).toLocaleString("nl-BE", {
+                      year: "numeric",
+                      month: "numeric",
+                      day: "numeric",
+                    })
+                  }}
+                  <button
+                    class="ml-3 btn btn-primary"
+                    v-on:click="reportClick(String(value.id))"
+                  >
+                    {{ getShift(value.nightShift) }}
+                  </button>
+                </div>
+              </div>
             </div>
-
           </div>
+          <vPagination
+            class="float-right mr-2"
+            :classes="bootstrapPaginationClasses"
+            v-model="currentPage"
+            :page-count="pages"
+          ></vPagination>
         </div>
       </div>
-      <vPagination
-        :classes="bootstrapPaginationClasses"
-        v-model="currentPage"
-        :page-count="pages"
-      ></vPagination>
     </div>
   </div>
 </template>
@@ -79,7 +105,6 @@ import vPagination from "vue-plain-pagination";
 import VueRangedatePicker from "vue-rangedate-picker";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import { log } from "util";
 
 interface DateRange {
   start: string;
@@ -90,22 +115,18 @@ export default Vue.extend({
   components: {
     vPagination,
     VueRangedatePicker,
-    Treeselect
+    Treeselect,
   },
   data: function() {
     return {
+      numPerPage: 10, // numper per page
       typesFound: false,
       length: 0,
-      a: [] as any[],
-      aa: [] as any[],
-      testarray: [] as any[],
-      reportTypesArray: [] as any[],
       reportTypes: {},
       reports: {
         reports: [] as any[],
-        count: 0
+        count: 0,
       },
-      list: [],
       interval: 0,
       currentPage: 1,
       bootstrapPaginationClasses: {
@@ -113,12 +134,12 @@ export default Vue.extend({
         li: "page-item",
         liActive: "active",
         liDisable: "disabled",
-        button: "page-link"
+        button: "page-link",
       },
       pages: 1,
       selectedDate: {
         start: "",
-        end: ""
+        end: "",
       },
       months: [
         "Januari",
@@ -132,12 +153,12 @@ export default Vue.extend({
         "September",
         "October",
         "November",
-        "December"
+        "December",
       ],
       shortDays: ["ma", "di", "woe", "do", "vrij", "zat", "zo"],
       captions: {
         "title": "Kies de datums",
-        "ok_button": "Toepassen"
+        "ok_button": "Toepassen",
       },
       presetRanges: {
         today: function() {
@@ -161,8 +182,8 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: startToday,
-              end: endToday
-            }
+              end: endToday,
+            },
           };
         },
         thisMonth: function() {
@@ -178,8 +199,8 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: startMonth,
-              end: endMonth
-            }
+              end: endMonth,
+            },
           };
         },
         lastMonth: function() {
@@ -193,8 +214,8 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: startMonth,
-              end: endMonth
-            }
+              end: endMonth,
+            },
           };
         },
         last7days: function() {
@@ -210,8 +231,8 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: start,
-              end: end
-            }
+              end: end,
+            },
           };
         },
         last30days: function() {
@@ -227,20 +248,21 @@ export default Vue.extend({
             active: false,
             dateRange: {
               start: start,
-              end: end
-            }
+              end: end,
+            },
           };
-        }
+        },
       },
       filteredReports: {
         reports: [] as any[],
-        count: 0
+        count: 0,
       },
       types: [] as string[],
 
-      value: { // bevat de gekozen filter(s)
-        chosenValues: []
-      }, 
+      value: {
+        // bevat de gekozen filter(s)
+        chosenValues: [],
+      },
       options: [
         // {
         //   id: "signaling",
@@ -325,9 +347,9 @@ export default Vue.extend({
           children: [
             // all types
             {},
-          ]
-        }
-      ]
+          ],
+        },
+      ],
     };
   },
   created() {
@@ -345,25 +367,25 @@ export default Vue.extend({
         ReportingService.getPaginationReports(
           this.currentPage * 10 - 10,
           this.selectedDate
-        ).then(res => (this.reports.reports = res));
+        ).then((res) => (this.reports.reports = res));
       } else {
         this.getFiltered();
         this.reports.reports = this.filteredReports.reports;
       }
       ReportingService.getAllReports("/api/statistics/types").then(
-        res => (this.reportTypes = res, this.reportTypesArray = [res]) 
-      )
+        (res) => ((this.reportTypes = res), (this.reportTypesArray = [res]))
+      );
     },
-    
+
     onDateSelected: function(daterange: DateRange) {
       this.selectedDate = daterange;
     },
 
     loadCount: function() {
       if (this.filteredReports.reports.length == 0) {
-        ReportingService.getReportCount(this.selectedDate).then(res =>
+        ReportingService.getReportCount(this.selectedDate).then((res) =>
           this.calculatePages(res.count)
-        );      
+        );
       } else {
         this.calculatePages(this.filteredReports.count);
       }
@@ -377,8 +399,8 @@ export default Vue.extend({
       this.$router.push({
         path: "reportView",
         query: {
-          reportId: id
-        }
+          reportId: id,
+        },
       });
     },
 
@@ -391,8 +413,7 @@ export default Vue.extend({
     fillOptions: function() {
       const types: any = this.reportTypes;
 
-      if (!this.typesFound)
-        this.fillOptionsTypes();
+      if (!this.typesFound) this.fillOptionsTypes();
 
       return 1;
     },
@@ -400,28 +421,28 @@ export default Vue.extend({
       for (let i = 0; i < this.options.length; i++) {
         const option = this.options[i];
         option.children.pop(); // children begint met een lege default waarde
-        
+
         if (option.id == "types") {
           const reportTypes: any = this.reportTypes;
 
           for (const [key, value] of Object.entries(reportTypes)) {
             const valueArr: any = value;
 
-            // onze hard-coded velden zijn in het Engels, hiermee worden de velden 
+            // onze hard-coded velden zijn in het Engels, hiermee worden de velden
             // die getoond worden omgezet naar Nederlands
             let type = key;
             switch (key) {
               case "operationalTypes":
-                type = "Operationeel"
+                type = "Operationeel";
                 break;
               case "workplaceTypes":
-                type = "Voorval tijdens de dienst"
-                break
+                type = "Voorval tijdens de dienst";
+                break;
               case "defectTypes":
-                type = "Logistiek"
+                type = "Logistiek";
                 break;
               case "malfunctionTypes":
-                type = "Technisch"
+                type = "Technisch";
                 break;
               default:
                 break;
@@ -430,9 +451,9 @@ export default Vue.extend({
             const children: any[] = [];
             for (const val of valueArr) {
               const child = {
-                'id': val.typeName,
-                'label': val.typeName,
-              }
+                id: val.typeName,
+                label: val.typeName,
+              };
 
               this.addToTypes(val.typeName);
 
@@ -440,10 +461,10 @@ export default Vue.extend({
             }
 
             const val = {
-              'id': key,
-              'label': type,
-              'children': children
-            }
+              id: key,
+              label: type,
+              children: children,
+            };
             option.children.push(val);
           }
         }
@@ -452,7 +473,14 @@ export default Vue.extend({
     },
 
     getFiltered: function() {
-      ReportingService.getFiltered({selectedTypes: this.value, selectedDate: this.selectedDate, types: this.types, offset: this.currentPage * 10 - 10, numPages: 10}).then(
+      ReportingService.getFiltered(
+        {
+          selectedTypes: this.value, 
+          selectedDate: this.selectedDate, 
+          types: this.types, 
+          offset: this.currentPage * 10 - 10, 
+          numPerPage: this.numPerPage
+        }).then(
         (res) => (this.filteredReports = res)
       )
     },
@@ -471,27 +499,27 @@ export default Vue.extend({
       handler() {
         this.loadData();
       },
-      deep: true
+      deep: true,
     },
-    
+
     selectedDate: {
       handler() {
         this.loadData();
       },
-      deep: true
+      deep: true,
     },
 
     reports: {
       handler() {
         this.loadCount();
       },
-      deep: true
+      deep: true,
     },
 
     reportTypes: {
       handler() {
         this.fillOptions();
-      }
+      },
     },
 
     value: {
@@ -503,3 +531,8 @@ export default Vue.extend({
   },
 });
 </script>
+<style scoped>
+.card-body {
+  padding: 0.4em;
+}
+</style>

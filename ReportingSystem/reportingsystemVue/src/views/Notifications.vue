@@ -33,14 +33,14 @@
                   ></b-form-input>
                   <b-input-group-append>
                     <b-button :disabled="!administrativeFilter" @click="administrativeFilter = ''"
-                      >Clear</b-button
+                      >Verwijder</b-button
                     >
                   </b-input-group-append>
                 </b-input-group>
               </b-col>
               <b-col lg="6" class="my-1">
                 <b-form-group
-                  label="Per page"
+                  label="Per pagina"
                   label-cols-sm="6"
                   label-cols-md="4"
                   label-cols-lg="3"
@@ -143,18 +143,18 @@
                     v-model="defectFilter"
                     type="search"
                     id="filterInput"
-                    placeholder="Type to Search"
+                    placeholder="Type om te zoeken"
                   ></b-form-input>
                   <b-input-group-append>
                     <b-button :disabled="!defectFilter" @click="defectFilter = ''"
-                      >Clear</b-button
+                      >Verwijder</b-button
                     >
                   </b-input-group-append>
                 </b-input-group>
               </b-col>
               <b-col lg="6" class="my-1">
                 <b-form-group
-                  label="Per page"
+                  label="Per pagina"
                   label-cols-sm="6"
                   label-cols-md="4"
                   label-cols-lg="3"
@@ -322,7 +322,7 @@ export default Vue.extend({
           key: "edit",
         },
         {
-          label: "Melding verwijderen ",
+          label: "Melding archiveren ",
           key: "delete",
         },
       ],
