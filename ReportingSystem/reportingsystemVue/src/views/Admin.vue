@@ -290,13 +290,13 @@
                   v-if="customFiche.length <= 9 && customFiche.length > 0"
                   @click="addInputField"
                   type="button"
-                  class="btn btn-success btn-block form-control form-control-lg"
+                  class="btn btn-success"
                 >+ invoerveld</button>
                 <button
                   v-if="customFiche.length <= 10 && customFiche.length > 1"
                   @click="delInputField"
                   type="button"
-                  class="btn btn-danger btn-block form-control form-control-lg"
+                  class="btn btn-danger"
                 >- invoerveld</button>
               </div>
             </div>
