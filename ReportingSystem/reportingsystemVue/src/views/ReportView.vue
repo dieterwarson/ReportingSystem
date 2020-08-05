@@ -300,7 +300,7 @@
       <!-- Operational -->
       <section v-if="step == 'Operational'" class="container">
         <!-- Filter types -->
-        <div class="filter-select">
+        <div class="filter-select mt-4">
           <treeselect
             placeholder="Kies filters"
             v-model="selectedTypes.operational"
@@ -477,7 +477,7 @@
       <!-- Workforce -->
       <section v-if="step == 'Workforce'" class="container">
         <!-- Filter types -->
-        <div class="filter-select">
+        <div class="filter-select mt-4">
           <treeselect
             placeholder="Kies filters"
             v-model="selectedTypes.workplaceevent"
@@ -496,120 +496,120 @@
         >
           <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
         </div>
-          <div v-else>
-            <b-form-group
-              label="Filter"
-              label-cols-sm="3"
-              label-align-sm="right"
-              label-size="sm"
-              label-for="filterInput"
-              class="mb-0 mt-4"
-            >
-              <b-row>
-                <b-col lg="6" class="my-1">
-                  <b-input-group size="sm">
-                    <b-form-input
-                      v-model="Filter"
-                      type="search"
-                      id="filterInput"
-                      placeholder="Type om te zoeken"
-                    ></b-form-input>
-                    <b-input-group-append>
-                      <b-button
-                        :disabled="!administrativeFilter"
-                        @click="administrativeFilter = ''"
-                        >Verwijder</b-button
-                      >
-                    </b-input-group-append>
-                  </b-input-group>
-                </b-col>
-                <b-col lg="6" class="my-1">
-                  <b-form-group
-                    label="Per pagina"
-                    label-cols-sm="6"
-                    label-cols-md="4"
-                    label-cols-lg="3"
-                    label-align-sm="right"
-                    label-size="sm"
-                    label-for="administrativePerPageSelect"
-                    class="mb-0"
-                  >
-                    <b-form-select
-                      v-model="administrativePerPage"
-                      id="administrativePerPageSelect"
-                      size="sm"
-                      :options="pageOptions"
-                    ></b-form-select>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-            </b-form-group>
-
-            <b-table
-              v-if="loaded"
-              :head-variant="light"
-              :current-page="administrativeCurrentPage"
-              :per-page="administrativePerPage"
-              :filter="administrativeFilter"
-              :filterIncludedFields="administrativeFilterOn"
-              :sort-by.sync="administrativeSortBy"
-              :sort-desc.sync="administrativeSortDesc"
-              :sort-direction="administrativeSortDirection"
-              @filtered="administrativeOnFiltered"
-              id="administrative-table"
-              bordered
-              hover
-              :table-variant="primary"
-              :fields="administrativeFields"
-              :items="
-                this.reportContent.administrative.workplaceEvents.concat(
-                  this.reportContent.administrative.secretariatNotifications
-                )
-              "
-            >
-              <template v-slot:cell(date)="data">
-                {{
-                  new Date(data.item.date).toLocaleString("nl-BE", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                  })
-                }}
-              </template>
-              <template v-slot:cell(edit)="data">
-                <img
-                  id="topright"
-                  src="../assets/edit-logo.png"
-                  alt="pas aan"
-                  @click="
-                    changeEventClick(
-                      String(data.item.id),
-                      data.item.listName,
-                      'Technical'
-                    )
-                  "
-                />
-              </template>
-              <template v-slot:cell(type)="data">
-                <span class="card-text badge badge-danger">
-                  {{ getType(data.item.id, data.item.listName) }}</span
+        <div v-else>
+          <b-form-group
+            label="Filter"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            label-for="filterInput"
+            class="mb-0 mt-4"
+          >
+            <b-row>
+              <b-col lg="6" class="my-1">
+                <b-input-group size="sm">
+                  <b-form-input
+                    v-model="Filter"
+                    type="search"
+                    id="filterInput"
+                    placeholder="Type om te zoeken"
+                  ></b-form-input>
+                  <b-input-group-append>
+                    <b-button
+                      :disabled="!administrativeFilter"
+                      @click="administrativeFilter = ''"
+                      >Verwijder</b-button
+                    >
+                  </b-input-group-append>
+                </b-input-group>
+              </b-col>
+              <b-col lg="6" class="my-1">
+                <b-form-group
+                  label="Per pagina"
+                  label-cols-sm="6"
+                  label-cols-md="4"
+                  label-cols-lg="3"
+                  label-align-sm="right"
+                  label-size="sm"
+                  label-for="administrativePerPageSelect"
+                  class="mb-0"
                 >
-              </template>
-            </b-table>
-            <b-pagination
-              v-model="administrativeCurrentPage"
-              :total-rows="
-                this.reportContent.administrative.workplaceEvents.length +
-                  this.reportContent.administrative.secretariatNotifications.length
-              "
-              :per-page="administrativePerPage"
-              aria-controls="administrative-table"
-            ></b-pagination>
-          </div>
-        
+                  <b-form-select
+                    v-model="administrativePerPage"
+                    id="administrativePerPageSelect"
+                    size="sm"
+                    :options="pageOptions"
+                  ></b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-form-group>
+
+          <b-table
+            v-if="loaded"
+            :head-variant="light"
+            :current-page="administrativeCurrentPage"
+            :per-page="administrativePerPage"
+            :filter="administrativeFilter"
+            :filterIncludedFields="administrativeFilterOn"
+            :sort-by.sync="administrativeSortBy"
+            :sort-desc.sync="administrativeSortDesc"
+            :sort-direction="administrativeSortDirection"
+            @filtered="administrativeOnFiltered"
+            id="administrative-table"
+            bordered
+            hover
+            :table-variant="primary"
+            :fields="administrativeFields"
+            :items="
+              this.reportContent.administrative.workplaceEvents.concat(
+                this.reportContent.administrative.secretariatNotifications
+              )
+            "
+          >
+            <template v-slot:cell(date)="data">
+              {{
+                new Date(data.item.date).toLocaleString("nl-BE", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                })
+              }}
+            </template>
+            <template v-slot:cell(edit)="data">
+              <img
+                id="topright"
+                src="../assets/edit-logo.png"
+                alt="pas aan"
+                @click="
+                  changeEventClick(
+                    String(data.item.id),
+                    data.item.listName,
+                    'Technical'
+                  )
+                "
+              />
+            </template>
+            <template v-slot:cell(type)="data">
+              <span class="card-text badge badge-danger">
+                {{ getType(data.item.id, data.item.listName) }}</span
+              >
+            </template>
+          </b-table>
+          <b-pagination
+            v-model="administrativeCurrentPage"
+            :total-rows="
+              this.reportContent.administrative.workplaceEvents.length +
+                this.reportContent.administrative.secretariatNotifications
+                  .length
+            "
+            :per-page="administrativePerPage"
+            aria-controls="administrative-table"
+          ></b-pagination>
+        </div>
       </section>
       <!-- Technical -->
       <section v-if="step == 'Technical'" class="container">
@@ -783,7 +783,7 @@ export default Vue.extend({
         {
           id: "types",
           label: "Types",
-          children: [],
+          children: [{id: "", label: ""}],
         },
       ],
       pageOptions: [5, 10, 15],
@@ -845,8 +845,9 @@ export default Vue.extend({
           children: [
             {
               id: "secretariatNotification",
-              label: "Melding aan secretariaat"
-          }],
+              label: "Melding aan secretariaat",
+            },
+          ],
         },
       ],
       administrativeTotalRows: 1,
@@ -906,23 +907,175 @@ export default Vue.extend({
       step: "Operational",
       reportContent: {
         report: {
-          id: 1,
-          date: "2020-03-16T21:13:48.000Z",
+          id: 3,
+          date: "",
           temporary: false,
           nightShift: true,
           createdAt: "",
           updatedAt: "",
         },
         operational: {
-          operationalEvents: {},
+          operationalEvents: [
+            {
+              id: 5,
+              authorId: 1,
+              operationalId: 11,
+              signaling: "",
+              plNumber: "",
+              description:
+                "",
+              priority: true,
+              location: null,
+              unit: "",
+              date: "",
+              createdAt: "",
+              updatedAt: "",
+              eventTypes: [
+                {
+                  id: 2,
+                  operationalEventId: 5,
+                  operationalTypeId: 1,
+                  operationalSubtypeId: null,
+                  createdAt: "",
+                  updatedAt: "",
+                  operationalType: {
+                    id: 1,
+                    typeName: "",
+                    createdAt: "",
+                    updatedAt: "",
+                  },
+                  operationalSubtype: null,
+                },
+              ],
+            },
+          ],
         },
         administrative: {
-          workplaceEvents: {},
-          secretariatNotifications: {},
+          workplaceEvents: [
+            {
+              id: 8,
+              authorId: 1,
+              administrativeId: 2,
+              workplaceTypeId: 2,
+              workplaceSubtypeId: 0,
+              description: "",
+              absentee: "",
+              substitute: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: "",
+              workplaceType: {
+                id: 2,
+                typeName: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+              workplaceSubtype: null,
+              listName: "",
+            },
+          ],
+          secretariatNotifications: [
+            {
+              id: 5,
+              authorId: 1,
+              administrativeId: 2,
+              description: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: "",
+              listName: "",
+            },
+          ],
         },
         technical: {
-          defects: {},
-          malfunctions: {},
+          defects: [
+            {
+              id: 2,
+              authorId: 1,
+              technicalId: 2,
+              defectTypeId: 1,
+              defectSubtypeId: 1,
+              description: "",
+              monitoring: false,
+              date: "",
+              createdAt: "",
+              updatedAt: "",
+              defectType: {
+                id: 1,
+                typeName: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+              defectSubtype: {
+                id: 1,
+                defectTypeId: 1,
+                typeName: "",
+                description: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+              listName: "",
+            },
+            {
+              id: 3,
+              authorId: 1,
+              technicalId: 2,
+              defectTypeId: 1,
+              defectSubtypeId: 1,
+              description: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: "",
+              defectType: {
+                id: 1,
+                typeName: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+              defectSubtype: {
+                id: 1,
+                defectTypeId: 1,
+                typeName: "",
+                description: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+              listName: "",
+            },
+          ],
+          malfunctions: [
+            {
+              id: 2,
+              authorId: 1,
+              technicalId: 2,
+              malfunctionTypeId: 1,
+              malfunctionSubtypeId: 1,
+              description: "",
+              monitoring: true,
+              date: "",
+              duration: "",
+              createdAt: "",
+              updatedAt: "",
+              malfunctionType: {
+                id: 1,
+                typeName: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+              malfunctionSubtype: {
+                id: 1,
+                malfunctionTypeId: 1,
+                typeName: "",
+                description: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+              listName: "",
+            },
+          ],
         },
       },
 
@@ -954,41 +1107,43 @@ export default Vue.extend({
       this.loadPriority();
       this.setShift();
       for (
-          let i = 0;
-          i < this.reportContent.administrative.secretariatNotifications.length;
-          i++
-        ) {
-          if(this.reportContent.administrative.secretariatNotifications[i] != null)
-            (this.reportContent.administrative.secretariatNotifications[i] as any).listName = "SecretariatNotification";
-          
-        }
-        for (
-          let i = 0;
-          i < this.reportContent.administrative.workplaceEvents.length;
-          i++
-        ) {
-          if(this.reportContent.administrative.workplaceEvents[i] != null)
-            (this.reportContent.administrative.workplaceEvents[i] as any).listName = "WorkplaceEvent";
-        }
+        let i = 0;
+        i < this.reportContent.administrative.secretariatNotifications.length;
+        i++
+      ) {
+        if (
+          this.reportContent.administrative.secretariatNotifications[i] != null
+        )
+          (this.reportContent.administrative.secretariatNotifications[
+            i
+          ] as any).listName = "SecretariatNotification";
+      }
+      for (
+        let i = 0;
+        i < this.reportContent.administrative.workplaceEvents.length;
+        i++
+      ) {
+        if (this.reportContent.administrative.workplaceEvents[i] != null)
+          (this.reportContent.administrative.workplaceEvents[
+            i
+          ] as any).listName = "WorkplaceEvent";
+      }
 
-        for (
-          let i = 0;
-          i < this.reportContent.technical.defects.length;
-          i++
-        ) {
-          if(this.reportContent.technical.defects[i] != null)
-            (this.reportContent.technical.defects[i] as any).listName = "Defect";
-        }
+      for (let i = 0; i < this.reportContent.technical.defects.length; i++) {
+        if (this.reportContent.technical.defects[i] != null)
+          (this.reportContent.technical.defects[i] as any).listName = "Defect";
+      }
 
-        for (
-          let i = 0;
-          i < this.reportContent.technical.malfunctions.length;
-          i++
-        ) {
-          if(this.reportContent.technical.malfunctions[i] != null)
-            (this.reportContent.technical.malfunctions[i] as any).listName = "Malfunction";
-        }
-      
+      for (
+        let i = 0;
+        i < this.reportContent.technical.malfunctions.length;
+        i++
+      ) {
+        if (this.reportContent.technical.malfunctions[i] != null)
+          (this.reportContent.technical.malfunctions[i] as any).listName =
+            "Malfunction";
+      }
+
       this.loaded = true;
     },
     priorityContent: function() {
@@ -1017,12 +1172,14 @@ export default Vue.extend({
 
   methods: {
     getTypes() {
+      this.operationalOptions[0].children.pop();
       for (let i = 0; i < this.reportTypes.operationalTypes.length; i++) {
         this.operationalOptions[0].children.push({
           id: this.reportTypes.operationalTypes[i].typeName as string,
           label: this.reportTypes.operationalTypes[i].typeName as string,
         });
       }
+      this.administrativeOptions[0].children.pop();
       for (let i = 0; i < this.reportTypes.workplaceTypes.length; i++) {
         this.administrativeOptions[0].children.push({
           id: this.reportTypes.workplaceTypes[i].typeName as string,
@@ -1139,37 +1296,74 @@ export default Vue.extend({
       });
       this.selectAllSections();
     },
-    getType: function(id:string, list:string){
-      if(this.reportContent.administrative.workplaceEvents !== [] && list == "WorkplaceEvent"){
-        for (let i = 0; i < this.reportContent.administrative.workplaceEvents.length; i++) {
-          if(this.reportContent.administrative.workplaceEvents[i] !== null && this.reportContent.administrative.workplaceEvents[i].id == id){
-            return this.reportContent.administrative.workplaceEvents[i].workplaceType.typeName;
+    getType: function(id: number, list: string) {
+      if (
+        this.reportContent.administrative.workplaceEvents !== [] &&
+        list == "WorkplaceEvent"
+      ) {
+        for (
+          let i = 0;
+          i < this.reportContent.administrative.workplaceEvents.length;
+          i++
+        ) {
+          if (
+            this.reportContent.administrative.workplaceEvents[i] !== null &&
+            this.reportContent.administrative.workplaceEvents[i].id == id
+          ) {
+            return this.reportContent.administrative.workplaceEvents[i]
+              .workplaceType.typeName;
           }
-          
         }
       }
-      if(this.reportContent.administrative.secretariatNotifications !== [] && list == "SecretariatNotification"){
-        for (let i = 0; i < this.reportContent.administrative.secretariatNotifications.length; i++) {
-          if(this.reportContent.administrative.secretariatNotifications[i] !== null){
+      if (
+        this.reportContent.administrative.secretariatNotifications !== [] &&
+        list == "SecretariatNotification"
+      ) {
+        for (
+          let i = 0;
+          i < this.reportContent.administrative.secretariatNotifications.length;
+          i++
+        ) {
+          if (
+            this.reportContent.administrative.secretariatNotifications[i] !==
+            null
+          ) {
             return "Melding aan secretariaat";
           }
-          
         }
       }
-      if(this.reportContent.technical.defects !== [] && list == "Defect"){
+      if (this.reportContent.technical.defects !== [] && list == "Defect") {
         for (let i = 0; i < this.reportContent.technical.defects.length; i++) {
-          if(this.reportContent.technical.defects[i] !== null && this.reportContent.technical.defects[i].id == id){
-            return "Logistiek: " + this.reportContent.technical.defects[i].defectType.typeName;
+          if (
+            this.reportContent.technical.defects[i] !== null &&
+            this.reportContent.technical.defects[i].id == id
+          ) {
+            return (
+              "Logistiek: " +
+              this.reportContent.technical.defects[i].defectType.typeName
+            );
           }
-          
         }
       }
-      if(this.reportContent.technical.malfunctions !== [] && list == "Malfunction"){
-        for (let i = 0; i < this.reportContent.technical.malfunctions.length; i++) {
-          if(this.reportContent.technical.malfunctions[i] !== null && this.reportContent.technical.malfunctions[i].id == id){
-            return "Technisch: " + this.reportContent.technical.malfunctions[i].malfunctionType.typeName;
+      if (
+        this.reportContent.technical.malfunctions !== [] &&
+        list == "Malfunction"
+      ) {
+        for (
+          let i = 0;
+          i < this.reportContent.technical.malfunctions.length;
+          i++
+        ) {
+          if (
+            this.reportContent.technical.malfunctions[i] !== null &&
+            this.reportContent.technical.malfunctions[i].id == id
+          ) {
+            return (
+              "Technisch: " +
+              this.reportContent.technical.malfunctions[i].malfunctionType
+                .typeName
+            );
           }
-          
         }
       }
     },

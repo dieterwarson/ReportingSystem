@@ -9,7 +9,6 @@
         Meldingen
       </h1>
 
-
       <!--- ADMINISTRATIEF --->
       <template>
         <div>
@@ -32,7 +31,9 @@
                     placeholder="Type om te zoeken"
                   ></b-form-input>
                   <b-input-group-append>
-                    <b-button :disabled="!administrativeFilter" @click="administrativeFilter = ''"
+                    <b-button
+                      :disabled="!administrativeFilter"
+                      @click="administrativeFilter = ''"
                       >Verwijder</b-button
                     >
                   </b-input-group-append>
@@ -60,7 +61,8 @@
             </b-row>
           </b-form-group>
 
-          <b-table v-if="loaded"
+          <b-table
+            v-if="loaded"
             :head-variant="light"
             :current-page="administrativeCurrentPage"
             :per-page="administrativePerPage"
@@ -94,9 +96,20 @@
               }}
             </template>
             <template v-slot:cell(edit)="data">
-              <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(data.item.id), data.item.listName, 'Workforce')" />
+              <img
+                id="topright"
+                src="../assets/edit-logo.png"
+                alt="pas aan"
+                @click="
+                  changeEventClick(
+                    String(data.item.id),
+                    data.item.listName,
+                    'Workforce'
+                  )
+                "
+              />
             </template>
-            
+
             <template v-slot:cell(delete)="data">
               <button
                 class="btn btn-primary btn-sm"
@@ -123,7 +136,6 @@
         </div>
       </template>
 
-
       <!--- DEFECTEN --->
       <template>
         <div>
@@ -146,7 +158,9 @@
                     placeholder="Type om te zoeken"
                   ></b-form-input>
                   <b-input-group-append>
-                    <b-button :disabled="!defectFilter" @click="defectFilter = ''"
+                    <b-button
+                      :disabled="!defectFilter"
+                      @click="defectFilter = ''"
                       >Verwijder</b-button
                     >
                   </b-input-group-append>
@@ -174,7 +188,8 @@
             </b-row>
           </b-form-group>
 
-          <b-table v-if="loaded"
+          <b-table
+            v-if="loaded"
             :head-variant="light"
             :current-page="defectCurrentPage"
             :per-page="defectPerPage"
@@ -216,7 +231,18 @@
               </button>
             </template>
             <template v-slot:cell(edit)="data">
-              <img id="topright" src="../assets/edit-logo.png" alt="pas aan" @click="changeEventClick(String(data.item.id), data.item.listName, 'Technical')" />
+              <img
+                id="topright"
+                src="../assets/edit-logo.png"
+                alt="pas aan"
+                @click="
+                  changeEventClick(
+                    String(data.item.id),
+                    data.item.listName,
+                    'Technical'
+                  )
+                "
+              />
             </template>
             <template v-slot:cell(type)="data">
               <span class="card-text badge badge-danger">
@@ -329,12 +355,110 @@ export default Vue.extend({
       interval: 0,
       monitored: {
         administrative: {
-          workplaceEvents: [],
-          secretariatNotifications: [],
+          count: 11,
+          workplaceEvents: [
+            {
+              id: 7,
+              authorId: 2,
+              administrativeId: 8,
+              workplaceTypeId: 2,
+              workplaceSubtypeId: 0,
+              description: "",
+              absentee: "",
+              substitute: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: "",
+              workplaceType: {
+                id: 2,
+                typeName: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+              listName: "",
+            },
+          ],
+          secretariatNotifications: [
+            {
+              id: 4,
+              authorId: 2,
+              administrativeId: 8,
+              description: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: "",
+              listName: "",
+            },
+          ],
         },
         technical: {
-          defects: [],
-          malfunctions: [],
+          count: [
+            {
+              id: 1,
+              authorId: 2,
+              technicalId: 4,
+              defectTypeId: 1,
+              defectSubtypeId: 1,
+              description: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: "",
+              defectType: {
+                id: 1,
+                typeName: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+            },
+          ],
+          defects: [
+            {
+              id: 1,
+              authorId: 2,
+              technicalId: 4,
+              defectTypeId: 1,
+              defectSubtypeId: 1,
+              description: "",
+              monitoring: true,
+              date: "",
+              createdAt: "",
+              updatedAt: "",
+              defectType: {
+                id: 1,
+                typeName: "",
+                createdAt: "",
+                updatedAt: "",
+              },
+              listName: "",
+            },
+            
+          ],
+          malfunctions: [
+            {
+              id: 5,
+              authorId: 2,
+              technicalId: 4,
+              malfunctionTypeId: 3,
+              malfunctionSubtypeId: 3,
+              description: "stroom uitgevallen hoofdgebouw",
+              monitoring: true,
+              date: "2020-03-21T15:26:24.000Z",
+              duration: "0:13",
+              createdAt: "2020-05-17T11:45:39.000Z",
+              updatedAt: "2020-05-17T11:45:39.000Z",
+              malfunctionType: {
+                id: 3,
+                typeName: "Verwittiging (anderen)",
+                createdAt: "2020-05-17T11:45:39.000Z",
+                updatedAt: "2020-05-17T11:45:39.000Z",
+              },
+              listName: "Malfunction",
+            },
+            
+          ],
         },
       },
       emptyMonitored: {
@@ -366,37 +490,68 @@ export default Vue.extend({
   },
 
   methods: {
-    getType: function(id:string, list:string){
-      if(this.monitored.administrative.workplaceEvents !== [] && list == "WorkplaceEvent"){
-        for (let i = 0; i < this.monitored.administrative.workplaceEvents.length; i++) {
-          if(this.monitored.administrative.workplaceEvents[i] !== null && this.monitored.administrative.workplaceEvents[i].id == id){
-            return this.monitored.administrative.workplaceEvents[i].workplaceType.typeName;
+    getType: function(id: number, list: string) {
+      if (
+        this.monitored.administrative.workplaceEvents !== [] &&
+        list == "WorkplaceEvent"
+      ) {
+        for (
+          let i = 0;
+          i < this.monitored.administrative.workplaceEvents.length;
+          i++
+        ) {
+          if (
+            this.monitored.administrative.workplaceEvents[i] !== null &&
+            this.monitored.administrative.workplaceEvents[i].id == id
+          ) {
+            return this.monitored.administrative.workplaceEvents[i]
+              .workplaceType.typeName;
           }
-          
         }
       }
-      if(this.monitored.administrative.secretariatNotifications !== [] && list == "SecretariatNotification"){
-        for (let i = 0; i < this.monitored.administrative.secretariatNotifications.length; i++) {
-          if(this.monitored.administrative.secretariatNotifications[i] !== null){
+      if (
+        this.monitored.administrative.secretariatNotifications !== [] &&
+        list == "SecretariatNotification"
+      ) {
+        for (
+          let i = 0;
+          i < this.monitored.administrative.secretariatNotifications.length;
+          i++
+        ) {
+          if (
+            this.monitored.administrative.secretariatNotifications[i] !== null
+          ) {
             return "Melding aan secretariaat";
           }
-          
         }
       }
-      if(this.monitored.technical.defects !== [] && list == "Defect"){
+      if (this.monitored.technical.defects !== [] && list == "Defect") {
         for (let i = 0; i < this.monitored.technical.defects.length; i++) {
-          if(this.monitored.technical.defects[i] !== null && this.monitored.technical.defects[i].id == id){
-            return "Logistiek: " + this.monitored.technical.defects[i].defectType.typeName;
+          if (
+            this.monitored.technical.defects[i] !== null &&
+            this.monitored.technical.defects[i].id == id
+          ) {
+            return (
+              "Logistiek: " +
+              this.monitored.technical.defects[i].defectType.typeName
+            );
           }
-          
         }
       }
-      if(this.monitored.technical.malfunctions !== [] && list == "Malfunction"){
+      if (
+        this.monitored.technical.malfunctions !== [] &&
+        list == "Malfunction"
+      ) {
         for (let i = 0; i < this.monitored.technical.malfunctions.length; i++) {
-          if(this.monitored.technical.malfunctions[i] !== null && this.monitored.technical.malfunctions[i].id == id){
-            return "Technisch: " + this.monitored.technical.malfunctions[i].malfunctionType.typeName;
+          if (
+            this.monitored.technical.malfunctions[i] !== null &&
+            this.monitored.technical.malfunctions[i].id == id
+          ) {
+            return (
+              "Technisch: " +
+              this.monitored.technical.malfunctions[i].malfunctionType.typeName
+            );
           }
-          
         }
       }
     },
@@ -421,7 +576,7 @@ export default Vue.extend({
         category,
       }).then((res) => this.loadData());
     },
-    changeEventClick: function (id: string, subcat: string, categorie: string) {
+    changeEventClick: function(id: string, subcat: string, categorie: string) {
       subcat = subcat[0].toLowerCase() + subcat.substring(1);
       this.$router.push({
         path: "changeEvent",
@@ -429,8 +584,8 @@ export default Vue.extend({
           reportId: String(0),
           eventId: String(id),
           categorie: categorie,
-          subcategorie: String(subcat + 's')
-        }
+          subcategorie: String(subcat + "s"),
+        },
       });
     },
   },
@@ -444,41 +599,35 @@ export default Vue.extend({
           i < this.monitored.administrative.secretariatNotifications.length;
           i++
         ) {
-          if(this.monitored.administrative.secretariatNotifications[i] != null)
-            (this.monitored.administrative.secretariatNotifications[i] as any).listName = "SecretariatNotification";
-          
+          if (this.monitored.administrative.secretariatNotifications[i] != null)
+            (this.monitored.administrative.secretariatNotifications[
+              i
+            ] as any).listName = "SecretariatNotification";
         }
         for (
           let i = 0;
           i < this.monitored.administrative.workplaceEvents.length;
           i++
         ) {
-          if(this.monitored.administrative.workplaceEvents[i] != null)
-            (this.monitored.administrative.workplaceEvents[i] as any).listName = "WorkplaceEvent";
+          if (this.monitored.administrative.workplaceEvents[i] != null)
+            (this.monitored.administrative.workplaceEvents[i] as any).listName =
+              "WorkplaceEvent";
         }
 
-        for (
-          let i = 0;
-          i < this.monitored.technical.defects.length;
-          i++
-        ) {
-          if(this.monitored.technical.defects[i] != null)
+        for (let i = 0; i < this.monitored.technical.defects.length; i++) {
+          if (this.monitored.technical.defects[i] != null)
             (this.monitored.technical.defects[i] as any).listName = "Defect";
         }
 
-        for (
-          let i = 0;
-          i < this.monitored.technical.malfunctions.length;
-          i++
-        ) {
-          if(this.monitored.technical.malfunctions[i] != null)
-            (this.monitored.technical.malfunctions[i] as any).listName = "Malfunction";
+        for (let i = 0; i < this.monitored.technical.malfunctions.length; i++) {
+          if (this.monitored.technical.malfunctions[i] != null)
+            (this.monitored.technical.malfunctions[i] as any).listName =
+              "Malfunction";
         }
-      
+
         this.loaded = true;
       },
     },
-    
   },
 
   beforeDestroy: function() {
@@ -488,7 +637,6 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-
 #topright {
   height: 30px;
   width: 30px;
