@@ -1,28 +1,95 @@
 <template>
-<div class="userlist">
-<div id="nav">
-    <router-link to="/">Startscherm</router-link>
-        <b>/</b>
+  <div class="userlist">
+    <div id="nav">
+      <router-link to="/">Startscherm</router-link>
+      <b>/</b>
 
-    <router-link to="/admin">Administrator</router-link>
-  </div>
-<div v-if="users">
-  <h1>Gebruikers</h1>
-  <div class="row d-flex justify-content-center">
-    <div class="  card h-100 col-sm-5" v-for="user in users" :key="user.id">
-      <h3 class="card-header bg-primary text-white">{{ user.username }}</h3>
-      <div class="card-body">
-        <p class="card-text">{{user.email}}</p>
-        <p v-if="user.accessRights == 0" class="card-text">Administrator</p>
-        <p v-if="user.accessRights == 1" class="card-text">Supervisor</p>
-        <p v-if="user.accessRights == 2" class="card-text">Secretariaat</p>
-        <label><input name="Subscription" type="checkbox" @change="changeSubscription(user)" v-model="user.subscription">Toegevoegd aan maillijst</label>
-        <!-- <button type="button" class="btn btn-danger btn-block" @click="deleteUser(user)">Gebruiker verwijderen</button> -->
+      <router-link to="/admin">Administrator</router-link>
+    </div>
+
+    <div v-if="users">
+      {{users}}
+      <h1>Gebruikers</h1>
+      <template>
+        <div>
+          <b-form-group
+            label="Filter"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            label-for="filterInput"
+            class="mb-0 mt-4"
+          >
+            <b-row>
+              <b-col lg="6" class="my-1">
+                <b-input-group size="sm">
+                  <b-form-input
+                    v-model="Filter"
+                    type="search"
+                    id="filterInput"
+                    placeholder="Type om te zoeken"
+                  ></b-form-input>
+                  <b-input-group-append>
+                    <b-button :disabled="!filter" @click="filter = ''"
+                      >Verwijder</b-button
+                    >
+                  </b-input-group-append>
+                </b-input-group>
+              </b-col>
+              <b-col lg="6" class="my-1">
+                <b-form-group
+                  label="Per pagina"
+                  label-cols-sm="6"
+                  label-cols-md="4"
+                  label-cols-lg="3"
+                  label-align-sm="right"
+                  label-size="sm"
+                  label-for="operationalPerPageSelect"
+                  class="mb-0"
+                >
+                  <b-form-select
+                    v-model="perPage"
+                    id="operationalPerPageSelect"
+                    size="sm"
+                    :options="pageOptions"
+                  ></b-form-select>
+                </b-form-group>
+              </b-col>
+            </b-row>
+          </b-form-group>
+
+          <b-table
+            :head-variant="light"
+            :current-page="currentPage"
+            :per-page="perPage"
+            :filter="filter"
+            :filterIncludedFields="filterOn"
+            :sort-by.sync="sortBy"
+            :sort-desc.sync="sortDesc"
+            :sort-direction="sortDirection"
+            @filtered="onFiltered"
+            id="operational-table"
+            bordered
+            hover
+            :table-variant="primary"
+            :fields="fields"
+            :items="
+              this.users
+            "
+          >   
+          </b-table>
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="
+              this.users.length
+            "
+            :per-page="perPage"
+            aria-controls="operational-table"
+          ></b-pagination>
+        </div>
+      </template>
     </div>
   </div>
-</div>
-</div>
-</div>
 </template>
 
 <script lang="ts">
@@ -33,7 +100,43 @@ import jwt from "jsonwebtoken";
 export default Vue.extend({
   data() {
     return {
-      users: []
+      pageOptions: [5, 10, 15],
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 5,
+      sortBy: "id",
+      sortDesc: true,
+      sortDirection: "asc",
+      filter: null,
+      filterOn: [],
+      users: [],
+      fields: [
+        {
+          label: "#",
+          key: "id",
+          sortable: true
+        },
+        {
+          label: "Gebruikersnaam",
+          key: "username",
+          sortable: true
+        },
+        {
+          label: "Emailadres",
+          key: "email",
+          sortable: true
+        },
+        {
+          label: "Functie",
+          key: "accessRights",
+          sortable: true
+        },
+        {
+          label: "Maillijst",
+          key: "subscription",
+          sortable: true
+        }
+      ]
     };
   },
 
@@ -42,33 +145,35 @@ export default Vue.extend({
   },
 
   methods: {
-    loadUsers: function () {
-      ReportingService.getAllUsers('/api/users/all').then(
-        (res) => (this.users = res)
+    loadUsers: function() {
+      ReportingService.getAllUsers("/api/users/all").then(
+        res => (this.users = res)
       );
     },
-    changeSubscription: function (user: any) {
-      
+    changeSubscription: function(user: any) {
       ReportingService.changeSubscription({
         id: user.id,
-        subscription: user.subscription,
+        subscription: user.subscription
       });
     },
-    deleteUser: function (user: any) {
-      const decodedToken: any = jwt.decode(window.localStorage.getItem("token") !);
-     
+    deleteUser: function(user: any) {
+      const decodedToken: any = jwt.decode(
+        window.localStorage.getItem("token")!
+      );
+
       ReportingService.deleteUser({
         id: decodedToken.id,
-        deleteid: user.id,
+        deleteid: user.id
       });
     }
   }
-})
+});
 </script>
 
 <style>
 .card {
-display: inline-block;  width: 35%;
-padding: 0px;
+  display: inline-block;
+  width: 35%;
+  padding: 0px;
 }
 </style>
