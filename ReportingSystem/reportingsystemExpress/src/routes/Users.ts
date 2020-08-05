@@ -113,12 +113,13 @@ router.post('/addUser', async (req, res) => {
 router.post('/changePassword', async (req, res) => {
   
   const userData = req.body;
-  if(!checkPassword(userData.password, userData.rptPassword)){
+
+  if(! /^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(userData.password)){
     return res.json({
       message: "Wachtwoord wijzigen mislukt"
     })
   }
-  if (userData.username, userData.password, userData.rptPassword) {
+  if (userData.username, userData.password) {
     const passwordHash = bcrypt.hashSync(userData.password, 10);
     User.update(
       { password: passwordHash },

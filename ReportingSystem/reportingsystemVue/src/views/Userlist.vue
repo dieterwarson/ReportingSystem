@@ -8,7 +8,6 @@
     </div>
 
     <div v-if="users">
-      {{users}}
       <h1>Gebruikers</h1>
       <template>
         <div>
@@ -24,15 +23,13 @@
               <b-col lg="6" class="my-1">
                 <b-input-group size="sm">
                   <b-form-input
-                    v-model="Filter"
+                    v-model="filter"
                     type="search"
                     id="filterInput"
                     placeholder="Type om te zoeken"
                   ></b-form-input>
                   <b-input-group-append>
-                    <b-button :disabled="!filter" @click="filter = ''"
-                      >Verwijder</b-button
-                    >
+                    <b-button :disabled="!filter" @click="filter = ''">Verwijder</b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-col>
@@ -76,7 +73,40 @@
             :items="
               this.users
             "
-          >   
+          >
+            <template v-slot:cell(id)="data">
+              {{
+              data.item.id
+              }}
+            </template>
+            <template v-slot:cell(subscription)="data">
+              <input
+                @change="changeSubscription(data.item)"
+                type="checkbox"
+                class="form-check-input"
+                id="exampleCheck1"
+                v-model="data.item.subscription"
+              />
+            </template>
+
+            <template v-slot:cell(accessRights)="data">
+              <select
+                class="form-control"
+                @change="doChangeAccess(data.item.username, data.item.accessRights)"
+                v-model="data.item.accessRights"
+              >
+                <option value="0">Administrator</option>
+                <option value="1">Supervisor</option>
+                <option value="2">Secretariaat</option>-
+              </select>
+            </template>
+            <template v-slot:cell(password)="data">
+              <input type="password" v-model="newPwd[data.item.id - 1]" />
+              <button
+                class="btn btn-primary"
+                @click="changePassword(data.item.username, newPwd[data.item.id - 1])"
+              >Wijzig</button>
+            </template>
           </b-table>
           <b-pagination
             v-model="currentPage"
@@ -89,11 +119,70 @@
         </div>
       </template>
     </div>
+    <div class="input-group-vertical mt-2">
+      <label>Gebruikersnaam (3 tot 15 tekens):</label>
+      <input
+        name="username"
+        v-model="newUserData.username"
+        type="text"
+        placeholder="Gebruikersnaam"
+        class="form-control form-control-lg"
+      />
+      <p v-if="!newUserData.usernameCheck">De gebruikersnaam voldoet niet aan de voorwaarden</p>
+      <label>Email:</label>
+      <input
+        name="email"
+        v-model="newUserData.email"
+        type="email"
+        placeholder="E-mail"
+        class="form-control form-control-lg"
+      />
+      <label>Wachtwoord (6 tot 12 tekens, minstens 1 hoofdletter, minstens 1 cijfer):</label>
+      <input
+        name="password"
+        v-model="newUserData.password"
+        type="password"
+        placeholder="Wachtwoord"
+        class="form-control form-control-lg"
+      />
+      <input
+        name="passwordCheck"
+        v-model="newUserData.rptPassword"
+        type="password"
+        placeholder="Herhaal wachtwoord"
+        class="form-control form-control-lg"
+      />
+      <p v-if="!newUserData.passwordComp">De wachtwoorden voldoen niet aan de voorwaarden</p>
+      <label>toegangsrechten:</label>
+      <select
+        class="form-control form-control-lg"
+        id="accessRights"
+        v-model="newUserData.accessRights"
+      >
+        <option value="0">Administrator</option>
+        <option value="1">Supervisor</option>
+        <option value="2">Secretariaat</option>
+      </select>
+      <br />
+      <label>
+        <input name="Subscription" v-model="newUserData.subscription" type="checkbox" />Toevoegen aan maillijst
+      </label>
+
+      <button
+        type="button"
+        class="btn btn-info btn-block"
+        @click.prevent="doNewUser"
+      >Voeg gebruiker toe</button>
+      <small v-if="newUserData.failed">De gebruiker toevoegen is niet gelukt!</small>
+      <small v-if="newUserData.completed">De nieuwe gebruiker is toegevoegd!</small>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import BootstrapVue from "bootstrap-vue";
+Vue.use(BootstrapVue);
 import ReportingService from "../services/ReportingService";
 import jwt from "jsonwebtoken";
 
@@ -101,15 +190,29 @@ export default Vue.extend({
   data() {
     return {
       pageOptions: [5, 10, 15],
+      newPwd: [],
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
       sortBy: "id",
-      sortDesc: true,
+      sortDesc: false,
       sortDirection: "asc",
       filter: null,
       filterOn: [],
       users: [],
+      newUserData: {
+        username: "",
+        password: "",
+        rptPassword: "",
+        email: "",
+        accessRights: 0,
+        subscription: false,
+        passwordCheck: true,
+        usernameCheck: true,
+        passwordComp: false,
+        completed: false,
+        failed: false
+      },
       fields: [
         {
           label: "#",
@@ -135,6 +238,11 @@ export default Vue.extend({
           label: "Maillijst",
           key: "subscription",
           sortable: true
+        },
+        {
+          label: "Wijzig wachtwoord",
+          key: "password",
+          sortable: false
         }
       ]
     };
@@ -149,6 +257,9 @@ export default Vue.extend({
       ReportingService.getAllUsers("/api/users/all").then(
         res => (this.users = res)
       );
+      this.users.forEach(user => {
+        this.newPwd.push("");
+      });
     },
     changeSubscription: function(user: any) {
       ReportingService.changeSubscription({
@@ -165,7 +276,92 @@ export default Vue.extend({
         id: decodedToken.id,
         deleteid: user.id
       });
-    }
+    },
+    async doChangeAccess(username: any, newAcces: any) {
+      if (this.checkAccessRights(newAcces)) {
+        const response = await ReportingService.changeAcces({
+          username: username,
+          newAcces: newAcces
+        });
+      }
+    },
+    checkAccessRights: function(accessRights: number) {
+      if (accessRights >= 0 && accessRights < 3) return true;
+      else return false;
+    },
+    checkPassword: function(pwd: any) {
+      if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(pwd)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    async changePassword(username: any, newPass: any) {
+      if (this.checkPassword(newPass)) {
+        const response = await ReportingService.changePassword({
+          username: username,
+          password: newPass
+        });
+      }
+    },
+    async doNewUser() {
+      //CHECK IF PASSWORDS ARE THE SAME
+      this.newUserData.failed = false;
+      this.newUserData.completed = false;
+      this.newUserData.usernameCheck = this.checkUsername(
+        this.newUserData.username
+      );
+      this.newUserData.passwordComp = this.checkPasswords(
+        this.newUserData.password,
+        this.newUserData.rptPassword
+      );
+      if (
+        this.newUserData.passwordComp &&
+        this.newUserData.usernameCheck &&
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(
+          this.newUserData.email
+        )
+      ) {
+        const response = await ReportingService.addUser({
+          username: this.newUserData.username,
+          password: this.newUserData.password,
+          rptPassword: this.newUserData.rptPassword,
+          accessRights: this.newUserData.accessRights,
+          mail: this.newUserData.email,
+          subscription: this.newUserData.subscription
+        });
+        this.newUserData.completed = true;
+      } else {
+        this.newUserData.failed = true;
+      }
+      this.newUserData.password = "";
+      this.newUserData.rptPassword = "";
+      this.newUserData.username = "";
+      this.newUserData.email = "";
+      this.newUserData.accessRights = 0;
+      this.newUserData.subscription = false;
+      this.loadUsers();
+    },
+    checkUsername: function(username: string) {
+      if (/^[a-zA-Z0-9_-]{3,15}$/.test(username)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    checkPasswords: function(password1: string, password2: string) {
+      if (/^(?=.*?[0-9])(?=.*[A-Z]).{6,12}$/.test(password1)) {
+        //Check if password is at least 6 long and at least one uppercase
+        const test = new String(password1);
+        if (test.localeCompare(password2) == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    },
   }
 });
 </script>
