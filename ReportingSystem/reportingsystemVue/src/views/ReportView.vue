@@ -20,253 +20,6 @@
         }}
         <span class="badge badge-primary">{{ shift }}</span>
       </h1>
-      <div class="row my-5">
-        <!-- Operationeel met prioriteit -->
-        <div class="col">
-          <div class="card w-100">
-            <div class="card-header bg-primary text-white">
-              Operationeel met prioriteit
-            </div>
-            <div class="card-body">
-              <div
-                v-if="
-                  Object.keys(priorityContent.operational.operationalEvents)
-                    .length === 0
-                "
-              >
-                <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
-              </div>
-              <div v-else class="row row-cols-1">
-                <div
-                  v-for="event in priorityContent.operational.operationalEvents"
-                  :key="event.id"
-                >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h3 class="card-title display-5">
-                        {{
-                          new Date(event.date).toLocaleString("nl-BE", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        }}
-                      </h3>
-                      <p class="card-text">{{ event.signaling }}</p>
-                      <p class="card-text">{{ event.description }}</p>
-                      <p class="card-text">{{ event.location }}</p>
-                      <h5>
-                        <span
-                          class="card-text badge badge-primary mr-1"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="PL-nummer"
-                          >{{ event.plNumber }}</span
-                        >
-                        <span
-                          class="card-text badge badge-danger"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="Eenheid"
-                          >{{ event.unit }}</span
-                        >
-                      </h5>
-
-                      <div v-if="!event.eventTypes === null">
-                        <div v-for="type in event.eventTypes" :key="type.id">
-                          <h5 class="card-text">
-                            <div v-if="!(type.operationalType === null)">
-                              <span
-                                class="card-text badge badge-secondary mr-1"
-                                >{{ type.operationalType.typeName }}</span
-                              >
-                              <span v-if="!(type.operationalSubtype === null)">
-                                <span class="card-text badge badge-secondary">
-                                  {{ type.operationalSubtype.typeName }}
-                                </span>
-                              </span>
-                            </div>
-                          </h5>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Meldingen -->
-        <div class="col">
-          <div class="card w-100">
-            <div class="card-header bg-primary text-white">Meldingen</div>
-            <div class="card-body">
-              <div
-                v-if="
-                  Object.keys(
-                    notificationContent.administrative.workplaceEvents
-                  ).length === 0 &&
-                    Object.keys(
-                      notificationContent.administrative
-                        .secretariatNotifications
-                    ).length === 0 &&
-                    Object.keys(notificationContent.technical.defects)
-                      .length === 0 &&
-                    Object.keys(notificationContent.technical.malfunctions)
-                      .length === 0
-                "
-              >
-                <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
-              </div>
-              <div v-else class="row row-cols-1">
-                <div
-                  v-for="event in notificationContent.administrative
-                    .workplaceEvents"
-                  :key="event.id"
-                >
-                  <div
-                    v-if="!(Object.keys(event) === 0)"
-                    class="col card h-100"
-                  >
-                    <div class="card-body">
-                      <h5 class="card-title">Voorval tijdens de dienst</h5>
-                      <h5 class="card-text">
-                        {{
-                          new Date(event.date).toLocaleString("nl-BE", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        }}
-                      </h5>
-                      <p class="card-text">{{ event.description }}</p>
-                      <p class="card-text">
-                        {{ event.absentee }} vervangen door
-                        {{ event.substitute }}
-                      </p>
-                      <div v-if="!(event.workplaceType == null)">
-                        <h5 class="card-text">
-                          <span class="card-text badge badge-secondary mr-1">{{
-                            event.workplaceType.typeName
-                          }}</span>
-                          <span v-if="!(event.workplaceSubtype == null)">
-                            <span class="card-text badge badge-secondary">{{
-                              event.workplaceSubtype.typeName
-                            }}</span>
-                          </span>
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  v-for="event in notificationContent.administrative
-                    .secretariatNotifications"
-                  :key="event.id"
-                >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title display-5">
-                        {{
-                          new Date(event.date).toLocaleString("nl-BE", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: false,
-                          })
-                        }}
-                      </h5>
-                      <p class="card-text">{{ event.signaling }}</p>
-                      <h5>
-                        <span
-                          class="card-text badge badge-primary"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="PL-nummer"
-                          >{{ event.plNumber }}</span
-                        >
-                        <span
-                          class="card-text badge badge-danger"
-                          data-toggle="tooltip"
-                          data-placement="top"
-                          title="Eenheid"
-                          >{{ event.unit }}</span
-                        >
-                      </h5>
-                      <p class="card-text">{{ event.description }}</p>
-                      <p class="card-text">{{ event.location }}</p>
-                      <h5></h5>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  v-for="event in notificationContent.technical.defects"
-                  :key="event.id"
-                >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">Logistiek</h5>
-                      <h5 class="card-text">
-                        {{
-                          new Date(event.date).toLocaleString("nl-BE", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        }}
-                      </h5>
-                      <p class="card-text">{{ event.description }}</p>
-                      <div v-if="!(event.defectType == null)">
-                        <h5 class="card-text">
-                          <span class="card-text badge badge-secondary mr-1">
-                            {{ event.defectType.typeName }}
-                          </span>
-                          <span v-if="!(event.defectSubtype == null)">
-                            <span class="card-text badge badge-secondary">
-                              {{ event.defectSubtype.typeName }}
-                            </span>
-                          </span>
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  v-for="event in notificationContent.technical.malfunctions"
-                  :key="event.id"
-                >
-                  <div class="col card h-100">
-                    <div class="card-body">
-                      <h5 class="card-title">Technisch</h5>
-                      <h5 class="card-text">
-                        {{
-                          new Date(event.date).toLocaleString("nl-BE", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })
-                        }}
-                      </h5>
-                      <p class="card-text">{{ event.description }}</p>
-                      <p class="card-text">{{ event.duration }}</p>
-                      <div v-if="!(event.malfunctionType == null)">
-                        <h5 class="card-text">
-                          <span class="card-text badge badge-secondary mr-1">
-                            {{ event.malfunctionType.typeName }}
-                          </span>
-                          <span v-if="!(event.malfunctionSubtype == null)">
-                            <span class="card-text badge badge-secondary">
-                              {{ event.malfunctionSubtype.typeName }}
-                            </span>
-                          </span>
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div
         class="btn-group d-flex"
         role="group"
@@ -406,7 +159,7 @@
                       changeEventClick(
                         String(data.item.id),
                         data.item.listName,
-                        'Workforce'
+                        'operational'
                       )
                     "
                   />
@@ -423,36 +176,23 @@
                 </template>
                 <template v-slot:cell(unit)="data">
                   <span
-                    class="card-text badge badge-danger"
+                    class="card-text badge badge-secondary"
                     data-toggle="tooltip"
                     data-placement="top"
                     title="Eenheid"
                     >{{ data.item.unit }}</span
                   >
                 </template>
-                <template v-slot:cell(edit)="data">
-                  <img
-                    id="topright"
-                    src="../assets/edit-logo.png"
-                    alt="pas aan"
-                    @click="
-                      changeEventClick(
-                        String(data.item.id),
-                        'operationalEvents'
-                      )
-                    "
-                  />
-                </template>
                 <template v-slot:cell(type)="data">
                   <div v-if="!(data.item.eventTypes == null)">
                     <div v-for="type in data.item.eventTypes" :key="type.id">
                       <h5 class="card-text">
                         <div v-if="!(type.operationalType == null)">
-                          <span class="card-text badge badge-secondary mr-1">
+                          <span class="card-text badge badge-danger mr-1">
                             {{ type.operationalType.typeName }}
                           </span>
                           <span v-if="!(type.operationalSubtype == null)">
-                            <span class="card-text badge badge-secondary">
+                            <span class="card-text badge badge-danger">
                               {{ type.operationalSubtype.typeName }}
                             </span>
                           </span>
@@ -588,7 +328,7 @@
                   changeEventClick(
                     String(data.item.id),
                     data.item.listName,
-                    'Technical'
+                    'Workforce'
                   )
                 "
               />
@@ -614,62 +354,15 @@
       <!-- Technical -->
       <section v-if="step == 'Technical'" class="container">
         <!-- Filter types -->
-        <div v-if="Object.keys(reportTypes).length === 0">
-          <p>Er zijn nog geen types</p>
+        <div class="filter-select mt-4">
+          <treeselect
+            placeholder="Kies filters"
+            v-model="selectedTypes.defect"
+            :multiple="true"
+            :options="defectOptions"
+            valueConsistsOf="ALL"
+          />
         </div>
-        <form v-else id="typeSelector" class="col-md-12">
-          <div class="text-sm-left">
-            <input
-              type="checkbox"
-              id="defectParent"
-              @change="selectAll('defect')"
-            />
-            <label>
-              <h5>Logistiek</h5>
-            </label>
-            <div class="checkbox-container text-sm-left col-sm-7">
-              <div
-                v-for="value in this.reportTypes.defectTypes"
-                :key="value.id"
-              >
-                <div class="typecontainer text-lg-left" id="defect">
-                  <input
-                    type="checkbox"
-                    id="defect"
-                    :value="value.typeName"
-                    v-model="selectedTypes.defect"
-                  />
-                  <label>{{ value.typeName }}</label>
-                </div>
-              </div>
-            </div>
-
-            <input
-              type="checkbox"
-              id="malfunctionParent"
-              @change="selectAll('malfunction')"
-            />
-            <label>
-              <h5>Technisch</h5>
-            </label>
-            <div class="checkbox-container text-sm-left col-sm-7">
-              <div
-                v-for="value in this.reportTypes.malfunctionTypes"
-                :key="value.id"
-              >
-                <div class="typecontainer text-lg-left" id="malfunction">
-                  <input
-                    type="checkbox"
-                    id="malfunction"
-                    :value="value.typeName"
-                    v-model="selectedTypes.malfunction"
-                  />
-                  <label>{{ value.typeName }}</label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
         <div
           v-if="
             Object.keys(reportContent.technical.defects).length === 0 &&
@@ -678,85 +371,127 @@
         >
           <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
         </div>
-        <div v-else class="row row-cols-1 row-cols-md-2">
-          <!-- Change form -->
-          <div v-for="event in reportContent.technical.defects" :key="event.id">
-            <div class="col card h-100">
-              <p class="card-text">
-                <img
-                  id="topright"
-                  src="../assets/edit-logo.png"
-                  alt="pas aan"
-                  @click="changeEventClick(String(event.id), 'defects')"
-                />
-              </p>
-              <div class="card-body">
-                <h5 class="card-title">Logistiek</h5>
-                <h5 class="card-text">
-                  {{
-                    new Date(event.date).toLocaleString("nl-BE", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  }}
-                </h5>
-                <p class="card-text">{{ event.description }}</p>
-                <div v-if="!(event.defectType == null)">
-                  <h5 class="card-text">
-                    <span class="card-text badge badge-secondary mr-1">
-                      {{ event.defectType.typeName }}
-                    </span>
-                    <span v-if="!(event.defectSubtype == null)">
-                      <span class="card-text badge badge-secondary">
-                        {{ event.defectSubtype.typeName }}
-                      </span>
-                    </span>
-                  </h5>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div v-else>
+          <div>
+            <b-form-group
+              label="Filter"
+              label-cols-sm="3"
+              label-align-sm="right"
+              label-size="sm"
+              label-for="filterInput"
+              class="mb-0 mt-4"
+            >
+              <b-row>
+                <b-col lg="6" class="my-1">
+                  <b-input-group size="sm">
+                    <b-form-input
+                      v-model="defectFilter"
+                      type="search"
+                      id="filterInput"
+                      placeholder="Type om te zoeken"
+                    ></b-form-input>
+                    <b-input-group-append>
+                      <b-button
+                        :disabled="!defectFilter"
+                        @click="defectFilter = ''"
+                        >Verwijder</b-button
+                      >
+                    </b-input-group-append>
+                  </b-input-group>
+                </b-col>
+                <b-col lg="6" class="my-1">
+                  <b-form-group
+                    label="Per pagina"
+                    label-cols-sm="6"
+                    label-cols-md="4"
+                    label-cols-lg="3"
+                    label-align-sm="right"
+                    label-size="sm"
+                    label-for="defectPerPageSelect"
+                    class="mb-0"
+                  >
+                    <b-form-select
+                      v-model="defectPerPage"
+                      id="defectPerPageSelect"
+                      size="sm"
+                      :options="pageOptions"
+                    ></b-form-select>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-form-group>
 
-          <!-- Change form -->
-          <div
-            v-for="event in reportContent.technical.malfunctions"
-            :key="event.id"
-          >
-            <div class="col card h-100">
-              <p class="card-text">
+            <b-table
+              v-if="loaded"
+              :head-variant="light"
+              :current-page="defectCurrentPage"
+              :per-page="defectPerPage"
+              :filter="defectFilter"
+              :filterIncludedFields="defectFilterOn"
+              :sort-by.sync="defectSortBy"
+              :sort-desc.sync="defectSortDesc"
+              :sort-direction="defectSortDirection"
+              @filtered="defectOnFiltered"
+              id="defect-table"
+              bordered
+              hover
+              :table-variant="Primary"
+              :fields="defectFields"
+              :items="
+                this.reportContent.technical.defects.concat(
+                  this.reportContent.technical.malfunctions
+                )
+              "
+            >
+              <template v-slot:cell(date)="data">
+                {{
+                  new Date(data.item.date).toLocaleString("nl-BE", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })
+                }}
+              </template>
+              <template v-slot:cell(delete)="data">
+                <button
+                  class="btn btn-primary btn-sm"
+                  @click="removeClicked(data.item.id, data.item.listName)"
+                >
+                  🗑
+                </button>
+              </template>
+              <template v-slot:cell(edit)="data">
                 <img
                   id="topright"
                   src="../assets/edit-logo.png"
                   alt="pas aan"
-                  @click="changeEventClick(String(event.id), 'malfunctions')"
+                  @click="
+                    changeEventClick(
+                      String(data.item.id),
+                      data.item.listName,
+                      'Technical'
+                    )
+                  "
                 />
-              </p>
-              <div class="card-body">
-                <h5 class="card-title">Technisch</h5>
-                <h5 class="card-text">
-                  {{
-                    new Date(event.date).toLocaleString("nl-BE", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  }}
-                </h5>
-                <p class="card-text">{{ event.description }}</p>
-                <p class="card-text">{{ event.duration }}</p>
-                <div v-if="!(event.malfunctionType == null)">
-                  <h5 class="card-text">
-                    <span class="card-text badge badge-secondary mr-1">
-                      {{ event.malfunctionType.typeName }}
-                    </span>
-                    <span v-if="!(event.malfunctionSubtype == null)">
-                      <span class="card-text badge badge-secondary">
-                        {{ event.malfunctionSubtype.typeName }}
-                      </span>
-                    </span>
-                  </h5>
-                </div>
-              </div>
-            </div>
+              </template>
+              <template v-slot:cell(type)="data">
+                <span class="card-text badge badge-danger">
+                  {{ getType(data.item.id, data.item.listName) }}</span
+                >
+              </template>
+            </b-table>
+            <b-pagination
+              v-model="defectCurrentPage"
+              :total-rows="
+                this.reportContent.technical.defects.length +
+                  this.reportContent.technical.malfunctions.length
+              "
+              :per-page="defectPerPage"
+              aria-controls="defect-table"
+            ></b-pagination>
           </div>
         </div>
       </section>
@@ -783,7 +518,7 @@ export default Vue.extend({
         {
           id: "types",
           label: "Types",
-          children: [{id: "", label: ""}],
+          children: [{ id: "", label: "" }],
         },
       ],
       pageOptions: [5, 10, 15],
@@ -890,6 +625,49 @@ export default Vue.extend({
         },
       ],
 
+      defectTotalRows: 1,
+      defectCurrentPage: 1,
+      defectPerPage: 5,
+      defectSortBy: "date",
+      defectSortDesc: true,
+      defectSortDirection: "asc",
+      defectFilter: null,
+      defectFilterOn: [],
+      defectFields: [
+        {
+          label: "Datum",
+          key: "date",
+          sortable: true,
+        },
+        {
+          label: "Omschrijving",
+          key: "description",
+          sortable: false,
+        },
+        {
+          label: "Type",
+          key: "type",
+          sortable: true,
+        },
+        {
+          label: "Gebeurtenis aanpassen",
+          key: "edit",
+        },
+      ],
+
+      defectOptions: [
+        {
+          id: "defect",
+          label: "Logistiek",
+          children: [{ id: "", label: "" }],
+        },
+        {
+          id: "malfunction",
+          label: "Technisch",
+          children: [{ id: "", label: "" }],
+        },
+      ],
+
       reportTypes: {
         operationalTypes: [{ typeName: "", id: 0 }],
         workplaceTypes: [{ typeName: "", id: 0 }],
@@ -922,8 +700,7 @@ export default Vue.extend({
               operationalId: 11,
               signaling: "",
               plNumber: "",
-              description:
-                "",
+              description: "",
               priority: true,
               location: null,
               unit: "",
@@ -1154,9 +931,22 @@ export default Vue.extend({
     },
     selectedTypes: {
       handler() {
+        const changedTypes = JSON.parse(JSON.stringify(this.selectedTypes));
+        for (let i = 0; i < this.reportTypes.malfunctionTypes.length; i++) {
+          const index = changedTypes.defect.indexOf(
+            this.reportTypes.malfunctionTypes[i].typeName
+          );
+          if (index !== -1) {
+            changedTypes.malfunction.push(this.selectedTypes.defect[index]);
+          }
+        }
+        const changedDefects = changedTypes.defect.filter(
+          (x) => !changedTypes.malfunction.includes(x)
+        );
+        changedTypes.defect = changedDefects;
         ReportingService.getFilteredEvents(
           {
-            selectedTypes: this.selectedTypes,
+            selectedTypes: changedTypes,
           },
           Number(this.$route.query.reportId)
         ).then((res) => (this.reportContent = res));
@@ -1167,6 +957,7 @@ export default Vue.extend({
 
   mounted() {
     this.loadData();
+    this.selectedTypes = this.reportTypes;
     // this.interval = window.setInterval(this.loadData, 5000);
   },
 
@@ -1179,11 +970,24 @@ export default Vue.extend({
           label: this.reportTypes.operationalTypes[i].typeName as string,
         });
       }
-      this.administrativeOptions[0].children.pop();
       for (let i = 0; i < this.reportTypes.workplaceTypes.length; i++) {
         this.administrativeOptions[0].children.push({
           id: this.reportTypes.workplaceTypes[i].typeName as string,
           label: this.reportTypes.workplaceTypes[i].typeName as string,
+        });
+      }
+      this.defectOptions[0].children.pop();
+      for (let i = 0; i < this.reportTypes.defectTypes.length; i++) {
+        this.defectOptions[0].children.push({
+          id: this.reportTypes.defectTypes[i].typeName as string,
+          label: this.reportTypes.defectTypes[i].typeName as string,
+        });
+      }
+      this.defectOptions[1].children.pop();
+      for (let i = 0; i < this.reportTypes.malfunctionTypes.length; i++) {
+        this.defectOptions[1].children.push({
+          id: this.reportTypes.malfunctionTypes[i].typeName as string,
+          label: this.reportTypes.malfunctionTypes[i].typeName as string,
         });
       }
     },
@@ -1284,17 +1088,17 @@ export default Vue.extend({
         technicalButton.classList.replace("btn-primary", "btn-info");
       }
     },
-    changeEventClick: function(id: string, subcat: string) {
+    changeEventClick: function(id: string, subcat: string, categorie: string) {
+      subcat = subcat[0].toLowerCase() + subcat.substring(1);
       this.$router.push({
         path: "changeEvent",
         query: {
-          reportId: String(this.reportContent.report.id),
+          reportId: String(0),
           eventId: String(id),
-          categorie: String(this.step),
-          subcategorie: String(subcat),
+          categorie: categorie,
+          subcategorie: String(subcat + "s"),
         },
       });
-      this.selectAllSections();
     },
     getType: function(id: number, list: string) {
       if (
