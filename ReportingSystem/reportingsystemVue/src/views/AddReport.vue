@@ -5,7 +5,6 @@
     </div>
     <!-- script has to be implemented again to achieve the seperate forms -->
     <div class="container pt-5 pb-5">
-      {{customEvents}}
       <h1>Voeg gebeurtenis toe</h1>
       <form id="addReport" class="formcontainer">
         <div class="btn-group d-flex" role="group" aria-label="Justified button group">
@@ -433,14 +432,6 @@
                 :value="option.id"
               >{{option.customName}}</option>
             </select>
-            <div v-if="selectedOption < 0">
-              Nog geen optie geselecteerd {{this.selectedOption}}
-              <button
-                type="button"
-                class="btn btn-info"
-                @click.prevent="alerter"
-              >Operationeel</button>
-            </div>
             <div v-if="selectedOption > 0" class="input-group">
               <div class="input-group">
                 <input
