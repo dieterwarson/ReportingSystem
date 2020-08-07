@@ -15,7 +15,7 @@ export default {
     return Api()
       .post('api/users/addUser', data)
       .then((res) => {
-        return res;
+        return res.data;
       })
       .catch((error) => {
         alert(error);

@@ -5,14 +5,14 @@
     </div>
     <div class="adminPage">
       <h1>Admin functies</h1>
-      <div >
+      <div>
         <div class="row">
           <div class="col-sm">
             <button
               type="button"
               class="btn btn-primary btn-block customBtn"
               @click.prevent="getAddField"
-            >Nieuw veld toevoegen</button>
+            >Nieuw (sub)type toevoegen</button>
           </div>
         </div>
         <section v-if="option == 'addField'">
@@ -24,7 +24,7 @@
               <option value="3">Technisch</option>
             </select>
 
-            <label>Optioneel:</label>
+            <label>Optioneel (subtype):</label>
 
             <select
               v-if="addField.category == 0"
@@ -79,20 +79,21 @@
               >{{ value.typeName }}</option>
             </select>
           </div>
-          <label>De naam van het veld moet minstens 3 tekens lang zijn</label>
+          <label>De naam van het type moet minstens 3 tekens lang zijn</label>
           <input
             name="addField"
             v-model="addField.newField"
             type="text"
             placeholder="Nieuw veld"
             class="form-control form-control-lg"
+            :class="{ 'is-invalid' : !addField.valid, 'is-valid' : addField.valid}"
           />
           <button
             type="button"
             class="btn btn-info btn-block subBtn"
             @click.prevent="doAddField"
-          >Voeg veld toe</button>
-          <small v-if="addField.completed">Het veld is toegevoegd!</small>
+          >Voeg (sub)type toe</button>
+          <small v-if="addField.completed">Het (sub)type is toegevoegd!</small>
         </section>
       </div>
 
@@ -101,7 +102,7 @@
           <div class="col-sm">
             <button
               type="button"
-              class="btn btn-primary btn-block customBtn" 
+              class="btn btn-primary btn-block customBtn"
               @click.prevent="getCustomFiche"
             >Maak nieuwe gepersonaliseerde fiche</button>
           </div>
@@ -116,15 +117,18 @@
               type="text"
               placeholder="Naam fiche"
             />
+            <div class="input-group">
+              <div v-for="(inputfield, index) in customFiche" :key="index" class="customFicheInput">
+                <label>Veld {{index + 1 }} (Minstens 3 tekens lang)</label>
 
-            <div v-for="(inputfield, index) in customFiche" :key="index">
-              <label>Veld {{index + 1 }} (Minstens 3 tekens lang)</label>
-              <input
-                class="form-control form-control-lg"
-                v-model="customFiche[index].title"
-                type="text"
-                placeholder="Naam veld"
-              />
+                <input
+                  class="form-control form-control-lg"
+                  v-model="customFiche[index].title"
+                  :class="{ 'is-invalid' : !customFiche[index].valid, 'is-valid' : customFiche[index].valid}"
+                  type="text"
+                  placeholder="Naam veld"
+                />
+              </div>
             </div>
             <div>
               <div class="btn-group d-flex">
@@ -147,8 +151,8 @@
               class="btn btn-info btn-block subBtn"
               @click.prevent="addNewCustom"
             >Voeg gepersonaliseerde fiche toe</button>
-            <small v-if="newCustom.failed">De gebruiker toevoegen is niet gelukt!</small>
-            <small v-if="newCustom.completed">De nieuwe gebruiker is toegevoegd!</small>
+            <small v-if="newCustom.failed">Het toevoegen is mislukt!</small>
+            <small v-if="newCustom.completed">De gepersonaliseerde fiche is toegevoegd!</small>
           </div>
         </section>
       </div>
@@ -188,9 +192,8 @@ export default Vue.extend({
   data() {
     return {
       option: "no-option",
-      fieldnames: "",
       customTitle: "",
-      
+
       changeAccesRights: {
         username: "",
         rights: "",
@@ -215,11 +218,13 @@ export default Vue.extend({
         malfunctiontype: -1,
         defecttype: -1,
         reportTypes: {},
-        completed: false
+        completed: false,
+        valid: true,
       },
       customFiche: [
         {
-          title: ""
+          title: "",
+          valid: true
         }
       ],
       newCustom: {
@@ -236,7 +241,8 @@ export default Vue.extend({
     addInputField: function() {
       if (this.customFiche.length < 10)
         this.customFiche.push({
-          title: ""
+          title: "",
+          valid: true
         });
     },
     delInputField: function() {
@@ -283,10 +289,10 @@ export default Vue.extend({
       this.emptyAllFields();
     },
     async doChangePassword() {
-        const response = await ReportingService.changePassword({
-          username: this.changePassword.username,
-          password: this.changePassword.newPassword,
-        });      
+      const response = await ReportingService.changePassword({
+        username: this.changePassword.username,
+        password: this.changePassword.newPassword
+      });
     },
     async doChangeAccess() {
       this.changeAccesRights.failed = false;
@@ -305,6 +311,10 @@ export default Vue.extend({
       }
     },
     async doAddField() {
+      if (this.addField.newField.length < 3) {
+        this.addField.valid = false;
+        return;
+      } 
       if (this.checkUsername(this.addField.newField)) {
         const response = await ReportingService.addTypes({
           type: this.addField.category,
@@ -314,6 +324,7 @@ export default Vue.extend({
           malfunctionTypes: this.addField.malfunctiontype,
           field: this.addField.newField
         });
+        this.addField.valid = true;
         this.addField.newField = "";
         (this.addField.category = 0),
           (this.addField.operationaltype = -1),
@@ -348,7 +359,6 @@ export default Vue.extend({
       else return false;
     },
     emptyAllFields: function() {
-
       this.changeAccesRights.username = "";
       this.changeAccesRights.newRights = 0;
       this.changeAccesRights.completed = false;
@@ -374,13 +384,34 @@ export default Vue.extend({
       );
     },
     async addNewCustom() {
+      //customFiche[index].title
+      let check: boolean;
+      this.customFiche.forEach(element => {
+        if (element.title.length < 3) {
+          element.valid = false;
+          this.newCustom.failed = true;
+          this.newCustom.completed = false;
+          check = true;
+        }
+      });
+      if (check == true) return; //if a field is empty return
+
       const response = await ReportingService.addCustomFiche({
         fields: this.customFiche,
         title: this.customTitle
       });
-    },
-    async getCustom() {
-      this.fieldnames = await ReportingService.getCustomFiche();
+      if (response.check) {
+        this.customFiche.forEach(element => {
+          element.title = "";
+          element.valid = true;
+        });
+        this.customTitle = "";
+        this.newCustom.failed = false;
+        this.newCustom.completed = true;
+      } else {
+        this.newCustom.failed = true;
+        this.newCustom.completed = false;
+      }
     }
   }
 });
@@ -391,7 +422,8 @@ export default Vue.extend({
   margin-left: 10%;
 }
 .buttons {
-  margin-top: 0.5%;
+  margin-top: 0.25%;
+  margin-bottom: 0.25%;
 }
 .customBtn {
   padding-top: 1%;
@@ -400,5 +432,11 @@ export default Vue.extend({
 
 .subBtn {
   margin-top: 0.3%;
+}
+
+.customFicheInput {
+  width: 47%;
+  margin-left: 1.5%;
+  margin-right: 1.5%;
 }
 </style>

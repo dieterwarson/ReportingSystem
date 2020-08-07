@@ -35,7 +35,7 @@
         </div>
 
         <section v-if="step == 'Operational'">
-          <div class="row">
+          <div class="row extraMargin">
             <div v-if="(Object.keys(reportTypes).length === 0)">
               <p>Er zijn nog geen types</p>
             </div>
@@ -81,7 +81,7 @@
                 >Deselecteer alles</button>
               </div>
             </form>
-            <div class="text-sm-left col-lg">
+            <div class="text-sm-left col-lg extraMargin">
               <div class="input-group">
                 <div class="input-group">
                   <div class="autocomplete">
@@ -113,7 +113,7 @@
               </div>
               <div class="input-group">
                 <button
-                  class="btn btn-block btn-success"
+                  class="btn btn-block btn-success extraMargin"
                   type="button"
                   @click.prevent="getFile"
                 >Zoek fiche</button>
@@ -126,7 +126,7 @@
                   v-model="form.location"
                   type="text"
                   placeholder="Adres"
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                 />
               </div>
               <div class="input-group">
@@ -137,7 +137,7 @@
                   v-model="form.operationalDate"
                   type="text"
                   placeholder="Datum"
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                 />
               </div>
               <div class="input-group">
@@ -148,7 +148,7 @@
                   v-model="form.unit"
                   type="text"
                   placeholder="Unit"
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                 />
               </div>
               <div class="input-group">
@@ -158,7 +158,7 @@
                   v-model="form.operationalMessage"
                   type="text"
                   placeholder="Extra info"
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin" 
                 />
               </div>
               <label>
@@ -166,7 +166,7 @@
               </label>
 
               <button
-                class="btn btn-large btn-block btn-success"
+                class="btn btn-large btn-block btn-success extraMargin save"
                 type="button"
                 @click.prevent="addOperationalEvent"
               >Opslaan</button>
@@ -178,7 +178,7 @@
       </form>
       <form id="workForce">
         <section v-if="step == 'Workforce'">
-          <div class="row">
+          <div class="row extraMargin">
             <div class="input-group text-sm-left col-sm">
               <div class="checkbox-container text-sm-left">
                 <!-- Types -->
@@ -225,7 +225,7 @@
                     v-model="form.absentee"
                     type="text"
                     placeholder="Naam afwezige"
-                    class="form-control form-control-lg"
+                    class="form-control form-control-lg extraMargin"
                     :class="{ 'is-invalid' : !form.absenteeOk, 'is-valid' : form.absenteeOk}"
                   />
                   <input
@@ -233,7 +233,7 @@
                     v-model="form.replacement"
                     type="text"
                     placeholder="Naam vervanger"
-                    class="form-control form-control-lg"
+                    class="form-control form-control-lg extraMargin"
                     :class="{ 'is-invalid' : !form.replacementOk, 'is-valid' : form.replacementOk}"
                   />
                 </div>
@@ -242,7 +242,7 @@
                   v-model="form.workforceMessage"
                   type="text"
                   placeholder="Extra info"
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   :class="{ 'is-invalid' : !form.wfMessageOk, 'is-valid' : form.wfMessageOk}"
                 />
                 <div class="input-group">
@@ -251,7 +251,7 @@
                   </label>
                 </div>
                 <button
-                  class="btn btn-large btn-block btn-success"
+                  class="btn btn-large btn-block btn-success extraMargin save"
                   type="button"
                   @click.prevent="addWorkForceEvent"
                 >Opslaan</button>
@@ -264,7 +264,7 @@
                     v-model="form.secretNotification"
                     type="text"
                     placeholder="Informatie voor het secretariaat"
-                    class="form-control form-control-lg"
+                    class="form-control form-control-lg extraMargin"
                     :class="{ 'is-invalid' : !form.snOk, 'is-valid' : form.snOk}"
                   />
                 </div>
@@ -275,7 +275,7 @@
                 </div>
                 <div class="input-group">
                   <button
-                    class="btn btn-large btn-block btn-success"
+                    class="btn btn-large btn-block btn-success extraMargin save"
                     type="button"
                     @click.prevent="addSecretaryNotification"
                   >Opslaan</button>
@@ -288,7 +288,7 @@
       </form>
       <form id="technical">
         <section v-if="step == 'Technical'">
-          <div class="row">
+          <div class="row extraMargin">
             <div class="input-group text-sm-left col-sm">
               <div class="checkbox-container text-sm-left">
                 <!-- Types -->
@@ -296,7 +296,7 @@
                   <h5>Logistiek</h5>
                 </label>
                 <div v-for="type in reportTypes.defectTypes" :key="type.id">
-                  <div class="typecontainer text-lg-left" id="defect">
+                  <div class="typecontainer text-lg-left " id="defect">
                     <label>
                       {{ type.typeName }}
                       <input
@@ -373,7 +373,7 @@
                     v-model="form.defectDescription"
                     type="text"
                     placeholder="Info over defect"
-                    class="form-control form-control-lg"
+                    class="form-control form-control-lg extraMargin"
                     :class="{ 'is-invalid' : !form.defectDescOk, 'is-valid' : form.defectDescOk}"
                   />
                 </div>
@@ -382,7 +382,7 @@
                 </label>
 
                 <button
-                  class="btn btn-large btn-block btn-success"
+                  class="btn btn-large btn-block btn-success extraMargin save"
                   type="button"
                   @click.prevent="addDefect"
                 >Opslaan</button>
@@ -395,7 +395,7 @@
                     v-model="form.malfunctionDescription"
                     type="text"
                     placeholder="Info over probleem"
-                    class="form-control form-control-lg"
+                    class="form-control form-control-lg extraMargin"
                     :class="{ 'is-invalid' : !form.malfDescOk, 'is-valid' : form.malfDescOk}"
                   />
                   <input
@@ -403,7 +403,7 @@
                     v-model="form.malfunctionDuration"
                     type="text"
                     placeholder="Sinds wanneer is dit probleem er"
-                    class="form-control form-control-lg"
+                    class="form-control form-control-lg extraMargin"
                     :class="{ 'is-invalid' : !form.malfDur, 'is-valid' : form.malfDur}"
                   />
                 </div>
@@ -412,7 +412,7 @@
                 </label>
 
                 <button
-                  class="btn btn-large btn-block btn-success"
+                  class="btn btn-large btn-block btn-success extraMargin save"
                   type="button"
                   @click.prevent="addMalfunction"
                 >Opslaan</button>
@@ -425,7 +425,7 @@
         </section>
         <section v-if="step == 'Custom'">
           <div class="row">
-            <select class="form-control form-control-lg" v-model="selectedOption">
+            <select class="form-control form-control-lg extraMargin" v-model="selectedOption">
               <option
                 v-for="option in this.fieldOptions"
                 :key="option.id"
@@ -435,7 +435,7 @@
             <div v-if="selectedOption > 0" class="input-group">
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name1 !== null"
                   v-model="customFiche.field1"
@@ -444,7 +444,7 @@
               </div>
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name2 !== null"
                   v-model="customFiche.field2"
@@ -453,7 +453,7 @@
               </div>
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name3 !== null"
                   v-model="customFiche.field3"
@@ -462,7 +462,7 @@
               </div>
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name4 !== null"
                   v-model="customFiche.field4"
@@ -471,7 +471,7 @@
               </div>
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name5 !== null"
                   v-model="customFiche.field5"
@@ -480,7 +480,7 @@
               </div>
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name6 !== null"
                   v-model="customFiche.field6"
@@ -489,7 +489,7 @@
               </div>
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name7 !== null"
                   v-model="customFiche.field7"
@@ -498,7 +498,7 @@
               </div>
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name8 !== null"
                   v-model="customFiche.field8"
@@ -507,7 +507,7 @@
               </div>
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name9 !== null"
                   v-model="customFiche.field9"
@@ -516,7 +516,7 @@
               </div>
               <div class="input-group">
                 <input
-                  class="form-control form-control-lg"
+                  class="form-control form-control-lg extraMargin"
                   type="text"
                   v-if="this.fieldOptions[selectedOption - 1].name10 !== null"
                   v-model="customFiche.field10"
@@ -525,9 +525,9 @@
               </div>
               <button
                 type="button"
-                class="btn btn-large btn-block btn-success"
+                class="btn btn-large btn-block btn-success extraMargin save"
                 @click.prevent="addCustomFiche"
-              >Operationeel</button>
+              >Opslaan</button>
             </div>
           </div>
         </section>
@@ -1176,5 +1176,14 @@ export default Vue.extend({
 .addReport{
   width: 90%;
   margin-left: 5%;
+}
+
+.extraMargin{
+  margin-top: 0.5%;
+}
+
+.save {
+  padding-top: 1%;
+  padding-bottom: 1%;
 }
 </style>

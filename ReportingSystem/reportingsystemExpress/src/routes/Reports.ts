@@ -2481,7 +2481,7 @@ router.post("/newCustomFiche", async (req, res) => {
   })
 
   res.json({
-    bool: true
+    check: true
   })
 });
 

@@ -138,8 +138,14 @@
           type="text"
           placeholder="Gebruikersnaam"
           class="form-control form-control-lg customTable"
+          :class="{ 'is-invalid' : !newUserData.usernameCheck, 'is-valid' : newUserData.usernameCheck}"
         />
-        <p v-if="!newUserData.usernameCheck">De gebruikersnaam voldoet niet aan de voorwaarden</p>
+        <p
+          class="redText"
+          v-if="!newUserData.usernameCheck && !newUserData.exists"
+        >De gebruikersnaam voldoet niet aan de voorwaarden</p>
+        <p v-if="newUserData.exists">Deze gebruikersnaam is al in gebruik</p>
+
         <label>Email:</label>
         <input
           name="email"
@@ -155,6 +161,7 @@
           type="password"
           placeholder="Wachtwoord"
           class="form-control form-control-lg customTable"
+          :class="{ 'is-invalid' : !newUserData.passwordComp, 'is-valid' : newUserData.passwordComp}"
         />
         <input
           name="passwordCheck"
@@ -162,8 +169,12 @@
           type="password"
           placeholder="Herhaal wachtwoord"
           class="form-control form-control-lg customTable"
+          :class="{ 'is-invalid' : !newUserData.passwordComp, 'is-valid' : newUserData.passwordComp}"
         />
-        <p v-if="!newUserData.passwordComp">De wachtwoorden voldoen niet aan de voorwaarden</p>
+        <p
+          class="redText"
+          v-if="!newUserData.passwordComp"
+        >De wachtwoorden voldoen niet aan de voorwaarden</p>
         <label>toegangsrechten:</label>
         <select
           class="form-control form-control-lg customTable"
@@ -184,8 +195,8 @@
           class="btn btn-success btn-block"
           @click.prevent="doNewUser"
         >Voeg gebruiker toe</button>
-        <small v-if="newUserData.failed">De gebruiker toevoegen is niet gelukt!</small>
-        <small v-if="newUserData.completed">De nieuwe gebruiker is toegevoegd!</small>
+        <p v-if="newUserData.failed">De gebruiker toevoegen is niet gelukt!</p>
+        <p v-if="newUserData.completed">De nieuwe gebruiker is toegevoegd!</p>
       </div>
     </div>
   </div>
@@ -223,9 +234,10 @@ export default Vue.extend({
         subscription: false,
         passwordCheck: true,
         usernameCheck: true,
-        passwordComp: false,
+        passwordComp: true,
         completed: false,
-        failed: false
+        failed: false,
+        exists: false
       },
       fields: [
         {
@@ -254,7 +266,8 @@ export default Vue.extend({
           sortable: true
         },
         {
-          label: "Wijzig wachtwoord (6 tot 12 tekens, minstens 1 hoofdletter, minstens 1 cijfer)",
+          label:
+            "Wijzig wachtwoord (6 tot 12 tekens, minstens 1 hoofdletter, minstens 1 cijfer)",
           key: "password",
           sortable: false
         }
@@ -310,7 +323,7 @@ export default Vue.extend({
         return false;
       }
     },
-    async changePassword(username: any, newPass: any, id : any) {
+    async changePassword(username: any, newPass: any, id: any) {
       this.pwdNotChanged = false;
       this.pwdChanged = false;
       if (this.checkPassword(newPass)) {
@@ -325,7 +338,6 @@ export default Vue.extend({
         } else {
           this.pwdNotChanged = true;
           this.pwdChanged = false;
-
         }
       }
     },
@@ -336,6 +348,7 @@ export default Vue.extend({
       this.newUserData.usernameCheck = this.checkUsername(
         this.newUserData.username
       );
+      
       this.newUserData.passwordComp = this.checkPasswords(
         this.newUserData.password,
         this.newUserData.rptPassword
@@ -355,9 +368,20 @@ export default Vue.extend({
           mail: this.newUserData.email,
           subscription: this.newUserData.subscription
         });
-        this.newUserData.completed = true;
-      } else {
-        this.newUserData.failed = true;
+        if (response.check) {
+          this.newUserData.completed = true;
+          this.newUserData.failed = false;
+          this.newUserData.exists = false;
+        } else if (response.userExists) {
+          this.newUserData.exists = true;
+          this.newUserData.failed = true;
+          this.newUserData.completed = false;
+          this.newUserData.usernameCheck = false;
+        } else {
+          this.newUserData.failed = true;
+          this.newUserData.completed = false;
+          this.newUserData.exists = false;
+        }
       }
       this.newUserData.password = "";
       this.newUserData.rptPassword = "";
@@ -405,5 +429,9 @@ export default Vue.extend({
   width: 45%;
   margin-top: 3%;
   margin-bottom: 3%;
+}
+
+.redText {
+  color: red;
 }
 </style>

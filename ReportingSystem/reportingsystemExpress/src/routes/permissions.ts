@@ -32,6 +32,11 @@ router.post('/update', async (req: Request, res: Response) => {
       user.seeReports = role.seeReports;
       user.seeStatistics = role.seeStatistics;
       user.save({});
+    }).catch(error => {
+      res.json({
+        err: error,
+        check: false
+      })
     })
   });
   res.json({ check: true, message: "Rechten zijn gewijzigd" })

@@ -89,7 +89,9 @@ router.post('/addUser', async (req, res) => {
         loggedIn: false
       }).then(function () {
         res.json({
-          message: "Gebruiker aangemaakt"
+          message: "Gebruiker aangemaakt",
+          userExists: false,
+          check: true,
         });
       })
         .catch(function (error) {
@@ -99,8 +101,10 @@ router.post('/addUser', async (req, res) => {
         })
       User.sync();
     } else {
-      res.status(409).json({
-        message: "This user already exists"
+      res.json({
+        message: "This user already exists",
+        userExists: true,
+        check: false,
       })
     }
   })
