@@ -18,7 +18,7 @@
         <section v-if="option == 'addField'">
           <div class="input-group-vertical" mt-2>
             <select class="form-control form-control-lg" id="addField" v-model="addField.category">
-              <option value="0">Administratief</option>
+              <option value="0">Operationeel</option>
               <option value="1">Personeel</option>
               <option value="2">Logistiek</option>
               <option value="3">Technisch</option>

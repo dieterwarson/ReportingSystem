@@ -126,7 +126,8 @@ router.post('/changePassword', async (req, res) => {
       { where: { username: userData.username } }
     ).then(function () {
       res.json({
-        message: "Wachtwoord gewijzigd"
+        message: "Wachtwoord gewijzigd",
+        bool: true
       })
     })
       .catch(function (err) {

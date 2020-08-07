@@ -25,7 +25,7 @@ export default {
     return Api()
       .post('api/users/changePassword', data)
       .then((res) => {
-        return res;
+        return res.data;
       })
       .catch((error) => {
         alert(error);

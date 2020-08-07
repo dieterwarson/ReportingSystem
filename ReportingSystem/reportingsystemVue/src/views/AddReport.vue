@@ -4,7 +4,7 @@
       <router-link to="/">Startscherm</router-link>
     </div>
     <!-- script has to be implemented again to achieve the seperate forms -->
-    <div class="container pt-5 pb-5">
+    <div class="addReport">
       <h1>Voeg gebeurtenis toe</h1>
       <form id="addReport" class="formcontainer">
         <div class="btn-group d-flex" role="group" aria-label="Justified button group">
@@ -1172,5 +1172,9 @@ export default Vue.extend({
 .options ul li:hover {
   background: steelblue;
   color: black;
+}
+.addReport{
+  width: 90%;
+  margin-left: 5%;
 }
 </style>

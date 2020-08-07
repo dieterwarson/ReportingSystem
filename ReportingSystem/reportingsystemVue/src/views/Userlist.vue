@@ -8,7 +8,7 @@
     </div>
 
     <div v-if="users">
-      <h1>Gebruikers</h1>
+      <h1>Gebruikerslijst</h1>
       <template>
         <div>
           <b-form-group
@@ -17,7 +17,7 @@
             label-align-sm="right"
             label-size="sm"
             label-for="filterInput"
-            class="mb-0 mt-4"
+            class="mb-0 mt-4 customTable"
           >
             <b-row>
               <b-col lg="6" class="my-1">
@@ -66,6 +66,7 @@
             :sort-direction="sortDirection"
             @filtered="onFiltered"
             id="operational-table"
+            class="customTable"
             bordered
             hover
             :table-variant="primary"
@@ -101,11 +102,15 @@
               </select>
             </template>
             <template v-slot:cell(password)="data">
-              <input type="password" v-model="newPwd[data.item.id - 1]" />
-              <button
-                class="btn btn-primary"
-                @click="changePassword(data.item.username, newPwd[data.item.id - 1])"
-              >Wijzig</button>
+              <div class="input-group mb-3">
+                <input class="form-control" type="password" v-model="newPwd[data.item.id - 1]" />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-primary"
+                    @click="changePassword(data.item.username, newPwd[data.item.id - 1], data.item.id - 1)"
+                  >Wijzig</button>
+                </div>
+              </div>
             </template>
           </b-table>
           <b-pagination
@@ -115,66 +120,73 @@
             "
             :per-page="perPage"
             aria-controls="operational-table"
+            class="customTable"
           ></b-pagination>
         </div>
       </template>
+      <p v-if="pwdChanged">Het wachtwoord is gewijzigd</p>
+      <p v-if="pwdNotChanged">Het wachtwoord is niet gewijzigd</p>
     </div>
-    <div class="input-group-vertical mt-2">
-      <label>Gebruikersnaam (3 tot 15 tekens):</label>
-      <input
-        name="username"
-        v-model="newUserData.username"
-        type="text"
-        placeholder="Gebruikersnaam"
-        class="form-control form-control-lg"
-      />
-      <p v-if="!newUserData.usernameCheck">De gebruikersnaam voldoet niet aan de voorwaarden</p>
-      <label>Email:</label>
-      <input
-        name="email"
-        v-model="newUserData.email"
-        type="email"
-        placeholder="E-mail"
-        class="form-control form-control-lg"
-      />
-      <label>Wachtwoord (6 tot 12 tekens, minstens 1 hoofdletter, minstens 1 cijfer):</label>
-      <input
-        name="password"
-        v-model="newUserData.password"
-        type="password"
-        placeholder="Wachtwoord"
-        class="form-control form-control-lg"
-      />
-      <input
-        name="passwordCheck"
-        v-model="newUserData.rptPassword"
-        type="password"
-        placeholder="Herhaal wachtwoord"
-        class="form-control form-control-lg"
-      />
-      <p v-if="!newUserData.passwordComp">De wachtwoorden voldoen niet aan de voorwaarden</p>
-      <label>toegangsrechten:</label>
-      <select
-        class="form-control form-control-lg"
-        id="accessRights"
-        v-model="newUserData.accessRights"
-      >
-        <option value="0">Administrator</option>
-        <option value="1">Supervisor</option>
-        <option value="2">Secretariaat</option>
-      </select>
-      <br />
-      <label>
-        <input name="Subscription" v-model="newUserData.subscription" type="checkbox" />Toevoegen aan maillijst
-      </label>
+    <div class="customTable border border-primary rounded newUser">
+      <h2>Nieuwe gebruiker maken</h2>
 
-      <button
-        type="button"
-        class="btn btn-info btn-block"
-        @click.prevent="doNewUser"
-      >Voeg gebruiker toe</button>
-      <small v-if="newUserData.failed">De gebruiker toevoegen is niet gelukt!</small>
-      <small v-if="newUserData.completed">De nieuwe gebruiker is toegevoegd!</small>
+      <div class="input-group-vertical mt-2">
+        <label>Gebruikersnaam (3 tot 15 tekens):</label>
+        <input
+          name="username"
+          v-model="newUserData.username"
+          type="text"
+          placeholder="Gebruikersnaam"
+          class="form-control form-control-lg customTable"
+        />
+        <p v-if="!newUserData.usernameCheck">De gebruikersnaam voldoet niet aan de voorwaarden</p>
+        <label>Email:</label>
+        <input
+          name="email"
+          v-model="newUserData.email"
+          type="email"
+          placeholder="E-mail"
+          class="form-control form-control-lg customTable"
+        />
+        <label>Wachtwoord (6 tot 12 tekens, minstens 1 hoofdletter, minstens 1 cijfer):</label>
+        <input
+          name="password"
+          v-model="newUserData.password"
+          type="password"
+          placeholder="Wachtwoord"
+          class="form-control form-control-lg customTable"
+        />
+        <input
+          name="passwordCheck"
+          v-model="newUserData.rptPassword"
+          type="password"
+          placeholder="Herhaal wachtwoord"
+          class="form-control form-control-lg customTable"
+        />
+        <p v-if="!newUserData.passwordComp">De wachtwoorden voldoen niet aan de voorwaarden</p>
+        <label>toegangsrechten:</label>
+        <select
+          class="form-control form-control-lg customTable"
+          id="accessRights"
+          v-model="newUserData.accessRights"
+        >
+          <option value="0">Administrator</option>
+          <option value="1">Supervisor</option>
+          <option value="2">Secretariaat</option>
+        </select>
+        <br />
+        <label>
+          <input name="Subscription" v-model="newUserData.subscription" type="checkbox" />Toevoegen aan maillijst
+        </label>
+
+        <button
+          type="button"
+          class="btn btn-success btn-block"
+          @click.prevent="doNewUser"
+        >Voeg gebruiker toe</button>
+        <small v-if="newUserData.failed">De gebruiker toevoegen is niet gelukt!</small>
+        <small v-if="newUserData.completed">De nieuwe gebruiker is toegevoegd!</small>
+      </div>
     </div>
   </div>
 </template>
@@ -191,6 +203,8 @@ export default Vue.extend({
     return {
       pageOptions: [5, 10, 15],
       newPwd: [],
+      pwdChanged: false,
+      pwdNotChanged: false,
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
@@ -240,7 +254,7 @@ export default Vue.extend({
           sortable: true
         },
         {
-          label: "Wijzig wachtwoord",
+          label: "Wijzig wachtwoord (6 tot 12 tekens, minstens 1 hoofdletter, minstens 1 cijfer)",
           key: "password",
           sortable: false
         }
@@ -296,12 +310,23 @@ export default Vue.extend({
         return false;
       }
     },
-    async changePassword(username: any, newPass: any) {
+    async changePassword(username: any, newPass: any, id : any) {
+      this.pwdNotChanged = false;
+      this.pwdChanged = false;
       if (this.checkPassword(newPass)) {
         const response = await ReportingService.changePassword({
           username: username,
           password: newPass
         });
+        if (response.bool) {
+          this.pwdChanged = true;
+          this.pwdNotChanged = false;
+          this.newPwd[id] = "";
+        } else {
+          this.pwdNotChanged = true;
+          this.pwdChanged = false;
+
+        }
       }
     },
     async doNewUser() {
@@ -361,7 +386,7 @@ export default Vue.extend({
       } else {
         return false;
       }
-    },
+    }
   }
 });
 </script>
@@ -371,5 +396,14 @@ export default Vue.extend({
   display: inline-block;
   width: 35%;
   padding: 0px;
+}
+.customTable {
+  width: 80%;
+  margin-left: 10%;
+}
+.newUser {
+  width: 45%;
+  margin-top: 3%;
+  margin-bottom: 3%;
 }
 </style>
