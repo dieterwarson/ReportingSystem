@@ -5,7 +5,7 @@
     <b>/</b>
     <router-link to="/admin">Administrator</router-link>
   </div>
-<div class="container pt-5 pb-5">
+<div class="rightsTable">
   <h1>Rechten van gebruikersrollen wijzigen</h1>
   <div class="input-group-vertical" mt-2>
     <table class="table">
@@ -62,3 +62,9 @@ export default Vue.extend({
   }
 })
 </script>
+<style>
+.rightsTable {
+  width: 80%;
+  margin-left: 10%;
+}
+</style>

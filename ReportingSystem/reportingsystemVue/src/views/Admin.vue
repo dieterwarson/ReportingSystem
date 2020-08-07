@@ -3,14 +3,14 @@
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
     </div>
-    <div class="container pt-5 pb-5">
+    <div class="adminPage">
       <h1>Admin functies</h1>
-      <div class="container mb-2">
+      <div >
         <div class="row">
           <div class="col-sm">
             <button
               type="button"
-              class="btn btn-primary btn-block"
+              class="btn btn-primary btn-block customBtn"
               @click.prevent="getAddField"
             >Nieuw veld toevoegen</button>
           </div>
@@ -89,19 +89,19 @@
           />
           <button
             type="button"
-            class="btn btn-info btn-block"
+            class="btn btn-info btn-block subBtn"
             @click.prevent="doAddField"
           >Voeg veld toe</button>
           <small v-if="addField.completed">Het veld is toegevoegd!</small>
         </section>
       </div>
 
-      <div class="container mb-2">
+      <div class="buttons">
         <div class="row">
           <div class="col-sm">
             <button
               type="button"
-              class="btn btn-primary btn-block"
+              class="btn btn-primary btn-block customBtn" 
               @click.prevent="getCustomFiche"
             >Maak nieuwe gepersonaliseerde fiche</button>
           </div>
@@ -132,19 +132,19 @@
                   v-if="customFiche.length <= 9 && customFiche.length > 0"
                   @click="addInputField"
                   type="button"
-                  class="btn btn-success"
+                  class="btn btn-success subBtn"
                 >+ invoerveld</button>
                 <button
                   v-if="customFiche.length <= 10 && customFiche.length > 1"
                   @click="delInputField"
                   type="button"
-                  class="btn btn-danger"
+                  class="btn btn-danger subBtn"
                 >- invoerveld</button>
               </div>
             </div>
             <button
               type="button"
-              class="btn btn-info btn-block"
+              class="btn btn-info btn-block subBtn"
               @click.prevent="addNewCustom"
             >Voeg gepersonaliseerde fiche toe</button>
             <small v-if="newCustom.failed">De gebruiker toevoegen is niet gelukt!</small>
@@ -153,25 +153,25 @@
         </section>
       </div>
 
-      <div class="container mb-2">
+      <div class="buttons">
         <div class="row">
           <div class="col-sm">
             <router-link
               to="/changePermissions"
               tag="button"
-              class="btn btn-primary btn-block"
+              class="btn btn-primary btn-block customBtn"
             >Gebruikersrollen wijzigen</router-link>
           </div>
         </div>
       </div>
 
-      <div class="container mb-2">
+      <div class="buttons">
         <div class="row">
           <div class="col-sm">
             <router-link
               to="/userlist"
               tag="button"
-              class="btn btn-primary btn-block"
+              class="btn btn-primary btn-block customBtn"
             >Gebruikerslijst</router-link>
           </div>
         </div>
@@ -385,3 +385,20 @@ export default Vue.extend({
   }
 });
 </script>
+<style>
+.adminPage {
+  width: 80%;
+  margin-left: 10%;
+}
+.buttons {
+  margin-top: 0.5%;
+}
+.customBtn {
+  padding-top: 1%;
+  padding-bottom: 1%;
+}
+
+.subBtn {
+  margin-top: 0.3%;
+}
+</style>

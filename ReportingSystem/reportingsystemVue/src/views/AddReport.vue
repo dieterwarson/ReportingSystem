@@ -829,7 +829,7 @@ export default Vue.extend({
     async addMalfunction() {
       this.form.malfDur = this.checkInputLength(this.form.malfunctionDuration);
       this.form.malfDescOk = this.checkInputLength(this.form.malfunctionDescription);
-      if (this.form.malfunctionDescOk && this.form.malfDur) {
+      if (this.form.malfDescOk && this.form.malfDur) {
         const response = await ReportingService.addMalfunction({
           id: this.tokenData.authorId,
           description: this.form.malfunctionDescription,
