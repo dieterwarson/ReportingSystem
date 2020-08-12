@@ -207,8 +207,8 @@ async function searchOperationalEventSignaling(reportIds: reportData[], searchSt
       include: [{ model: Report }]
     });
     if (event != null && curEvent.signaling != null) {
-      const description = "Signalering: " + curEvent.signaling;
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+      const description = curEvent.signaling;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
   }
@@ -243,7 +243,7 @@ async function searchOperationalEventPlNumber(reportIds: reportData[], searchStr
       include: [{ model: Report }]
     });
     if (event != null && curEvent.plNumber != null) {
-      const description = "PL-nummer: " + curEvent.plNumber;
+      const description = curEvent.plNumber;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -279,7 +279,7 @@ async function searchOperationalEventDescription(reportIds: reportData[], search
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      const description = "Beschrijving: " + curEvent.description;
+      const description = curEvent.description;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -315,7 +315,7 @@ async function searchOperationalEventLocation(reportIds: reportData[], searchStr
       include: [{ model: Report }]
     });
     if (event != null && curEvent.location != null) {
-      const description = "Locatie: " + curEvent.location;
+      const description = curEvent.location;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -351,7 +351,7 @@ async function searchOperationalEventUnit(reportIds: reportData[], searchString:
       include: [{ model: Report }]
     });
     if (event != null && curEvent.unit != null) {
-      const description = "Unit: " + curEvent.unit;
+      const description = curEvent.unit;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -372,7 +372,7 @@ async function searchOperationalEventDate(reportIds: reportData[], search: strin
         include: [{ model: Report }]
       });
       if (event != null && dateString != null) {
-        const description = "Datum: " + dateString;
+        const description = dateString;
         let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
@@ -409,7 +409,7 @@ async function searchWorkplaceEventDescription(reportIds: reportData[], searchSt
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      const description = "Beschrijving: " + curEvent.description;
+      const description = curEvent.description;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -445,7 +445,7 @@ async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchStrin
       include: [{ model: Report }]
     });
     if (event != null && curEvent.absentee != null) {
-      const description = "Afwezige: " + curEvent.absentee;
+      const description = curEvent.absentee;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -481,7 +481,7 @@ async function searchWorkplaceEventSubstitute(reportIds: reportData[], searchStr
       include: [{ model: Report }]
     });
     if (event != null && curEvent.substitute != null) {
-      const description = "Vervanger: " + curEvent.substitute;
+      const description = curEvent.substitute;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -502,7 +502,7 @@ async function searchWorkplaceEventDate(reportIds: reportData[], search: string)
         include: [{ model: Report }]
       });
       if (event != null) {
-        const description = "Datum: " + dateString;
+        const description = dateString;
         let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
@@ -539,7 +539,7 @@ async function searchSecretariatNotificationDescription(reportIds: reportData[],
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      const description = "Beschrijving: " + curEvent.description;
+      const description = curEvent.description;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -560,7 +560,7 @@ async function searchSecretariatNotificationDate(reportIds: reportData[], search
         include: [{ model: Report }]
       });
       if (event != null) {
-        const description = "Datum: " + dateString;
+        const description = dateString;
         let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
@@ -597,7 +597,7 @@ async function searchDefectDescription(reportIds: reportData[], searchString: st
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      const description = "Beschrijving: " + curEvent.description;
+      const description = curEvent.description;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -618,7 +618,7 @@ async function searchDefectDate(reportIds: reportData[], search: string) {
         include: [{ model: Report }]
       });
       if (event != null) {
-        const description = "Datum: " + dateString;
+        const description = dateString;
         let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
@@ -655,7 +655,7 @@ async function searchMalfunctionDescription(reportIds: reportData[], searchStrin
       include: [{ model: Report }]
     });
     if (event != null && curEvent.description != null) {
-      const description = "Beschrijving: " + curEvent.description;
+      const description = curEvent.description;
       let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
       addReport(report, reportIds);
     }
@@ -676,7 +676,7 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
         include: [{ model: Report }]
       });
       if (event != null) {
-        const description = "Datum: " + dateString;
+        const description = dateString;
         let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
