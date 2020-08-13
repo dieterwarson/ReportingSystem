@@ -2657,6 +2657,16 @@ router.post("/getKeywordReports", async (req, res) => {
 
   let reportIds: reportData[] = [];
 
+  await searchCustomField1(reportIds, search, "s");
+  await searchCustomField2(reportIds, search, "s");
+  await searchCustomField3(reportIds, search, "s");
+  await searchCustomField4(reportIds, search, "s");
+  await searchCustomField5(reportIds, search, "s");
+  await searchCustomField6(reportIds, search, "s");
+  await searchCustomField7(reportIds, search, "s");
+  await searchCustomField8(reportIds, search, "s");
+  await searchCustomField9(reportIds, search, "s");
+  await searchCustomField10(reportIds, search, "s");
   await searchOperationalEventSignaling(reportIds, search, "s");
   await searchOperationalEventPlNumber(reportIds, search, "s");
   await searchOperationalEventDescription(reportIds, search, "s");
