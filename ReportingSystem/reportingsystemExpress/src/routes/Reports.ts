@@ -178,6 +178,42 @@ interface reportData {
   nightShift: Boolean;
 }
 
+async function searchCustomField1(reportIds: reportData[], searchString: string, type: string) {
+  let customEvents: CustomEvent[];
+  if (type === "l") {
+    customEvents = await sequelize.query(
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field1) BETWEEN 0 AND 4',
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+  } else {
+    searchString = '%' + searchString + '%';
+    customEvents = await CustomEvent.findAll({
+      where: {
+        field1: {
+          [Op.like]: searchString,
+        },
+      },
+    });
+  }
+  for (let i in customEvents) {
+    const curEvent = customEvents[i];
+    const event = await Custom.findOne({
+      where: {
+        id: curEvent.customId
+      },
+      include: [{ model: Report }]
+    });
+    if (event != null && curEvent.field1 != null) {
+      const description = curEvent.field1;
+      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.field1, date: new Date, nightShift: event.report.nightShift };
+      addReport(report, reportIds);
+    }
+  }
+}
+
 async function searchOperationalEventSignaling(reportIds: reportData[], searchString: string, type: string) {
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
@@ -700,33 +736,50 @@ router.post('/search', async (req, res) => {
 
   let reportIds: reportData[] = [];
 
-  await searchOperationalEventSignaling(reportIds, search, "l");
-  await searchOperationalEventSignaling(reportIds, search, "s");
-  await searchOperationalEventPlNumber(reportIds, search, "l");
-  await searchOperationalEventPlNumber(reportIds, search, "s");
-  await searchOperationalEventDescription(reportIds, search, "l");
-  await searchOperationalEventDescription(reportIds, search, "s");
-  await searchOperationalEventLocation(reportIds, search, "l");
-  await searchOperationalEventLocation(reportIds, search, "s");
-  await searchOperationalEventUnit(reportIds, search, "l");
-  await searchOperationalEventUnit(reportIds, search, "s");
-  await searchOperationalEventDate(reportIds, search);
-  await searchWorkplaceEventDescription(reportIds, search, "l");
-  await searchWorkplaceEventDescription(reportIds, search, "s");
-  await searchWorkplaceEventAbsentee(reportIds, search, "l");
-  await searchWorkplaceEventAbsentee(reportIds, search, "s");
-  await searchWorkplaceEventSubstitute(reportIds, search, "l");
-  await searchWorkplaceEventSubstitute(reportIds, search, "s");
-  await searchWorkplaceEventDate(reportIds, search);
-  await searchSecretariatNotificationDescription(reportIds, search, "l");
-  await searchSecretariatNotificationDescription(reportIds, search, "s");
-  await searchSecretariatNotificationDate(reportIds, search);
-  await searchDefectDescription(reportIds, search, "l");
-  await searchDefectDescription(reportIds, search, "s");
-  await searchDefectDate(reportIds, search);
-  await searchMalfunctionDescription(reportIds, search, "l");
-  await searchMalfunctionDescription(reportIds, search, "s");
-  await searchMalfunctionDate(reportIds, search);
+  console.log("\n\n\n");  
+  console.log(search);
+  console.log("\n---voor custom-----\n");
+  console.log(reportIds);
+  console.log("\n\n\n");
+
+  await searchCustomField1(reportIds, search, "l");
+  // await searchCustomField1(reportIds, search, "s");
+
+  console.log("\n---na custom---\n");
+  console.log(reportIds);
+  console.log("\n\n\n");
+
+  // await searchOperationalEventSignaling(reportIds, search, "l");
+  // await searchOperationalEventSignaling(reportIds, search, "s");
+
+  console.log("\n---na signaling---\n");
+  console.log(reportIds);
+  console.log("\n\n\n");
+  // await searchOperationalEventPlNumber(reportIds, search, "l");
+  // await searchOperationalEventPlNumber(reportIds, search, "s");
+  // await searchOperationalEventDescription(reportIds, search, "l");
+  // await searchOperationalEventDescription(reportIds, search, "s");
+  // await searchOperationalEventLocation(reportIds, search, "l");
+  // await searchOperationalEventLocation(reportIds, search, "s");
+  // await searchOperationalEventUnit(reportIds, search, "l");
+  // await searchOperationalEventUnit(reportIds, search, "s");
+  // await searchOperationalEventDate(reportIds, search);
+  // await searchWorkplaceEventDescription(reportIds, search, "l");
+  // await searchWorkplaceEventDescription(reportIds, search, "s");
+  // await searchWorkplaceEventAbsentee(reportIds, search, "l");
+  // await searchWorkplaceEventAbsentee(reportIds, search, "s");
+  // await searchWorkplaceEventSubstitute(reportIds, search, "l");
+  // await searchWorkplaceEventSubstitute(reportIds, search, "s");
+  // await searchWorkplaceEventDate(reportIds, search);
+  // await searchSecretariatNotificationDescription(reportIds, search, "l");
+  // await searchSecretariatNotificationDescription(reportIds, search, "s");
+  // await searchSecretariatNotificationDate(reportIds, search);
+  // await searchDefectDescription(reportIds, search, "l");
+  // await searchDefectDescription(reportIds, search, "s");
+  // await searchDefectDate(reportIds, search);
+  // await searchMalfunctionDescription(reportIds, search, "l");
+  // await searchMalfunctionDescription(reportIds, search, "s");
+  // await searchMalfunctionDate(reportIds, search);
 
   const count = reportIds.length;
   reportIds = reportIds.slice(offset, offset + reportsPerPage);
