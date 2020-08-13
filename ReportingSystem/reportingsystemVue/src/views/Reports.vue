@@ -300,7 +300,7 @@ export default Vue.extend({
         this.reports.reports = this.filteredReports.reports;
       }
       ReportingService.getAllReports("/api/statistics/types").then(
-        (res) => ((this.reportTypes = res), (this.reportTypesArray = [res]))
+        (res) => (this.reportTypes = res)
       );
     },
 

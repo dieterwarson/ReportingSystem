@@ -57,7 +57,7 @@
         <div class="filter-select mt-4">
           <treeselect
             placeholder="Kies filters"
-            v-model="selectedTypes.operational"
+            v-model="selectedTypes.operationalEvents"
             :multiple="true"
             :options="operationalOptions"
             valueConsistsOf="ALL"
@@ -227,7 +227,7 @@
         <div class="filter-select mt-4">
           <treeselect
             placeholder="Kies filters"
-            v-model="selectedTypes.workplaceevent"
+            v-model="selectedTypes.workplaceTypes"
             :multiple="true"
             :options="administrativeOptions"
             valueConsistsOf="ALL"
@@ -369,7 +369,7 @@
         <div class="filter-select mt-4">
           <treeselect
             placeholder="Kies filters"
-            v-model="selectedTypes.defect"
+            v-model="selectedTypes.defectTypes"
             :multiple="true"
             :options="defectOptions"
             valueConsistsOf="ALL"
@@ -525,6 +525,7 @@ import BootstrapVue from "bootstrap-vue";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 Vue.use(BootstrapVue);
+
 export default Vue.extend({
   data: function() {
     return {
@@ -691,10 +692,10 @@ export default Vue.extend({
         malfunctionTypes: [{ typeName: "", id: 0 }],
       },
       selectedTypes: {
-        operational: [],
-        workplaceevent: [],
-        defect: [],
-        malfunction: [],
+        operationalTypes: [] as any[],
+        workplaceTypes: [] as any[],
+        defectTypes: [] as any[],
+        malfunctionTypes: [] as any[],
       },
 
       interval: 0,
@@ -941,11 +942,11 @@ export default Vue.extend({
             this.reportTypes.malfunctionTypes[i].typeName
           );
           if (index !== -1) {
-            changedTypes.malfunction.push(this.selectedTypes.defect[index]);
+            changedTypes.malfunction.push(this.selectedTypes.defectTypes[index]);
           }
         }
         const changedDefects = changedTypes.defect.filter(
-          (x) => !changedTypes.malfunction.includes(x)
+          (x: any) => !changedTypes.malfunction.includes(x)
         );
         changedTypes.defect = changedDefects;
         ReportingService.getFilteredEvents(
