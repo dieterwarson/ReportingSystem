@@ -139,9 +139,8 @@
                 :fields="operationalFields"
                 :items="this.reportContent.operational.operationalEvents"
               >
+                <!-- date -->
                 <template v-slot:cell(date)="data">
-    <p>data.item.date: {{ data.item.date }}</p>
-
                   {{
                     new Date(data.item.date).toLocaleString("nl-BE", {
                       year: "numeric",
@@ -153,7 +152,10 @@
                     })
                   }}
                 </template>
+                <!-- edit -->
                 <template v-slot:cell(edit)="data">
+    <p>data.item: {{ data.item }}</p>
+
                   <img
                     id="topright"
                     src="../assets/edit-logo.png"
@@ -162,12 +164,12 @@
                       changeEventClick(
                         String(data.item.id),
                         data.item.listName,
-                        'operational'
+                        'Operational'
                       )
                     "
                   />
                 </template>
-
+                <!-- plNumber -->
                 <template v-slot:cell(plNumber)="data">
                   <span
                     class="card-text badge badge-primary mr-1"
@@ -177,6 +179,7 @@
                     >{{ data.item.plNumber }}</span
                   >
                 </template>
+                <!-- unit -->
                 <template v-slot:cell(unit)="data">
                   <span
                     class="card-text badge badge-secondary"
@@ -186,6 +189,7 @@
                     >{{ data.item.unit }}</span
                   >
                 </template>
+                <!-- type -->
                 <template v-slot:cell(type)="data">
                   <div v-if="!(data.item.eventTypes == null)">
                     <div v-for="type in data.item.eventTypes" :key="type.id">
@@ -310,6 +314,7 @@
               )
             "
           >
+            <!-- date -->
             <template v-slot:cell(date)="data">
               {{
                 new Date(data.item.date).toLocaleString("nl-BE", {
@@ -322,7 +327,10 @@
                 })
               }}
             </template>
+            <!-- edit -->
             <template v-slot:cell(edit)="data">
+    <p>data.item: {{ data.item }}</p>
+
               <img
                 id="topright"
                 src="../assets/edit-logo.png"
@@ -336,6 +344,7 @@
                 "
               />
             </template>
+            <!-- type -->
             <template v-slot:cell(type)="data">
               <span class="card-text badge badge-danger">
                 {{ getType(data.item.id, data.item.listName) }}</span
@@ -446,6 +455,7 @@
                 )
               "
             >
+              <!-- date -->
               <template v-slot:cell(date)="data">
                 {{
                   new Date(data.item.date).toLocaleString("nl-BE", {
@@ -458,6 +468,7 @@
                   })
                 }}
               </template>
+              <!-- delete -->
               <template v-slot:cell(delete)="data">
                 <button
                   class="btn btn-primary btn-sm"
@@ -466,6 +477,7 @@
                   🗑
                 </button>
               </template>
+              <!-- edit -->
               <template v-slot:cell(edit)="data">
                 <img
                   id="topright"
@@ -480,6 +492,7 @@
                   "
                 />
               </template>
+              <!-- type -->
               <template v-slot:cell(type)="data">
                 <span class="card-text badge badge-danger">
                   {{ getType(data.item.id, data.item.listName) }}</span
@@ -727,6 +740,7 @@ export default Vue.extend({
                   operationalSubtype: null,
                 },
               ],
+              listName: "",
             },
           ],
         },
@@ -886,42 +900,29 @@ export default Vue.extend({
     reportContent: function() {
       this.loadPriority();
       this.setShift();
-      for (
-        let i = 0;
-        i < this.reportContent.administrative.secretariatNotifications.length;
-        i++
-      ) {
-        if (
-          this.reportContent.administrative.secretariatNotifications[i] != null
-        )
-          (this.reportContent.administrative.secretariatNotifications[
-            i
-          ] as any).listName = "SecretariatNotification";
+      for (let i = 0; i < this.reportContent.operational.operationalEvents.length; i++) {
+        if (this.reportContent.operational.operationalEvents[i] != null)
+          (this.reportContent.operational.operationalEvents[i] as any).listName = "OperationalEvents";
       }
-      for (
-        let i = 0;
-        i < this.reportContent.administrative.workplaceEvents.length;
-        i++
-      ) {
+
+      for (let i = 0; i < this.reportContent.administrative.secretariatNotifications.length; i++) {
+        if (this.reportContent.administrative.secretariatNotifications[i] != null)
+          (this.reportContent.administrative.secretariatNotifications[i] as any).listName = "SecretariatNotifications";
+      }
+
+      for (let i = 0; i < this.reportContent.administrative.workplaceEvents.length; i++) {
         if (this.reportContent.administrative.workplaceEvents[i] != null)
-          (this.reportContent.administrative.workplaceEvents[
-            i
-          ] as any).listName = "WorkplaceEvent";
+          (this.reportContent.administrative.workplaceEvents[i] as any).listName = "WorkplaceEvents";
       }
 
       for (let i = 0; i < this.reportContent.technical.defects.length; i++) {
         if (this.reportContent.technical.defects[i] != null)
-          (this.reportContent.technical.defects[i] as any).listName = "Defect";
+          (this.reportContent.technical.defects[i] as any).listName = "Defects";
       }
 
-      for (
-        let i = 0;
-        i < this.reportContent.technical.malfunctions.length;
-        i++
-      ) {
+      for (let i = 0; i < this.reportContent.technical.malfunctions.length; i++) {
         if (this.reportContent.technical.malfunctions[i] != null)
-          (this.reportContent.technical.malfunctions[i] as any).listName =
-            "Malfunction";
+          (this.reportContent.technical.malfunctions[i] as any).listName = "Malfunctions";
       }
 
       this.loaded = true;
@@ -1092,14 +1093,13 @@ export default Vue.extend({
       }
     },
     changeEventClick: function(id: string, subcat: string, categorie: string) {
-      subcat = subcat[0].toLowerCase() + subcat.substring(1);
       this.$router.push({
         path: "changeEvent",
         query: {
           reportId: String(0),
           eventId: String(id),
           categorie: categorie,
-          subcategorie: String(subcat + "s"),
+          subcategorie: String(subcat),
         },
       });
     },
