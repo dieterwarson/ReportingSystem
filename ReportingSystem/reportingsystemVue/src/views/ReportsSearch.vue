@@ -125,8 +125,8 @@ import vPagination from "vue-plain-pagination";
 import VueRangedatePicker from "vue-rangedate-picker";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import Loading from 'vue-loading-overlay';
-import 'vue-loading-overlay/dist/vue-loading.css';
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 interface DateRange {
   start: string;
