@@ -29,6 +29,7 @@
         </form>
         <div class="col-md-8">
           <div v-if="filteredReports.reports.length == 0">
+            <p>DEBUG, reports: {{ reports }}</p>
             <div
               class="container my-2"
               v-for="value in reports.reports"
@@ -36,6 +37,7 @@
             >
               <div class="card shadow">
                 <div class="card-body h5">
+                  <p>DEBUG, value: {{ value }}</p>
                   {{
                     new Date(value[0].date).toLocaleString("nl-BE", {
                       year: "numeric",
@@ -62,13 +64,15 @@
             </div>
           </div>
           <div v-else>
+            <p>DEBUG, reports: {{ reports }}</p>
             <div
               class="container my-2"
               v-for="value in filteredReports.reports"
-              :key="value.id"
+              :key="value.reportId"
             >
               <div class="card shadow">
                 <div class="card-body h5">
+                  <p>DEBUG, value: {{ value }}</p>
                   {{
                     new Date(value.date).toLocaleString("nl-BE", {
                       year: "numeric",
@@ -78,7 +82,7 @@
                   }}
                   <button
                     class="ml-3 btn btn-primary"
-                    v-on:click="reportClick(String(value.id))"
+                    v-on:click="reportClick(String(value.reportId))"
                   >
                     {{ getShift(value.nightShift) }}
                   </button>
@@ -264,83 +268,6 @@ export default Vue.extend({
         chosenValues: [],
       },
       options: [
-        // {
-        //   id: "signaling",
-        //   label: "Signalering",
-        //   children: [
-        //     {
-        //       // names of all signalings
-        //       id: "signaling-jan",
-        //       label: "Signalering Jan"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "plNumber",
-        //   label: "PL-nummer",
-        //   children: [
-        //     {
-        //       // names of all plNumbers
-        //       id: "plNumber",
-        //       label: "007"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "description",
-        //   label: "Beschrijving",
-        //   children: [
-        //     {
-        //       // names of all descriptions
-        //       id: "description",
-        //       label: "bes"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "location",
-        //   label: "Adres",
-        //   children: [
-        //     {
-        //       // names of all locations
-        //       id: "location-hasselt",
-        //       label: "Hasselt"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "unit",
-        //   label: "Unit",
-        //   children: [
-        //     {
-        //       // names of all units
-        //       id: "unit-kampla",
-        //       label: "KAMPLA"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "absentee",
-        //   label: "Afwezige",
-        //   children: [
-        //     {
-        //       // names of all personel
-        //       id: "absentee-jan",
-        //       label: "Jan"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "substitute",
-        //   label: "Vervanger",
-        //   children: [
-        //     {
-        //       // names of all personel
-        //       id: "substitute-jan",
-        //       label: "Jan"
-        //     }
-        //   ]
-        // },
         {
           id: "types",
           label: "Types",

@@ -1,5 +1,6 @@
 <template>
   <div class="search">
+    <p> Reports: {{ reports }} </p>
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
     </div>

@@ -1,5 +1,6 @@
 <template>
   <div class="reportview">
+    <p>reportContent.report: {{ reportContent.report }}</p>
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
       <b>/</b>
@@ -139,6 +140,8 @@
                 :items="this.reportContent.operational.operationalEvents"
               >
                 <template v-slot:cell(date)="data">
+    <p>data.item.date: {{ data.item.date }}</p>
+
                   {{
                     new Date(data.item.date).toLocaleString("nl-BE", {
                       year: "numeric",
