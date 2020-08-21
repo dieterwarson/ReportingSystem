@@ -1,6 +1,5 @@
 <template>
   <div class="reportview">
-    <p>reportContent.report: {{ reportContent.report }}</p>
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
       <b>/</b>
@@ -57,7 +56,7 @@
         <div class="filter-select mt-4">
           <treeselect
             placeholder="Kies filters"
-            v-model="selectedTypes.operationalEvents"
+            v-model="selectedTypes.operationalTypes"
             :multiple="true"
             :options="operationalOptions"
             valueConsistsOf="ALL"
@@ -86,7 +85,7 @@
                   <b-col lg="6" class="my-1">
                     <b-input-group size="sm">
                       <b-form-input
-                        v-model="Filter"
+                        v-model="operationalFilter"
                         type="search"
                         id="filterInput"
                         placeholder="Type om te zoeken"
@@ -154,7 +153,7 @@
                 </template>
                 <!-- edit -->
                 <template v-slot:cell(edit)="data">
-    <p>data.item: {{ data.item }}</p>
+    
 
                   <img
                     id="topright"
@@ -256,7 +255,7 @@
               <b-col lg="6" class="my-1">
                 <b-input-group size="sm">
                   <b-form-input
-                    v-model="Filter"
+                    v-model="administrativeFilter"
                     type="search"
                     id="filterInput"
                     placeholder="Type om te zoeken"
@@ -329,7 +328,7 @@
             </template>
             <!-- edit -->
             <template v-slot:cell(edit)="data">
-    <p>data.item: {{ data.item }}</p>
+    
 
               <img
                 id="topright"
@@ -938,17 +937,17 @@ export default Vue.extend({
       handler() {
         const changedTypes = JSON.parse(JSON.stringify(this.selectedTypes));
         for (let i = 0; i < this.reportTypes.malfunctionTypes.length; i++) {
-          const index = changedTypes.defect.indexOf(
+          const index = changedTypes.defectTypes.indexOf(
             this.reportTypes.malfunctionTypes[i].typeName
           );
           if (index !== -1) {
-            changedTypes.malfunction.push(this.selectedTypes.defectTypes[index]);
+            changedTypes.malfunctionTypes.push(this.selectedTypes.defectTypes[index]);
           }
         }
-        const changedDefects = changedTypes.defect.filter(
-          (x: any) => !changedTypes.malfunction.includes(x)
+        const changedDefects = changedTypes.defectTypes.filter(
+          (x: any) => !changedTypes.malfunctionTypes.includes(x)
         );
-        changedTypes.defect = changedDefects;
+        changedTypes.defectTypes = changedDefects;
         ReportingService.getFilteredEvents(
           {
             selectedTypes: changedTypes,
@@ -962,7 +961,6 @@ export default Vue.extend({
 
   mounted() {
     this.loadData();
-    this.selectedTypes = this.reportTypes;
     // this.interval = window.setInterval(this.loadData, 5000);
   },
 
@@ -1107,7 +1105,7 @@ export default Vue.extend({
     getType: function(id: number, list: string) {
       if (
         this.reportContent.administrative.workplaceEvents !== [] &&
-        list == "WorkplaceEvent"
+        list == "WorkplaceEvents"
       ) {
         for (
           let i = 0;
@@ -1125,7 +1123,7 @@ export default Vue.extend({
       }
       if (
         this.reportContent.administrative.secretariatNotifications !== [] &&
-        list == "SecretariatNotification"
+        list == "SecretariatNotifications"
       ) {
         for (
           let i = 0;
@@ -1140,7 +1138,7 @@ export default Vue.extend({
           }
         }
       }
-      if (this.reportContent.technical.defects !== [] && list == "Defect") {
+      if (this.reportContent.technical.defects !== [] && list == "Defects") {
         for (let i = 0; i < this.reportContent.technical.defects.length; i++) {
           if (
             this.reportContent.technical.defects[i] !== null &&
@@ -1155,7 +1153,7 @@ export default Vue.extend({
       }
       if (
         this.reportContent.technical.malfunctions !== [] &&
-        list == "Malfunction"
+        list == "Malfunctions"
       ) {
         for (
           let i = 0;
