@@ -122,19 +122,19 @@
         </form>
 
         <div class="col-md-6">
+          <!-- charts -->
+          <PieChart v-if="loaded" :chartdata="PieData" />
+          <ScatterChart v-if="loaded" :chartdata="LineData" :options="options" />
+          <h5 v-else class="mt-10">Selecteer de gewenste types om grafieken te zien</h5>
           <p>{{ this.combinedData }}</p>
           <download-csv
             class   = "btn btn-default"
             :data="combinedData"
             name    = "filename.csv">
 
-            Download CSV
+            Download CSV ⬇
 
           </download-csv>
-          <!-- charts -->
-          <PieChart v-if="loaded" :chartdata="PieData" />
-          <ScatterChart v-if="loaded" :chartdata="LineData" :options="options" />
-          <h5 v-else class="mt-10">Selecteer de gewenste types om grafieken te zien</h5>
         </div>
       </div>
     </div>
@@ -406,3 +406,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+input {
+   margin-right:10px;
+}
+</style>

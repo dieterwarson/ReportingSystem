@@ -1197,12 +1197,18 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
       reportId: reportId
     }
   });
+  let custom = await Custom.findOne({
+    where: {
+      reportId: reportId
+    }
+  })
 
   let operationalEvents: OperationalEvent[] = [];
   let workplaceEvents: WorkplaceEvent[] = [];
   let secretariatNotifications: SecretariatNotification[] = [];
   let defects: Defect[] = [];
   let malfunctions: Malfunction[] = [];
+  let customEvents: CustomEvent[] = [];
 
   if (operational != null) {
     operationalEvents = await OperationalEvent.findAll({
@@ -1251,11 +1257,21 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     })
   }
 
+  if(custom != null) {
+    customEvents = await CustomEvent.findAll({
+      where: {
+        customId: custom.id
+      },
+      include: [FieldNames]
+    })
+  }
+
   results = {
     report: report,
     operational: { operationalEvents },
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
+    custom: {customEvents}
   };
 
   res.send(results);
@@ -1813,8 +1829,8 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
   let malfunctions: Malfunction[] = [];
 
   if (operational != null) {
-    for (let i in types.operational) {
-      var type = types.operational[i];
+    for (let i in types.operationalTypes) {
+      var type = types.operationalTypes[i];
       var result = [];
 
       result = await OperationalEvent.findAll({
@@ -1850,8 +1866,8 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
   }
 
   if (administrative != null) {
-    for (let i in types.workplaceevent) {
-      var type = types.workplaceevent[i];
+    for (let i in types.workplaceTypes) {
+      var type = types.workplaceTypes[i];
       var result = [];
       result = await WorkplaceEvent.findAll({
         where: {
@@ -1872,8 +1888,8 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
         });
       }
     }
-    if (types.workplaceevent != null) {
-      if (types.workplaceevent.includes("secretariatNotification")) {
+    if (types.workplaceTypes != null) {
+      if (types.workplaceTypes.includes("secretariatNotification")) {
         secretariatNotifications = await SecretariatNotification.findAll({
           where: {
             administrativeId: administrative.id
@@ -1884,8 +1900,8 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
   }
 
   if (technical != null) {
-    for (let i in types.defect) {
-      var type = types.defect[i];
+    for (let i in types.defectTypes) {
+      var type = types.defectTypes[i];
       var result = [];
       result = await Defect.findAll({
         where: {
@@ -1907,8 +1923,8 @@ router.post('/getTypeEvents/:reportId', async (req, res) => {
       }
     }
 
-    for (let i in types.malfunction) {
-      var type = types.malfunction[i];
+    for (let i in types.malfunctionTypes) {
+      var type = types.malfunctionTypes[i];
       var result = [];
       result = await Malfunction.findAll({
         where: {

@@ -1,11 +1,11 @@
 <template>
   <div class="reportview">
-    <p>reportContent.report: {{ reportContent.report }}</p>
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
       <b>/</b>
       <router-link to="/reports">Verslagen</router-link>
     </div>
+    <p> {{reportContent.custom}} </p>
     <div
       class="container pt-5 pb-5"
       v-if="!(Object.keys(reportContent).length === 0)"
@@ -22,14 +22,14 @@
         <span class="badge badge-primary">{{ shift }}</span>
       </h1>
       <div
-        class="btn-group d-flex"
+        class="btn-group d-flex mt-4"
         role="group"
         aria-label="Justified button group"
       >
         <button
           id="operationalButton"
           type="button"
-          class="btn btn-info"
+          class="btn btn-primary border-primary"
           @click.prevent="getOperational"
         >
           Operationeel
@@ -37,7 +37,7 @@
         <button
           id="workForceButton"
           type="button"
-          class="btn btn-primary"
+          class="btn btn-secondary border-primary"
           @click.prevent="getWorkforce"
         >
           Personeel
@@ -45,10 +45,18 @@
         <button
           id="technicalButton"
           type="button"
-          class="btn btn-primary"
+          class="btn btn-secondary border-primary"
           @click.prevent="getTechnical"
         >
           Technisch
+        </button>
+        <button
+          id="customButton"
+          type="button"
+          class="btn btn-secondary border-primary"
+          @click.prevent="getCustom"
+        >
+          Custom
         </button>
       </div>
       <!-- Operational -->
@@ -57,7 +65,7 @@
         <div class="filter-select mt-4">
           <treeselect
             placeholder="Kies filters"
-            v-model="selectedTypes.operationalEvents"
+            v-model="selectedTypes.operationalTypes"
             :multiple="true"
             :options="operationalOptions"
             valueConsistsOf="ALL"
@@ -86,7 +94,7 @@
                   <b-col lg="6" class="my-1">
                     <b-input-group size="sm">
                       <b-form-input
-                        v-model="Filter"
+                        v-model="operationalFilter"
                         type="search"
                         id="filterInput"
                         placeholder="Type om te zoeken"
@@ -154,7 +162,7 @@
                 </template>
                 <!-- edit -->
                 <template v-slot:cell(edit)="data">
-    <p>data.item: {{ data.item }}</p>
+    
 
                   <img
                     id="topright"
@@ -256,7 +264,7 @@
               <b-col lg="6" class="my-1">
                 <b-input-group size="sm">
                   <b-form-input
-                    v-model="Filter"
+                    v-model="administrativeFilter"
                     type="search"
                     id="filterInput"
                     placeholder="Type om te zoeken"
@@ -329,7 +337,7 @@
             </template>
             <!-- edit -->
             <template v-slot:cell(edit)="data">
-    <p>data.item: {{ data.item }}</p>
+    
 
               <img
                 id="topright"
@@ -510,6 +518,9 @@
             ></b-pagination>
           </div>
         </div>
+      </section>
+      <section v-if="step == 'Custom'" class="container">
+
       </section>
     </div>
     <div v-else>
@@ -872,6 +883,9 @@ export default Vue.extend({
             },
           ],
         },
+        custom: {
+
+        },
       },
 
       priorityContent: {
@@ -938,17 +952,17 @@ export default Vue.extend({
       handler() {
         const changedTypes = JSON.parse(JSON.stringify(this.selectedTypes));
         for (let i = 0; i < this.reportTypes.malfunctionTypes.length; i++) {
-          const index = changedTypes.defect.indexOf(
+          const index = changedTypes.defectTypes.indexOf(
             this.reportTypes.malfunctionTypes[i].typeName
           );
           if (index !== -1) {
-            changedTypes.malfunction.push(this.selectedTypes.defectTypes[index]);
+            changedTypes.malfunctionTypes.push(this.selectedTypes.defectTypes[index]);
           }
         }
-        const changedDefects = changedTypes.defect.filter(
-          (x: any) => !changedTypes.malfunction.includes(x)
+        const changedDefects = changedTypes.defectTypes.filter(
+          (x: any) => !changedTypes.malfunctionTypes.includes(x)
         );
-        changedTypes.defect = changedDefects;
+        changedTypes.defectTypes = changedDefects;
         ReportingService.getFilteredEvents(
           {
             selectedTypes: changedTypes,
@@ -962,7 +976,6 @@ export default Vue.extend({
 
   mounted() {
     this.loadData();
-    this.selectedTypes = this.reportTypes;
     // this.interval = window.setInterval(this.loadData, 5000);
   },
 
@@ -1066,9 +1079,11 @@ export default Vue.extend({
         const operationalButton = document.getElementById("operationalButton")!;
         const workForceButton = document.getElementById("workForceButton")!;
         const technicalButton = document.getElementById("technicalButton")!;
-        operationalButton.classList.replace("btn-primary", "btn-info");
-        workForceButton.classList.replace("btn-info", "btn-primary");
-        technicalButton.classList.replace("btn-info", "btn-primary");
+        const customButton = document.getElementById("customButton")!;
+        operationalButton.classList.replace("btn-secondary", "btn-primary");
+        workForceButton.classList.replace("btn-primary", "btn-secondary");
+        technicalButton.classList.replace("btn-primary", "btn-secondary");
+        customButton.classList.replace("btn-primary", "btn-secondary");
       }
     },
     getWorkforce: function() {
@@ -1077,9 +1092,11 @@ export default Vue.extend({
         const operationalButton = document.getElementById("operationalButton")!;
         const workForceButton = document.getElementById("workForceButton")!;
         const technicalButton = document.getElementById("technicalButton")!;
-        operationalButton.classList.replace("btn-info", "btn-primary");
-        workForceButton.classList.replace("btn-primary", "btn-info");
-        technicalButton.classList.replace("btn-info", "btn-primary");
+        const customButton = document.getElementById("customButton")!;
+        operationalButton.classList.replace("btn-primary", "btn-secondary");
+        workForceButton.classList.replace("btn-secondary", "btn-primary");
+        technicalButton.classList.replace("btn-primary", "btn-secondary");
+        customButton.classList.replace("btn-primary", "btn-secondary");
       }
     },
     getTechnical: function() {
@@ -1088,9 +1105,24 @@ export default Vue.extend({
         const operationalButton = document.getElementById("operationalButton")!;
         const workForceButton = document.getElementById("workForceButton")!;
         const technicalButton = document.getElementById("technicalButton")!;
-        operationalButton.classList.replace("btn-info", "btn-primary");
-        workForceButton.classList.replace("btn-info", "btn-primary");
-        technicalButton.classList.replace("btn-primary", "btn-info");
+        const customButton = document.getElementById("customButton")!;
+        operationalButton.classList.replace("btn-primary", "btn-secondary");
+        workForceButton.classList.replace("btn-primary", "btn-secondary");
+        technicalButton.classList.replace("btn-secondary", "btn-primary");
+        customButton.classList.replace("btn-primary", "btn-secondary");
+      }
+    },
+    getCustom: function() {
+      if (this.step != "Custom") {
+        this.step = "Custom";
+        const operationalButton = document.getElementById("operationalButton")!;
+        const workForceButton = document.getElementById("workForceButton")!;
+        const technicalButton = document.getElementById("technicalButton")!;
+        const customButton = document.getElementById("customButton")!;
+        operationalButton.classList.replace("btn-primary", "btn-secondary");
+        workForceButton.classList.replace("btn-primary", "btn-secondary");
+        technicalButton.classList.replace("btn-primary", "btn-secondary");
+        customButton.classList.replace("btn-secondary", "btn-primary");
       }
     },
     changeEventClick: function(id: string, subcat: string, categorie: string) {
@@ -1107,7 +1139,7 @@ export default Vue.extend({
     getType: function(id: number, list: string) {
       if (
         this.reportContent.administrative.workplaceEvents !== [] &&
-        list == "WorkplaceEvent"
+        list == "WorkplaceEvents"
       ) {
         for (
           let i = 0;
@@ -1125,7 +1157,7 @@ export default Vue.extend({
       }
       if (
         this.reportContent.administrative.secretariatNotifications !== [] &&
-        list == "SecretariatNotification"
+        list == "SecretariatNotifications"
       ) {
         for (
           let i = 0;
@@ -1140,7 +1172,7 @@ export default Vue.extend({
           }
         }
       }
-      if (this.reportContent.technical.defects !== [] && list == "Defect") {
+      if (this.reportContent.technical.defects !== [] && list == "Defects") {
         for (let i = 0; i < this.reportContent.technical.defects.length; i++) {
           if (
             this.reportContent.technical.defects[i] !== null &&
@@ -1155,7 +1187,7 @@ export default Vue.extend({
       }
       if (
         this.reportContent.technical.malfunctions !== [] &&
-        list == "Malfunction"
+        list == "Malfunctions"
       ) {
         for (
           let i = 0;

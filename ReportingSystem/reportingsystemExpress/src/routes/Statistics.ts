@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import OperationalType from 'src/models/operationalType';
 import WorkplaceType from 'src/models/workplaceType';
 import DefectType from 'src/models/defectType';
@@ -10,6 +10,7 @@ import Defect from 'src/models/defect';
 import Malfunction from 'src/models/malfunction';
 import OperationalEvent from 'src/models/operationalEvent';
 import EventType from 'src/models/eventType';
+import User from 'src/models/user';
 
 // Init router
 const router = Router();
@@ -85,8 +86,8 @@ function countDate(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Ma
 router.post('/getStatistics', async (req, res) => {
   let reports: StatisticsData = { counts: [], lineContent: [] };
   const types = req.body.selectedTypes;
-  let date = {start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z"}
-  if(!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
+  let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
+  if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
     date = req.body.selectedDate;
 
   let events: eventDate[] = []
@@ -280,6 +281,225 @@ router.post('/getStatistics', async (req, res) => {
       }]
     });
 */
+
+/******************************************************************************
+ *                         Get user statistics
+ ******************************************************************************/
+function countUser(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Malfunction[], events: eventDate[]) {
+
+  for(let element of result) {
+    let userFound = false;
+    for (let i = 0; i < events.length; i++) {
+      if (events[i].x == element.user.username) {
+        userFound = true;
+        events[i].y++;
+      }
+    }
+    if (!userFound) {
+      events.push({ x: element.user.username, y: 1 });
+    }
+  };
+
+  return events;
+}
+
+router.post('/getUserStatistics', async (req, res) => {
+  const types = req.body.selectedTypes;
+  let reports: StatisticsData = { counts: [], lineContent: [] };
+  let date = { start: "2013-05-10T00:00:00.000Z", end: "2999-08-21T00:00:00.000Z" }
+  if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
+    date = req.body.selectedDate;
+
+  let events: eventDate[] = []
+
+  for (let i in types.workplaceevent) {
+    var type = types.workplaceevent[i];
+    var result = [];
+    result = await WorkplaceEvent.findAll({
+      order: ['date'],
+      attributes: ['date', 'authorId'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
+      include: [{
+        model: WorkplaceType,
+        where: {
+          typeName: {
+            [Op.like]: '' + type,
+          },
+        },
+      },
+    {
+      model:User,
+      attributes: ['username'],
+      where: {
+        id: Sequelize.col('WorkplaceEvent.authorId')
+      }
+    }],
+
+    });
+
+    console.log(result);
+
+    // group events by date
+
+
+    events = countUser(result, events);
+    const dates: lineData = { label: type, data: events }
+    reports.lineContent.push(dates);
+    events = [];
+
+    if (result.length != 0) {
+      // Add the typeName and number of its occurrences to reports
+      var count: Counts = { typeName: type, count: result.length };
+      reports.counts.push(count);
+    }
+  }
+
+  for (let i in types.operational) {
+    var type = types.operational[i];
+    var result = [];
+    result = await OperationalEvent.findAll({
+      order: ['date'],
+      attributes: ['date', 'authorId'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
+      include: [{
+        model: EventType,
+        required: true,
+        include: [{
+          model: OperationalType,
+          required: true,
+          where: {
+            typeName: {
+              [Op.like]: '' + type,
+            },
+          },
+        }]
+      },
+      {
+        model:User,
+        attributes: ['username'],
+        where: {
+          id: Sequelize.col('OperationalEvent.authorId')
+        }
+      }]
+    });
+
+    events = countUser(result, events);
+    reports.lineContent.push({ label: type, data: events });
+    events = [];
+
+    // console.log(events);
+
+    if (result.length != 0) {
+      // Add the typeName and number of its occurrences to reports
+      var count: Counts = { typeName: type, count: result.length };
+      reports.counts.push(count);
+    }
+  }
+
+  for (let i in types.defect) {
+    var type = types.defect[i];
+    var result = [];
+    result = await Defect.findAll({
+      order: ['date'],
+      attributes: ['date', 'authorId'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
+      include: [{
+        model: DefectType,
+        attributes: [],
+        where: {
+          typeName: {
+            [Op.like]: '' + type,
+          },
+        },
+      },
+      {
+        model:User,
+        attributes: ['username'],
+        where: {
+          id: Sequelize.col('defect.authorId')
+        }
+      }]
+
+    });
+
+    events = countUser(result, events);
+    reports.lineContent.push({ label: type, data: events });
+    events = [];
+
+    if (result.length != 0) {
+      // Add the typeName and number of its occurrences to reports
+      var count: Counts = { typeName: type, count: result.length };
+      reports.counts.push(count);
+    }
+  }
+
+  for (let i in types.malfunction) {
+    var type = types.malfunction[i];
+    var result = [];
+    result = await Malfunction.findAll({
+      order: ['date'],
+      attributes: ['date', 'authorId'],
+      where: {
+        date: {
+          [Op.and]: {
+            [Op.lt]: date.end,
+            [Op.gt]: date.start,
+          }
+        }
+      },
+      include: [{
+        model: MalfunctionType,
+        attributes: [],
+        where: {
+          typeName: {
+            [Op.like]: '' + type,
+          },
+        },
+      },
+      {
+        model:User,
+        attributes: ['username'],
+        where: {
+          id: Sequelize.col('malfunction.authorId')
+        }
+      }]
+
+    });
+
+    events = countUser(result, events);
+    reports.lineContent.push({ label: type, data: events });
+    events = [];
+
+    if (result.length != 0) {
+      // Add the typeName and number of its occurrences to reports
+      var count: Counts = { typeName: type, count: result.length };
+      reports.counts.push(count);
+    }
+  }
+  //console.log(reports);
+  res.send(reports);
+});
 
 /******************************************************************************
  *                                     Export
