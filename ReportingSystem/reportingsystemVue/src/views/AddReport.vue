@@ -1056,7 +1056,6 @@ export default Vue.extend({
       this.fieldOptions = await ReportingService.getCustomFiche();
     },
     async addCustomFiche() {
-      alert(this.customFiche.field1);
       const response = await ReportingService.addCustomEvent({
         selectedFiche: this.selectedOption,
         field1: this.customFiche.field1,

@@ -108,10 +108,12 @@
           </div>
         </div>
         <section v-if="option == 'customFiche'">
+          
           <div class="input-group-vertical mt-2">
             <label>Naam fiche</label>
             <input
               class="form-control form-control-lg"
+              :class="{ 'is-invalid' : !customTitleCheck, 'is-valid' : customTitleCheck}"
               v-model="customTitle"
               name="titel"
               type="text"
@@ -193,6 +195,7 @@ export default Vue.extend({
     return {
       option: "no-option",
       customTitle: "",
+      customTitleCheck: true,
 
       changeAccesRights: {
         username: "",
@@ -235,7 +238,6 @@ export default Vue.extend({
   },
   mounted() {
     this.loadData();
-    this.getCustomFiche();
   },
   methods: {
     addInputField: function() {
@@ -385,6 +387,8 @@ export default Vue.extend({
     },
     async addNewCustom() {
       //customFiche[index].title
+      
+
       let check = false;
       this.customFiche.forEach(element => {
         if (element.title.length < 3) {
@@ -394,6 +398,10 @@ export default Vue.extend({
           check = true;
         }
       });
+      if (this.customTitle.length < 3) {
+        this.customTitleCheck = false;
+        check = true;
+      }
       if (check) return; //if a field is empty return
 
       const response = await ReportingService.addCustomFiche({
@@ -408,6 +416,7 @@ export default Vue.extend({
         this.customTitle = "";
         this.newCustom.failed = false;
         this.newCustom.completed = true;
+         this.customTitleCheck = true;
       } else {
         this.newCustom.failed = true;
         this.newCustom.completed = false;

@@ -126,6 +126,7 @@
       </template>
       <p v-if="pwdChanged">Het wachtwoord is gewijzigd</p>
       <p v-if="pwdNotChanged">Het wachtwoord is niet gewijzigd</p>
+      <p v-if="pwdNotReq">Het wachtwoord voldoet niet aan de voorwaarden</p>
     </div>
     <div class="customTable border border-primary rounded newUser">
       <h2>Nieuwe gebruiker maken</h2>
@@ -216,6 +217,7 @@ export default Vue.extend({
       newPwd: [] as any[],
       pwdChanged: false,
       pwdNotChanged: false,
+      pwdNotReq: false,
       totalRows: 1,
       currentPage: 1,
       perPage: 5,
@@ -326,6 +328,8 @@ export default Vue.extend({
     async changePassword(username: any, newPass: any, id: any) {
       this.pwdNotChanged = false;
       this.pwdChanged = false;
+      this.pwdNotReq = false;
+
       if (this.checkPassword(newPass)) {
         const response = await ReportingService.changePassword({
           username: username,
@@ -335,10 +339,16 @@ export default Vue.extend({
           this.pwdChanged = true;
           this.pwdNotChanged = false;
           this.newPwd[id] = "";
+          this.pwdNotReq = true
         } else {
           this.pwdNotChanged = true;
           this.pwdChanged = false;
+          this.pwdNotReq = false
         }
+      } else {
+        this.pwdNotChanged = false;
+        this.pwdChanged = false;
+        this.pwdNotReq = true
       }
     },
     async doNewUser() {

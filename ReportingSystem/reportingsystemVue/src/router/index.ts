@@ -7,6 +7,8 @@ import ReportingService from '@/services/ReportingService';
 
 Vue.use(VueRouter);
 
+
+
 const routes = [
   {
     path: '/',
@@ -102,19 +104,22 @@ const router = new VueRouter({
   routes,
 });
 
+let previousShift: string;
+ReportingService.getAllReports("/api/reports/lastShift").then(
+    res => (previousShift = res.id)
+  );
+
 router.beforeEach((to, from, next) => {
   const response = ReportingService.checkAuthentication();
-  let ReportId : any;
   const token = window.localStorage.getItem("token");
   const decodedToken : any = jwt.decode(token!)!;
-  const test = ReportingService.latestReportId().then(result => {
-    ReportId = result
-  });
+  
   response.then(res => {
+ 
     if (to.path !== '/login' && !res) next({name: 'Login'});
     else if (to.name === 'Login' && res) next({name: 'Home'})
-    else if (to.name === 'ReportView' && to.query.reportId == "18" && !decodedToken.seePreviousShift) next({name: 'Home'})
-    else if (to.name === 'ReportView' && to.query.reportId == "18" && decodedToken.seePreviousShift) next()
+    else if (to.name === 'ReportView' && to.query.reportId == previousShift && !decodedToken.seePreviousShift) next({name: 'Home'})
+    else if (to.name === 'ReportView' && to.query.reportId == previousShift && decodedToken.seePreviousShift) next()
     else if (to.name === 'ReportView' && !decodedToken.seeReports) next({name: 'Home'})
     else if (to.name === 'Reports' && !decodedToken.seeReports) next({name: 'Home'})
     else if (to.name === 'ChangeEvent' && !decodedToken.seeReports) next({name: 'Home'})
@@ -132,4 +137,7 @@ router.beforeEach((to, from, next) => {
   
 })
 
+
+
 export default router;
+
