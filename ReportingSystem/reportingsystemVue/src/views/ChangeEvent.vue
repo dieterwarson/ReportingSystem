@@ -8,10 +8,10 @@
   <h1>Wijzig gebeurtenis</h1>
   <form id="changeOperationalEvent">
     <!-- Operational -->
-    <fieldset v-if="categorie == 'Operational'">
+    <fieldset v-if="categorie.toLowerCase() == 'Operational'.toLowerCase()">
       <h3 id="smalltitle">Operationeel</h3>
       <!-- OperationalEvents -->
-      <section v-if="subcategorie == 'operationalEvents'">
+      <section v-if="subcategorie.toLowerCase() == 'operationalEvents'.toLowerCase()">
         <h4 id="smalltitle">Operationele gebeurtenis</h4>
         <div class="row">
           <!-- Checkboxes -->
@@ -102,10 +102,10 @@
 
   <form id="changeWorkforce">
     <!-- Personal -->
-    <fieldset v-if="categorie == 'Workforce'">
+    <fieldset v-if="categorie.toLowerCase() == 'Workforce'.toLowerCase()">
       <h3 id="smalltitle">Personeel</h3>
       <!-- WorkplaceEvents -->
-      <section v-if="subcategorie == 'workplaceEvents'">
+      <section v-if="subcategorie.toLowerCase() == 'workplaceEvents'.toLowerCase()">
         <h4 id="smalltitle">Werkplaatsgebeurtenis</h4>
         <div class="row">
           <!-- Checkboxes -->
@@ -174,7 +174,7 @@
         </div>
       </section>
       <!-- SecretariatNotifications -->
-      <section v-else-if="subcategorie == 'secretariatNotifications'">
+      <section v-else-if="subcategorie.toLowerCase() == 'secretariatNotifications'.toLowerCase()">
         <h4 id="smalltitle">Secretariaatmeldingen</h4>
         <div class="row">
           <!-- Checkboxes -->
@@ -206,10 +206,10 @@
 
   <form id="changeTechnical">
     <!-- Technical -->
-    <fieldset v-if="categorie == 'Technical'">
+    <fieldset v-if="categorie.toLowerCase() == 'Technical'.toLowerCase()">
       <h3 id="smalltitle">Technisch</h3>
       <!-- Defects -->
-      <section v-if="subcategorie == 'defects'">
+      <section v-if="subcategorie.toLowerCase() == 'defects'.toLowerCase()">
         <h4 id="smalltitle">Defect</h4>
         <div class="row">
           <!-- Checkboxes -->
@@ -266,7 +266,7 @@
         </div>
       </section>
       <!-- Malfunctions -->
-      <section v-else-if="subcategorie == 'malfunctions'">
+      <section v-else-if="subcategorie.toLowerCase() == 'malfunctions'.toLowerCase()">
         <h4 id="smalltitle">Malfunctie</h4>
         <div class="row">
           <!-- Checkboxes -->
@@ -535,15 +535,15 @@ export default Vue.extend({
         "/api/reports/content/" + String(this.reportId)
       ).then(res => (this.reportContent = res));
 
-      if (this.subcategorie == "operationalEvents") {
+      if (this.subcategorie.toLowerCase() == 'operationalEvents'.toLowerCase()) {
         this.loadOperationalEvent();
-      } else if (this.subcategorie == "workplaceEvents") {
+      } else if (this.subcategorie.toLowerCase() == 'workplaceEvents'.toLowerCase()) {
         this.loadWorkplaceEvent();
-      } else if (this.subcategorie == "secretariatNotifications") {
+      } else if (this.subcategorie.toLowerCase() == 'secretariatNotifications'.toLowerCase()) {
         this.loadSecretariatNotification();
-      } else if (this.subcategorie == "defects") {
+      } else if (this.subcategorie.toLowerCase() == 'defects'.toLowerCase()) {
         this.loadDefect();
-      } else if (this.subcategorie == "malfunctions") {
+      } else if (this.subcategorie.toLowerCase() == 'malfunctions'.toLowerCase()) {
         this.loadMalfunction();
       }
     },

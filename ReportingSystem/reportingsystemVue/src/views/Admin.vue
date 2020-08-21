@@ -235,7 +235,7 @@ export default Vue.extend({
   },
   mounted() {
     this.loadData();
-    this.getCustom();
+    this.getCustomFiche();
   },
   methods: {
     addInputField: function() {
@@ -385,7 +385,7 @@ export default Vue.extend({
     },
     async addNewCustom() {
       //customFiche[index].title
-      let check: boolean;
+      let check = false;
       this.customFiche.forEach(element => {
         if (element.title.length < 3) {
           element.valid = false;
@@ -394,7 +394,7 @@ export default Vue.extend({
           check = true;
         }
       });
-      if (check == true) return; //if a field is empty return
+      if (check) return; //if a field is empty return
 
       const response = await ReportingService.addCustomFiche({
         fields: this.customFiche,

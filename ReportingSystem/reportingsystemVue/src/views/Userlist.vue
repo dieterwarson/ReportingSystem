@@ -213,7 +213,7 @@ export default Vue.extend({
   data() {
     return {
       pageOptions: [5, 10, 15],
-      newPwd: [],
+      newPwd: [] as any[],
       pwdChanged: false,
       pwdNotChanged: false,
       totalRows: 1,

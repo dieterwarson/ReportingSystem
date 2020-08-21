@@ -3,107 +3,117 @@
     <div id="nav">
       <router-link to="/">Startscherm</router-link>
     </div>
-    <div v-if="reports.reports.length != 0" class="container">
-      <h1>Gevonden verslagen</h1>
-      <div class="row">
-        <form class="col-md-4">
-          <p class="mb-1 text-sm-left">Selecteer hier de datums:</p>
-          <VueRangedatePicker
-            class="mb-5"
-            @selected="onDateSelected"
-            i18n="EN"
-            :months="months"
-            :shortDays="shortDays"
-            :captions="captions"
-            :presetRanges="presetRanges"
-          ></VueRangedatePicker>
-          <!-- Selection box for filters -->
-          <div class="filter-select">
-            <treeselect
-              placeholder="Kies filters"
-              v-model="value.chosenValues"
-              :multiple="true"
-              :options="options"
-            />
-          </div>
-        </form>
-        <div class="col-md-8">
-          <div
-            v-if="selectedDate.start == '' && value.chosenValues.length == 0"
-          >
+    <div v-if="!isLoading">
+      <div v-if="reports.reports.length != 0" class="container">
+        <h1>Gevonden verslagen</h1>
+        <div class="row">
+          <form class="col-md-4">
+            <p class="mb-1 text-sm-left">Selecteer hier de datums:</p>
+            <VueRangedatePicker
+              class="mb-5"
+              @selected="onDateSelected"
+              i18n="EN"
+              :months="months"
+              :shortDays="shortDays"
+              :captions="captions"
+              :presetRanges="presetRanges"
+            ></VueRangedatePicker>
+            <!-- Selection box for filters -->
+            <div class="filter-select">
+              <treeselect
+                placeholder="Kies filters"
+                v-model="value.chosenValues"
+                :multiple="true"
+                :options="options"
+              />
+            </div>
+          </form>
+          <div class="col-md-8">
             <div
-              class="container my-2"
-              v-for="value in reports.reports"
-              :key="value.reportId"
+              v-if="selectedDate.start == '' && value.chosenValues.length == 0"
             >
-              <div class="card shadow">
-                <div
-                  class="card-body h5"
-                  v-on:click="reportClick(String(value.reportId))"
-                >
-                  {{
-                    new Date(value.date).toLocaleString("nl-BE", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                    })
-                  }}
-                  <button
-                    class="ml-3 btn btn-primary"
+              <div
+                class="container my-2"
+                v-for="value in reports.reports"
+                :key="value.reportId"
+              >
+                <div class="card shadow">
+                  <div
+                    class="card-body h5"
                     v-on:click="reportClick(String(value.reportId))"
                   >
-                    {{ getShift(value.nightShift) }}
-                  </button>
-                  <h5 class="card-text">
-                    Zoekresultaat: {{ value.description }}
-                  </h5>
+                    {{
+                      new Date(value.date).toLocaleString("nl-BE", {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                      })
+                    }}
+                    <button
+                      class="ml-3 btn btn-primary"
+                      v-on:click="reportClick(String(value.reportId))"
+                    >
+                      {{ getShift(value.nightShift) }}
+                    </button>
+                    <h5 class="card-text">
+                      Zoekresultaat: {{ value.description }}
+                    </h5>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div v-else>
-            <div
-              class="container my-2"
-              v-for="value in filteredReports.reports"
-              :key="value.reportId"
-            >
-              <div class="card shadow">
-                <div
-                  class="card-body h5"
-                  v-on:click="reportClick(String(value.reportId))"
-                >
-                  {{
-                    new Date(value.date).toLocaleString("nl-BE", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                    })
-                  }}
-                  <button
-                    class="ml-3 btn btn-primary"
+            <div v-else>
+              <div
+                class="container my-2"
+                v-for="value in filteredReports.reports"
+                :key="value.reportId"
+              >
+                <div class="card shadow">
+                  <div
+                    class="card-body h5"
                     v-on:click="reportClick(String(value.reportId))"
                   >
-                    {{ getShift(value.nightShift) }}
-                  </button>
-                  <h5 class="card-text">
-                    Zoekresultaat: {{ value.description }}
-                  </h5>
+                    {{
+                      new Date(value.date).toLocaleString("nl-BE", {
+                        year: "numeric",
+                        month: "numeric",
+                        day: "numeric",
+                      })
+                    }}
+                    <button
+                      class="ml-3 btn btn-primary"
+                      v-on:click="reportClick(String(value.reportId))"
+                    >
+                      {{ getShift(value.nightShift) }}
+                    </button>
+                    <h5 class="card-text">
+                      Zoekresultaat: {{ value.description }}
+                    </h5>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <vPagination
+          class="float-right mr-2"
+          :classes="bootstrapPaginationClasses"
+          v-model="currentPage"
+          :page-count="pages"
+        ></vPagination>
       </div>
-      <vPagination
-        class="float-right mr-2"
-        :classes="bootstrapPaginationClasses"
-        v-model="currentPage"
-        :page-count="pages"
-      ></vPagination>
+      <div v-else>
+        <h1>Geen verslagen gevonden.</h1>
+      </div>
     </div>
     <div v-else>
-      <h1>Geen verslagen gevonden.</h1>
+      <h1>Even wachten</h1>
+      <div class="vld-parent">
+        <loading :active.sync="isLoading" 
+        :can-cancel="false" 
+        :is-full-page="true"></loading>
+      </div>
     </div>
   </div>
 </template>
@@ -115,6 +125,8 @@ import vPagination from "vue-plain-pagination";
 import VueRangedatePicker from "vue-rangedate-picker";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 interface DateRange {
   start: string;
@@ -126,9 +138,11 @@ export default Vue.extend({
     vPagination,
     VueRangedatePicker,
     Treeselect,
+    Loading,
   },
   data: function() {
     return {
+      isLoading: true,
       numPerPage: 10,
       keyword: "",
       plNumber: "",
@@ -275,83 +289,6 @@ export default Vue.extend({
         chosenValues: [],
       },
       options: [
-        // {
-        //   id: "signaling",
-        //   label: "Signalering",
-        //   children: [
-        //     {
-        //       // names of all signalings
-        //       id: "signaling-jan",
-        //       label: "Signalering Jan"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "plNumber",
-        //   label: "PL-nummer",
-        //   children: [
-        //     {
-        //       // names of all plNumbers
-        //       id: "plNumber",
-        //       label: "007"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "description",
-        //   label: "Beschrijving",
-        //   children: [
-        //     {
-        //       // names of all descriptions
-        //       id: "description",
-        //       label: "bes"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "location",
-        //   label: "Adres",
-        //   children: [
-        //     {
-        //       // names of all locations
-        //       id: "location-hasselt",
-        //       label: "Hasselt"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "unit",
-        //   label: "Unit",
-        //   children: [
-        //     {
-        //       // names of all units
-        //       id: "unit-kampla",
-        //       label: "KAMPLA"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "absentee",
-        //   label: "Afwezige",
-        //   children: [
-        //     {
-        //       // names of all personel
-        //       id: "absentee-jan",
-        //       label: "Jan"
-        //     }
-        //   ]
-        // },
-        // {
-        //   id: "substitute",
-        //   label: "Vervanger",
-        //   children: [
-        //     {
-        //       // names of all personel
-        //       id: "substitute-jan",
-        //       label: "Jan"
-        //     }
-        //   ]
-        // },
         {
           id: "types",
           label: "Types",
@@ -365,7 +302,6 @@ export default Vue.extend({
   },
   created() {
     this.loadData();
-    this.interval = window.setInterval(this.loadData, 5000);
   },
   mounted() {
     this.loadData();
@@ -396,8 +332,10 @@ export default Vue.extend({
           this.loadKeywordReports(this.keyword);
         }
       } else {
-        if (this.value.chosenValues.length == 0) this.filterDate();
-        else this.getFiltered();
+        if (this.value.chosenValues.length == 0) 
+          this.filterDate();
+        else 
+          this.getFiltered();
         this.loadCount();
       }
       ReportingService.getAllReports("/api/statistics/types").then(
@@ -408,21 +346,23 @@ export default Vue.extend({
      * Finds the reports which contain an event that contains the pl-number partially.
      */
     loadPlReports: function() {
+      this.isLoading = true;
       ReportingService.getSearchPlReports({
         plNumber: this.plNumber,
         offset: this.currentPage * 10 - 10,
         numPerPage: this.numPerPage,
-      }).then((res) => (this.reports = res));
+      }).then((res) => (this.reports = res, this.isLoading = false));
     },
     /**
      * Finds the reports which contain an event that contains the keyword partially.
      */
     loadKeywordReports: function(keyword: string) {
+      this.isLoading = true;
       ReportingService.getSearchReports({
         keyword: this.keyword,
         offset: this.currentPage * 10 - 10,
         numPerPage: this.numPerPage,
-      }).then((res) => (this.reports = res));
+      }).then((res) => (this.reports = res, this.isLoading = false));
     },
 
     onDateSelected: function(daterange: DateRange) {
@@ -439,6 +379,7 @@ export default Vue.extend({
         if (this.value.chosenValues.length != 0)
           this.calculatePages(this.filteredReports.count);
       }
+      // this.isLoading = false;
     },
 
     calculatePages: function(count: number) {
@@ -458,7 +399,8 @@ export default Vue.extend({
     },
 
     getShift: function(nightShift: boolean) {
-      if (nightShift) return "Nachtshift ☾";
+      if (nightShift) 
+        return "Nachtshift ☾";
 
       return "Dagshift 🌣";
     },
@@ -466,7 +408,8 @@ export default Vue.extend({
     fillOptions: function() {
       const types: any = this.reportTypes;
 
-      if (!this.typesFound) this.fillOptionsTypes();
+      if (!this.typesFound) 
+        this.fillOptionsTypes();
 
       return 1;
     },
@@ -528,25 +471,28 @@ export default Vue.extend({
 
     filterDate: function() {
       if (this.plNumber == "") {
+        this.isLoading = true;
         ReportingService.filterDate({
           data: this.reports.reports,
           selectedDate: this.selectedDate,
           offset: this.currentPage * 10 - 10,
           numPerPage: this.numPerPage,
-        }).then((res) => (this.filteredReports = res));
+        }).then((res) => (this.filteredReports = res, this.isLoading = false));
       } else {
+        this.isLoading = true;
         ReportingService.filterPlDate({
           data: this.reports.reports,
           selectedDate: this.selectedDate,
           offset: this.currentPage * 10 - 10,
           numPerPage: this.numPerPage,
-        }).then((res) => (this.filteredReports = res));
+        }).then((res) => (this.filteredReports = res, this.isLoading = false));
       }
     },
 
     getFiltered: function() {
       if (this.value.chosenValues.length != 0) {
         if (this.plNumber == "") {
+          this.isLoading = true;
           ReportingService.getSearchFiltered({
             oldReports: this.reports.reports,
             keyword: this.keyword,
@@ -555,8 +501,9 @@ export default Vue.extend({
             types: this.types,
             offset: this.currentPage * 10 - 10,
             numPerPage: this.numPerPage,
-          }).then((res) => (this.filteredReports = res));
+          }).then((res) => (this.filteredReports = res, this.isLoading = false));
         } else {
+          this.isLoading = true;
           ReportingService.getSearchPlFiltered({
             oldReports: this.reports.reports,
             plNumber: this.plNumber,
@@ -565,7 +512,7 @@ export default Vue.extend({
             types: this.types,
             offset: this.currentPage * 10 - 10,
             numPerPage: this.numPerPage,
-          }).then((res) => (this.filteredReports = res));
+          }).then((res) => (this.filteredReports = res, this.isLoading = false));
         }
       } else {
         this.filteredReports.reports = [];
@@ -576,10 +523,6 @@ export default Vue.extend({
     addToTypes: function(type: string) {
       this.types.push(type);
     },
-  },
-
-  beforeDestroy: function() {
-    window.clearInterval(this.interval);
   },
 
   watch: {
