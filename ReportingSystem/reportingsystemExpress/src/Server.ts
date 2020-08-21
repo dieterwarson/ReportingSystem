@@ -111,10 +111,7 @@ app.get('*', (req: Request, res: Response) => {
 // Na eenmaal toevoegen, dus eenmaal herstarten via nodemon, moeten de save()'s terug gecomment worden
 // Anders wordt elke keer nodemon hetstart opnieuw al deze kolommen toegevoegd
 
-// const custom = new Custom({
-//   reportId: 18
-// });
-// custom.save();
+
 const user1 = new User({
   username: 'jan_janssens',
   password: '',
