@@ -341,7 +341,7 @@ export default {
   },
   getStatistics(data: any) {
     return Api()
-      .post("api/statistics/getStatistics", data)
+      .post("api/statistics/getUserStatistics", data)
       .then(res => {
         return res.data;
       })
