@@ -1197,12 +1197,18 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
       reportId: reportId
     }
   });
+  let custom = await Custom.findOne({
+    where: {
+      reportId: reportId
+    }
+  })
 
   let operationalEvents: OperationalEvent[] = [];
   let workplaceEvents: WorkplaceEvent[] = [];
   let secretariatNotifications: SecretariatNotification[] = [];
   let defects: Defect[] = [];
   let malfunctions: Malfunction[] = [];
+  let customEvents: CustomEvent[] = [];
 
   if (operational != null) {
     operationalEvents = await OperationalEvent.findAll({
@@ -1251,11 +1257,21 @@ router.get('/content/:reportId', async (req: Request, res: Response) => {
     })
   }
 
+  if(custom != null) {
+    customEvents = await CustomEvent.findAll({
+      where: {
+        customId: custom.id
+      },
+      include: [FieldNames]
+    })
+  }
+
   results = {
     report: report,
     operational: { operationalEvents },
     administrative: { workplaceEvents, secretariatNotifications },
     technical: { defects, malfunctions },
+    custom: {customEvents}
   };
 
   res.send(results);

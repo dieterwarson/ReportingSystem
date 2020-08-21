@@ -5,6 +5,7 @@
       <b>/</b>
       <router-link to="/reports">Verslagen</router-link>
     </div>
+    <p> {{reportContent.custom}} </p>
     <div
       class="container pt-5 pb-5"
       v-if="!(Object.keys(reportContent).length === 0)"
@@ -21,14 +22,14 @@
         <span class="badge badge-primary">{{ shift }}</span>
       </h1>
       <div
-        class="btn-group d-flex"
+        class="btn-group d-flex mt-4"
         role="group"
         aria-label="Justified button group"
       >
         <button
           id="operationalButton"
           type="button"
-          class="btn btn-info"
+          class="btn btn-primary border-primary"
           @click.prevent="getOperational"
         >
           Operationeel
@@ -36,7 +37,7 @@
         <button
           id="workForceButton"
           type="button"
-          class="btn btn-primary"
+          class="btn btn-secondary border-primary"
           @click.prevent="getWorkforce"
         >
           Personeel
@@ -44,10 +45,18 @@
         <button
           id="technicalButton"
           type="button"
-          class="btn btn-primary"
+          class="btn btn-secondary border-primary"
           @click.prevent="getTechnical"
         >
           Technisch
+        </button>
+        <button
+          id="customButton"
+          type="button"
+          class="btn btn-secondary border-primary"
+          @click.prevent="getCustom"
+        >
+          Custom
         </button>
       </div>
       <!-- Operational -->
@@ -510,6 +519,9 @@
           </div>
         </div>
       </section>
+      <section v-if="step == 'Custom'" class="container">
+
+      </section>
     </div>
     <div v-else>
       <h2>Dit verslag bestaat niet</h2>
@@ -871,6 +883,9 @@ export default Vue.extend({
             },
           ],
         },
+        custom: {
+
+        },
       },
 
       priorityContent: {
@@ -1064,9 +1079,11 @@ export default Vue.extend({
         const operationalButton = document.getElementById("operationalButton")!;
         const workForceButton = document.getElementById("workForceButton")!;
         const technicalButton = document.getElementById("technicalButton")!;
-        operationalButton.classList.replace("btn-primary", "btn-info");
-        workForceButton.classList.replace("btn-info", "btn-primary");
-        technicalButton.classList.replace("btn-info", "btn-primary");
+        const customButton = document.getElementById("customButton")!;
+        operationalButton.classList.replace("btn-secondary", "btn-primary");
+        workForceButton.classList.replace("btn-primary", "btn-secondary");
+        technicalButton.classList.replace("btn-primary", "btn-secondary");
+        customButton.classList.replace("btn-primary", "btn-secondary");
       }
     },
     getWorkforce: function() {
@@ -1075,9 +1092,11 @@ export default Vue.extend({
         const operationalButton = document.getElementById("operationalButton")!;
         const workForceButton = document.getElementById("workForceButton")!;
         const technicalButton = document.getElementById("technicalButton")!;
-        operationalButton.classList.replace("btn-info", "btn-primary");
-        workForceButton.classList.replace("btn-primary", "btn-info");
-        technicalButton.classList.replace("btn-info", "btn-primary");
+        const customButton = document.getElementById("customButton")!;
+        operationalButton.classList.replace("btn-primary", "btn-secondary");
+        workForceButton.classList.replace("btn-secondary", "btn-primary");
+        technicalButton.classList.replace("btn-primary", "btn-secondary");
+        customButton.classList.replace("btn-primary", "btn-secondary");
       }
     },
     getTechnical: function() {
@@ -1086,9 +1105,24 @@ export default Vue.extend({
         const operationalButton = document.getElementById("operationalButton")!;
         const workForceButton = document.getElementById("workForceButton")!;
         const technicalButton = document.getElementById("technicalButton")!;
-        operationalButton.classList.replace("btn-info", "btn-primary");
-        workForceButton.classList.replace("btn-info", "btn-primary");
-        technicalButton.classList.replace("btn-primary", "btn-info");
+        const customButton = document.getElementById("customButton")!;
+        operationalButton.classList.replace("btn-primary", "btn-secondary");
+        workForceButton.classList.replace("btn-primary", "btn-secondary");
+        technicalButton.classList.replace("btn-secondary", "btn-primary");
+        customButton.classList.replace("btn-primary", "btn-secondary");
+      }
+    },
+    getCustom: function() {
+      if (this.step != "Custom") {
+        this.step = "Custom";
+        const operationalButton = document.getElementById("operationalButton")!;
+        const workForceButton = document.getElementById("workForceButton")!;
+        const technicalButton = document.getElementById("technicalButton")!;
+        const customButton = document.getElementById("customButton")!;
+        operationalButton.classList.replace("btn-primary", "btn-secondary");
+        workForceButton.classList.replace("btn-primary", "btn-secondary");
+        technicalButton.classList.replace("btn-primary", "btn-secondary");
+        customButton.classList.replace("btn-secondary", "btn-primary");
       }
     },
     changeEventClick: function(id: string, subcat: string, categorie: string) {
