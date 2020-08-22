@@ -1,15 +1,15 @@
 <template>
 <div class="LoginPage container">
-  <h1>Aanmelden</h1>
-  <div class="container pt-5 pb-5">
+  <h1 class="mt-2">Aanmelden</h1>
+  <div class="container pt-5 pb-5 w-50 p-3">
   <form class="input-group">
     <div class="input-group">
-      <input type="text" name="username" v-model="input.username" placeholder="Gebruikersnaam" class="form-control form-control-lg">
+      <input type="text" name="username" v-model="input.username" placeholder="Gebruikersnaam" class="mt-2 form-control form-control-lg">
     </div>
     <div class="input-group">
-      <input type="password" name="password" v-model="input.password" placeholder="Wachtwoord" class="form-control form-control-lg">
+      <input type="password" name="password" v-model="input.password" placeholder="Wachtwoord" class="mt-2 form-control form-control-lg">
     </div>
-    <div class="input-group">
+    <div class="input-group mt-2">
     <small v-if="output.failed" name="response">Verkeerde gebruikersnaam of wachtwoord</small>
 
     </div>

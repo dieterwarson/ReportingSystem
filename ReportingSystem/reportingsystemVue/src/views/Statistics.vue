@@ -1,8 +1,8 @@
 <template>
   <div class="statistics">
     <div id="nav">
-    <router-link to="/">Startscherm</router-link>
-  </div>
+      <router-link to="/">Startscherm</router-link>
+    </div>
     <h1>Statistieken</h1>
     <div class="container mt-5">
       <div class="row">
@@ -10,7 +10,29 @@
           <p>Er zijn nog geen types</p>
         </div>
         <form v-else id="typeSelector" class="col-md-6">
-          <p class="mb-1 text-sm-left">Selecteer hier de datums: </p>
+          <div
+            class="btn-group d-flex mt-4"
+            role="group"
+            aria-label="Justified button group"
+          >
+            <button
+              id="statisticsButton"
+              type="button"
+              class="btn btn-primary border-primary"
+              @click.prevent="getTypeStatistics"
+            >
+              Per type
+            </button>
+            <button
+              id="userStatisticsButton"
+              type="button"
+              class="btn btn-secondary border-primary"
+              @click.prevent="getUserStatistics"
+            >
+              Per gebruiker
+            </button>
+          </div>
+          <p class="mb-1 mt-4 text-sm-left">Selecteer hier de datums:</p>
           <VueRangedatePicker
             class="mb-5"
             @selected="onDateSelected"
@@ -119,22 +141,27 @@
               </div>
             </div>
           </div>
+          <download-csv
+            class="btn btn-primary"
+            :data="combinedData"
+            name="filename.csv"
+          >
+            Download CSV ⬇
+          </download-csv>
         </form>
 
         <div class="col-md-6">
           <!-- charts -->
           <PieChart v-if="loaded" :chartdata="PieData" />
-          <ScatterChart v-if="loaded" :chartdata="LineData" :options="options" />
-          <h5 v-else class="mt-10">Selecteer de gewenste types om grafieken te zien</h5>
-          <p>{{ this.combinedData }}</p>
-          <download-csv
-            class   = "btn btn-default"
-            :data="combinedData"
-            name    = "filename.csv">
-
-            Download CSV ⬇
-
-          </download-csv>
+          <ScatterChart
+            v-if="loaded"
+            :chartdata="LineData"
+            :options="options"
+          />
+          <h5 v-else class="mt-10">
+            Selecteer de gewenste types om grafieken te zien
+          </h5>
+          <p>{{ this.statisticsData }}</p>
         </div>
       </div>
     </div>
@@ -147,9 +174,9 @@ import ReportingService from "../services/ReportingService";
 import ScatterChart from "../views/components/ScatterChart.vue";
 import PieChart from "../views/components/PieChart.vue";
 import VueRangedatePicker from "vue-rangedate-picker";
-import JsonCSV from 'vue-json-csv';
+import JsonCSV from "vue-json-csv";
 
-Vue.component('downloadCsv', JsonCSV);
+Vue.component("downloadCsv", JsonCSV);
 
 interface DateRange {
   start: string;
@@ -159,6 +186,7 @@ interface DateRange {
 export default Vue.extend({
   data: function() {
     return {
+      step: "Statistics",
       reportTypes: {},
       selectedTypes: {
         operational: [],
@@ -265,45 +293,55 @@ export default Vue.extend({
             },
           };
         },
-        lastMonth: function () {
-          const n = new Date()
-          const startMonth = new Date(Date.UTC(n.getFullYear(), n.getMonth() - 1, 1))
-          const endMonth = new Date(Date.UTC(n.getFullYear(), n.getMonth(), 0))
+        lastMonth: function() {
+          const n = new Date();
+          const startMonth = new Date(
+            Date.UTC(n.getFullYear(), n.getMonth() - 1, 1)
+          );
+          const endMonth = new Date(Date.UTC(n.getFullYear(), n.getMonth(), 0));
           return {
             label: "Vorige maand",
             active: false,
             dateRange: {
               start: startMonth,
-              end: endMonth
-            }
-          }
+              end: endMonth,
+            },
+          };
         },
-        last7days: function () {
-          const n = new Date()
-          const start = new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate() - 6))
-          const end = new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()))
+        last7days: function() {
+          const n = new Date();
+          const start = new Date(
+            Date.UTC(n.getFullYear(), n.getMonth(), n.getDate() - 6)
+          );
+          const end = new Date(
+            Date.UTC(n.getFullYear(), n.getMonth(), n.getDate())
+          );
           return {
             label: "Vorige 7 dagen",
             active: false,
             dateRange: {
               start: start,
-              end: end
-            }
-          }
+              end: end,
+            },
+          };
         },
-        last30days: function () {
-          const n = new Date()
-          const start = new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate() - 30))
-          const end = new Date(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()))
+        last30days: function() {
+          const n = new Date();
+          const start = new Date(
+            Date.UTC(n.getFullYear(), n.getMonth(), n.getDate() - 30)
+          );
+          const end = new Date(
+            Date.UTC(n.getFullYear(), n.getMonth(), n.getDate())
+          );
           return {
             label: "Vorige 30 dagen",
             active: false,
             dateRange: {
               start: start,
-              end: end
-            }
-          } 
-        }
+              end: end,
+            },
+          };
+        },
       },
     };
   },
@@ -315,7 +353,7 @@ export default Vue.extend({
   components: {
     ScatterChart,
     PieChart,
-    VueRangedatePicker
+    VueRangedatePicker,
   },
 
   methods: {
@@ -326,7 +364,30 @@ export default Vue.extend({
     },
 
     combineData() {
-      this.combinedData = this.statisticsData.counts.concat(this.statisticsData.lineContent);
+      this.combinedData = this.statisticsData.counts.concat(
+        this.statisticsData.lineContent
+      );
+    },
+
+    getTypeStatistics: function() {
+      if (this.step != "Statistics") {
+        this.step = "Statistics";
+        const statisticsButton = document.getElementById("statisticsButton")!;
+        const userStatisticsButton = document.getElementById("userStatisticsButton")!;
+        statisticsButton.classList.replace("btn-secondary", "btn-primary");
+        userStatisticsButton.classList.replace("btn-primary", "btn-secondary");
+        this.getStatistics();
+      }
+    },
+    getUserStatistics: function() {
+      if (this.step != "UserStatistics") {
+        this.step = "UserStatistics";
+        const statisticsButton = document.getElementById("statisticsButton")!;
+        const userStatisticsButton = document.getElementById("userStatisticsButton")!;
+        statisticsButton.classList.replace("btn-primary", "btn-secondary");
+        userStatisticsButton.classList.replace("btn-secondary", "btn-primary");
+        this.getUStatistics();
+      }
     },
 
     onDateSelected: function(daterange: DateRange) {
@@ -374,9 +435,17 @@ export default Vue.extend({
     },
 
     getStatistics: function() {
-      ReportingService.getStatistics({selectedTypes: this.selectedTypes, selectedDate: this.selectedDate}).then(
-        (res) => (this.statisticsData = res)
-      );
+      ReportingService.getStatistics({
+        selectedTypes: this.selectedTypes,
+        selectedDate: this.selectedDate,
+      }).then((res) => (this.statisticsData = res));
+      this.combineData();
+    },
+    getUStatistics: function() {
+      ReportingService.getUserStatistics({
+        selectedTypes: this.selectedTypes,
+        selectedDate: this.selectedDate,
+      }).then((res) => (this.statisticsData = res));
       this.combineData();
     },
   },
@@ -401,7 +470,10 @@ export default Vue.extend({
       this.getPieData();
       this.getLineData();
       this.combineData();
-      this.loaded = true;
+      if(this.statisticsData.counts.length !== 0)
+        this.loaded = true;
+      else
+        this.loaded = false;
     },
   },
 });
@@ -409,6 +481,6 @@ export default Vue.extend({
 
 <style scoped>
 input {
-   margin-right:10px;
+  margin-right: 10px;
 }
 </style>

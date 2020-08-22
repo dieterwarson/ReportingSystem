@@ -5,7 +5,6 @@
       <b>/</b>
       <router-link to="/reports">Verslagen</router-link>
     </div>
-    <p> {{reportContent.custom}} </p>
     <div
       class="container pt-5 pb-5"
       v-if="!(Object.keys(reportContent).length === 0)"

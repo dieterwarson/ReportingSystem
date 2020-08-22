@@ -252,7 +252,6 @@ router.post('/getStatistics', async (req, res) => {
       reports.counts.push(count);
     }
   }
-  console.log(reports);
   res.send(reports);
 });
 
@@ -285,22 +284,55 @@ router.post('/getStatistics', async (req, res) => {
 /******************************************************************************
  *                         Get user statistics
  ******************************************************************************/
-function countUser(result: OperationalEvent[] | WorkplaceEvent[] | Defect[] | Malfunction[], events: eventDate[]) {
-
+function countUser(result: userEvent[]) {
+  let events: Counts[] = []
   for(let element of result) {
     let userFound = false;
     for (let i = 0; i < events.length; i++) {
-      if (events[i].x == element.user.username) {
+      if (events[i].typeName == element.user) {
         userFound = true;
-        events[i].y++;
+        events[i].count++;
       }
     }
     if (!userFound) {
-      events.push({ x: element.user.username, y: 1 });
+      events.push({ typeName: element.user, count: 1 });
     }
   };
 
   return events;
+}
+
+function dateUser(result: userEvent[]) {
+  let lineContent: lineData[] = [];
+  for(let element of result){
+    let test = lineContent.findIndex(function(item, i){return item.label === element.user})
+    if(test === -1){
+      lineContent.push({label: element.user, data: []})
+    }
+  }
+
+  for(let dateUser of lineContent){
+    let dates = dateUser.data;
+    for(let el of result) {
+      let dateFound = false;
+      for (let i = 0; i < dates.length; i++) {
+        if (dates[i].x == el.date && dateUser.label === el.user) {
+          dateFound = true;
+          dates[i].y++;
+        }
+      }
+      if (!dateFound && dateUser.label === el.user) {
+        dates.push({ x: el.date, y: 1 });
+      }
+    }
+  }
+
+  return lineContent;
+}
+
+interface userEvent{
+  user: string,
+  date: string
 }
 
 router.post('/getUserStatistics', async (req, res) => {
@@ -310,7 +342,7 @@ router.post('/getUserStatistics', async (req, res) => {
   if (!(req.body.selectedDate.start == '' && req.body.selectedDate.end == ''))
     date = req.body.selectedDate;
 
-  let events: eventDate[] = []
+  let events: userEvent[] = []
 
   for (let i in types.workplaceevent) {
     var type = types.workplaceevent[i];
@@ -349,15 +381,17 @@ router.post('/getUserStatistics', async (req, res) => {
     // group events by date
 
 
-    events = countUser(result, events);
+/*     events = countUser(result, events);
     const dates: lineData = { label: type, data: events }
     reports.lineContent.push(dates);
-    events = [];
+    events = []; */
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
-      var count: Counts = { typeName: type, count: result.length };
-      reports.counts.push(count);
+      for(let event of result){
+        let temp = {user: event.user.username, date: event.date.toDateString()} as userEvent
+        events.push(temp);
+      }
     }
   }
 
@@ -397,16 +431,18 @@ router.post('/getUserStatistics', async (req, res) => {
       }]
     });
 
-    events = countUser(result, events);
+    /* events = countUser(result, events);
     reports.lineContent.push({ label: type, data: events });
-    events = [];
+    events = []; */
 
     // console.log(events);
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
-      var count: Counts = { typeName: type, count: result.length };
-      reports.counts.push(count);
+      for(let event of result){
+        let temp = {user: event.user.username, date: event.date.toDateString()} as userEvent
+        events.push(temp);
+      }
     }
   }
 
@@ -437,20 +473,22 @@ router.post('/getUserStatistics', async (req, res) => {
         model:User,
         attributes: ['username'],
         where: {
-          id: Sequelize.col('defect.authorId')
+          id: Sequelize.col('Defect.authorId')
         }
       }]
 
     });
 
-    events = countUser(result, events);
+    /* events = countUser(result, events);
     reports.lineContent.push({ label: type, data: events });
-    events = [];
+    events = []; */
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
-      var count: Counts = { typeName: type, count: result.length };
-      reports.counts.push(count);
+      for(let event of result){
+        let temp = {user: event.user.username, date: event.date.toDateString()} as userEvent
+        events.push(temp);
+      }
     }
   }
 
@@ -481,22 +519,29 @@ router.post('/getUserStatistics', async (req, res) => {
         model:User,
         attributes: ['username'],
         where: {
-          id: Sequelize.col('malfunction.authorId')
+          id: Sequelize.col('Malfunction.authorId')
         }
       }]
 
     });
 
-    events = countUser(result, events);
+    /* events = countUser(result, events);
     reports.lineContent.push({ label: type, data: events });
-    events = [];
+    events = []; */
 
     if (result.length != 0) {
       // Add the typeName and number of its occurrences to reports
-      var count: Counts = { typeName: type, count: result.length };
-      reports.counts.push(count);
+      for(let event of result){
+        let temp = {user: event.user.username, date: event.date.toDateString()} as userEvent
+        events.push(temp);
+      }
     }
   }
+
+  reports.counts = countUser(events);
+  reports.lineContent = dateUser(events);
+
+  console.log(reports);
   //console.log(reports);
   res.send(reports);
 });
