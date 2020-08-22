@@ -2913,6 +2913,7 @@ router.post("/addCustomEvent", async (req, res) => {
     limit: 1,
     order: [['id', 'DESC']]
   }).then(async function (entries) {
+    console.log(entries[0].reportId)
     CustomEvent.create({
       authorId: req.body.author,
       customId: entries[0].id,
@@ -2927,16 +2928,25 @@ router.post("/addCustomEvent", async (req, res) => {
       field8: req.body.field8,
       field9: req.body.field9,
       field10: req.body.field10,
+    }).then(function () {
+      CustomEvent.sync();
+      return res.json({
+        check: true,
+      })
+    }).catch(function(err : Error){
+      return res.json({
+        check: false,
+        message: err
+      })
     })
+    
   }).catch(function (err: Error) {
-    res.json({
+    return res.json({
       check: false,
       message: err
     })
   });
-    res.json({
-      check: true
-    })
+
 });
 
 /******************************************************************************

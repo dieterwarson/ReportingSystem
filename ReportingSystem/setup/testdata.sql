@@ -496,17 +496,17 @@ UNLOCK TABLES;
 -- Table structure for table `Custom`
 --
 
-DROP TABLE IF EXISTS `Custom`;
+DROP TABLE IF EXISTS `Customs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Custom` (
+CREATE TABLE `Customs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `reportId` int(11) DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `custom_report_id` (`reportId`),
-  CONSTRAINT `custom_ibfk_1` FOREIGN KEY (`reportId`) REFERENCES `Reports` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `customs_report_id` (`reportId`),
+  CONSTRAINT `customs_ibfk_1` FOREIGN KEY (`reportId`) REFERENCES `Reports` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -514,10 +514,10 @@ CREATE TABLE `Custom` (
 -- Dumping data for table `Custom`
 --
 
-LOCK TABLES `Custom` WRITE;
-/*!40000 ALTER TABLE `Custom` DISABLE KEYS */;
-INSERT INTO `Custom` VALUES (1,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,3,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,2,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,12,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,4,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,11,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(7,17,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(8,18,'2020-05-17 11:45:39','2020-05-17 11:45:39') ;
-/*!40000 ALTER TABLE `Custom` ENABLE KEYS */;
+LOCK TABLES `Customs` WRITE;
+/*!40000 ALTER TABLE `Customs` DISABLE KEYS */;
+INSERT INTO `Customs` VALUES (1,1,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,3,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(3,2,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(4,12,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(5,4,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(6,11,'2020-05-17 11:45:39','2020-05-17 11:45:39'),(7,17,'2020-05-17 11:45:39','2020-05-17 11:45:39');
+/*!40000 ALTER TABLE `Customs` ENABLE KEYS */;
 UNLOCK TABLES;
 
 

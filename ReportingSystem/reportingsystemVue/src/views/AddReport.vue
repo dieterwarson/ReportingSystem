@@ -158,7 +158,7 @@
                   v-model="form.operationalMessage"
                   type="text"
                   placeholder="Extra info"
-                  class="form-control form-control-lg extraMargin" 
+                  class="form-control form-control-lg extraMargin"
                 />
               </div>
               <label>
@@ -296,7 +296,7 @@
                   <h5>Logistiek</h5>
                 </label>
                 <div v-for="type in reportTypes.defectTypes" :key="type.id">
-                  <div class="typecontainer text-lg-left " id="defect">
+                  <div class="typecontainer text-lg-left" id="defect">
                     <label>
                       {{ type.typeName }}
                       <input
@@ -528,6 +528,8 @@
                 class="btn btn-large btn-block btn-success extraMargin save"
                 @click.prevent="addCustomFiche"
               >Opslaan</button>
+              <p v-if="customFiche.failed">Toevoegen van fiche mislukt</p>
+              <p v-if="customFiche.succeeded">Toevoegen van fiche gelukt</p>
             </div>
           </div>
         </section>
@@ -597,16 +599,18 @@ export default Vue.extend({
         technicalSucceeded: false
       },
       customFiche: {
-        field1: null,
-        field2: null,
-        field3: null,
-        field4: null,
-        field5: null,
-        field6: null,
-        field7: null,
-        field8: null,
-        field9: null,
-        field10: null
+        field1: "",
+        field2: "",
+        field3: "",
+        field4: "",
+        field5: "",
+        field6: "",
+        field7: "",
+        field8: "",
+        field9: "",
+        field10: "",
+        failed: false,
+        succeeded: false,
       },
       tokenData: {
         authorId: 0
@@ -810,7 +814,9 @@ export default Vue.extend({
       this.form.unit = response.unit;
     },
     async addDefect() {
-      this.form.defectDescOk = this.checkInputLength(this.form.defectDescription)
+      this.form.defectDescOk = this.checkInputLength(
+        this.form.defectDescription
+      );
       if (this.form.defectDescOk) {
         const response = await ReportingService.addDefect({
           id: this.tokenData.authorId,
@@ -828,7 +834,9 @@ export default Vue.extend({
     },
     async addMalfunction() {
       this.form.malfDur = this.checkInputLength(this.form.malfunctionDuration);
-      this.form.malfDescOk = this.checkInputLength(this.form.malfunctionDescription);
+      this.form.malfDescOk = this.checkInputLength(
+        this.form.malfunctionDescription
+      );
       if (this.form.malfDescOk && this.form.malfDur) {
         const response = await ReportingService.addMalfunction({
           id: this.tokenData.authorId,
@@ -838,15 +846,15 @@ export default Vue.extend({
           subtype: this.malfunctionTypeSelected.subTypeName,
           duration: this.form.malfunctionDuration
         });
-        
-          this.form.technicalSucceeded = true;
-          this.form.malfunctionDescription = "";
-          this.form.malfunctionDuration = "";
-          this.form.malfunctionMonitoring = false;
+
+        this.form.technicalSucceeded = true;
+        this.form.malfunctionDescription = "";
+        this.form.malfunctionDuration = "";
+        this.form.malfunctionMonitoring = false;
       }
     },
     async addSecretaryNotification() {
-      this.form.snOk = this.checkInputLength(this.form.secretNotification)
+      this.form.snOk = this.checkInputLength(this.form.secretNotification);
       if (this.form.snOk) {
         const response = await ReportingService.addSecretaryNotification({
           id: this.tokenData.authorId,
@@ -864,7 +872,11 @@ export default Vue.extend({
       this.form.absenteeOk = this.checkInputLength(this.form.absentee);
       this.form.replacementOk = this.checkInputLength(this.form.replacement);
       this.form.wfMessageOk = this.checkInputLength(this.form.workforceMessage);
-      if (this.form.absenteeOk && this.form.replacementOk && this.form.wfMessageOk) {
+      if (
+        this.form.absenteeOk &&
+        this.form.replacementOk &&
+        this.form.wfMessageOk
+      ) {
         const response = await ReportingService.addWorkForceEvent({
           absentee: this.form.absentee,
           substitute: this.form.replacement,
@@ -1056,6 +1068,8 @@ export default Vue.extend({
       this.fieldOptions = await ReportingService.getCustomFiche();
     },
     async addCustomFiche() {
+      this.customFiche.failed = false;
+      this.customFiche.succeeded = false;
       const response = await ReportingService.addCustomEvent({
         selectedFiche: this.selectedOption,
         field1: this.customFiche.field1,
@@ -1070,6 +1084,24 @@ export default Vue.extend({
         field10: this.customFiche.field10,
         author: this.tokenData.authorId
       });
+      if (response.check) {
+        this.customFiche.field10 = "";
+        this.customFiche.field9 = "";
+        this.customFiche.field8 = "";
+        this.customFiche.field7 = "";
+        this.customFiche.field6 = "";
+        this.customFiche.field5 = "";
+        this.customFiche.field4 = "";
+        this.customFiche.field3 = "";
+        this.customFiche.field2 = "";
+        this.customFiche.field1 = "";
+        this.customFiche.failed = false;
+        this.customFiche.succeeded = true;
+      } else {
+        this.customFiche.failed = true;
+        this.customFiche.succeeded = false; 
+        alert(response.message);
+      }
     },
     async getAllCustomEvents() {
       this.customEvents = await ReportingService.getAllCustomEvents();
@@ -1172,12 +1204,12 @@ export default Vue.extend({
   background: steelblue;
   color: black;
 }
-.addReport{
+.addReport {
   width: 90%;
   margin-left: 5%;
 }
 
-.extraMargin{
+.extraMargin {
   margin-top: 0.5%;
 }
 
