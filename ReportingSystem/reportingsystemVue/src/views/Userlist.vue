@@ -339,7 +339,7 @@ export default Vue.extend({
           this.pwdChanged = true;
           this.pwdNotChanged = false;
           this.newPwd[id] = "";
-          this.pwdNotReq = true
+          this.pwdNotReq = false;
         } else {
           this.pwdNotChanged = true;
           this.pwdChanged = false;
