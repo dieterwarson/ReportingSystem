@@ -610,7 +610,7 @@ export default Vue.extend({
         field9: "",
         field10: "",
         failed: false,
-        succeeded: false,
+        succeeded: false
       },
       tokenData: {
         authorId: 0
@@ -642,6 +642,20 @@ export default Vue.extend({
         subTypeName: ""
       }
     };
+  },
+  watch: {
+    selectedOption: function() {
+      this.customFiche.field10 = "";
+      this.customFiche.field9 = "";
+      this.customFiche.field8 = "";
+      this.customFiche.field7 = "";
+      this.customFiche.field6 = "";
+      this.customFiche.field5 = "";
+      this.customFiche.field4 = "";
+      this.customFiche.field3 = "";
+      this.customFiche.field2 = "";
+      this.customFiche.field1 = "";
+    }
   },
   mounted() {
     this.loadData();
@@ -1099,7 +1113,7 @@ export default Vue.extend({
         this.customFiche.succeeded = true;
       } else {
         this.customFiche.failed = true;
-        this.customFiche.succeeded = false; 
+        this.customFiche.succeeded = false;
         alert(response.message);
       }
     },
