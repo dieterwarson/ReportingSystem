@@ -148,6 +148,9 @@
           >
             Download CSV ⬇
           </download-csv>
+          <button @click.prevent="getPDF" class="btn btn-primary ">
+            Download PDF ⬇
+          </button>
         </form>
 
         <div class="col-md-6">
@@ -448,6 +451,22 @@ export default Vue.extend({
       }).then((res) => (this.statisticsData = res));
       this.combineData();
     },
+    getPDF: function(){
+      ReportingService.getPDF().then((response) => {
+      alert(response);
+      const newBlob = new Blob([response], {type: "application/pdf"});
+      const fileURL = window.URL.createObjectURL(newBlob);
+      const fileLink = document.createElement('a');
+      fileLink.href = fileURL;
+      fileLink.download = "page.pdf";
+      document.body.appendChild(fileLink);
+      fileLink.click();
+      setTimeout(function(){
+    // For Firefox it is necessary to delay revoking the ObjectURL
+    window.URL.revokeObjectURL(fileURL);
+        }, 100);
+      });
+    }
   },
   watch: {
     selectedTypes: {

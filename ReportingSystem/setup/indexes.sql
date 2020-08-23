@@ -14,39 +14,27 @@ USE reports;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 /* Defects */
-CREATE INDEX defect_description_idx
-ON Defects (description);
+ALTER TABLE Defects
+add FULLTEXT(description);
 
 /* Malfunctions */
-CREATE INDEX malfunction_description_idx
-ON Malfunctions (description);
+ALTER TABLE Malfunctions
+add FULLTEXT(description);
 
 /* OperationalEvents */
-CREATE INDEX operationalevent_description_idx
-ON OperationalEvents (description);
-
-CREATE INDEX operationalevent_unit_idx
-ON OperationalEvents (unit);
-
-CREATE INDEX operationalevent_location_idx
-ON OperationalEvents (location);
-
-CREATE INDEX operationalevent_signaling_idx
-ON OperationalEvents (signaling);
-
-CREATE INDEX operationalevent_plNumber_idx
-ON OperationalEvents (plNumber);
+ALTER TABLE OperationalEvents
+add FULLTEXT(description, unit, location, signaling, plNumber);
 
 /* SecretariatNotifications */
-CREATE INDEX secretariatnotification_description_idx
-ON SecretariatNotifications (description);
+ALTER TABLE SecretariatNotifications
+add FULLTEXT(description);
 
 /* WorkplaceEvents */
-CREATE INDEX workplaceevent_description_idx
-ON WorkplaceEvents (description);
+ALTER TABLE WorkplaceEvents
+add FULLTEXT(description, absentee, substitute);
 
-CREATE INDEX workplaceevent_absentee_idx
-ON WorkplaceEvents (absentee);
-
-CREATE INDEX workplaceevent_substitute_idx
-ON WorkplaceEvents (substitute);
+/* Custom */
+/* ALTER TABLE CustomEvents
+add FULLTEXT(field1);
+ALTER TABLE CustomEvents ENABLE KEYS;
+ALTER INDEX field1 VISIBLE; */

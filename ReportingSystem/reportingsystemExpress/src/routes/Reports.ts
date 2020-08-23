@@ -197,6 +197,15 @@ async function searchCustomField1(reportIds: reportData[], searchString: string,
         },
       },
     });
+
+    /* customEvents = await sequelize.query(
+      `SELECT * FROM CustomEvents WHERE MATCH (field1) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+    console.log("MATCHED: " + customEvents); */
   }
   for (let i in customEvents) {
     const curEvent = customEvents[i];
@@ -538,25 +547,33 @@ async function searchCustomField10(reportIds: reportData[], searchString: string
   }
 }
 
-async function searchOperationalEventSignaling(reportIds: reportData[], searchString: string, type: string) {
+async function searchOperationalEvent(reportIds: reportData[], searchString: string, type: string) {
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
     operationalEvents = await sequelize.query(
-      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, signaling) BETWEEN 4 AND 9',
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
       }
     );
   } else {
-    searchString = '%' + searchString + '%';
+    /* searchString = '%' + searchString + '%';
     operationalEvents = await OperationalEvent.findAll({
       where: {
         signaling: {
           [Op.like]: searchString,
         },
       },
-    });
+    }); */
+    operationalEvents = await sequelize.query(
+      `SELECT * FROM OperationalEvents WHERE MATCH (description, unit, location, signaling, plNumber) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
+    console.log("______MATCHED: " + operationalEvents);
   }
   for (let i in operationalEvents) {
     const curEvent = operationalEvents[i];
@@ -574,7 +591,7 @@ async function searchOperationalEventSignaling(reportIds: reportData[], searchSt
   }
 }
 
-async function searchOperationalEventPlNumber(reportIds: reportData[], searchString: string, type: string) {
+/* async function searchOperationalEventPlNumber(reportIds: reportData[], searchString: string, type: string) {
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
     operationalEvents = await sequelize.query(
@@ -738,9 +755,9 @@ async function searchOperationalEventDate(reportIds: reportData[], search: strin
       }
     }
   }
-}
+} */
 
-async function searchWorkplaceEventDescription(reportIds: reportData[], searchString: string, type: string) {
+async function searchWorkplaceEvent(reportIds: reportData[], searchString: string, type: string) {
   let workplaceEvents: WorkplaceEvent[];
   if (type === "l") {
     workplaceEvents = await sequelize.query(
@@ -751,14 +768,21 @@ async function searchWorkplaceEventDescription(reportIds: reportData[], searchSt
       }
     );
   } else {
-    searchString = '%' + searchString + '%';
+    /* searchString = '%' + searchString + '%';
     workplaceEvents = await WorkplaceEvent.findAll({
       where: {
         description: {
           [Op.like]: searchString,
         },
       },
-    });
+    }); */
+    workplaceEvents = await sequelize.query(
+      `SELECT * FROM WorkplaceEvents WHERE MATCH (description, absentee, substitute) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
   }
   for (let i in workplaceEvents) {
     const curEvent = workplaceEvents[i];
@@ -776,7 +800,7 @@ async function searchWorkplaceEventDescription(reportIds: reportData[], searchSt
   }
 }
 
-async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchString: string, type: string) {
+/* async function searchWorkplaceEventAbsentee(reportIds: reportData[], searchString: string, type: string) {
   let workplaceEvents: WorkplaceEvent[];
   if (type === "l") {
     workplaceEvents = await sequelize.query(
@@ -869,8 +893,9 @@ async function searchWorkplaceEventDate(reportIds: reportData[], search: string)
     }
   }
 }
+ */
 
-async function searchSecretariatNotificationDescription(reportIds: reportData[], searchString: string, type: string) {
+async function searchSecretariatNotification(reportIds: reportData[], searchString: string, type: string) {
   let secretariatNotifications: SecretariatNotification[];
   if (type === "l") {
     secretariatNotifications = await sequelize.query(
@@ -881,14 +906,21 @@ async function searchSecretariatNotificationDescription(reportIds: reportData[],
       }
     );
   } else {
-    searchString = '%' + searchString + '%';
+    /* searchString = '%' + searchString + '%';
     secretariatNotifications = await SecretariatNotification.findAll({
       where: {
         description: {
           [Op.like]: searchString,
         },
       },
-    });
+    }); */
+    secretariatNotifications = await sequelize.query(
+      `SELECT * FROM SecretariatNotifications WHERE MATCH (description) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
   }
   for (let i in secretariatNotifications) {
     const curEvent = secretariatNotifications[i];
@@ -906,7 +938,7 @@ async function searchSecretariatNotificationDescription(reportIds: reportData[],
   }
 }
 
-async function searchSecretariatNotificationDate(reportIds: reportData[], search: string) {
+/* async function searchSecretariatNotificationDate(reportIds: reportData[], search: string) {
   let secretariatNotifications = await SecretariatNotification.findAll();
   for (let i = 0; i < secretariatNotifications.length; i++) {
     const curEvent = secretariatNotifications[i];
@@ -926,9 +958,9 @@ async function searchSecretariatNotificationDate(reportIds: reportData[], search
       }
     }
   }
-}
+} */
 
-async function searchDefectDescription(reportIds: reportData[], searchString: string, type: string) {
+async function searchDefect(reportIds: reportData[], searchString: string, type: string) {
   let defects: Defect[];
   if (type === "l") {
     defects = await sequelize.query(
@@ -939,14 +971,21 @@ async function searchDefectDescription(reportIds: reportData[], searchString: st
       }
     );
   } else {
-    searchString = '%' + searchString + '%';
+    /* searchString = '%' + searchString + '%';
     defects = await Defect.findAll({
       where: {
         description: {
           [Op.like]: searchString,
         },
       },
-    });
+    }); */
+    defects = await sequelize.query(
+      `SELECT * FROM Defects WHERE MATCH (description) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
   }
   for (let i in defects) {
     const curEvent = defects[i];
@@ -964,7 +1003,7 @@ async function searchDefectDescription(reportIds: reportData[], searchString: st
   }
 }
 
-async function searchDefectDate(reportIds: reportData[], search: string) {
+/* async function searchDefectDate(reportIds: reportData[], search: string) {
   let defects = await Defect.findAll();
   for (let i = 0; i < defects.length; i++) {
     const curEvent = defects[i];
@@ -985,8 +1024,8 @@ async function searchDefectDate(reportIds: reportData[], search: string) {
     }
   }
 }
-
-async function searchMalfunctionDescription(reportIds: reportData[], searchString: string, type: string) {
+ */
+async function searchMalfunction(reportIds: reportData[], searchString: string, type: string) {
   let malfunctions: Malfunction[];
   if (type === "l") {
     malfunctions = await sequelize.query(
@@ -997,14 +1036,21 @@ async function searchMalfunctionDescription(reportIds: reportData[], searchStrin
       }
     );
   } else {
-    searchString = '%' + searchString + '%';
+    /* searchString = '%' + searchString + '%';
     malfunctions = await Malfunction.findAll({
       where: {
         description: {
           [Op.like]: searchString,
         },
       },
-    });
+    }); */
+    malfunctions = await sequelize.query(
+      `SELECT * FROM Malfunctions WHERE MATCH (description) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      {
+        replacements: { string: searchString },
+        type: QueryTypes.SELECT
+      }
+    );
   }
   for (let i in malfunctions) {
     const curEvent = malfunctions[i];
@@ -1022,7 +1068,7 @@ async function searchMalfunctionDescription(reportIds: reportData[], searchStrin
   }
 }
 
-async function searchMalfunctionDate(reportIds: reportData[], search: string) {
+/* async function searchMalfunctionDate(reportIds: reportData[], search: string) {
   let malfunctions = await Malfunction.findAll();
   for (let i = 0; i < malfunctions.length; i++) {
     const curEvent = malfunctions[i];
@@ -1042,7 +1088,7 @@ async function searchMalfunctionDate(reportIds: reportData[], search: string) {
       }
     }
   }
-}
+} */
 
 /******************************************************************************
  *                      Search Reports - "POST /api/reports/search"
@@ -1060,53 +1106,14 @@ router.post('/search', async (req, res) => {
 
   let reportIds: reportData[] = [];
 
-  await searchCustomField1(reportIds, search, "l");
-  await searchCustomField1(reportIds, search, "s");
-  await searchCustomField2(reportIds, search, "l");
-  await searchCustomField2(reportIds, search, "s");
-  await searchCustomField3(reportIds, search, "l");
-  await searchCustomField3(reportIds, search, "s");
-  await searchCustomField4(reportIds, search, "l");
-  await searchCustomField4(reportIds, search, "s");
-  await searchCustomField5(reportIds, search, "l");
-  await searchCustomField5(reportIds, search, "s");
-  await searchCustomField6(reportIds, search, "l");
-  await searchCustomField6(reportIds, search, "s");
-  await searchCustomField7(reportIds, search, "l");
-  await searchCustomField7(reportIds, search, "s");
-  await searchCustomField8(reportIds, search, "l");
-  await searchCustomField8(reportIds, search, "s");
-  await searchCustomField9(reportIds, search, "l");
-  await searchCustomField9(reportIds, search, "s");
-  await searchCustomField10(reportIds, search, "l");
-  await searchCustomField10(reportIds, search, "s");
-  await searchOperationalEventSignaling(reportIds, search, "l");
-  await searchOperationalEventSignaling(reportIds, search, "s");
-  await searchOperationalEventPlNumber(reportIds, search, "l");
-  await searchOperationalEventPlNumber(reportIds, search, "s");
-  await searchOperationalEventDescription(reportIds, search, "l");
-  await searchOperationalEventDescription(reportIds, search, "s");
-  await searchOperationalEventLocation(reportIds, search, "l");
-  await searchOperationalEventLocation(reportIds, search, "s");
-  await searchOperationalEventUnit(reportIds, search, "l");
-  await searchOperationalEventUnit(reportIds, search, "s");
-  await searchOperationalEventDate(reportIds, search);
-  await searchWorkplaceEventDescription(reportIds, search, "l");
-  await searchWorkplaceEventDescription(reportIds, search, "s");
-  await searchWorkplaceEventAbsentee(reportIds, search, "l");
-  await searchWorkplaceEventAbsentee(reportIds, search, "s");
-  await searchWorkplaceEventSubstitute(reportIds, search, "l");
-  await searchWorkplaceEventSubstitute(reportIds, search, "s");
-  await searchWorkplaceEventDate(reportIds, search);
-  await searchSecretariatNotificationDescription(reportIds, search, "l");
-  await searchSecretariatNotificationDescription(reportIds, search, "s");
-  await searchSecretariatNotificationDate(reportIds, search);
-  await searchDefectDescription(reportIds, search, "l");
-  await searchDefectDescription(reportIds, search, "s");
-  await searchDefectDate(reportIds, search);
-  await searchMalfunctionDescription(reportIds, search, "l");
-  await searchMalfunctionDescription(reportIds, search, "s");
-  await searchMalfunctionDate(reportIds, search);
+  /* await searchCustomField1(reportIds, search, "l");
+  await searchCustomField1(reportIds, search, "s");*/
+  await searchOperationalEvent(reportIds, search, "s");
+  await searchOperationalEvent(reportIds, search, "l");
+  await searchWorkplaceEvent(reportIds, search, "s");
+  await searchSecretariatNotification(reportIds, search, "s");
+  await searchDefect(reportIds, search, "s");
+  await searchMalfunction(reportIds, search, "s");
 
   const count = reportIds.length;
   reportIds = reportIds.slice(offset, offset + reportsPerPage);
@@ -2673,32 +2680,53 @@ router.post("/getKeywordReports", async (req, res) => {
 
   let reportIds: reportData[] = [];
 
+    /* await searchCustomField1(reportIds, search, "l");
   await searchCustomField1(reportIds, search, "s");
+  await searchCustomField2(reportIds, search, "l");
   await searchCustomField2(reportIds, search, "s");
+  await searchCustomField3(reportIds, search, "l");
   await searchCustomField3(reportIds, search, "s");
+  await searchCustomField4(reportIds, search, "l");
   await searchCustomField4(reportIds, search, "s");
+  await searchCustomField5(reportIds, search, "l");
   await searchCustomField5(reportIds, search, "s");
+  await searchCustomField6(reportIds, search, "l");
   await searchCustomField6(reportIds, search, "s");
+  await searchCustomField7(reportIds, search, "l");
   await searchCustomField7(reportIds, search, "s");
+  await searchCustomField8(reportIds, search, "l");
   await searchCustomField8(reportIds, search, "s");
+  await searchCustomField9(reportIds, search, "l");
   await searchCustomField9(reportIds, search, "s");
+  await searchCustomField10(reportIds, search, "l");
   await searchCustomField10(reportIds, search, "s");
-  await searchOperationalEventSignaling(reportIds, search, "s");
+  await searchOperationalEventSignaling(reportIds, search, "l"); */
+  await searchOperationalEvent(reportIds, search, "s");
+  /* await searchOperationalEventPlNumber(reportIds, search, "l");
   await searchOperationalEventPlNumber(reportIds, search, "s");
+  await searchOperationalEventDescription(reportIds, search, "l");
   await searchOperationalEventDescription(reportIds, search, "s");
+  await searchOperationalEventLocation(reportIds, search, "l");
   await searchOperationalEventLocation(reportIds, search, "s");
+  await searchOperationalEventUnit(reportIds, search, "l");
   await searchOperationalEventUnit(reportIds, search, "s");
-  await searchOperationalEventDate(reportIds, search);
-  await searchWorkplaceEventDescription(reportIds, search, "s");
+  await searchOperationalEventDate(reportIds, search); */
+  await searchWorkplaceEvent(reportIds, search, "s");
+  /* await searchWorkplaceEventDescription(reportIds, search, "s");
+  await searchWorkplaceEventAbsentee(reportIds, search, "l");
   await searchWorkplaceEventAbsentee(reportIds, search, "s");
+  await searchWorkplaceEventSubstitute(reportIds, search, "l");
   await searchWorkplaceEventSubstitute(reportIds, search, "s");
-  await searchWorkplaceEventDate(reportIds, search);
-  await searchSecretariatNotificationDescription(reportIds, search, "s");
-  await searchSecretariatNotificationDate(reportIds, search);
-  await searchDefectDescription(reportIds, search, "s");
-  await searchDefectDate(reportIds, search);
-  await searchMalfunctionDescription(reportIds, search, "s");
-  await searchMalfunctionDate(reportIds, search);
+  await searchWorkplaceEventDate(reportIds, search); */
+  await searchSecretariatNotification(reportIds, search, "s");
+  /* await searchSecretariatNotificationDescription(reportIds, search, "s");
+  await searchSecretariatNotificationDate(reportIds, search); */
+  await searchDefect(reportIds, search, "s");
+  /* await searchDefectDescription(reportIds, search, "s");
+  await searchDefectDate(reportIds, search); */
+  await searchMalfunction(reportIds, search, "s");
+  /* await searchMalfunctionDescription(reportIds, search, "s");
+  await searchMalfunctionDate(reportIds, search); */
 
   const outputArr = reportIds.slice(0, 10);
 
@@ -3754,8 +3782,13 @@ router.post('/latestReport', async (req, res) => {
   });
 });
 
-
-
+/******************************************************************************
+*                         Send pdf to browser
+******************************************************************************/
+router.get('/downloadPDF', (req, res) => {
+  console.log("pdf")
+  res.download('page.pdf');
+});
 
 /******************************************************************************
 *                                     Export
