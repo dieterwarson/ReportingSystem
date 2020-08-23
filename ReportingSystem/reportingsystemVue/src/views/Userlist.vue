@@ -154,6 +154,7 @@
           type="email"
           placeholder="E-mail"
           class="form-control form-control-lg customTable"
+          :class="{ 'is-invalid' : !newUserData.emailCheck, 'is-valid' : newUserData.emailCheck}"
         />
         <label>Wachtwoord (6 tot 12 tekens, minstens 1 hoofdletter, minstens 1 cijfer):</label>
         <input
@@ -239,7 +240,8 @@ export default Vue.extend({
         passwordComp: true,
         completed: false,
         failed: false,
-        exists: false
+        exists: false,
+        emailCheck: true
       },
       fields: [
         {
@@ -343,12 +345,12 @@ export default Vue.extend({
         } else {
           this.pwdNotChanged = true;
           this.pwdChanged = false;
-          this.pwdNotReq = false
+          this.pwdNotReq = false;
         }
       } else {
         this.pwdNotChanged = false;
         this.pwdChanged = false;
-        this.pwdNotReq = true
+        this.pwdNotReq = true;
       }
     },
     async doNewUser() {
@@ -358,7 +360,17 @@ export default Vue.extend({
       this.newUserData.usernameCheck = this.checkUsername(
         this.newUserData.username
       );
-      
+
+      if (
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(
+          this.newUserData.email
+        )
+      ) {
+        this.newUserData.emailCheck = true;
+      } else {
+        this.newUserData.emailCheck = false;
+      }
+
       this.newUserData.passwordComp = this.checkPasswords(
         this.newUserData.password,
         this.newUserData.rptPassword
@@ -366,9 +378,7 @@ export default Vue.extend({
       if (
         this.newUserData.passwordComp &&
         this.newUserData.usernameCheck &&
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(
-          this.newUserData.email
-        )
+        this.newUserData.emailCheck
       ) {
         const response = await ReportingService.addUser({
           username: this.newUserData.username,
@@ -382,6 +392,12 @@ export default Vue.extend({
           this.newUserData.completed = true;
           this.newUserData.failed = false;
           this.newUserData.exists = false;
+          this.newUserData.password = "";
+          this.newUserData.rptPassword = "";
+          this.newUserData.username = "";
+          this.newUserData.email = "";
+          this.newUserData.accessRights = 0;
+          this.newUserData.subscription = false;
         } else if (response.userExists) {
           this.newUserData.exists = true;
           this.newUserData.failed = true;
@@ -393,12 +409,7 @@ export default Vue.extend({
           this.newUserData.exists = false;
         }
       }
-      this.newUserData.password = "";
-      this.newUserData.rptPassword = "";
-      this.newUserData.username = "";
-      this.newUserData.email = "";
-      this.newUserData.accessRights = 0;
-      this.newUserData.subscription = false;
+
       this.loadUsers();
     },
     checkUsername: function(username: string) {
