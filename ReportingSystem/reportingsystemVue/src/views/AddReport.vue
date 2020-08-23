@@ -170,8 +170,10 @@
                 type="button"
                 @click.prevent="addOperationalEvent"
               >Opslaan</button>
-              <small v-if="form.operationalFailed">Het verslag kon niet toegevoegd worden</small>
-              <small v-if="form.operationalSucceeded">Het verslag is toegevoegd</small>
+              <p
+                v-if="form.operationalFailed"
+              >De fiche kon niet toegevoegd worden, elke invoer moet minstens 3 tekens lang zijn</p>
+              <p v-if="form.operationalSucceeded">De fiche is toegevoegd</p>
             </div>
           </div>
         </section>
@@ -255,7 +257,8 @@
                   type="button"
                   @click.prevent="addWorkForceEvent"
                 >Opslaan</button>
-                <small v-if="form.workForceSucceeded">Het verslag is toegevoegd</small>
+                <p v-if="form.workForceSucceeded">De fiche is toegevoegd</p>
+                <p v-if="form.workForceFailed">De fiche is niet toegevoegd, elke invoer moet minstens 3 tekens lang zijn </p>
               </div>
               <div class="input-group text-sm-left col-lg" v-else>
                 <div class="input-group">
@@ -280,7 +283,8 @@
                     @click.prevent="addSecretaryNotification"
                   >Opslaan</button>
                 </div>
-                <small v-if="form.workForceSucceeded">Het verslag is toegevoegd</small>
+                <p v-if="form.workForceSucceeded">De fiche is toegevoegd</p>
+                <p v-if="form.workForceFailed">De fiche is niet toegevoegd, elke invoer moet minstens 3 tekens lang zijn </p>
               </div>
             </div>
           </div>
@@ -386,7 +390,10 @@
                   type="button"
                   @click.prevent="addDefect"
                 >Opslaan</button>
-                <small v-if="form.technicalSucceeded">Het verslag is toegevoegd</small>
+                <p
+                  v-if="form.technicalFailed"
+                >De fiche is niet toegevoegd, elke invoer moet minstens 3 tekens lang zijn</p>
+                <p v-if="form.technicalSucceeded">De fiche is toegevoegd</p>
               </div>
               <div class="container text-sm-left col-lg" v-else>
                 <div class="input-group">
@@ -417,8 +424,10 @@
                   @click.prevent="addMalfunction"
                 >Opslaan</button>
 
-                <small v-if="form.technicalFailed">Het verslag is niet toegevoegd</small>
-                <small v-if="form.technicalSucceeded">Het verslag is toegevoegd</small>
+                <p
+                  v-if="form.technicalFailed"
+                >De fiche is niet toegevoegd, elke invoer moet minstens 3 tekens lang zijn</p>
+                <p v-if="form.technicalSucceeded">De fiche is toegevoegd</p>
               </div>
             </div>
           </div>
@@ -528,8 +537,10 @@
                 class="btn btn-large btn-block btn-success extraMargin save"
                 @click.prevent="addCustomFiche"
               >Opslaan</button>
-              <p v-if="customFiche.failed">Toevoegen van fiche mislukt</p>
-              <p v-if="customFiche.succeeded">Toevoegen van fiche gelukt</p>
+              <p v-if="customFiche.failed">Toevoegen van fiche mislukt, elke invoer moet minstens 3 tekens lang zijn</p>
+              <p
+                v-if="customFiche.succeeded"
+              >Toevoegen van fiche gelukt</p>
             </div>
           </div>
         </section>
@@ -580,6 +591,7 @@ export default Vue.extend({
         absentee: "",
         substitute: null,
         workForceSucceeded: false,
+        workForceFailed: false,
         absenteeOk: true,
         replacementOk: true,
         wfMessageOk: true,
@@ -597,6 +609,8 @@ export default Vue.extend({
 
         technicalFailed: false,
         technicalSucceeded: false
+
+
       },
       customFiche: {
         field1: "",
@@ -828,6 +842,8 @@ export default Vue.extend({
       this.form.unit = response.unit;
     },
     async addDefect() {
+      this.form.technicalSucceeded = false;
+      this.form.technicalFailed = false;
       this.form.defectDescOk = this.checkInputLength(
         this.form.defectDescription
       );
@@ -843,10 +859,16 @@ export default Vue.extend({
           this.form.technicalSucceeded = true;
           this.form.defectDescription = "";
           this.form.defectMonitoring = false;
+        } else {
+          this.form.technicalFailed = true;
         }
+      } else {
+        this.form.technicalFailed = true;
       }
     },
     async addMalfunction() {
+      this.form.technicalFailed = false;
+      this.form.technicalSucceeded = false;
       this.form.malfDur = this.checkInputLength(this.form.malfunctionDuration);
       this.form.malfDescOk = this.checkInputLength(
         this.form.malfunctionDescription
@@ -860,14 +882,21 @@ export default Vue.extend({
           subtype: this.malfunctionTypeSelected.subTypeName,
           duration: this.form.malfunctionDuration
         });
-
-        this.form.technicalSucceeded = true;
-        this.form.malfunctionDescription = "";
-        this.form.malfunctionDuration = "";
-        this.form.malfunctionMonitoring = false;
+        if (response.bool) {
+          this.form.technicalSucceeded = true;
+          this.form.malfunctionDescription = "";
+          this.form.malfunctionDuration = "";
+          this.form.malfunctionMonitoring = false;
+        } else {
+          this.form.technicalFailed = true;
+        }
+      } else {
+        this.form.technicalFailed = true;
       }
     },
     async addSecretaryNotification() {
+      this.form.workForceFailed = false;
+      this.form.workForceSucceeded = false;
       this.form.snOk = this.checkInputLength(this.form.secretNotification);
       if (this.form.snOk) {
         const response = await ReportingService.addSecretaryNotification({
@@ -879,10 +908,16 @@ export default Vue.extend({
           this.form.secretNotification = "";
           this.form.secretMonitoring = false;
           this.form.workForceSucceeded = true;
+        } else {
+          this.form.workForceFailed = true;
         }
+      } else {
+        this.form.workForceFailed = true;
       }
     },
     async addWorkForceEvent() {
+      this.form.workForceSucceeded = false;
+      this.form.workForceFailed = false;
       this.form.absenteeOk = this.checkInputLength(this.form.absentee);
       this.form.replacementOk = this.checkInputLength(this.form.replacement);
       this.form.wfMessageOk = this.checkInputLength(this.form.workforceMessage);
@@ -905,7 +940,11 @@ export default Vue.extend({
           this.form.absentee = "";
           this.form.replacement = "";
           this.form.workforceMessage = "";
+        } else {
+          this.form.workForceFailed = true;
         }
+      } else {
+        this.form.workForceFailed = true;
       }
     },
     async addOperationalEvent() {
