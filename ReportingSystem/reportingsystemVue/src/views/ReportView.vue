@@ -5,58 +5,45 @@
       <b>/</b>
       <router-link to="/reports">Verslagen</router-link>
     </div>
-    <div
-      class="container pt-5 pb-5"
-      v-if="!(Object.keys(reportContent).length === 0)"
-    >
+    <div class="container pt-5 pb-5" v-if="!(Object.keys(reportContent).length === 0)">
       <h1>
         Verslag van
         {{
-          new Date(reportContent.report.date).toLocaleString("nl-BE", {
-            year: "numeric",
-            month: "numeric",
-            day: "numeric",
-          })
+        new Date(reportContent.report.date).toLocaleString("nl-BE", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        })
         }}
-        <span class="badge badge-primary">{{ shift }}</span>
+        <span
+          class="badge badge-primary"
+        >{{ shift }}</span>
       </h1>
-      <div
-        class="btn-group d-flex mt-4"
-        role="group"
-        aria-label="Justified button group"
-      >
+      <div class="btn-group d-flex mt-4" role="group" aria-label="Justified button group">
         <button
           id="operationalButton"
           type="button"
           class="btn btn-primary border-primary"
           @click.prevent="getOperational"
-        >
-          Operationeel
-        </button>
+        >Operationeel</button>
         <button
           id="workForceButton"
           type="button"
           class="btn btn-secondary border-primary"
           @click.prevent="getWorkforce"
-        >
-          Personeel
-        </button>
+        >Personeel</button>
         <button
           id="technicalButton"
           type="button"
           class="btn btn-secondary border-primary"
           @click.prevent="getTechnical"
-        >
-          Technisch
-        </button>
+        >Technisch</button>
         <button
           id="customButton"
           type="button"
           class="btn btn-secondary border-primary"
           @click.prevent="getCustom"
-        >
-          Custom
-        </button>
+        >Custom</button>
       </div>
       <!-- Operational -->
       <section v-if="step == 'Operational'" class="container">
@@ -102,8 +89,7 @@
                         <b-button
                           :disabled="!operationalFilter"
                           @click="operationalFilter = ''"
-                          >Verwijder</b-button
-                        >
+                        >Verwijder</b-button>
                       </b-input-group-append>
                     </b-input-group>
                   </b-col>
@@ -149,20 +135,18 @@
                 <!-- date -->
                 <template v-slot:cell(date)="data">
                   {{
-                    new Date(data.item.date).toLocaleString("nl-BE", {
-                      year: "numeric",
-                      month: "numeric",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: false,
-                    })
+                  new Date(data.item.date).toLocaleString("nl-BE", {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                  })
                   }}
                 </template>
                 <!-- edit -->
                 <template v-slot:cell(edit)="data">
-    
-
                   <img
                     id="topright"
                     src="../assets/edit-logo.png"
@@ -183,8 +167,7 @@
                     data-toggle="tooltip"
                     data-placement="top"
                     title="PL-nummer"
-                    >{{ data.item.plNumber }}</span
-                  >
+                  >{{ data.item.plNumber }}</span>
                 </template>
                 <!-- unit -->
                 <template v-slot:cell(unit)="data">
@@ -193,8 +176,7 @@
                     data-toggle="tooltip"
                     data-placement="top"
                     title="Eenheid"
-                    >{{ data.item.unit }}</span
-                  >
+                  >{{ data.item.unit }}</span>
                 </template>
                 <!-- type -->
                 <template v-slot:cell(type)="data">
@@ -202,13 +184,13 @@
                     <div v-for="type in data.item.eventTypes" :key="type.id">
                       <h5 class="card-text">
                         <div v-if="!(type.operationalType == null)">
-                          <span class="card-text badge badge-danger mr-1">
-                            {{ type.operationalType.typeName }}
-                          </span>
+                          <span
+                            class="card-text badge badge-danger mr-1"
+                          >{{ type.operationalType.typeName }}</span>
                           <span v-if="!(type.operationalSubtype == null)">
-                            <span class="card-text badge badge-danger">
-                              {{ type.operationalSubtype.typeName }}
-                            </span>
+                            <span
+                              class="card-text badge badge-danger"
+                            >{{ type.operationalSubtype.typeName }}</span>
                           </span>
                         </div>
                       </h5>
@@ -272,8 +254,7 @@
                     <b-button
                       :disabled="!administrativeFilter"
                       @click="administrativeFilter = ''"
-                      >Verwijder</b-button
-                    >
+                    >Verwijder</b-button>
                   </b-input-group-append>
                 </b-input-group>
               </b-col>
@@ -324,20 +305,18 @@
             <!-- date -->
             <template v-slot:cell(date)="data">
               {{
-                new Date(data.item.date).toLocaleString("nl-BE", {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false,
-                })
+              new Date(data.item.date).toLocaleString("nl-BE", {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+              })
               }}
             </template>
             <!-- edit -->
             <template v-slot:cell(edit)="data">
-    
-
               <img
                 id="topright"
                 src="../assets/edit-logo.png"
@@ -353,9 +332,9 @@
             </template>
             <!-- type -->
             <template v-slot:cell(type)="data">
-              <span class="card-text badge badge-danger">
-                {{ getType(data.item.id, data.item.listName) }}</span
-              >
+              <span
+                class="card-text badge badge-danger"
+              >{{ getType(data.item.id, data.item.listName) }}</span>
             </template>
           </b-table>
           <b-pagination
@@ -410,11 +389,7 @@
                       placeholder="Type om te zoeken"
                     ></b-form-input>
                     <b-input-group-append>
-                      <b-button
-                        :disabled="!defectFilter"
-                        @click="defectFilter = ''"
-                        >Verwijder</b-button
-                      >
+                      <b-button :disabled="!defectFilter" @click="defectFilter = ''">Verwijder</b-button>
                     </b-input-group-append>
                   </b-input-group>
                 </b-col>
@@ -465,14 +440,14 @@
               <!-- date -->
               <template v-slot:cell(date)="data">
                 {{
-                  new Date(data.item.date).toLocaleString("nl-BE", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                  })
+                new Date(data.item.date).toLocaleString("nl-BE", {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false,
+                })
                 }}
               </template>
               <!-- delete -->
@@ -480,9 +455,7 @@
                 <button
                   class="btn btn-primary btn-sm"
                   @click="removeClicked(data.item.id, data.item.listName)"
-                >
-                  🗑
-                </button>
+                >🗑</button>
               </template>
               <!-- edit -->
               <template v-slot:cell(edit)="data">
@@ -501,9 +474,9 @@
               </template>
               <!-- type -->
               <template v-slot:cell(type)="data">
-                <span class="card-text badge badge-danger">
-                  {{ getType(data.item.id, data.item.listName) }}</span
-                >
+                <span
+                  class="card-text badge badge-danger"
+                >{{ getType(data.item.id, data.item.listName) }}</span>
               </template>
             </b-table>
             <b-pagination
@@ -519,7 +492,133 @@
         </div>
       </section>
       <section v-if="step == 'Custom'" class="container">
+        <div
+          v-if="
+            Object.keys(reportContent.custom.customEvents).length === 0 
+          "
+        >
+          <p>Er zijn nog geen gebeurtenissen van deze categorie</p>
+        </div>
+        <div v-else>
+          <div>
+            <b-form-group
+              label="Filter"
+              label-cols-sm="3"
+              label-align-sm="right"
+              label-size="sm"
+              label-for="filterInput"
+              class="mb-0 mt-4"
+            >
+              <b-row>
+                <b-col lg="6" class="my-1">
+                  <b-input-group size="sm">
+                    <b-form-input
+                      v-model="customFilter"
+                      type="search"
+                      id="filterInput"
+                      placeholder="Type om te zoeken"
+                    ></b-form-input>
+                    <b-input-group-append>
+                      <b-button :disabled="!customFilter" @click="customFilter = ''">Verwijder</b-button>
+                    </b-input-group-append>
+                  </b-input-group>
+                </b-col>
+                <b-col lg="6" class="my-1">
+                  <b-form-group
+                    label="Per pagina"
+                    label-cols-sm="6"
+                    label-cols-md="4"
+                    label-cols-lg="3"
+                    label-align-sm="right"
+                    label-size="sm"
+                    label-for="defectPerPageSelect"
+                    class="mb-0"
+                  >
+                    <b-form-select
+                      v-model="customPerPage"
+                      id="defectPerPageSelect"
+                      size="sm"
+                      :options="pageOptions"
+                    ></b-form-select>
+                  </b-form-group>
+                </b-col>
+              </b-row>
+            </b-form-group>
 
+            <b-table
+              v-if="loaded"
+              :head-variant="light"
+              :current-page="customCurrentPage"
+              :per-page="customPerPage"
+              :filter="customFilter"
+              :filterIncludedFields="customFilterOn"
+              :sort-by.sync="customSortBy"
+              :sort-desc.sync="customSortDesc"
+              :sort-direction="customSortDirection"
+              @filtered="customOnFiltered"
+              id="defect-table"
+              bordered
+              hover
+              :table-variant="Primary"
+              :fields="customFields"
+              :items="
+                this.reportContent.custom.customEvents
+              "
+            >
+              <template v-slot:cell(fieldname)="data">
+                <span class="card-text badge badge-danger">{{data.item.fieldname.customName}}</span>
+              </template>
+              <template v-slot:cell(field1)="data">
+                <span v-if="data.item.field1">{{data.item.field1}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+              <template v-slot:cell(field2)="data">
+                <span v-if="data.item.field2">{{data.item.field2}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+              <template v-slot:cell(field3)="data">
+                <span v-if="data.item.field3">{{data.item.field3}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+              <template v-slot:cell(field4)="data">
+                <span v-if="data.item.field4">{{data.item.field4}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+              <template v-slot:cell(field5)="data">
+                <span v-if="data.item.field5">{{data.item.field5}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+              <template v-slot:cell(field6)="data">
+                <span v-if="data.item.field6">{{data.item.field6}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+              <template v-slot:cell(field7)="data">
+                <span v-if="data.item.field7">{{data.item.field7}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+              <template v-slot:cell(field8)="data">
+                <span v-if="data.item.field8">{{data.item.field8}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+              <template v-slot:cell(field9)="data">
+                <span v-if="data.item.field9">{{data.item.field9}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+              <template v-slot:cell(field10)="data">
+                <span v-if="data.item.field10">{{data.item.field10}}</span>
+                <span v-else>N.V.T.</span>
+              </template>
+            </b-table>
+            <b-pagination
+              v-model="customCurrentPage"
+              :total-rows="
+                this.reportContent.custom.customEvents.length 
+              "
+              :per-page="customPerPage"
+              aria-controls="defect-table"
+            ></b-pagination>
+          </div>
+        </div>
       </section>
     </div>
     <div v-else>
@@ -545,8 +644,8 @@ export default Vue.extend({
         {
           id: "types",
           label: "Types",
-          children: [{ id: "", label: "" }],
-        },
+          children: [{ id: "", label: "" }]
+        }
       ],
       pageOptions: [5, 10, 15],
       operationalTotalRows: 1,
@@ -561,43 +660,43 @@ export default Vue.extend({
         {
           label: "Datum",
           key: "date",
-          sortable: true,
+          sortable: true
         },
         {
           label: "Omschrijving",
           key: "description",
-          sortable: false,
+          sortable: false
         },
         {
           label: "Signalering",
           key: "signaling",
-          sortable: false,
+          sortable: false
         },
         {
           label: "Locatie",
           key: "location",
-          sortable: false,
+          sortable: false
         },
         {
           label: "Type",
           key: "type",
-          sortable: true,
+          sortable: true
         },
         {
           label: "Eenheid",
           key: "unit",
-          sortable: true,
+          sortable: true
         },
         {
           label: "PL-nummer",
           key: "plNumber",
-          sortable: false,
+          sortable: false
         },
         {
           label: "Gebeurtenis aanpassen",
           key: "edit",
-          sortable: "false",
-        },
+          sortable: "false"
+        }
       ],
       administrativeValues: [],
       administrativeOptions: [
@@ -607,10 +706,10 @@ export default Vue.extend({
           children: [
             {
               id: "secretariatNotification",
-              label: "Melding aan secretariaat",
-            },
-          ],
-        },
+              label: "Melding aan secretariaat"
+            }
+          ]
+        }
       ],
       administrativeTotalRows: 1,
       administrativeCurrentPage: 1,
@@ -624,32 +723,32 @@ export default Vue.extend({
         {
           label: "Datum",
           key: "date",
-          sortable: true,
+          sortable: true
         },
         {
           label: "Omschrijving",
           key: "description",
-          sortable: false,
+          sortable: false
         },
         {
           label: "Type",
           key: "type",
-          sortable: true,
+          sortable: true
         },
         {
           label: "Afwezige",
           key: "absentee",
-          sortable: true,
+          sortable: true
         },
         {
           label: "Vervanger",
           key: "substitute",
-          sortable: true,
+          sortable: true
         },
         {
           label: "Gebeurtenis aanpassen",
-          key: "edit",
-        },
+          key: "edit"
+        }
       ],
 
       defectTotalRows: 1,
@@ -664,48 +763,114 @@ export default Vue.extend({
         {
           label: "Datum",
           key: "date",
-          sortable: true,
+          sortable: true
         },
         {
           label: "Omschrijving",
           key: "description",
-          sortable: false,
+          sortable: false
         },
         {
           label: "Type",
           key: "type",
-          sortable: true,
+          sortable: true
         },
         {
           label: "Gebeurtenis aanpassen",
-          key: "edit",
-        },
+          key: "edit"
+        }
       ],
 
       defectOptions: [
         {
           id: "defect",
           label: "Logistiek",
-          children: [{ id: "", label: "" }],
+          children: [{ id: "", label: "" }]
         },
         {
           id: "malfunction",
           label: "Technisch",
-          children: [{ id: "", label: "" }],
+          children: [{ id: "", label: "" }]
+        }
+      ],
+
+      customTotalRows: 1,
+      customCurrentPage: 1,
+      customPerPage: 5,
+      customSortBy: "date",
+      customSortDesc: true,
+      customSortDirection: "asc",
+      customFilter: null,
+      customFilterOn: [],
+      customFields: [
+        {
+          label: "Type",
+          key: "fieldname",
+          sortable: true
         },
+        {
+          label: "Veld 1",
+          key: "field1",
+          sortable: false
+        },
+        {
+          label: "Veld 2",
+          key: "field2",
+          sortable: false
+        },
+        {
+          label: "Veld 3",
+          key: "field3",
+          sortable: false
+        },
+        {
+          label: "Veld 4",
+          key: "field4",
+          sortable: false
+        },
+        {
+          label: "Veld 5",
+          key: "field5",
+          sortable: false
+        },
+        {
+          label: "Veld 6",
+          key: "field6",
+          sortable: false
+        },
+        {
+          label: "Veld 7",
+          key: "field7",
+          sortable: false
+        },
+        {
+          label: "Veld 8",
+          key: "field8",
+          sortable: false
+        },
+        {
+          label: "Veld 9",
+          key: "field9",
+          sortable: false
+        },
+        {
+          label: "Veld 10",
+          key: "field10",
+          sortable: false
+        }
       ],
 
       reportTypes: {
         operationalTypes: [{ typeName: "", id: 0 }],
         workplaceTypes: [{ typeName: "", id: 0 }],
         defectTypes: [{ typeName: "", id: 0 }],
-        malfunctionTypes: [{ typeName: "", id: 0 }],
+        malfunctionTypes: [{ typeName: "", id: 0 }]
       },
       selectedTypes: {
         operationalTypes: [] as any[],
         workplaceTypes: [] as any[],
         defectTypes: [] as any[],
-        malfunctionTypes: [] as any[],
+        malfunctionTypes: [] as any[]
       },
 
       interval: 0,
@@ -717,7 +882,7 @@ export default Vue.extend({
           temporary: false,
           nightShift: true,
           createdAt: "",
-          updatedAt: "",
+          updatedAt: ""
         },
         operational: {
           operationalEvents: [
@@ -746,14 +911,14 @@ export default Vue.extend({
                     id: 1,
                     typeName: "",
                     createdAt: "",
-                    updatedAt: "",
+                    updatedAt: ""
                   },
-                  operationalSubtype: null,
-                },
+                  operationalSubtype: null
+                }
               ],
-              listName: "",
-            },
-          ],
+              listName: ""
+            }
+          ]
         },
         administrative: {
           workplaceEvents: [
@@ -774,11 +939,11 @@ export default Vue.extend({
                 id: 2,
                 typeName: "",
                 createdAt: "",
-                updatedAt: "",
+                updatedAt: ""
               },
               workplaceSubtype: null,
-              listName: "",
-            },
+              listName: ""
+            }
           ],
           secretariatNotifications: [
             {
@@ -790,9 +955,9 @@ export default Vue.extend({
               date: "",
               createdAt: "",
               updatedAt: "",
-              listName: "",
-            },
-          ],
+              listName: ""
+            }
+          ]
         },
         technical: {
           defects: [
@@ -811,7 +976,7 @@ export default Vue.extend({
                 id: 1,
                 typeName: "",
                 createdAt: "",
-                updatedAt: "",
+                updatedAt: ""
               },
               defectSubtype: {
                 id: 1,
@@ -819,9 +984,9 @@ export default Vue.extend({
                 typeName: "",
                 description: "",
                 createdAt: "",
-                updatedAt: "",
+                updatedAt: ""
               },
-              listName: "",
+              listName: ""
             },
             {
               id: 3,
@@ -838,7 +1003,7 @@ export default Vue.extend({
                 id: 1,
                 typeName: "",
                 createdAt: "",
-                updatedAt: "",
+                updatedAt: ""
               },
               defectSubtype: {
                 id: 1,
@@ -846,10 +1011,10 @@ export default Vue.extend({
                 typeName: "",
                 description: "",
                 createdAt: "",
-                updatedAt: "",
+                updatedAt: ""
               },
-              listName: "",
-            },
+              listName: ""
+            }
           ],
           malfunctions: [
             {
@@ -868,7 +1033,7 @@ export default Vue.extend({
                 id: 1,
                 typeName: "",
                 createdAt: "",
-                updatedAt: "",
+                updatedAt: ""
               },
               malfunctionSubtype: {
                 id: 1,
@@ -876,57 +1041,75 @@ export default Vue.extend({
                 typeName: "",
                 description: "",
                 createdAt: "",
-                updatedAt: "",
+                updatedAt: ""
               },
-              listName: "",
-            },
-          ],
+              listName: ""
+            }
+          ]
         },
-        custom: {
-
-        },
+        custom: [{ customEvents: {} }]
       },
 
       priorityContent: {
         operational: {
-          operationalEvents: {},
-        },
+          operationalEvents: {}
+        }
       },
       notificationContent: {
         administrative: {
           workplaceEvents: {},
-          secretariatNotifications: {},
+          secretariatNotifications: {}
         },
         technical: {
           defects: {},
-          malfunctions: {},
-        },
+          malfunctions: {}
+        }
       },
-      shift: "",
+      shift: ""
     };
   },
 
   components: {
-    Treeselect,
+    Treeselect
   },
 
   watch: {
     reportContent: function() {
       this.loadPriority();
       this.setShift();
-      for (let i = 0; i < this.reportContent.operational.operationalEvents.length; i++) {
+      for (
+        let i = 0;
+        i < this.reportContent.operational.operationalEvents.length;
+        i++
+      ) {
         if (this.reportContent.operational.operationalEvents[i] != null)
-          (this.reportContent.operational.operationalEvents[i] as any).listName = "OperationalEvents";
+          (this.reportContent.operational.operationalEvents[
+            i
+          ] as any).listName = "OperationalEvents";
       }
 
-      for (let i = 0; i < this.reportContent.administrative.secretariatNotifications.length; i++) {
-        if (this.reportContent.administrative.secretariatNotifications[i] != null)
-          (this.reportContent.administrative.secretariatNotifications[i] as any).listName = "SecretariatNotifications";
+      for (
+        let i = 0;
+        i < this.reportContent.administrative.secretariatNotifications.length;
+        i++
+      ) {
+        if (
+          this.reportContent.administrative.secretariatNotifications[i] != null
+        )
+          (this.reportContent.administrative.secretariatNotifications[
+            i
+          ] as any).listName = "SecretariatNotifications";
       }
 
-      for (let i = 0; i < this.reportContent.administrative.workplaceEvents.length; i++) {
+      for (
+        let i = 0;
+        i < this.reportContent.administrative.workplaceEvents.length;
+        i++
+      ) {
         if (this.reportContent.administrative.workplaceEvents[i] != null)
-          (this.reportContent.administrative.workplaceEvents[i] as any).listName = "WorkplaceEvents";
+          (this.reportContent.administrative.workplaceEvents[
+            i
+          ] as any).listName = "WorkplaceEvents";
       }
 
       for (let i = 0; i < this.reportContent.technical.defects.length; i++) {
@@ -934,9 +1117,14 @@ export default Vue.extend({
           (this.reportContent.technical.defects[i] as any).listName = "Defects";
       }
 
-      for (let i = 0; i < this.reportContent.technical.malfunctions.length; i++) {
+      for (
+        let i = 0;
+        i < this.reportContent.technical.malfunctions.length;
+        i++
+      ) {
         if (this.reportContent.technical.malfunctions[i] != null)
-          (this.reportContent.technical.malfunctions[i] as any).listName = "Malfunctions";
+          (this.reportContent.technical.malfunctions[i] as any).listName =
+            "Malfunctions";
       }
 
       this.loaded = true;
@@ -955,7 +1143,9 @@ export default Vue.extend({
             this.reportTypes.malfunctionTypes[i].typeName
           );
           if (index !== -1) {
-            changedTypes.malfunctionTypes.push(this.selectedTypes.defectTypes[index]);
+            changedTypes.malfunctionTypes.push(
+              this.selectedTypes.defectTypes[index]
+            );
           }
         }
         const changedDefects = changedTypes.defectTypes.filter(
@@ -964,13 +1154,13 @@ export default Vue.extend({
         changedTypes.defectTypes = changedDefects;
         ReportingService.getFilteredEvents(
           {
-            selectedTypes: changedTypes,
+            selectedTypes: changedTypes
           },
           Number(this.$route.query.reportId)
-        ).then((res) => (this.reportContent = res));
+        ).then(res => (this.reportContent = res));
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
 
   mounted() {
@@ -984,38 +1174,38 @@ export default Vue.extend({
       for (let i = 0; i < this.reportTypes.operationalTypes.length; i++) {
         this.operationalOptions[0].children.push({
           id: this.reportTypes.operationalTypes[i].typeName as string,
-          label: this.reportTypes.operationalTypes[i].typeName as string,
+          label: this.reportTypes.operationalTypes[i].typeName as string
         });
       }
       for (let i = 0; i < this.reportTypes.workplaceTypes.length; i++) {
         this.administrativeOptions[0].children.push({
           id: this.reportTypes.workplaceTypes[i].typeName as string,
-          label: this.reportTypes.workplaceTypes[i].typeName as string,
+          label: this.reportTypes.workplaceTypes[i].typeName as string
         });
       }
       this.defectOptions[0].children.pop();
       for (let i = 0; i < this.reportTypes.defectTypes.length; i++) {
         this.defectOptions[0].children.push({
           id: this.reportTypes.defectTypes[i].typeName as string,
-          label: this.reportTypes.defectTypes[i].typeName as string,
+          label: this.reportTypes.defectTypes[i].typeName as string
         });
       }
       this.defectOptions[1].children.pop();
       for (let i = 0; i < this.reportTypes.malfunctionTypes.length; i++) {
         this.defectOptions[1].children.push({
           id: this.reportTypes.malfunctionTypes[i].typeName as string,
-          label: this.reportTypes.malfunctionTypes[i].typeName as string,
+          label: this.reportTypes.malfunctionTypes[i].typeName as string
         });
       }
     },
     loadData: async function() {
       await ReportingService.getAllReports("/api/statistics/types").then(
-        (res) => (this.reportTypes = res)
+        res => (this.reportTypes = res)
       );
 
       await ReportingService.getAllReports(
         "/api/reports/content/" + String(this.$route.query.reportId)
-      ).then((res) => (this.reportContent = res));
+      ).then(res => (this.reportContent = res));
     },
 
     selectAll: function(section: string) {
@@ -1064,12 +1254,12 @@ export default Vue.extend({
     loadPriority: function() {
       ReportingService.getAllReports(
         "/api/reports/priority/" + String(this.$route.query.reportId)
-      ).then((res) => (this.priorityContent = res));
+      ).then(res => (this.priorityContent = res));
     },
     loadNotifications: function() {
       ReportingService.getAllReports(
         "/api/reports/notifications/" + String(this.$route.query.reportId)
-      ).then((res) => (this.notificationContent = res));
+      ).then(res => (this.notificationContent = res));
     },
 
     getOperational: function() {
@@ -1131,8 +1321,8 @@ export default Vue.extend({
           reportId: String(0),
           eventId: String(id),
           categorie: categorie,
-          subcategorie: String(subcat),
-        },
+          subcategorie: String(subcat)
+        }
       });
     },
     getType: function(id: number, list: string) {
@@ -1205,11 +1395,11 @@ export default Vue.extend({
           }
         }
       }
-    },
+    }
   },
   beforeDestroy: function() {
     window.clearInterval(this.interval);
-  },
+  }
 });
 </script>
 
