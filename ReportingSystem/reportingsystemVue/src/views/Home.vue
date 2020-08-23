@@ -141,7 +141,7 @@
                   tag="button"
                   class="btn btn-secondary btn-lg btn-block"
                 >Administrator functies</router-link>
-                <button type="submit" class="btn btn-dark logout btn-block" @click.prevent="logOut">Afmelden</button>
+                <button type="submit" class="btn btn-dark btn-lg logout btn-block" @click.prevent="logOut">Afmelden</button>
               </div>
             </div>
           </div>

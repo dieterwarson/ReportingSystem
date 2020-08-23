@@ -547,7 +547,7 @@ async function searchCustomField10(reportIds: reportData[], searchString: string
   }
 }
 
-async function searchOperationalEvent(reportIds: reportData[], searchString: string, type: string) {
+async function searchOperationalEvent(reportIds: reportData[], searchString: string, type: string, search: boolean) {
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
     operationalEvents = await sequelize.query(
@@ -567,28 +567,39 @@ async function searchOperationalEvent(reportIds: reportData[], searchString: str
       },
     }); */
     operationalEvents = await sequelize.query(
-      `SELECT * FROM OperationalEvents WHERE MATCH (description, unit, location, signaling, plNumber) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      `SELECT * FROM OperationalEvents WHERE MATCH (description, unit, location, signaling, plNumber) AGAINST(:string IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)`, 
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
       }
     );
-    console.log("______MATCHED: " + operationalEvents);
+    //console.log("______MATCHED: " + operationalEvents);
   }
-  for (let i in operationalEvents) {
-    const curEvent = operationalEvents[i];
-    const event = await Operational.findOne({
-      where: {
-        id: curEvent.operationalId
-      },
-      include: [{ model: Report }]
-    });
-    if (event != null && curEvent.signaling != null) {
-      const description = curEvent.signaling;
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
+  let report: reportData;
+  if(search){
+    for (let i in operationalEvents) {
+      const curEvent = operationalEvents[i];
+      const event = await Operational.findOne({
+        where: {
+          id: curEvent.operationalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null && curEvent.signaling != null) {
+        const description = curEvent.signaling;
+        report = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
+      }
+    }
+  }
+  else{
+    for (let i in operationalEvents) {
+      const curEvent = operationalEvents[i];
+      report = { reportId: 0, eventId: curEvent.id, description: curEvent.signaling, date: curEvent.date, nightShift: false };
       addReport(report, reportIds);
     }
   }
+  
 }
 
 /* async function searchOperationalEventPlNumber(reportIds: reportData[], searchString: string, type: string) {
@@ -757,7 +768,7 @@ async function searchOperationalEventDate(reportIds: reportData[], search: strin
   }
 } */
 
-async function searchWorkplaceEvent(reportIds: reportData[], searchString: string, type: string) {
+async function searchWorkplaceEvent(reportIds: reportData[], searchString: string, type: string, search: boolean) {
   let workplaceEvents: WorkplaceEvent[];
   if (type === "l") {
     workplaceEvents = await sequelize.query(
@@ -777,24 +788,34 @@ async function searchWorkplaceEvent(reportIds: reportData[], searchString: strin
       },
     }); */
     workplaceEvents = await sequelize.query(
-      `SELECT * FROM WorkplaceEvents WHERE MATCH (description, absentee, substitute) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      `SELECT * FROM WorkplaceEvents WHERE MATCH (description, absentee, substitute) AGAINST(:string IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)`, 
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
       }
     );
   }
-  for (let i in workplaceEvents) {
-    const curEvent = workplaceEvents[i];
-    const event = await Administrative.findOne({
-      where: {
-        id: curEvent.administrativeId
-      },
-      include: [{ model: Report }]
-    });
-    if (event != null && curEvent.description != null) {
-      const description = curEvent.description;
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+  let report: reportData;
+  if(search){
+    for (let i in workplaceEvents) {
+      const curEvent = workplaceEvents[i];
+      const event = await Administrative.findOne({
+        where: {
+          id: curEvent.administrativeId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null && curEvent.description != null) {
+        const description = curEvent.description;
+        report = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
+      }
+    }
+  }
+  else{
+    for (let i in workplaceEvents) {
+      const curEvent = workplaceEvents[i];
+      report = { reportId: 0, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: false };
       addReport(report, reportIds);
     }
   }
@@ -895,7 +916,7 @@ async function searchWorkplaceEventDate(reportIds: reportData[], search: string)
 }
  */
 
-async function searchSecretariatNotification(reportIds: reportData[], searchString: string, type: string) {
+async function searchSecretariatNotification(reportIds: reportData[], searchString: string, type: string, search: boolean) {
   let secretariatNotifications: SecretariatNotification[];
   if (type === "l") {
     secretariatNotifications = await sequelize.query(
@@ -915,27 +936,38 @@ async function searchSecretariatNotification(reportIds: reportData[], searchStri
       },
     }); */
     secretariatNotifications = await sequelize.query(
-      `SELECT * FROM SecretariatNotifications WHERE MATCH (description) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      `SELECT * FROM SecretariatNotifications WHERE MATCH (description) AGAINST(:string IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)`, 
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
       }
     );
   }
-  for (let i in secretariatNotifications) {
-    const curEvent = secretariatNotifications[i];
-    const event = await Administrative.findOne({
-      where: {
-        id: curEvent.administrativeId
-      },
-      include: [{ model: Report }]
-    });
-    if (event != null && curEvent.description != null) {
-      const description = curEvent.description;
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+  let report: reportData;
+  if(search){
+    for (let i in secretariatNotifications) {
+      const curEvent = secretariatNotifications[i];
+      const event = await Administrative.findOne({
+        where: {
+          id: curEvent.administrativeId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null && curEvent.description != null) {
+        const description = curEvent.description;
+        report = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
+      }
+    }
+  }
+  else{
+    for (let i in secretariatNotifications) {
+      const curEvent = secretariatNotifications[i];
+      report = { reportId: 0, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: false };
       addReport(report, reportIds);
     }
   }
+  
 }
 
 /* async function searchSecretariatNotificationDate(reportIds: reportData[], search: string) {
@@ -960,7 +992,7 @@ async function searchSecretariatNotification(reportIds: reportData[], searchStri
   }
 } */
 
-async function searchDefect(reportIds: reportData[], searchString: string, type: string) {
+async function searchDefect(reportIds: reportData[], searchString: string, type: string, search: boolean) {
   let defects: Defect[];
   if (type === "l") {
     defects = await sequelize.query(
@@ -980,24 +1012,34 @@ async function searchDefect(reportIds: reportData[], searchString: string, type:
       },
     }); */
     defects = await sequelize.query(
-      `SELECT * FROM Defects WHERE MATCH (description) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      `SELECT * FROM Defects WHERE MATCH (description) AGAINST(:string IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)`, 
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
       }
     );
   }
-  for (let i in defects) {
-    const curEvent = defects[i];
-    const event = await Technical.findOne({
-      where: {
-        id: curEvent.technicalId
-      },
-      include: [{ model: Report }]
-    });
-    if (event != null && curEvent.description != null) {
-      const description = curEvent.description;
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+  let report: reportData;
+  if(search){
+    for (let i in defects) {
+      const curEvent = defects[i];
+      const event = await Technical.findOne({
+        where: {
+          id: curEvent.technicalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null && curEvent.description != null) {
+        const description = curEvent.description;
+        report = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
+      }
+    }
+  }
+  else{
+    for (let i in defects) {
+      const curEvent = defects[i];
+      report = { reportId: 0, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: false };
       addReport(report, reportIds);
     }
   }
@@ -1025,7 +1067,7 @@ async function searchDefect(reportIds: reportData[], searchString: string, type:
   }
 }
  */
-async function searchMalfunction(reportIds: reportData[], searchString: string, type: string) {
+async function searchMalfunction(reportIds: reportData[], searchString: string, type: string, search: boolean) {
   let malfunctions: Malfunction[];
   if (type === "l") {
     malfunctions = await sequelize.query(
@@ -1045,24 +1087,34 @@ async function searchMalfunction(reportIds: reportData[], searchString: string, 
       },
     }); */
     malfunctions = await sequelize.query(
-      `SELECT * FROM Malfunctions WHERE MATCH (description) AGAINST(:string IN NATURAL LANGUAGE MODE)`, 
+      `SELECT * FROM Malfunctions WHERE MATCH (description) AGAINST(:string IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION)`, 
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
       }
     );
   }
-  for (let i in malfunctions) {
-    const curEvent = malfunctions[i];
-    const event = await Technical.findOne({
-      where: {
-        id: curEvent.technicalId
-      },
-      include: [{ model: Report }]
-    });
-    if (event != null && curEvent.description != null) {
-      const description = curEvent.description;
-      let report: reportData = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+  let report: reportData;
+  if(search){
+    for (let i in malfunctions) {
+      const curEvent = malfunctions[i];
+      const event = await Technical.findOne({
+        where: {
+          id: curEvent.technicalId
+        },
+        include: [{ model: Report }]
+      });
+      if (event != null && curEvent.description != null) {
+        const description = curEvent.description;
+        report = { reportId: event.reportId, eventId: curEvent.id, description: description, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
+      }
+    }
+  }
+  else{
+    for (let i in malfunctions) {
+      const curEvent = malfunctions[i];
+      report = { reportId: 0, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: false };
       addReport(report, reportIds);
     }
   }
@@ -1108,12 +1160,19 @@ router.post('/search', async (req, res) => {
 
   /* await searchCustomField1(reportIds, search, "l");
   await searchCustomField1(reportIds, search, "s");*/
-  await searchOperationalEvent(reportIds, search, "s");
-  await searchOperationalEvent(reportIds, search, "l");
-  await searchWorkplaceEvent(reportIds, search, "s");
-  await searchSecretariatNotification(reportIds, search, "s");
-  await searchDefect(reportIds, search, "s");
-  await searchMalfunction(reportIds, search, "s");
+  await searchOperationalEvent(reportIds, search, "s", true);
+  await searchWorkplaceEvent(reportIds, search, "s", true);
+  await searchSecretariatNotification(reportIds, search, "s", true);
+  await searchDefect(reportIds, search, "s", true);
+  await searchMalfunction(reportIds, search, "s", true);
+  if(reportIds.length < 30){
+    await searchWorkplaceEvent(reportIds, search, "l", true);
+    await searchSecretariatNotification(reportIds, search, "l", true);
+    await searchDefect(reportIds, search, "l", true);
+    await searchMalfunction(reportIds, search, "l", true);
+    await searchOperationalEvent(reportIds, search, "l", true);
+  }
+  
 
   const count = reportIds.length;
   reportIds = reportIds.slice(offset, offset + reportsPerPage);
@@ -1133,6 +1192,7 @@ function addReport(report: reportData, reportIds: reportData[]) {
   }
   if (!inside)
     reportIds.push(report);
+    console.log(report.description + " Added!!");
 }
 
 /******************************************************************************
@@ -2679,56 +2739,21 @@ router.post("/getKeywordReports", async (req, res) => {
   const search = req.body.keyword;
 
   let reportIds: reportData[] = [];
-
-    /* await searchCustomField1(reportIds, search, "l");
-  await searchCustomField1(reportIds, search, "s");
-  await searchCustomField2(reportIds, search, "l");
-  await searchCustomField2(reportIds, search, "s");
-  await searchCustomField3(reportIds, search, "l");
-  await searchCustomField3(reportIds, search, "s");
-  await searchCustomField4(reportIds, search, "l");
-  await searchCustomField4(reportIds, search, "s");
-  await searchCustomField5(reportIds, search, "l");
-  await searchCustomField5(reportIds, search, "s");
-  await searchCustomField6(reportIds, search, "l");
-  await searchCustomField6(reportIds, search, "s");
-  await searchCustomField7(reportIds, search, "l");
-  await searchCustomField7(reportIds, search, "s");
-  await searchCustomField8(reportIds, search, "l");
-  await searchCustomField8(reportIds, search, "s");
-  await searchCustomField9(reportIds, search, "l");
-  await searchCustomField9(reportIds, search, "s");
-  await searchCustomField10(reportIds, search, "l");
-  await searchCustomField10(reportIds, search, "s");
-  await searchOperationalEventSignaling(reportIds, search, "l"); */
-  await searchOperationalEvent(reportIds, search, "s");
-  /* await searchOperationalEventPlNumber(reportIds, search, "l");
-  await searchOperationalEventPlNumber(reportIds, search, "s");
-  await searchOperationalEventDescription(reportIds, search, "l");
-  await searchOperationalEventDescription(reportIds, search, "s");
-  await searchOperationalEventLocation(reportIds, search, "l");
-  await searchOperationalEventLocation(reportIds, search, "s");
-  await searchOperationalEventUnit(reportIds, search, "l");
-  await searchOperationalEventUnit(reportIds, search, "s");
-  await searchOperationalEventDate(reportIds, search); */
-  await searchWorkplaceEvent(reportIds, search, "s");
-  /* await searchWorkplaceEventDescription(reportIds, search, "s");
-  await searchWorkplaceEventAbsentee(reportIds, search, "l");
-  await searchWorkplaceEventAbsentee(reportIds, search, "s");
-  await searchWorkplaceEventSubstitute(reportIds, search, "l");
-  await searchWorkplaceEventSubstitute(reportIds, search, "s");
-  await searchWorkplaceEventDate(reportIds, search); */
-  await searchSecretariatNotification(reportIds, search, "s");
-  /* await searchSecretariatNotificationDescription(reportIds, search, "s");
-  await searchSecretariatNotificationDate(reportIds, search); */
-  await searchDefect(reportIds, search, "s");
-  /* await searchDefectDescription(reportIds, search, "s");
-  await searchDefectDate(reportIds, search); */
-  await searchMalfunction(reportIds, search, "s");
-  /* await searchMalfunctionDescription(reportIds, search, "s");
-  await searchMalfunctionDate(reportIds, search); */
+  await searchOperationalEvent(reportIds, search, "s", false);
+  await searchWorkplaceEvent(reportIds, search, "s", false);
+  await searchSecretariatNotification(reportIds, search, "s", false);
+  await searchDefect(reportIds, search, "s", false);
+  await searchMalfunction(reportIds, search, "s", false);
+  if(reportIds.length < 40){
+    await searchOperationalEvent(reportIds, search, "l", false);
+    await searchWorkplaceEvent(reportIds, search, "l", false);
+    await searchSecretariatNotification(reportIds, search, "l", false);
+    await searchDefect(reportIds, search, "l", false);
+    await searchMalfunction(reportIds, search, "l", false);
+  }
 
   const outputArr = reportIds.slice(0, 10);
+  console.log(outputArr);
 
   res.json(outputArr);
 });
@@ -3263,6 +3288,7 @@ router.post('/getSearchFiltered', async (req, res) => {
           },
         }],
       });
+      console.log(result);
 
       for (let i in result) {
         const curEvent = result[i];
