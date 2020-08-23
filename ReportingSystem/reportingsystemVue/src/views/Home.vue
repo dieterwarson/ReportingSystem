@@ -10,7 +10,7 @@
         <div class="name" v-if="tokenData.accessRights == 0">(Administrator)</div>
         <div class="name" v-else-if="tokenData.accessRights == 1">(Supervisor)</div>
         <div class="name" v-else-if="tokenData.accessRights == 2">(Secretariaat)</div>
-        <button type="submit" class="btn btn-primary logout" @click.prevent="logOut">Afmelden</button>
+        
       </div>
 
       <!-- Search form -->
@@ -141,6 +141,7 @@
                   tag="button"
                   class="btn btn-secondary btn-lg btn-block"
                 >Administrator functies</router-link>
+                <button type="submit" class="btn btn-dark logout btn-block" @click.prevent="logOut">Afmelden</button>
               </div>
             </div>
           </div>
@@ -396,9 +397,6 @@ export default Vue.extend({
   margin-right: auto;
 }
 .logout {
-  margin-left: 49%;
-  margin-top: 0px;
-  margin-right: 2%;
-  margin-bottom: 10px;
+  padding: 1.5%;
 }
 </style>

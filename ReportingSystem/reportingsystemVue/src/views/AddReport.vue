@@ -610,7 +610,7 @@ export default Vue.extend({
         field9: "",
         field10: "",
         failed: false,
-        succeeded: false,
+        succeeded: false
       },
       tokenData: {
         authorId: 0
@@ -642,6 +642,20 @@ export default Vue.extend({
         subTypeName: ""
       }
     };
+  },
+  watch: {
+    selectedOption: function() {
+      this.customFiche.field10 = "";
+      this.customFiche.field9 = "";
+      this.customFiche.field8 = "";
+      this.customFiche.field7 = "";
+      this.customFiche.field6 = "";
+      this.customFiche.field5 = "";
+      this.customFiche.field4 = "";
+      this.customFiche.field3 = "";
+      this.customFiche.field2 = "";
+      this.customFiche.field1 = "";
+    }
   },
   mounted() {
     this.loadData();
@@ -1070,37 +1084,41 @@ export default Vue.extend({
     async addCustomFiche() {
       this.customFiche.failed = false;
       this.customFiche.succeeded = false;
-      const response = await ReportingService.addCustomEvent({
-        selectedFiche: this.selectedOption,
-        field1: this.customFiche.field1,
-        field2: this.customFiche.field2,
-        field3: this.customFiche.field3,
-        field4: this.customFiche.field4,
-        field5: this.customFiche.field5,
-        field6: this.customFiche.field6,
-        field7: this.customFiche.field7,
-        field8: this.customFiche.field8,
-        field9: this.customFiche.field9,
-        field10: this.customFiche.field10,
-        author: this.tokenData.authorId
-      });
-      if (response.check) {
-        this.customFiche.field10 = "";
-        this.customFiche.field9 = "";
-        this.customFiche.field8 = "";
-        this.customFiche.field7 = "";
-        this.customFiche.field6 = "";
-        this.customFiche.field5 = "";
-        this.customFiche.field4 = "";
-        this.customFiche.field3 = "";
-        this.customFiche.field2 = "";
-        this.customFiche.field1 = "";
-        this.customFiche.failed = false;
-        this.customFiche.succeeded = true;
+      if (this.customFiche.field1.length > 3) {
+        const response = await ReportingService.addCustomEvent({
+          selectedFiche: this.selectedOption,
+          field1: this.customFiche.field1,
+          field2: this.customFiche.field2,
+          field3: this.customFiche.field3,
+          field4: this.customFiche.field4,
+          field5: this.customFiche.field5,
+          field6: this.customFiche.field6,
+          field7: this.customFiche.field7,
+          field8: this.customFiche.field8,
+          field9: this.customFiche.field9,
+          field10: this.customFiche.field10,
+          author: this.tokenData.authorId
+        });
+        if (response.check) {
+          this.customFiche.field10 = "";
+          this.customFiche.field9 = "";
+          this.customFiche.field8 = "";
+          this.customFiche.field7 = "";
+          this.customFiche.field6 = "";
+          this.customFiche.field5 = "";
+          this.customFiche.field4 = "";
+          this.customFiche.field3 = "";
+          this.customFiche.field2 = "";
+          this.customFiche.field1 = "";
+          this.customFiche.failed = false;
+          this.customFiche.succeeded = true;
+        } else {
+          this.customFiche.failed = true;
+          this.customFiche.succeeded = false;
+        }
       } else {
         this.customFiche.failed = true;
-        this.customFiche.succeeded = false; 
-        alert(response.message);
+        this.customFiche.succeeded = false;
       }
     },
     async getAllCustomEvents() {
