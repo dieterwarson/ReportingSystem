@@ -141,6 +141,10 @@
                   tag="button"
                   class="btn btn-secondary btn-lg btn-block"
                 >Administrator functies</router-link>
+              </div>
+            </div>
+            <div class="row logoutdiv">
+              <div class="col-sm">
                 <button type="submit" class="btn btn-dark btn-lg logout btn-block" @click.prevent="logOut">Afmelden</button>
               </div>
             </div>
@@ -401,5 +405,8 @@ export default Vue.extend({
 }
 .logout {
   padding: 1.5%;
+}
+.logoutdiv {
+  margin-top: 3%;
 }
 </style>
