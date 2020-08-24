@@ -83,6 +83,7 @@ const sequelize = new Sequelize({
   dialect: 'mysql',
   username: 'root',
   password: 'mysqlroot',
+  logging: false,
   models: [__dirname + '/models'], // or [Player, Team],
 });
 
