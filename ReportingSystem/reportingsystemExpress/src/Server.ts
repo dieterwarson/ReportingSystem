@@ -31,6 +31,7 @@ import WorkplaceType from './models/workplaceType';
 import EventType from './models/eventType';
 import OperationalType from './models/operationalType';
 import OperationalSubtype from './models/operationalSubtype';
+import CustomEvent from './models/customevent'
 import Custom from './models/custom'
 const cron = require("node-cron");
 import cronServer from './cron'
@@ -115,119 +116,148 @@ app.get('*', (req: Request, res: Response) => {
 // })
 // custom.save();
 
-const user1 = new User({
-  username: 'jan_janssens',
-  password: '',
-  accessRights: 0,
-});
-// user1.save();
+// const user1 = new User({
+//   username: 'jan_janssens',
+//   password: '',
+//   accessRights: 0,
+// });
+// // user1.save();
 
-const user2 = new User({
-  username: 'chass_beerts',
-  password: 'test',
-  accessRights: 0,
-});
-//  user2.save();
+// const user2 = new User({
+//   username: 'chass_beerts',
+//   password: 'test',
+//   accessRights: 0,
+// });
+// //  user2.save();
 
 
 
-/* for (let i = 19; i < 500; i++) {
-  const report1 = new Report({
-    id: i,
-    date: new Date('2020/08/16 23:01:00'),
-    temporary: false,
-    nightShift: true,
-  });
-  report1.save();
-  const report2 = new Report({
-    id: i,
-    date: new Date('2020/08/16 12:01:00'),
-    temporary: false,
-    nightShift: false,
-  });
-  report2.save();
+//  for (let i = 19; i < 500; i++) {
+//   const report1 = new Report({
+//     id: i,
+//     date: new Date('2020/03/01 23:01:00'),
+//     temporary: false,
+//     nightShift: true,
+//   });
+//   report1.save();
+//   const report2 = new Report({
+//     id: i,
+//     date: new Date('2020/03/01 12:01:00'),
+//     temporary: false,
+//     nightShift: false,
+//   });
+//   report2.save();
 
-  const technical1 = new Technical({
-    reportId: i,
-    id: i,
-  });
-  technical1.save();
+//   const technical1 = new Technical({
+//     reportId: i,
+//     id: i,
+//   });
+//   technical1.save();
 
-  const administrative1 = new Administrative({
-    reportId: i,
-    id: i,
-  });
-  administrative1.save();
+//   const administrative1 = new Administrative({
+//     reportId: i,
+//     id: i,
+//   });
+//   administrative1.save();
 
-  const operational1 = new Operational({
-    reportId: i,
-    id: i,
-  });
-  operational1.save();
+//   const operational1 = new Operational({
+//     reportId: i,
+//     id: i,
+//   });
+//   operational1.save();
 
-  const workplaceEvent1 = new WorkplaceEvent({
-    authorId: 1,
-    administrativeId: i,
-    workplaceTypeId: 1,
-    workplaceSubtypeId: 1,
-    description: 'Jacob sleutelbeen gebroken',
-    absentee: 'Jacob Franssen',
-    substitute: 'James Brook',
-    monitoring: false,
-    date: new Date('2020/03/16 9:10:23'),
-  });
-  workplaceEvent1.save();
+//   const custom = new Custom({
+//     reportId: i, id: i,
+//   });
+//   custom.save();
 
-  const secretariatNotification1 = new SecretariatNotification({
-    authorId: 2,
-    administrativeId: i,
-    description: 'Jan Janssens Inp ziek',
-    monitoring: false,
-    date: new Date('2020/03/16 20:30:46'),
-  });
-  secretariatNotification1.save();
-  const operationalEvent1 = new OperationalEvent({
-    authorId: 2,
-    operationalId: i,
-    signaling: 'Verlies inschrijvingsbewijs CIM NR 545102920 / 1ABC123',
-    plNumber: null,
-    description: null,
-    location: null,
-    unit: 'KEMPLA',
-    date: new Date('2020/03/16 18:13:48'),
-  });
-  operationalEvent1.save();
+//   const workplaceEvent1 = new WorkplaceEvent({
+//     authorId: 1,
+//     administrativeId: i,
+//     workplaceTypeId: 1,
+//     workplaceSubtypeId: 1,
+//     description: 'Jacob sleutelbeen gebroken',
+//     absentee: 'Jacob Franssen',
+//     substitute: 'James Brook',
+//     monitoring: false,
+//     date: new Date('2020/03/16 9:10:23'),
+//   });
+//   workplaceEvent1.save();
 
-  const defect1 = new Defect({
-    technicalId: i,
-    authorId: 2,
-    defectTypeId: 1,
-    defectSubtypeId: 1,
-    description: 'Voertuig P320 achterlicht kapot',
-    monitoring: true,
-    date: new Date('2020/03/16 13:03:57'),
-  });
-  defect1.save();
+//   const secretariatNotification1 = new SecretariatNotification({
+//     authorId: 2,
+//     administrativeId: i,
+//     description: 'Jan Janssens Inp ziek',
+//     monitoring: false,
+//     date: new Date('2020/03/16 20:30:46'),
+//   });
+//   secretariatNotification1.save();
+//   const operationalEvent1 = new OperationalEvent({
+//     authorId: 2,
+//     operationalId: i,
+//     signaling: 'Verlies inschrijvingsbewijs CIM NR 545102920 / 1ABC123',
+//     plNumber: null,
+//     description: null,
+//     location: null,
+//     unit: 'KEMPLA',
+//     date: new Date('2020/03/16 18:13:48'),
+//   });
+//   operationalEvent1.save();
 
-  const malfunction1 = new Malfunction({
-    technicalId: i,
-    authorId: 1,
-    malfunctionTypeId: 2,
-    malfunctionSubtypeId: 1,
-    description: 'lekkende kraan in kamer 304',
-    monitoring: false,
-    date: new Date('2020/03/16 10:46:45'),
-    duration: '2:16'
-   });
-  malfunction1.save();
+//   const defect1 = new Defect({
+//     technicalId: i,
+//     authorId: 2,
+//     defectTypeId: 1,
+//     defectSubtypeId: 1,
+//     description: 'Voertuig P320 achterlicht kapot',
+//     monitoring: true,
+//     date: new Date('2020/03/16 13:03:57'),
+//   });
+//   defect1.save();
 
-  const eventType1 = new EventType({
-    operationalEventId: 4,
-    operationalTypeId: 5,
-    operationalSubtypeId: 3,
-  });
-  eventType1.save();
-} */
+//   const malfunction1 = new Malfunction({
+//     technicalId: i,
+//     authorId: 1,
+//     malfunctionTypeId: 2,
+//     malfunctionSubtypeId: 1,
+//     description: 'lekkende kraan in kamer 304',
+//     monitoring: false,
+//     date: new Date('2020/03/16 10:46:45'),
+//     duration: '2:16'
+//    });
+//   malfunction1.save();
+
+//   const eventType1 = new EventType({
+//     operationalEventId: 4,
+//     operationalTypeId: 5,
+//     operationalSubtypeId: 3,
+//   });
+//   eventType1.save();
+
+//   const customEvent1 = new CustomEvent({
+//     authorId: 1,
+//     customId: i,
+//     FieldnameId: 1,
+//     field1: "1-AAA-001",
+//     field2: "70km/u",
+//     field3: "90km/u",
+//     field4: "84km/u",
+//     field5: "Volkswagen",
+//   })
+//   customEvent1.save();
+
+//   const customEvent2 = new CustomEvent({
+//     authorId: 1,
+//     customId: i,
+//     FieldnameId: 1,
+//     field1: "1-AAA-001",
+//     field2: "50km/u",
+//     field3: "100km/u",
+//     field4: "94km/u",
+//     field5: "ALFA ROMEO",
+//   })
+//   customEvent2.save();
+// } 
 
 
 
