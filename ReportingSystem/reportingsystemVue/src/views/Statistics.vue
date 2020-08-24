@@ -4,7 +4,7 @@
       <router-link to="/">Startscherm</router-link>
     </div>
     <h1>Statistieken</h1>
-    <div class="container mt-5">
+    <div class="container mt-5" ref="content">
       <div class="row">
         <div v-if="this.reportTypes === {}">
           <p>Er zijn nog geen types</p>
@@ -148,9 +148,9 @@
           >
             Download CSV ⬇
           </download-csv>
-          <button @click.prevent="getPDF" class="btn btn-primary ">
+          <!--<button @click.prevent="getPDF" class="btn btn-primary ml-4">
             Download PDF ⬇
-          </button>
+          </button>-->
         </form>
 
         <div class="col-md-6">
@@ -164,7 +164,6 @@
           <h5 v-else class="mt-10">
             Selecteer de gewenste types om grafieken te zien
           </h5>
-          <p>{{ this.statisticsData }}</p>
         </div>
       </div>
     </div>
@@ -452,21 +451,15 @@ export default Vue.extend({
       this.combineData();
     },
     getPDF: function(){
-      ReportingService.getPDF().then((response) => {
-      alert(response);
-      const newBlob = new Blob([response], {type: "application/pdf"});
-      const fileURL = window.URL.createObjectURL(newBlob);
-      const fileLink = document.createElement('a');
-      fileLink.href = fileURL;
-      fileLink.download = "page.pdf";
-      document.body.appendChild(fileLink);
-      fileLink.click();
-      setTimeout(function(){
-    // For Firefox it is necessary to delay revoking the ObjectURL
-    window.URL.revokeObjectURL(fileURL);
-        }, 100);
-      });
-    }
+      /* const doc = new jsPDF();
+      const canvasElement = document.createElement('canvas');
+      html2canvas(this.$refs.content, { canvas: canvasElement 
+        }).then(function (canvas) {
+        const img = canvas.toDataURL("image/jpeg", 0.8);
+        doc.addImage(img,'JPEG',20,20, 0, 0);
+        doc.save("sample.pdf");
+      }); */
+    },
   },
   watch: {
     selectedTypes: {

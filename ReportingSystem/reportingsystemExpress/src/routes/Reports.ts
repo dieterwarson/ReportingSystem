@@ -182,7 +182,7 @@ async function searchCustomField1(reportIds: reportData[], searchString: string,
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field1) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field1) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -227,7 +227,7 @@ async function searchCustomField2(reportIds: reportData[], searchString: string,
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field2) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field2) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -263,7 +263,7 @@ async function searchCustomField3(reportIds: reportData[], searchString: string,
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field3) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field3) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -299,7 +299,7 @@ async function searchCustomField4(reportIds: reportData[], searchString: string,
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field4) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field4) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -335,7 +335,7 @@ async function searchCustomField5(reportIds: reportData[], searchString: string,
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field5) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field5) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -371,7 +371,7 @@ async function searchCustomField6(reportIds: reportData[], searchString: string,
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field6) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field6) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -407,7 +407,7 @@ async function searchCustomField7(reportIds: reportData[], searchString: string,
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field7) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field7) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -443,7 +443,7 @@ async function searchCustomField8(reportIds: reportData[], searchString: string,
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field8) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field8) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -479,7 +479,7 @@ async function searchCustomField9(reportIds: reportData[], searchString: string,
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field9) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field9) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -515,7 +515,7 @@ async function searchCustomField10(reportIds: reportData[], searchString: string
   let customEvents: CustomEvent[];
   if (type === "l") {
     customEvents = await sequelize.query(
-      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field10) BETWEEN 0 AND 4',
+      'SELECT * FROM CustomEvents WHERE levenshtein(:string, field10) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -551,7 +551,7 @@ async function searchOperationalEvent(reportIds: reportData[], searchString: str
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
     operationalEvents = await sequelize.query(
-      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -607,7 +607,7 @@ async function searchOperationalEvent(reportIds: reportData[], searchString: str
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
     operationalEvents = await sequelize.query(
-      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, plNumber) BETWEEN 0 AND 4',
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, plNumber) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -643,7 +643,7 @@ async function searchOperationalEventDescription(reportIds: reportData[], search
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
     operationalEvents = await sequelize.query(
-      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -679,7 +679,7 @@ async function searchOperationalEventLocation(reportIds: reportData[], searchStr
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
     operationalEvents = await sequelize.query(
-      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, location) BETWEEN 0 AND 4',
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, location) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -715,7 +715,7 @@ async function searchOperationalEventUnit(reportIds: reportData[], searchString:
   let operationalEvents: OperationalEvent[];
   if (type === "l") {
     operationalEvents = await sequelize.query(
-      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, unit) BETWEEN 0 AND 4',
+      'SELECT * FROM OperationalEvents WHERE levenshtein(:string, unit) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -773,7 +773,7 @@ async function searchWorkplaceEvent(reportIds: reportData[], searchString: strin
   let workplaceEvents: WorkplaceEvent[];
   if (type === "l") {
     workplaceEvents = await sequelize.query(
-      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, description) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -827,7 +827,7 @@ async function searchWorkplaceEvent(reportIds: reportData[], searchString: strin
   let workplaceEvents: WorkplaceEvent[];
   if (type === "l") {
     workplaceEvents = await sequelize.query(
-      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, absentee) BETWEEN 0 AND 4',
+      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, absentee) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -863,7 +863,7 @@ async function searchWorkplaceEventSubstitute(reportIds: reportData[], searchStr
   let workplaceEvents: WorkplaceEvent[];
   if (type === "l") {
     workplaceEvents = await sequelize.query(
-      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, substitute) BETWEEN 0 AND 4',
+      'SELECT * FROM WorkplaceEvents WHERE levenshtein(:string, substitute) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -922,7 +922,7 @@ async function searchSecretariatNotification(reportIds: reportData[], searchStri
   let secretariatNotifications: SecretariatNotification[];
   if (type === "l") {
     secretariatNotifications = await sequelize.query(
-      'SELECT * FROM SecretariatNotifications WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      'SELECT * FROM SecretariatNotifications WHERE levenshtein(:string, description) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -999,7 +999,7 @@ async function searchDefect(reportIds: reportData[], searchString: string, type:
   let defects: Defect[];
   if (type === "l") {
     defects = await sequelize.query(
-      'SELECT * FROM Defects WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      'SELECT * FROM Defects WHERE levenshtein(:string, description) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -1075,7 +1075,7 @@ async function searchMalfunction(reportIds: reportData[], searchString: string, 
   let malfunctions: Malfunction[];
   if (type === "l") {
     malfunctions = await sequelize.query(
-      'SELECT * FROM Malfunctions WHERE levenshtein(:string, description) BETWEEN 0 AND 4',
+      'SELECT * FROM Malfunctions WHERE levenshtein(:string, description) BETWEEN 0 AND 6',
       {
         replacements: { string: searchString },
         type: QueryTypes.SELECT
@@ -3804,10 +3804,10 @@ router.post('/latestReport', async (req, res) => {
 /******************************************************************************
 *                         Send pdf to browser
 ******************************************************************************/
-router.get('/downloadPDF', (req, res) => {
+/* router.get('/downloadPDF', (req, res) => {
   console.log("pdf")
   res.download('page.pdf');
-});
+}); */
 
 /******************************************************************************
 *                                     Export

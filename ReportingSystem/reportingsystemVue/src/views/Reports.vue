@@ -29,7 +29,6 @@
         </form>
         <div class="col-md-8">
           <div v-if="filteredReports.reports.length == 0">
-            <p>DEBUG, reports: {{ reports }}</p>
             <div
               class="container my-2"
               v-for="value in reports.reports"
@@ -37,7 +36,6 @@
             >
               <div class="card shadow">
                 <div class="card-body h5">
-                  <p>DEBUG, value: {{ value }}</p>
                   {{
                     new Date(value[0].date).toLocaleString("nl-BE", {
                       year: "numeric",
@@ -64,7 +62,6 @@
             </div>
           </div>
           <div v-else>
-            <p>DEBUG, reports: {{ reports }}</p>
             <div
               class="container my-2"
               v-for="value in filteredReports.reports"
@@ -72,7 +69,6 @@
             >
               <div class="card shadow">
                 <div class="card-body h5">
-                  <p>DEBUG, value: {{ value }}</p>
                   {{
                     new Date(value.date).toLocaleString("nl-BE", {
                       year: "numeric",
