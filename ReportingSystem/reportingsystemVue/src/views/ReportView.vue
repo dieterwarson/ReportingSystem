@@ -569,43 +569,43 @@
                 <span class="card-text badge badge-danger">{{data.item.fieldname.customName}}</span>
               </template>
               <template v-slot:cell(field1)="data">
-                <span v-if="data.item.field1">{{data.item.field1}}</span>
+                <span v-if="data.item.field1">{{data.item.field1}} ({{data.item.fieldname.name1}})</span>
                 <span v-else>N.V.T.</span>
               </template>
               <template v-slot:cell(field2)="data">
-                <span v-if="data.item.field2">{{data.item.field2}}</span>
+                <span v-if="data.item.field2">{{data.item.field2}} ({{data.item.fieldname.name2}})</span>
                 <span v-else>N.V.T.</span>
               </template>
               <template v-slot:cell(field3)="data">
-                <span v-if="data.item.field3">{{data.item.field3}}</span>
+                <span v-if="data.item.field3">{{data.item.field3}} ({{data.item.fieldname.name3}})</span>
                 <span v-else>N.V.T.</span>
               </template>
               <template v-slot:cell(field4)="data">
-                <span v-if="data.item.field4">{{data.item.field4}}</span>
+                <span v-if="data.item.field4">{{data.item.field4}} ({{data.item.fieldname.name4}})</span>
                 <span v-else>N.V.T.</span>
               </template>
               <template v-slot:cell(field5)="data">
-                <span v-if="data.item.field5">{{data.item.field5}}</span>
+                <span v-if="data.item.field5">{{data.item.field5}} ({{data.item.fieldname.name5}})</span>
                 <span v-else>N.V.T.</span>
               </template>
               <template v-slot:cell(field6)="data">
-                <span v-if="data.item.field6">{{data.item.field6}}</span>
+                <span v-if="data.item.field6">{{data.item.field6}} ({{data.item.fieldname.name6}})</span>
                 <span v-else>N.V.T.</span>
               </template>
               <template v-slot:cell(field7)="data">
-                <span v-if="data.item.field7">{{data.item.field7}}</span>
+                <span v-if="data.item.field7">{{data.item.field7}} ({{data.item.fieldname.name7}})</span>
                 <span v-else>N.V.T.</span>
               </template>
               <template v-slot:cell(field8)="data">
-                <span v-if="data.item.field8">{{data.item.field8}}</span>
+                <span v-if="data.item.field8">{{data.item.field8}} ({{data.item.fieldname.name8}})</span>
                 <span v-else>N.V.T.</span>
               </template>
               <template v-slot:cell(field9)="data">
-                <span v-if="data.item.field9">{{data.item.field9}}</span>
+                <span v-if="data.item.field9">{{data.item.field9}} ({{data.item.fieldname.name9}})</span>
                 <span v-else>N.V.T.</span>
               </template>
               <template v-slot:cell(field10)="data">
-                <span v-if="data.item.field10">{{data.item.field10}}</span>
+                <span v-if="data.item.field10">{{data.item.field10}} ({{data.item.fieldname.name10}})</span>
                 <span v-else>N.V.T.</span>
               </template>
             </b-table>
