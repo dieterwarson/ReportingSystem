@@ -190,6 +190,9 @@ export default Vue.extend({
       this.eventsPlNumber = response;
     },
     async getKeywordOptions(keyword: string) {
+      if(keyword == ''){
+        keyword = " "
+      }
       const response = await ReportingService.autoCompleteKeyword({
         keyword: keyword
       });

@@ -596,7 +596,8 @@ async function searchOperationalEvent(reportIds: reportData[], searchString: str
     for (let i in operationalEvents) {
       const curEvent = operationalEvents[i];
       report = { reportId: 0, eventId: curEvent.id, description: curEvent.signaling, date: curEvent.date, nightShift: false };
-      addReport(report, reportIds);
+      // addReport(report, reportIds);
+      reportIds.push(report);
     }
   }
   
@@ -816,7 +817,8 @@ async function searchWorkplaceEvent(reportIds: reportData[], searchString: strin
     for (let i in workplaceEvents) {
       const curEvent = workplaceEvents[i];
       report = { reportId: 0, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: false };
-      addReport(report, reportIds);
+      // addReport(report, reportIds);
+      reportIds.push(report);
     }
   }
 }
@@ -964,7 +966,8 @@ async function searchSecretariatNotification(reportIds: reportData[], searchStri
     for (let i in secretariatNotifications) {
       const curEvent = secretariatNotifications[i];
       report = { reportId: 0, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: false };
-      addReport(report, reportIds);
+      // addReport(report, reportIds);
+      reportIds.push(report);
     }
   }
   
@@ -1040,7 +1043,8 @@ async function searchDefect(reportIds: reportData[], searchString: string, type:
     for (let i in defects) {
       const curEvent = defects[i];
       report = { reportId: 0, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: false };
-      addReport(report, reportIds);
+      // addReport(report, reportIds);
+      reportIds.push(report);
     }
   }
 }
@@ -1115,7 +1119,8 @@ async function searchMalfunction(reportIds: reportData[], searchString: string, 
     for (let i in malfunctions) {
       const curEvent = malfunctions[i];
       report = { reportId: 0, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: false };
-      addReport(report, reportIds);
+      // addReport(report, reportIds);
+      reportIds.push(report);
     }
   }
 }
@@ -1192,7 +1197,6 @@ function addReport(report: reportData, reportIds: reportData[]) {
   }
   if (!inside)
     reportIds.push(report);
-    console.log(report.description + " Added!!");
 }
 
 /******************************************************************************
@@ -2744,16 +2748,14 @@ router.post("/getKeywordReports", async (req, res) => {
   await searchSecretariatNotification(reportIds, search, "s", false);
   await searchDefect(reportIds, search, "s", false);
   await searchMalfunction(reportIds, search, "s", false);
-  if(reportIds.length < 40){
+  if(reportIds.length < 10){
     await searchOperationalEvent(reportIds, search, "l", false);
     await searchWorkplaceEvent(reportIds, search, "l", false);
     await searchSecretariatNotification(reportIds, search, "l", false);
     await searchDefect(reportIds, search, "l", false);
     await searchMalfunction(reportIds, search, "l", false);
   }
-
   const outputArr = reportIds.slice(0, 10);
-  console.log(outputArr);
 
   res.json(outputArr);
 });
@@ -2921,7 +2923,6 @@ router.post("/newCustomFiche", async (req, res) => {
   for (let i = 0; i < amtFields; i++) {
     req.body.fields.push({title: null})
   }
-  console.log(req.body.fields)
 
   FieldNames.create({
     customName: req.body.title,
@@ -2961,12 +2962,10 @@ router.post("/getCustomFiche", async (req, res) => {
 *      POST Add custom fiche - "POST /api/reports/addCustomEvent"
 ******************************************************************************/
 router.post("/addCustomEvent", async (req, res) => {
-  console.log(req.body)
   Custom.findAll({
     limit: 1,
     order: [['id', 'DESC']]
   }).then(async function (entries) {
-    console.log(entries[0].reportId)
     CustomEvent.create({
       authorId: req.body.author,
       customId: entries[0].id,
@@ -3288,7 +3287,6 @@ router.post('/getSearchFiltered', async (req, res) => {
           },
         }],
       });
-      console.log(result);
 
       for (let i in result) {
         const curEvent = result[i];
