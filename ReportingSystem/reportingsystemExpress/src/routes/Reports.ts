@@ -585,11 +585,17 @@ async function searchOperationalEvent(reportIds: reportData[], searchString: str
         },
         include: [{ model: Report }]
       });
-      if (event != null && curEvent.signaling != null) {
+      if (event != null && curEvent.description != null) {
+        const description = curEvent.signaling;
+        report = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.description, date: curEvent.date, nightShift: event.report.nightShift };
+        addReport(report, reportIds);
+      }
+      else if (event != null && curEvent.signaling != null) {
         const description = curEvent.signaling;
         report = { reportId: event.reportId, eventId: curEvent.id, description: curEvent.signaling, date: curEvent.date, nightShift: event.report.nightShift };
         addReport(report, reportIds);
       }
+
     }
   }
   else{
