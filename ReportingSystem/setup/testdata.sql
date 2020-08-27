@@ -241,7 +241,7 @@ CREATE TABLE `DummyDatabases` (
 
 LOCK TABLES `DummyDatabases` WRITE;
 /*!40000 ALTER TABLE `DummyDatabases` DISABLE KEYS */;
-INSERT INTO `DummyDatabases` VALUES (1,'PL12536432','CARMA','Markt 37, 3740 Bilzen','2020-04-13 11:40:32','NAV zelfmoord te Overpelt','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,'PL12536433','CARMA','Universiteitslaan 32, Diepenbeek','2020-04-13 11:40:32','NAV zelfmoord','2020-05-17 11:45:39','2020-05-17 11:45:39');
+INSERT INTO `DummyDatabases` VALUES (1,'PL12536432','CARMA','Markt 37, 3740 Bilzen','2020-04-13 11:40:32','NAV zelfmoord te Overpelt','2020-05-17 11:45:39','2020-05-17 11:45:39'),(2,'PL12536433','CARMA','Universiteitslaan 32, Diepenbeek','2020-04-13 11:40:32','NAV zelfmoord','2020-05-17 11:45:39','2020-05-17 11:45:39'), (3,'PL77736433','Tongeren/Herstappe','Nieuwstraat, Tongeren','2020-08-24 7:50:32','Geseinde persoon gevlucht over de daken, ontsnapt','2020-05-17 11:45:39','2020-05-17 11:45:39');
 /*!40000 ALTER TABLE `DummyDatabases` ENABLE KEYS */;
 UNLOCK TABLES;
 

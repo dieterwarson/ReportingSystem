@@ -570,7 +570,6 @@ export default Vue.extend({
       });
     },
     removeClicked: function(id: number, category: string) {
-      alert(category);
       ReportingService.removeNotification({
         id,
         category,
