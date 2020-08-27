@@ -143,12 +143,12 @@
                 >Administrator functies</router-link>
               </div>
             </div>
-            <div class="row logoutdiv">
+          </div>
+        </div>
+        <div class="row logoutdiv">
               <div class="col-sm">
                 <button type="submit" class="btn btn-dark btn-lg logout btn-block" @click.prevent="logOut">Afmelden</button>
               </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
